@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "98198399231",
+    "project_id": "local-pulse-tanxr",
+    "storage_bucket": "local-pulse-tanxr.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98198399231:android:620b77cabbb41d31b384ca",
+        "android_client_info": {
+          "package_name": "ai.somethingtodo.somethingtodo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJBSDyaKBLEWjdvYBUjB9U_GygHJkb_po"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
