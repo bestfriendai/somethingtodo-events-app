@@ -70,15 +70,15 @@ class _ModernSkeletonState extends State<ModernSkeleton>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Container(
-      width: widget.width,
-      height: widget.height,
+      width: widget.width ?? double.infinity,
+      height: widget.height ?? 16.0, // Provide default height
       margin: widget.margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(widget.borderRadius),
-        color: isDark 
-            ? Colors.white.withOpacity(0.1) 
+        color: isDark
+            ? Colors.white.withOpacity(0.1)
             : Colors.grey.withOpacity(0.2),
       ),
       child: ClipRRect(
@@ -92,14 +92,14 @@ class _ModernSkeletonState extends State<ModernSkeleton>
                   left: _animation.value * (widget.width ?? 200),
                   child: Container(
                     width: (widget.width ?? 200) * 0.5,
-                    height: widget.height,
+                    height: widget.height ?? 16.0, // Provide default height
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                         colors: [
                           Colors.transparent,
-                          isDark 
+                          isDark
                               ? Colors.white.withOpacity(0.15)
                               : Colors.white.withOpacity(0.8),
                           Colors.transparent,

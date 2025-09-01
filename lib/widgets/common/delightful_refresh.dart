@@ -123,7 +123,7 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
       _sparkleController.stop();
       
       // Success haptic
-      PlatformInteractions.successImpact();
+      PlatformInteractions.lightImpact();
       
       // Success celebration with premium effects
       if (widget.showFunMessages) {
@@ -298,7 +298,7 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
       await widget.onRefresh();
       
       // Success feedback
-      PlatformInteractions.successImpact();
+      PlatformInteractions.lightImpact();
       DelightService.instance.showConfetti(
         context,
         customMessage: 'Refreshed with premium sparkles! ✨',

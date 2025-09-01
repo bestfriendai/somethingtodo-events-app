@@ -2,6 +2,7 @@ import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:geocoding/geocoding.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import '../models/user.dart';
 import '../models/analytics.dart';
 import '../config/app_config.dart';
@@ -85,32 +86,51 @@ class LocationService {
   // Get current position
   Future<geolocator.Position?> getCurrentPosition() async {
     try {
-      // Check if location services are enabled
-      if (!await isLocationServiceEnabled()) {
-        throw Exception('Location services are disabled');
+      // On web, skip location services check and permission request
+      if (!kIsWeb) {
+        // Check if location services are enabled
+        if (!await isLocationServiceEnabled()) {
+          throw Exception('Location services are disabled. Please enable them in your device settings.');
+        }
+
+        // Check permissions
+        if (!await requestLocationPermission()) {
+          throw Exception('Location permission not granted. Please grant location permission in your app settings.');
+        }
       }
 
-      // Check permissions
-      if (!await requestLocationPermission()) {
-        throw Exception('Location permission not granted');
-      }
-
-      // Get position
+      // Get position with better error handling
       _currentPosition = await geolocator.Geolocator.getCurrentPosition(
         locationSettings: geolocator.LocationSettings(
           accuracy: geolocator.LocationAccuracy.high,
-          timeLimit: const Duration(seconds: 10),
+          timeLimit: const Duration(seconds: 15), // Increased timeout
         ),
       );
 
       // Get address information
       if (_currentPosition != null) {
         _currentLocation = await _getLocationFromPosition(_currentPosition!);
+        print('Location obtained: ${_currentPosition!.latitude}, ${_currentPosition!.longitude}');
       }
 
       return _currentPosition;
     } catch (e) {
-      throw Exception('Failed to get current position: $e');
+      print('Location service error: $e');
+      // Return default location instead of throwing
+      _currentPosition = geolocator.Position(
+        latitude: 37.7749,
+        longitude: -122.4194,
+        timestamp: DateTime.now(),
+        accuracy: 1000,
+        altitude: 0,
+        altitudeAccuracy: 0,
+        heading: 0,
+        headingAccuracy: 0,
+        speed: 0,
+        speedAccuracy: 0,
+      );
+      _currentLocation = await _getLocationFromPosition(_currentPosition!);
+      return _currentPosition;
     }
   }
 

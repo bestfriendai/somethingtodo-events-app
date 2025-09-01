@@ -3,9 +3,17 @@ class AppConfig {
   static const String appVersion = '1.0.0';
   
   // API Configuration
-  static const String openAIApiKey = String.fromEnvironment('OPENAI_API_KEY');
   static const String googleMapsApiKey = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
   static const String stripePublishableKey = String.fromEnvironment('STRIPE_PUBLISHABLE_KEY');
+  
+   // Backend / Cloud Functions Configuration
+   static const String functionsRegion = String.fromEnvironment('FUNCTIONS_REGION', defaultValue: 'us-central1');
+   static const bool useFunctionsEmulator = bool.fromEnvironment('USE_FUNCTIONS_EMULATOR', defaultValue: true); // Enable for development
+   static const int functionsEmulatorPort = int.fromEnvironment('FUNCTIONS_EMULATOR_PORT', defaultValue: 5001);
+
+   // API Keys (these should be set via environment variables in production)
+   static const String rapidApiKey = String.fromEnvironment('RAPIDAPI_KEY', defaultValue: '92bc1b4fc7mshacea9f118bf7a3fp1b5a6cjsnd2287a72fcb9');
+   static const String openAIApiKey = String.fromEnvironment('OPENAI_API_KEY', defaultValue: 'demo-key');
   
   // Deep linking
   static const String appScheme = 'somethingtodo';
@@ -46,10 +54,10 @@ class AppConfig {
   static const bool analyticsEnabled = true;
   static const bool crashReportingEnabled = true;
   
-  // Environment specific configurations
-  static bool get isProduction => const bool.fromEnvironment('PRODUCTION', defaultValue: false);
-  static bool get isDevelopment => !isProduction;
-  static bool get demoMode => const bool.fromEnvironment('DEMO_MODE', defaultValue: true);
+   // Environment specific configurations
+   static bool get isProduction => const bool.fromEnvironment('PRODUCTION', defaultValue: false);
+   static bool get isDevelopment => !isProduction;
+   static const bool demoMode = false; // Always use real data
   
   // URLs
   static const String termsOfServiceUrl = 'https://somethingtodo.app/terms';

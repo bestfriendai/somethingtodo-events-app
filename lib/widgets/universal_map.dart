@@ -53,6 +53,13 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
       widget.currentLongitude ?? MapboxConfig.defaultLongitude,
     );
 
+    // Update map center when location changes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.currentLatitude != null && widget.currentLongitude != null) {
+        _mapController.move(center, _mapController.camera.zoom);
+      }
+    });
+
     return Stack(
       children: [
         FlutterMap(
@@ -142,7 +149,7 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
     return widget.events.map((event) {
       final point = LatLng(event.venue.latitude, event.venue.longitude);
       final isSelected = selectedEvent?.id == event.id;
-      
+
       return Marker(
         point: point,
         width: isSelected ? 50 : 40,
