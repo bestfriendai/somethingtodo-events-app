@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:glassmorphism/glassmorphism.dart';
@@ -23,9 +24,9 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
-  
+
   late final List<Widget> _screens;
-  
+
   @override
   void initState() {
     super.initState();
@@ -36,7 +37,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       const FavoritesScreen(),
       const GlassProfileScreen(),
     ];
-    
+
     // Initialize providers
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeProviders();
@@ -50,16 +51,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
     if (authProvider.isAuthenticated) {
       final isDemoMode = authProvider.isDemoMode;
-      
+
       // Initialize events provider with demo mode
       await eventsProvider.initialize(demoMode: isDemoMode);
-      
+
       // Initialize chat provider with demo mode
       await chatProvider.initialize(
         authProvider.currentUser!.id,
         demoMode: isDemoMode,
       );
-      
+
       // Set demo mode in Firestore service
       if (isDemoMode) {
         FirestoreService().setDemoMode(true);
@@ -78,18 +79,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             children: [
               // Demo mode banner
               if (authProvider.isDemoMode) _buildDemoModeBanner(),
-              
+
               // Main content
               Expanded(
-                child: IndexedStack(
-                  index: _currentIndex,
-                  children: _screens,
-                ),
+                child: IndexedStack(index: _currentIndex, children: _screens),
               ),
             ],
           ),
           bottomNavigationBar: _buildBottomNavigationBar(),
-          floatingActionButton: _currentIndex == 0 ? _buildFloatingActionButton() : null,
+          floatingActionButton: _currentIndex == 0
+              ? _buildFloatingActionButton()
+              : null,
         );
       },
     );
@@ -113,11 +113,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         bottom: false,
         child: Row(
           children: [
-            const Icon(
-              Icons.explore,
-              color: Colors.white,
-              size: 20,
-            ),
+            const Icon(Icons.explore, color: Colors.white, size: 20),
             const SizedBox(width: 8),
             const Expanded(
               child: Text(
@@ -190,7 +186,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
         final unreadCount = chatProvider.getUnreadRecommendationCount();
-        
+
         return GlassBottomNavigation(
           currentIndex: _currentIndex,
           unreadCount: unreadCount,
@@ -256,7 +252,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: const [
-                            Icon(Icons.star_rounded, color: Colors.white, size: 24),
+                            Icon(
+                              Icons.star_rounded,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                             SizedBox(width: 8),
                             Text(
                               'Upgrade',
@@ -276,7 +276,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
           );
         }
-        
+
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -340,7 +340,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     setState(() {
       _currentIndex = 2; // Switch to chat tab
     });
-    
+
     // The chat screen will handle creating a new session
   }
 }

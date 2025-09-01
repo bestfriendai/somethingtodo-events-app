@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -5,15 +6,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../models/event.dart';
 import '../../config/modern_theme.dart';
 import '../../providers/events_provider.dart';
-import '../../widgets/mobile/optimized_event_list.dart';
 import '../../widgets/modern/modern_skeleton.dart';
 import '../../widgets/modern/modern_event_card.dart';
-import '../../services/platform_interactions.dart';
-import '../../services/cache_service.dart';
-import '../../services/navigation_service.dart';
 import '../events/event_details_screen.dart';
 import '../map/map_screen.dart';
-import '../feed/vertical_feed_screen.dart';
 import '../../widgets/common/delightful_refresh.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -27,22 +23,22 @@ class _SearchScreenState extends State<SearchScreen>
     with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
-  
+
   late AnimationController _filterAnimationController;
   late AnimationController _resultsAnimationController;
-  
+
   bool _showFilters = false;
   bool _isSearching = false;
-  
+
   // Filters
   EventCategory? _selectedCategory;
   bool? _isFreeFilter;
   DateTime? _startDate;
   DateTime? _endDate;
   double _maxDistance = 25.0;
-  
+
   List<String> _recentSearches = [];
-  List<String> _trendingSearches = [
+  final List<String> _trendingSearches = [
     'Music festivals',
     'Food trucks',
     'Art galleries',
@@ -54,19 +50,39 @@ class _SearchScreenState extends State<SearchScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _filterAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _resultsAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _searchFocusNode.requestFocus();
     _loadRecentSearches();
+
+    // Trigger an initial search for nearby events when location is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _performInitialLocationSearch();
+    });
+  }
+
+  Future<void> _performInitialLocationSearch() async {
+    final eventsProvider = context.read<EventsProvider>();
+
+    // Wait a bit for location to be obtained
+    await Future.delayed(const Duration(seconds: 2));
+
+    // If we have user location and no search has been performed yet,
+    // perform an initial search for "events" near the user
+    if (_searchController.text.isEmpty &&
+        eventsProvider.searchResults.isEmpty) {
+      _searchController.text = 'events near me';
+      await _performSearch('events near me');
+    }
   }
 
   @override
@@ -97,30 +113,30 @@ class _SearchScreenState extends State<SearchScreen>
 
   void _saveSearch(String query) {
     if (query.trim().isEmpty || _recentSearches.contains(query)) return;
-    
+
     setState(() {
       _recentSearches.insert(0, query);
       if (_recentSearches.length > 10) {
         _recentSearches = _recentSearches.take(10).toList();
       }
     });
-    
+
     // In a real app, you'd save this to local storage
   }
 
   Future<void> _performSearch(String query) async {
     if (query.trim().isEmpty) return;
-    
+
     setState(() {
       _isSearching = true;
     });
-    
+
     _saveSearch(query);
     _searchFocusNode.unfocus();
-    
+
     try {
       await context.read<EventsProvider>().searchEvents(query);
-      
+
       _resultsAnimationController.reset();
       _resultsAnimationController.forward();
     } catch (e) {
@@ -147,7 +163,7 @@ class _SearchScreenState extends State<SearchScreen>
     setState(() {
       _showFilters = !_showFilters;
     });
-    
+
     if (_showFilters) {
       _filterAnimationController.forward();
     } else {
@@ -163,7 +179,7 @@ class _SearchScreenState extends State<SearchScreen>
       _endDate = null;
       _maxDistance = 25.0;
     });
-    
+
     if (_searchController.text.isNotEmpty) {
       _performSearch(_searchController.text);
     }
@@ -207,9 +223,8 @@ class _SearchScreenState extends State<SearchScreen>
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MapScreen(
-                      events: eventsProvider.searchResults,
-                    ),
+                    builder: (context) =>
+                        MapScreen(events: eventsProvider.searchResults),
                   ),
                 ),
                 icon: const Icon(Icons.map),
@@ -246,8 +261,8 @@ class _SearchScreenState extends State<SearchScreen>
                     onPressed: _toggleFilters,
                     icon: Icon(
                       Icons.tune,
-                      color: _showFilters || _hasActiveFilters() 
-                          ? ModernTheme.primaryColor 
+                      color: _showFilters || _hasActiveFilters()
+                          ? ModernTheme.primaryColor
                           : null,
                     ),
                   ),
@@ -260,7 +275,7 @@ class _SearchScreenState extends State<SearchScreen>
             onSubmitted: _performSearch,
             onChanged: (value) => setState(() {}),
           ),
-          
+
           // Active filters chips
           if (_hasActiveFilters()) ...[
             const SizedBox(height: 12),
@@ -303,10 +318,7 @@ class _SearchScreenState extends State<SearchScreen>
               () => setState(() => _endDate = null),
             ),
           const SizedBox(width: 8),
-          TextButton(
-            onPressed: _clearFilters,
-            child: const Text('Clear all'),
-          ),
+          TextButton(onPressed: _clearFilters, child: const Text('Clear all')),
         ],
       ),
     );
@@ -338,9 +350,7 @@ class _SearchScreenState extends State<SearchScreen>
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 border: Border.symmetric(
-                  horizontal: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                  ),
+                  horizontal: BorderSide(color: Theme.of(context).dividerColor),
                 ),
               ),
               child: Column(
@@ -349,19 +359,19 @@ class _SearchScreenState extends State<SearchScreen>
                   Text(
                     'Filters',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Category filter
                   _buildCategoryFilter(),
                   const SizedBox(height: 16),
-                  
+
                   // Price filter
                   _buildPriceFilter(),
                   const SizedBox(height: 16),
-                  
+
                   // Date filter
                   _buildDateFilter(),
                 ],
@@ -379,9 +389,9 @@ class _SearchScreenState extends State<SearchScreen>
       children: [
         Text(
           'Category',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         Wrap(
@@ -410,9 +420,9 @@ class _SearchScreenState extends State<SearchScreen>
       children: [
         Text(
           'Price',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         Row(
@@ -448,9 +458,9 @@ class _SearchScreenState extends State<SearchScreen>
       children: [
         Text(
           'Date Range',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         Row(
@@ -469,9 +479,11 @@ class _SearchScreenState extends State<SearchScreen>
                   }
                 },
                 icon: const Icon(Icons.calendar_today, size: 16),
-                label: Text(_startDate != null 
-                    ? '${_startDate!.day}/${_startDate!.month}'
-                    : 'Start Date'),
+                label: Text(
+                  _startDate != null
+                      ? '${_startDate!.day}/${_startDate!.month}'
+                      : 'Start Date',
+                ),
               ),
             ),
             const SizedBox(width: 8),
@@ -480,7 +492,8 @@ class _SearchScreenState extends State<SearchScreen>
                 onPressed: () async {
                   final date = await showDatePicker(
                     context: context,
-                    initialDate: _endDate ?? DateTime.now().add(const Duration(days: 7)),
+                    initialDate:
+                        _endDate ?? DateTime.now().add(const Duration(days: 7)),
                     firstDate: _startDate ?? DateTime.now(),
                     lastDate: DateTime.now().add(const Duration(days: 365)),
                   );
@@ -489,9 +502,11 @@ class _SearchScreenState extends State<SearchScreen>
                   }
                 },
                 icon: const Icon(Icons.calendar_today, size: 16),
-                label: Text(_endDate != null 
-                    ? '${_endDate!.day}/${_endDate!.month}'
-                    : 'End Date'),
+                label: Text(
+                  _endDate != null
+                      ? '${_endDate!.day}/${_endDate!.month}'
+                      : 'End Date',
+                ),
               ),
             ),
           ],
@@ -506,15 +521,15 @@ class _SearchScreenState extends State<SearchScreen>
         if (_isSearching) {
           return _buildLoadingState();
         }
-        
+
         if (_searchController.text.isEmpty) {
           return _buildSearchSuggestions();
         }
-        
+
         if (eventsProvider.searchResults.isEmpty && !_isSearching) {
           return _buildNoResults();
         }
-        
+
         return _buildSearchResults(eventsProvider.searchResults);
       },
     );
@@ -529,9 +544,9 @@ class _SearchScreenState extends State<SearchScreen>
             children: [
               Text(
                 'Recent Searches',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               const Spacer(),
               TextButton(
@@ -541,8 +556,8 @@ class _SearchScreenState extends State<SearchScreen>
             ],
           ),
           const SizedBox(height: 8),
-          ..._recentSearches.map((search) => 
-            ListTile(
+          ..._recentSearches.map(
+            (search) => ListTile(
               leading: const Icon(Icons.history),
               title: Text(search),
               onTap: () {
@@ -561,17 +576,20 @@ class _SearchScreenState extends State<SearchScreen>
           ),
           const SizedBox(height: 24),
         ],
-        
+
         Text(
           'Trending Searches',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        ..._trendingSearches.map((search) => 
-          ListTile(
-            leading: const Icon(Icons.trending_up, color: ModernTheme.primaryColor),
+        ..._trendingSearches.map(
+          (search) => ListTile(
+            leading: const Icon(
+              Icons.trending_up,
+              color: ModernTheme.primaryColor,
+            ),
             title: Text(search),
             onTap: () {
               _searchController.text = search;
@@ -579,35 +597,38 @@ class _SearchScreenState extends State<SearchScreen>
             },
           ),
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         Text(
           'Quick Searches',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: [
-            'Today',
-            'This weekend',
-            'Free events',
-            'Near me',
-            'Music',
-            'Food',
-          ].map((query) => 
-            ActionChip(
-              label: Text(query),
-              onPressed: () {
-                _searchController.text = query;
-                _performSearch(query);
-              },
-            ),
-          ).toList(),
+          children:
+              [
+                    'Today',
+                    'This weekend',
+                    'Free events',
+                    'Near me',
+                    'Music',
+                    'Food',
+                  ]
+                  .map(
+                    (query) => ActionChip(
+                      label: Text(query),
+                      onPressed: () {
+                        _searchController.text = query;
+                        _performSearch(query);
+                      },
+                    ),
+                  )
+                  .toList(),
         ),
       ],
     ).animate().fadeIn(duration: 400.ms);
@@ -631,25 +652,21 @@ class _SearchScreenState extends State<SearchScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.search_off, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'No events found',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[700],
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               'Try adjusting your search terms or filters to find more events.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -683,12 +700,12 @@ class _SearchScreenState extends State<SearchScreen>
           child: Text(
             '${events.length} events found',
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: ModernTheme.primaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: ModernTheme.primaryColor,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-        
+
         Expanded(
           child: AnimatedBuilder(
             animation: _resultsAnimationController,
@@ -702,7 +719,10 @@ class _SearchScreenState extends State<SearchScreen>
                   itemBuilder: (context, index) {
                     final event = events[index];
                     return Transform.translate(
-                      offset: Offset(0, 50 * (1 - _resultsAnimationController.value)),
+                      offset: Offset(
+                        0,
+                        50 * (1 - _resultsAnimationController.value),
+                      ),
                       child: Opacity(
                         opacity: _resultsAnimationController.value,
                         child: Padding(
@@ -712,7 +732,8 @@ class _SearchScreenState extends State<SearchScreen>
                             onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => EventDetailsScreen(event: event),
+                                builder: (context) =>
+                                    EventDetailsScreen(event: event),
                               ),
                             ),
                           ),
@@ -754,10 +775,7 @@ class _SearchScreenState extends State<SearchScreen>
             ),
           ),
           if (onRetry != null)
-            TextButton(
-              onPressed: onRetry,
-              child: const Text('Retry'),
-            ),
+            TextButton(onPressed: onRetry, child: const Text('Retry')),
         ],
       ),
     );
@@ -765,8 +783,8 @@ class _SearchScreenState extends State<SearchScreen>
 
   bool _hasActiveFilters() {
     return _selectedCategory != null ||
-           _isFreeFilter != null ||
-           _startDate != null ||
-           _endDate != null;
+        _isFreeFilter != null ||
+        _startDate != null ||
+        _endDate != null;
   }
 }

@@ -8,18 +8,16 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'firebase_options.dart';
-import 'config/theme.dart';
-import 'config/modern_theme.dart';
 import 'config/app_config.dart';
 import 'providers/auth_provider.dart';
 import 'providers/events_provider.dart';
 import 'providers/chat_provider.dart';
+import 'providers/theme_provider.dart';
 import 'services/performance_service.dart';
 import 'services/cache_service.dart';
-import 'screens/splash_screen.dart';
+import 'screens/splash/animated_splash_screen.dart';
 import 'screens/onboarding/glass_onboarding_screen.dart';
 import 'screens/auth/glass_auth_screen.dart';
-import 'screens/home/main_navigation_screen.dart';
 import 'screens/home/modern_main_navigation_screen.dart';
 import 'screens/events/event_details_screen.dart';
 import 'screens/events/event_list_screen.dart';
@@ -32,15 +30,15 @@ import 'screens/favorites/favorites_screen.dart';
 import 'screens/search/search_screen.dart';
 import 'screens/notifications/notifications_screen.dart';
 import 'screens/feed/vertical_feed_screen.dart';
+import 'screens/settings/theme_settings_screen.dart';
+import 'screens/search/enhanced_search_screen.dart';
 import 'services/navigation_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Firebase with options
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize Crashlytics (only on mobile platforms)
   if (AppConfig.crashReportingEnabled && !kIsWeb) {
@@ -49,10 +47,10 @@ void main() async {
 
   // Initialize Hive for local storage
   await Hive.initFlutter();
-  
+
   // Initialize cache service
   await CacheService.instance.initialize();
-  
+
   // Initialize performance service
   PerformanceService.instance.initialize();
 
@@ -61,7 +59,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  
+
   // Optimize system UI for immersive experience
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -71,11 +69,9 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
-  
+
   // Enable edge-to-edge on Android
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.edgeToEdge,
-  );
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   runApp(const SomethingToDoApp());
 }
@@ -84,30 +80,35 @@ class SomethingToDoApp extends StatelessWidget {
   const SomethingToDoApp({super.key});
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(
+    analytics: analytics,
+  );
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(
-          create: (_) => EventsProvider()..initialize(),
-        ),
+        ChangeNotifierProvider(create: (_) => EventsProvider()..initialize()),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()..initialize()),
       ],
-      child: Consumer<AuthProvider>(
-        builder: (context, authProvider, child) {
+      child: Consumer2<AuthProvider, ThemeProvider>(
+        builder: (context, authProvider, themeProvider, child) {
+          // Update theme based on system brightness if following system theme
+          final brightness = MediaQuery.platformBrightnessOf(context);
+          themeProvider.updateSystemTheme(brightness);
+
           return MaterialApp(
             title: AppConfig.appName,
             debugShowCheckedModeBanner: false,
-            theme: ModernTheme.lightTheme,
-            darkTheme: ModernTheme.darkTheme,
-            themeMode: ThemeMode.dark, // Gen Z loves dark mode by default
+            theme: themeProvider.currentTheme,
+            themeMode: themeProvider.useSystemTheme
+                ? ThemeMode.system
+                : (themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light),
             navigatorKey: NavigationService.navigatorKey,
             navigatorObservers: [observer],
-            home: const SplashScreen(),
+            home: const AnimatedSplashScreen(),
             routes: _buildRoutes(),
             onGenerateRoute: _generateRoute,
           );
@@ -116,32 +117,21 @@ class SomethingToDoApp extends StatelessWidget {
     );
   }
 
-  ThemeMode _getThemeMode(AuthProvider authProvider) {
-    final themePreference = authProvider.preferences.theme;
-    switch (themePreference) {
-      case 'light':
-        return ThemeMode.light;
-      case 'dark':
-        return ThemeMode.dark;
-      case 'system':
-      default:
-        return ThemeMode.system;
-    }
-  }
-
   Map<String, WidgetBuilder> _buildRoutes() {
     return {
-      '/splash': (context) => const SplashScreen(),
+      '/splash': (context) => const AnimatedSplashScreen(),
       '/onboarding': (context) => const GlassOnboardingScreen(),
       '/auth': (context) => const GlassAuthScreen(),
       '/home': (context) => const ModernMainNavigationScreen(),
       '/profile': (context) => const GlassProfileScreen(),
       '/settings': (context) => const GlassSettingsScreen(),
+      '/theme-settings': (context) => const ThemeSettingsScreen(),
       '/premium': (context) => const PremiumScreen(),
       '/events': (context) => const EventListScreen(),
       '/map': (context) => const MapScreen(),
       '/favorites': (context) => const FavoritesScreen(),
       '/search': (context) => const SearchScreen(),
+      '/enhanced-search': (context) => const EnhancedSearchScreen(),
       '/notifications': (context) => const NotificationsScreen(),
       '/feed': (context) => const VerticalFeedScreen(),
     };
@@ -150,9 +140,9 @@ class SomethingToDoApp extends StatelessWidget {
   Route<dynamic>? _generateRoute(RouteSettings settings) {
     // Handle dynamic routes with parameters
     final uri = Uri.parse(settings.name ?? '');
-    
+
     if (uri.pathSegments.isEmpty) return null;
-    
+
     switch (uri.pathSegments.first) {
       case 'event':
         if (uri.pathSegments.length > 1) {
@@ -173,7 +163,7 @@ class SomethingToDoApp extends StatelessWidget {
         }
         break;
     }
-    
+
     return null;
   }
 }

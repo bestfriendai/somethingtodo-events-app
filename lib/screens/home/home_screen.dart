@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../providers/events_provider.dart';
 import '../../providers/auth_provider.dart';
@@ -25,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
   final PageController _featuredPageController = PageController();
   final ScrollController _scrollController = ScrollController();
-  
+
   int _currentFeaturedIndex = 0;
   EventCategory? _selectedCategory;
 
@@ -58,14 +57,30 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _refreshData() async {
     final eventsProvider = context.read<EventsProvider>();
-    await eventsProvider.loadEvents(refresh: true);
+
+    // Prioritize location-based events if user location is available
+    if (eventsProvider.nearbyEvents.isNotEmpty) {
+      // If we already have nearby events, refresh them
+      await eventsProvider.loadNearbyEvents();
+    } else {
+      // Otherwise load general events and try to get location-based ones
+      await eventsProvider.loadEvents(refresh: true);
+
+      // Try to load nearby events after a short delay to allow location to be obtained
+      Future.delayed(const Duration(seconds: 1), () {
+        if (mounted) {
+          eventsProvider.loadNearbyEvents();
+        }
+      });
+    }
+
     await eventsProvider.loadFeaturedEvents();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _refreshData,
@@ -96,16 +111,16 @@ class _HomeScreenState extends State<HomeScreen>
             children: [
               Text(
                 'Good ${_getTimeOfDay()},',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               ),
               Text(
-                authProvider.currentUser?.displayName?.split(' ').first ?? 
-                'Explorer',
+                authProvider.currentUser?.displayName?.split(' ').first ??
+                    'Explorer',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -160,24 +175,17 @@ class _HomeScreenState extends State<HomeScreen>
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Colors.grey.withOpacity(0.3),
-                width: 1,
-              ),
+              border: Border.all(color: Colors.grey.withOpacity(0.3), width: 1),
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.search,
-                  color: Colors.grey[600],
-                  size: 20,
-                ),
+                Icon(Icons.search, color: Colors.grey[600], size: 20),
                 const SizedBox(width: 12),
                 Text(
                   'Search events, locations...',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -191,7 +199,8 @@ class _HomeScreenState extends State<HomeScreen>
     return SliverToBoxAdapter(
       child: Consumer<EventsProvider>(
         builder: (context, eventsProvider, child) {
-          if (eventsProvider.isLoading && eventsProvider.featuredEvents.isEmpty) {
+          if (eventsProvider.isLoading &&
+              eventsProvider.featuredEvents.isEmpty) {
             return const LoadingShimmer(height: 200);
           }
 
@@ -207,8 +216,8 @@ class _HomeScreenState extends State<HomeScreen>
                 child: Text(
                   'Featured Events',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               SizedBox(
@@ -264,13 +273,14 @@ class _HomeScreenState extends State<HomeScreen>
               children: [
                 // Background Image
                 CachedNetworkImage(
-                  imageUrl: event.imageUrls.isNotEmpty 
-                      ? event.imageUrls.first 
+                  imageUrl: event.imageUrls.isNotEmpty
+                      ? event.imageUrls.first
                       : 'https://via.placeholder.com/400x200',
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => const LoadingShimmer(height: 200),
+                  placeholder: (context, url) =>
+                      const LoadingShimmer(height: 200),
                   errorWidget: (context, url, error) => Container(
                     height: 200,
                     color: Colors.grey[300],
@@ -348,7 +358,9 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                           ),
                           Text(
-                            event.pricing.isFree ? 'Free' : '\$${event.pricing.price.toStringAsFixed(0)}',
+                            event.pricing.isFree
+                                ? 'Free'
+                                : '\$${event.pricing.price.toStringAsFixed(0)}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -397,9 +409,9 @@ class _HomeScreenState extends State<HomeScreen>
             padding: const EdgeInsets.all(16),
             child: Text(
               'Categories',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           SizedBox(
@@ -412,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen>
                 if (index == 0) {
                   return _buildCategoryChip('All', null);
                 }
-                
+
                 final category = EventCategory.values[index - 1];
                 return _buildCategoryChip(category.displayName, category);
               },
@@ -426,7 +438,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildCategoryChip(String label, EventCategory? category) {
     final isSelected = _selectedCategory == category;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -466,9 +478,9 @@ class _HomeScreenState extends State<HomeScreen>
           children: [
             Text(
               'Events Near You',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Consumer<EventsProvider>(
@@ -494,15 +506,16 @@ class _HomeScreenState extends State<HomeScreen>
 
                 return Column(
                   children: [
-                    ...eventsProvider.events.map((event) => 
-                      Padding(
+                    ...eventsProvider.events.map(
+                      (event) => Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: EventCard(
                           event: event,
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => EventDetailsScreen(event: event),
+                              builder: (context) =>
+                                  EventDetailsScreen(event: event),
                             ),
                           ),
                         ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.2),
@@ -513,14 +526,14 @@ class _HomeScreenState extends State<HomeScreen>
                         padding: EdgeInsets.all(16),
                         child: CircularProgressIndicator(),
                       ),
-                    if (!eventsProvider.hasMoreEvents && eventsProvider.events.isNotEmpty)
+                    if (!eventsProvider.hasMoreEvents &&
+                        eventsProvider.events.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.all(16),
                         child: Text(
                           'No more events to load',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: Colors.grey[600]),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -539,25 +552,21 @@ class _HomeScreenState extends State<HomeScreen>
     return Column(
       children: [
         const SizedBox(height: 40),
-        Icon(
-          Icons.event_outlined,
-          size: 64,
-          color: Colors.grey[400],
-        ),
+        Icon(Icons.event_outlined, size: 64, color: Colors.grey[400]),
         const SizedBox(height: 16),
         Text(
           'No events found',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w600,
-              ),
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 8),
         Text(
           'Try adjusting your filters or check back later',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),

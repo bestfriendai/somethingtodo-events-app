@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -21,12 +22,11 @@ class EventDetailsScreen extends StatefulWidget {
   final Event? event;
   final String? eventId;
 
-  const EventDetailsScreen({
-    super.key,
-    this.event,
-    this.eventId,
-  }) : assert(event != null || eventId != null, 
-         'Either event or eventId must be provided');
+  const EventDetailsScreen({super.key, this.event, this.eventId})
+    : assert(
+        event != null || eventId != null,
+        'Either event or eventId must be provided',
+      );
 
   @override
   State<EventDetailsScreen> createState() => _EventDetailsScreenState();
@@ -37,10 +37,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
   final FirestoreService _firestoreService = FirestoreService();
   final PageController _imagePageController = PageController();
   final ScrollController _scrollController = ScrollController();
-  
+
   late AnimationController _fabAnimationController;
   late AnimationController _heartAnimationController;
-  
+
   Event? _event;
   bool _isLoading = false;
   bool _isFavorited = false;
@@ -52,19 +52,19 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _fabAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _heartAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _scrollController.addListener(_onScroll);
-    
+
     _event = widget.event;
     if (_event == null && widget.eventId != null) {
       _loadEvent();
@@ -131,8 +131,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
   void _checkIfFavorited() {
     final authProvider = context.read<AuthProvider>();
     if (authProvider.currentUser != null && _event != null) {
-      _isFavorited = authProvider.currentUser!.favoriteEventIds
-          .contains(_event!.id);
+      _isFavorited = authProvider.currentUser!.favoriteEventIds.contains(
+        _event!.id,
+      );
     }
   }
 
@@ -145,7 +146,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
         limit: 5,
       );
       setState(() {
-        _similarEvents = events.where((e) => e.id != _event!.id).take(4).toList();
+        _similarEvents = events
+            .where((e) => e.id != _event!.id)
+            .take(4)
+            .toList();
       });
     } catch (e) {
       // Silently handle error
@@ -164,7 +168,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
 
   Future<void> _toggleFavorite() async {
     if (_isToggling || _event == null) return;
-    
+
     final authProvider = context.read<AuthProvider>();
     if (authProvider.currentUser == null) {
       _showAuthRequiredSnackBar();
@@ -241,7 +245,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
 
   Future<void> _openMap() async {
     if (_event == null) return;
-    
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -257,9 +261,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_event == null) {
@@ -310,10 +312,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
       backgroundColor: Colors.black,
       foregroundColor: Colors.white,
       actions: [
-        IconButton(
-          onPressed: _shareEvent,
-          icon: const Icon(Icons.share),
-        ),
+        IconButton(onPressed: _shareEvent, icon: const Icon(Icons.share)),
         IconButton(
           onPressed: _toggleFavorite,
           icon: _isToggling
@@ -383,10 +382,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                Colors.black.withOpacity(0.3),
-              ],
+              colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
             ),
           ),
         ),
@@ -445,17 +441,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
             // Title
             Text(
               _event!.title,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
             ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.3),
             const SizedBox(height: 8),
             // Organizer
             Text(
               'by ${_event!.organizerName}',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 16),
             // Date and time
@@ -463,8 +459,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
               Icons.calendar_today,
               'Date & Time',
               '${DateFormat('EEEE, MMMM d, yyyy').format(_event!.startDateTime)}\n'
-              '${DateFormat('h:mm a').format(_event!.startDateTime)} - '
-              '${DateFormat('h:mm a').format(_event!.endDateTime)}',
+                  '${DateFormat('h:mm a').format(_event!.startDateTime)} - '
+                  '${DateFormat('h:mm a').format(_event!.endDateTime)}',
             ),
             const Divider(height: 32),
             // Location
@@ -479,20 +475,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
             _buildInfoRow(
               Icons.confirmation_number,
               'Price',
-              _event!.pricing.isFree 
+              _event!.pricing.isFree
                   ? 'Free Event'
                   : '\$${_event!.pricing.price.toStringAsFixed(2)}',
             ),
             if (!_event!.pricing.isFree && _event!.pricing.tiers.isNotEmpty)
-              ..._event!.pricing.tiers.map((tier) => Padding(
-                    padding: const EdgeInsets.only(left: 40, top: 4),
-                    child: Text(
-                      '${tier.name}: \$${tier.price.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                    ),
-                  )),
+              ..._event!.pricing.tiers.map(
+                (tier) => Padding(
+                  padding: const EdgeInsets.only(left: 40, top: 4),
+                  child: Text(
+                    '${tier.name}: \$${tier.price.toStringAsFixed(2)}',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                  ),
+                ),
+              ),
             if (_event!.attendeeCount > 0) ...[
               const Divider(height: 32),
               _buildInfoRow(
@@ -527,11 +525,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                 color: AppTheme.primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                icon,
-                color: AppTheme.primaryColor,
-                size: 20,
-              ),
+              child: Icon(icon, color: AppTheme.primaryColor, size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -541,25 +535,21 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                   Text(
                     title,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     content,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[700],
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
                   ),
                 ],
               ),
             ),
             if (onTap != null)
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.grey[400],
-              ),
+              Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
           ],
         ),
       ),
@@ -577,16 +567,16 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
           children: [
             Text(
               'About This Event',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Text(
               _event!.description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.5,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(height: 1.5),
             ),
           ],
         ),
@@ -603,9 +593,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
           children: [
             Text(
               'Venue',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Card(
@@ -622,9 +612,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                           Expanded(
                             child: Text(
                               _event!.venue.name,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ),
                           const Icon(
@@ -638,16 +627,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                       Text(
                         _event!.venue.address,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                          color: Colors.grey[600],
+                        ),
                       ),
                       if (_event!.venue.description?.isNotEmpty ?? false) ...[
                         const SizedBox(height: 8),
                         Text(
                           _event!.venue.description!,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ],
@@ -670,9 +658,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
           children: [
             Text(
               'Organizer',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Card(
@@ -683,10 +671,16 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                     CircleAvatar(
                       radius: 25,
                       backgroundImage: _event!.organizerImageUrl != null
-                          ? CachedNetworkImageProvider(_event!.organizerImageUrl!)
+                          ? CachedNetworkImageProvider(
+                              _event!.organizerImageUrl!,
+                            )
                           : null,
                       child: _event!.organizerImageUrl == null
-                          ? Text(_event!.organizerName.substring(0, 1).toUpperCase())
+                          ? Text(
+                              _event!.organizerName
+                                  .substring(0, 1)
+                                  .toUpperCase(),
+                            )
                           : null,
                     ),
                     const SizedBox(width: 16),
@@ -696,16 +690,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                         children: [
                           Text(
                             _event!.organizerName,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'Event Organizer',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -731,24 +723,26 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
           children: [
             Text(
               'Similar Events',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            ..._similarEvents.map((event) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: EventCard(
-                    event: event,
-                    compact: true,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EventDetailsScreen(event: event),
-                      ),
+            ..._similarEvents.map(
+              (event) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: EventCard(
+                  event: event,
+                  compact: true,
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventDetailsScreen(event: event),
                     ),
                   ),
-                )),
+                ),
+              ),
+            ),
           ],
         ),
       ).animate().fadeIn(duration: 900.ms).slideY(begin: 0.2),
@@ -782,10 +776,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppTheme.errorColor,
-      ),
+      SnackBar(content: Text(message), backgroundColor: AppTheme.errorColor),
     );
   }
 
