@@ -72,8 +72,8 @@ class _ModernSkeletonState extends State<ModernSkeleton>
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      width: widget.width ?? double.infinity,
-      height: widget.height ?? 16.0, // Provide default height
+      width: widget.width ?? 200.0, // Fixed width instead of infinity
+      height: widget.height ?? 16.0,
       margin: widget.margin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -92,7 +92,7 @@ class _ModernSkeletonState extends State<ModernSkeleton>
                   left: _animation.value * (widget.width ?? 200),
                   child: Container(
                     width: (widget.width ?? 200) * 0.5,
-                    height: widget.height ?? 16.0, // Provide default height
+                    height: widget.height ?? 16.0,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.centerLeft,

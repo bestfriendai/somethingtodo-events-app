@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/modern/modern_bottom_nav.dart';
 import '../../widgets/modern/modern_fab.dart';
@@ -22,7 +22,8 @@ class ModernMainNavigationScreen extends StatefulWidget {
   const ModernMainNavigationScreen({super.key});
 
   @override
-  State<ModernMainNavigationScreen> createState() => _ModernMainNavigationScreenState();
+  State<ModernMainNavigationScreen> createState() =>
+      _ModernMainNavigationScreenState();
 }
 
 class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
@@ -30,16 +31,16 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
   int _currentIndex = 0;
   late final List<Widget> _screens;
   late AnimationController _fabAnimationController;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _fabAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _screens = [
       const ModernHomeScreen(),
       const MapScreen(),
@@ -47,12 +48,12 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
       const FavoritesScreen(),
       const GlassProfileScreen(),
     ];
-    
+
     // Initialize providers
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeProviders();
       _fabAnimationController.forward();
-      
+
       // Initialize delight services
       DelightService.instance.initialize();
       ShakeDetector.instance.startListening(context);
@@ -71,7 +72,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
       print('Initializing providers...');
       // Initialize cache service first
       await CacheService.instance.initialize();
-      
+
       final authProvider = context.read<AuthProvider>();
       final eventsProvider = context.read<EventsProvider>();
       final chatProvider = context.read<ChatProvider>();
@@ -80,16 +81,16 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
       if (authProvider.isAuthenticated) {
         final isDemoMode = authProvider.isDemoMode;
         print('Demo mode: $isDemoMode');
-        
+
         // Initialize events provider with demo mode
         await eventsProvider.initialize(demoMode: isDemoMode);
-        
+
         // Initialize chat provider with demo mode
         await chatProvider.initialize(
           authProvider.currentUser!.id,
           demoMode: isDemoMode,
         );
-        
+
         // Set demo mode in Firestore service
         if (isDemoMode) {
           FirestoreService().setDemoMode(true);
@@ -102,36 +103,39 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
 
   void _onNavTap(int index) {
     PlatformInteractions.lightImpact();
-    
+
     // Add delightful tab switching celebration
     if (index != _currentIndex) {
-      DelightService.instance.showMiniCelebration(
-        context, 
-        _getTabEmoji(index),
-      );
-      
+      DelightService.instance.showMiniCelebration(context, _getTabEmoji(index));
+
       // Special celebration for favorites tab
       if (index == 3) {
-        DelightService.instance.showHeartExplosion(context, const Offset(200, 300));
+        DelightService.instance.showHeartExplosion(
+          context,
+          const Offset(200, 300),
+        );
       }
-      
+
       // Chat tab gets a sparkle effect
       if (index == 2) {
         final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
         if (renderBox != null) {
           final position = renderBox.localToGlobal(Offset.zero);
           DelightService.instance.showSparkleEffect(
-            context, 
-            Offset(position.dx + renderBox.size.width / 2, position.dy + renderBox.size.height - 100),
+            context,
+            Offset(
+              position.dx + renderBox.size.width / 2,
+              position.dy + renderBox.size.height - 100,
+            ),
           );
         }
       }
     }
-    
+
     setState(() {
       _currentIndex = index;
     });
-    
+
     // Animate FAB based on screen
     if (index == 0) {
       _fabAnimationController.forward();
@@ -142,13 +146,13 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
 
   void _startNewChat() {
     PlatformInteractions.mediumImpact();
-    
+
     // Celebration for starting a new chat
     DelightService.instance.showConfetti(
       context,
       customMessage: 'Ready to chat! Let\'s find you something amazing! 💬✨',
     );
-    
+
     setState(() {
       _currentIndex = 2; // Switch to chat tab
     });
@@ -157,28 +161,37 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
 
   void _showSpeedDial() {
     PlatformInteractions.lightImpact();
-    
+
     // Show sparkle effect when speed dial opens
     final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
     if (renderBox != null) {
       final position = renderBox.localToGlobal(Offset.zero);
       DelightService.instance.showSparkleEffect(
-        context, 
-        Offset(position.dx + renderBox.size.width / 2, position.dy + renderBox.size.height - 120),
+        context,
+        Offset(
+          position.dx + renderBox.size.width / 2,
+          position.dy + renderBox.size.height - 120,
+        ),
       );
     }
-    
+
     // TODO: Implement speed dial actions
   }
-  
+
   String _getTabEmoji(int index) {
     switch (index) {
-      case 0: return '🏠'; // Home
-      case 1: return '🗺️'; // Map
-      case 2: return '💬'; // Chat
-      case 3: return '❤️'; // Favorites
-      case 4: return '👤'; // Profile
-      default: return '✨';
+      case 0:
+        return '🏠'; // Home
+      case 1:
+        return '🗺️'; // Map
+      case 2:
+        return '💬'; // Chat
+      case 3:
+        return '❤️'; // Favorites
+      case 4:
+        return '👤'; // Profile
+      default:
+        return '✨';
     }
   }
 
@@ -187,7 +200,9 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return Scaffold(
-          backgroundColor: const Color(0xFF0A0A0B), // Rich black like Arc Browser
+          backgroundColor: const Color(
+            0xFF0A0A0B,
+          ), // Rich black like Arc Browser
           extendBody: true,
           body: Stack(
             children: [
@@ -205,23 +220,21 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
                   ),
                 ),
               ),
-              
+
               // Demo mode banner
               if (authProvider.isDemoMode) _buildDemoModeBanner(),
-              
+
               // Main content with proper padding for banner
               Positioned.fill(
                 top: authProvider.isDemoMode ? 50 : 0,
-                child: IndexedStack(
-                  index: _currentIndex,
-                  children: _screens,
-                ),
+                child: IndexedStack(index: _currentIndex, children: _screens),
               ),
             ],
           ),
           bottomNavigationBar: _buildBottomNavigationBar(),
           floatingActionButton: _buildFloatingActionButton(),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
         );
       },
     );
@@ -235,9 +248,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: ModernTheme.warningGradient,
-          ),
+          gradient: const LinearGradient(colors: ModernTheme.warningGradient),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
@@ -278,7 +289,10 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -304,9 +318,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
   Widget _buildDemoInfoDialog() {
     return AlertDialog(
       backgroundColor: ModernTheme.darkCardSurface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       title: Row(
         children: [
           Container(
@@ -326,10 +338,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
           const SizedBox(width: 12),
           const Text(
             'Demo Mode',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
           ),
         ],
       ),
@@ -352,16 +361,15 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             'Got it',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-            ),
+            style: TextStyle(color: Colors.white.withOpacity(0.7)),
           ),
         ),
         ElevatedButton(
           onPressed: () {
             DelightService.instance.showConfetti(
               context,
-              customMessage: 'Welcome to the journey! Let\'s get you set up! 🚀',
+              customMessage:
+                  'Welcome to the journey! Let\'s get you set up! 🚀',
             );
             Navigator.of(context).pop();
             context.read<AuthProvider>().signOut();
@@ -383,7 +391,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
     return Consumer<ChatProvider>(
       builder: (context, chatProvider, child) {
         final unreadCount = chatProvider.getUnreadRecommendationCount();
-        
+
         return ModernBottomNavigation(
           currentIndex: _currentIndex,
           unreadCount: unreadCount,
@@ -399,7 +407,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
       animation: _fabAnimationController,
       builder: (context, child) {
         if (_currentIndex != 0) return const SizedBox.shrink();
-        
+
         return Transform.scale(
           scale: _fabAnimationController.value,
           child: Consumer<AuthProvider>(
@@ -410,7 +418,8 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
                     PlatformInteractions.mediumImpact();
                     DelightService.instance.showConfetti(
                       context,
-                      customMessage: 'Ready for premium features? Let\'s unlock the magic! ✨🎆',
+                      customMessage:
+                          'Ready for premium features? Let\'s unlock the magic! ✨🎆',
                     );
                     Navigator.pushNamed(context, '/premium');
                   },
@@ -420,7 +429,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
                   tooltip: 'Upgrade to Premium',
                 );
               }
-              
+
               // Premium users get speed dial
               return ModernSpeedDial(
                 gradient: ModernTheme.purpleGradient,
@@ -452,7 +461,10 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
                     gradient: ModernTheme.pinkGradient,
                     onPressed: () {
                       PlatformInteractions.lightImpact();
-                      DelightService.instance.showMiniCelebration(context, '🔍');
+                      DelightService.instance.showMiniCelebration(
+                        context,
+                        '🔍',
+                      );
                       Navigator.pushNamed(context, '/search');
                     },
                   ),

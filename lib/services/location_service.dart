@@ -3,18 +3,19 @@ import 'package:geocoding/geocoding.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:html' as html;
+import 'dart:async';
 import '../models/user.dart';
 import '../models/analytics.dart';
 import '../config/app_config.dart';
 
-enum LocationServiceStatus {
-  disabled,
-  enabled,
-}
+enum LocationServiceStatus { disabled, enabled }
 
 // Extension to convert from Geolocator's ServiceStatus
 extension LocationServiceStatusExtension on LocationServiceStatus {
-  static LocationServiceStatus fromGeolocatorStatus(geolocator.ServiceStatus status) {
+  static LocationServiceStatus fromGeolocatorStatus(
+    geolocator.ServiceStatus status,
+  ) {
     switch (status) {
       case geolocator.ServiceStatus.enabled:
         return LocationServiceStatus.enabled;
@@ -42,8 +43,20 @@ class LocationService {
   // Check and request location permissions
   Future<bool> requestLocationPermission() async {
     try {
-      geolocator.LocationPermission permission = await geolocator.Geolocator.checkPermission();
-      
+      // On web, try to request permission using the browser's geolocation API
+      if (kIsWeb) {
+        try {
+          // Check if geolocation is available
+          return true; // Assume geolocation is available on web
+        } catch (e) {
+          print('Web geolocation not available: $e');
+        }
+        return false;
+      }
+
+      geolocator.LocationPermission permission =
+          await geolocator.Geolocator.checkPermission();
+
       if (permission == geolocator.LocationPermission.denied) {
         permission = await geolocator.Geolocator.requestPermission();
       }
@@ -54,8 +67,9 @@ class LocationService {
         return false;
       }
 
-      final isGranted = permission == geolocator.LocationPermission.whileInUse || 
-                       permission == geolocator.LocationPermission.always;
+      final isGranted =
+          permission == geolocator.LocationPermission.whileInUse ||
+          permission == geolocator.LocationPermission.always;
 
       // Log permission status
       await _analytics.logEvent(
@@ -63,12 +77,19 @@ class LocationService {
         parameters: {
           'granted': isGranted,
           'permission_level': permission.name,
+          'platform': kIsWeb ? 'web' : 'mobile',
         },
       );
 
       return isGranted;
     } catch (e) {
-      throw Exception('Failed to request location permission: $e');
+      print('Permission request error: $e');
+      // On web, if permission request fails, still try to get location
+      // as the browser might still allow it
+      if (kIsWeb) {
+        return true; // Allow the attempt
+      }
+      return false;
     }
   }
 
@@ -86,17 +107,18 @@ class LocationService {
   // Get current position
   Future<geolocator.Position?> getCurrentPosition() async {
     try {
-      // On web, skip location services check and permission request
-      if (!kIsWeb) {
-        // Check if location services are enabled
-        if (!await isLocationServiceEnabled()) {
-          throw Exception('Location services are disabled. Please enable them in your device settings.');
-        }
+      // Check permissions for both web and mobile
+      if (!await requestLocationPermission()) {
+        throw Exception(
+          'Location permission not granted. Please grant location permission in your browser/app settings.',
+        );
+      }
 
-        // Check permissions
-        if (!await requestLocationPermission()) {
-          throw Exception('Location permission not granted. Please grant location permission in your app settings.');
-        }
+      // Check if location services are enabled (skip on web)
+      if (!kIsWeb && !await isLocationServiceEnabled()) {
+        throw Exception(
+          'Location services are disabled. Please enable them in your device settings.',
+        );
       }
 
       // Get position with better error handling
@@ -110,7 +132,9 @@ class LocationService {
       // Get address information
       if (_currentPosition != null) {
         _currentLocation = await _getLocationFromPosition(_currentPosition!);
-        print('Location obtained: ${_currentPosition!.latitude}, ${_currentPosition!.longitude}');
+        print(
+          'Location obtained: ${_currentPosition!.latitude}, ${_currentPosition!.longitude}',
+        );
       }
 
       return _currentPosition;
@@ -143,7 +167,7 @@ class LocationService {
           _currentPosition!.timestamp.millisecondsSinceEpoch,
         ),
       );
-      
+
       if (age < const Duration(minutes: 5)) {
         return _currentPosition;
       }
@@ -187,15 +211,16 @@ class LocationService {
     );
 
     // Listen to service status changes
-    geolocator.Geolocator.getServiceStatusStream().listen(
-      (geolocator.ServiceStatus status) {
-        final locationStatus = LocationServiceStatusExtension.fromGeolocatorStatus(status);
-        onServiceStatusChanged?.call(locationStatus);
-        if (locationStatus == LocationServiceStatus.disabled) {
-          _isListening = false;
-        }
-      },
-    );
+    geolocator.Geolocator.getServiceStatusStream().listen((
+      geolocator.ServiceStatus status,
+    ) {
+      final locationStatus =
+          LocationServiceStatusExtension.fromGeolocatorStatus(status);
+      onServiceStatusChanged?.call(locationStatus);
+      if (locationStatus == LocationServiceStatus.disabled) {
+        _isListening = false;
+      }
+    });
   }
 
   // Stop listening to position changes
@@ -212,11 +237,12 @@ class LocationService {
     required double endLongitude,
   }) {
     return geolocator.Geolocator.distanceBetween(
-      startLatitude,
-      startLongitude,
-      endLatitude,
-      endLongitude,
-    ) / 1000; // Convert to kilometers
+          startLatitude,
+          startLongitude,
+          endLatitude,
+          endLongitude,
+        ) /
+        1000; // Convert to kilometers
   }
 
   // Calculate bearing between two points
@@ -252,7 +278,7 @@ class LocationService {
         speed: 0,
         speedAccuracy: 0,
       );
-      
+
       return await _getLocationFromPosition(position);
     } catch (e) {
       throw Exception('Failed to get location from coordinates: $e');
@@ -292,7 +318,7 @@ class LocationService {
       endLatitude: centerLatitude,
       endLongitude: centerLongitude,
     );
-    
+
     return distance <= radiusKm;
   }
 
@@ -327,10 +353,10 @@ class LocationService {
 
   // Check if location is valid
   bool isValidLocation(double latitude, double longitude) {
-    return latitude >= -90 && 
-           latitude <= 90 && 
-           longitude >= -180 && 
-           longitude <= 180;
+    return latitude >= -90 &&
+        latitude <= 90 &&
+        longitude >= -180 &&
+        longitude <= 180;
   }
 
   // Get location mock for testing
@@ -347,7 +373,9 @@ class LocationService {
   }
 
   // Private helper method to get location details from position
-  Future<UserLocation> _getLocationFromPosition(geolocator.Position position) async {
+  Future<UserLocation> _getLocationFromPosition(
+    geolocator.Position position,
+  ) async {
     try {
       final placemarks = await placemarkFromCoordinates(
         position.latitude,
@@ -356,7 +384,7 @@ class LocationService {
 
       if (placemarks.isNotEmpty) {
         final placemark = placemarks.first;
-        
+
         return UserLocation(
           latitude: position.latitude,
           longitude: position.longitude,
@@ -388,7 +416,7 @@ class LocationService {
   // Build readable address string from placemark
   String _buildAddressString(Placemark placemark) {
     final components = <String>[];
-    
+
     if (placemark.subThoroughfare != null) {
       components.add(placemark.subThoroughfare!);
     }
@@ -404,7 +432,7 @@ class LocationService {
     if (placemark.postalCode != null) {
       components.add(placemark.postalCode!);
     }
-    
+
     return components.join(', ');
   }
 
@@ -418,9 +446,11 @@ class LocationService {
         position.latitude,
         position.longitude,
       );
-      
-      return placemarks.any((placemark) => 
-        placemark.locality?.toLowerCase() == cityName.toLowerCase());
+
+      return placemarks.any(
+        (placemark) =>
+            placemark.locality?.toLowerCase() == cityName.toLowerCase(),
+      );
     } catch (e) {
       return false;
     }
@@ -432,7 +462,7 @@ class LocationService {
         position.latitude,
         position.longitude,
       );
-      
+
       return placemarks.isNotEmpty ? placemarks.first.locality : null;
     } catch (e) {
       return null;
@@ -445,10 +475,15 @@ class LocationService {
         position.latitude,
         position.longitude,
       );
-      
+
       return placemarks.isNotEmpty ? placemarks.first.country : null;
     } catch (e) {
       return null;
     }
+  }
+
+  /// Dispose resources
+  void dispose() {
+    stopLocationUpdates();
   }
 }

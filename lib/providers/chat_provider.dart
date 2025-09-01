@@ -1,9 +1,159 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/chat.dart';
 import '../services/chat_service.dart';
 import '../data/sample_events.dart';
 import '../data/sample_chat_responses.dart';
 
+// Create a StateNotifier for better state management with Riverpod
+class ChatState {
+  final List<ChatSession> sessions;
+  final ChatSession? currentSession;
+  final List<ChatMessage> messages;
+  final List<ChatRecommendation> recommendations;
+  final bool isLoading;
+  final bool isSendingMessage;
+  final bool isTyping;
+  final String? error;
+  final bool isDemoMode;
+
+  ChatState({
+    this.sessions = const [],
+    this.currentSession,
+    this.messages = const [],
+    this.recommendations = const [],
+    this.isLoading = false,
+    this.isSendingMessage = false,
+    this.isTyping = false,
+    this.error,
+    this.isDemoMode = false,
+  });
+
+  ChatState copyWith({
+    List<ChatSession>? sessions,
+    ChatSession? currentSession,
+    List<ChatMessage>? messages,
+    List<ChatRecommendation>? recommendations,
+    bool? isLoading,
+    bool? isSendingMessage,
+    bool? isTyping,
+    String? error,
+    bool? isDemoMode,
+  }) {
+    return ChatState(
+      sessions: sessions ?? this.sessions,
+      currentSession: currentSession ?? this.currentSession,
+      messages: messages ?? this.messages,
+      recommendations: recommendations ?? this.recommendations,
+      isLoading: isLoading ?? this.isLoading,
+      isSendingMessage: isSendingMessage ?? this.isSendingMessage,
+      isTyping: isTyping ?? this.isTyping,
+      error: error,
+      isDemoMode: isDemoMode ?? this.isDemoMode,
+    );
+  }
+}
+
+class ChatNotifier extends StateNotifier<ChatState> {
+  final ChatService _chatService = ChatService();
+
+  ChatNotifier() : super(ChatState());
+
+  // Expose the same interface methods
+  Future<void> sendMessage({
+    required String sessionId,
+    required String content,
+    Map<String, dynamic>? metadata,
+  }) async {
+    if (state.currentSession == null) {
+      state = state.copyWith(error: 'No active chat session');
+      return;
+    }
+
+    state = state.copyWith(isSendingMessage: true, error: null);
+
+    try {
+      // Add user message to UI immediately for better UX
+      final userMessage = ChatMessage(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        sessionId: state.currentSession!.id,
+        role: MessageRole.user,
+        content: content,
+        metadata: metadata,
+        timestamp: DateTime.now(),
+      );
+      
+      final updatedMessages = [...state.messages, userMessage];
+      state = state.copyWith(messages: updatedMessages);
+
+      if (state.isDemoMode) {
+        // Simulate typing delay
+        state = state.copyWith(isTyping: true);
+        await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
+        state = state.copyWith(isTyping: false);
+        
+        // Generate demo response
+        final demoResponse = SampleChatResponses.getResponse(content);
+        final assistantMessage = ChatMessage(
+          id: '${DateTime.now().millisecondsSinceEpoch + 1}',
+          sessionId: state.currentSession!.id,
+          role: MessageRole.assistant,
+          content: demoResponse,
+          timestamp: DateTime.now(),
+        );
+        
+        final finalMessages = [...state.messages, assistantMessage];
+        state = state.copyWith(messages: finalMessages);
+      } else {
+        // Send message to AI and get response
+        await _chatService.sendMessageToAI(
+          sessionId: state.currentSession!.id,
+          userMessage: content,
+          chatType: state.currentSession!.type,
+          context: metadata,
+        );
+
+        // Reload messages from server
+        final updatedMessages = await _chatService.getSessionMessages(sessionId);
+        state = state.copyWith(messages: updatedMessages);
+      }
+
+      // Update session in list
+      final sessionIndex = state.sessions.indexWhere((s) => s.id == state.currentSession!.id);
+      if (sessionIndex != -1) {
+        final updatedSessions = [...state.sessions];
+        updatedSessions[sessionIndex] = updatedSessions[sessionIndex].copyWith(
+          updatedAt: DateTime.now(),
+        );
+        state = state.copyWith(sessions: updatedSessions);
+      }
+    } catch (e) {
+      state = state.copyWith(error: 'Failed to send message: $e');
+      // Remove the optimistically added message on error
+      if (state.messages.isNotEmpty) {
+        final revertedMessages = state.messages.sublist(0, state.messages.length - 1);
+        state = state.copyWith(messages: revertedMessages);
+      }
+    } finally {
+      state = state.copyWith(isSendingMessage: false);
+    }
+  }
+
+  void setTyping(bool typing) {
+    state = state.copyWith(isTyping: typing);
+  }
+
+  void clearError() {
+    state = state.copyWith(error: null);
+  }
+}
+
+// Riverpod provider
+final chatProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref) {
+  return ChatNotifier();
+});
+
+// Keep the old ChangeNotifier for backward compatibility
 class ChatProvider extends ChangeNotifier {
   final ChatService _chatService = ChatService();
 

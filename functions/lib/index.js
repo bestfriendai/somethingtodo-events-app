@@ -33,15 +33,51 @@ const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const openai_1 = require("openai");
 const axios_1 = __importDefault(require("axios"));
+// Load environment variables from .env file in development
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+// Get configuration from Firebase Functions config in production or .env in development
+const getConfig = () => {
+    var _a, _b;
+    // In production, use Firebase Functions config
+    if (process.env.NODE_ENV === 'production' || process.env.FUNCTIONS_EMULATOR !== 'true') {
+        const config = functions.config();
+        return {
+            OPENAI_API_KEY: ((_a = config.openai) === null || _a === void 0 ? void 0 : _a.api_key) || process.env.OPENAI_API_KEY,
+            RAPIDAPI_KEY: ((_b = config.rapidapi) === null || _b === void 0 ? void 0 : _b.key) || process.env.RAPIDAPI_KEY,
+        };
+    }
+    // In development, use environment variables from .env file
+    return {
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+        RAPIDAPI_KEY: process.env.RAPIDAPI_KEY,
+    };
+};
+// Load configuration
+const config = getConfig();
+// Validate required configuration at startup
+const validateEnvironment = () => {
+    const required = ['OPENAI_API_KEY', 'RAPIDAPI_KEY'];
+    const missing = required.filter(key => !config[key]);
+    if (missing.length > 0) {
+        console.error(`Missing required configuration: ${missing.join(', ')}`);
+        console.error('Please set these in Firebase Functions configuration or .env file for local development');
+        console.error('For production: Run ./set-config.sh to set Firebase Functions configuration');
+        console.error('For development: Create a .env file with the required keys');
+    }
+};
+// Validate on startup
+validateEnvironment();
 // Initialize Firebase Admin
 admin.initializeApp();
 // Initialize Express
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({ origin: true }));
 app.use(express_1.default.json());
-// Initialize OpenAI
+// Initialize OpenAI with secure API key from config
 const openai = new openai_1.OpenAI({
-    apiKey: process.env.OPENAI_API_KEY || 'demo-key',
+    apiKey: config.OPENAI_API_KEY,
 });
 // API Routes
 app.post('/chat', async (req, res) => {
@@ -186,6 +222,14 @@ exports.dailyRecommendations = functions.pubsub
 // Helper Functions
 async function generateAIResponse(message, chatHistory, chatType, context) {
     try {
+        // Check if OpenAI API key is configured
+        if (!config.OPENAI_API_KEY) {
+            console.error('OpenAI API key is not configured');
+            return {
+                content: 'The AI service is currently unavailable. Please try again later.',
+                type: 'text',
+            };
+        }
         const systemPrompt = getSystemPrompt(chatType, context);
         const messages = [
             { role: 'system', content: systemPrompt },
@@ -391,11 +435,14 @@ async function generatePersonalizedRecommendations(userId) {
     // Store recommendations in Firestore
     return [];
 }
-// Secure RapidAPI config
-const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '92bc1b4fc7mshacea9f118bf7a3fp1b5a6cjsnd2287a72fcb9';
+// Secure RapidAPI config from configuration
+const RAPIDAPI_KEY = config.RAPIDAPI_KEY;
 const RAPIDAPI_BASE = 'https://real-time-events-search.p.rapidapi.com';
 const RAPIDAPI_HOST = 'real-time-events-search.p.rapidapi.com';
 function rapidApiHeaders() {
+    if (!RAPIDAPI_KEY) {
+        throw new Error('RapidAPI key is not configured. Please set RAPIDAPI_KEY environment variable.');
+    }
     return {
         'x-rapidapi-key': RAPIDAPI_KEY,
         'x-rapidapi-host': RAPIDAPI_HOST,

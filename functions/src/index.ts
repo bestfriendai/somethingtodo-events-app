@@ -5,6 +5,47 @@ import express, { Request, Response } from 'express';
 import { OpenAI } from 'openai';
 import axios from 'axios';
 
+// Load environment variables from .env file in development
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
+// Get configuration from Firebase Functions config in production or .env in development
+const getConfig = () => {
+  // In production, use Firebase Functions config
+  if (process.env.NODE_ENV === 'production' || process.env.FUNCTIONS_EMULATOR !== 'true') {
+    const config = functions.config();
+    return {
+      OPENAI_API_KEY: config.openai?.api_key || process.env.OPENAI_API_KEY,
+      RAPIDAPI_KEY: config.rapidapi?.key || process.env.RAPIDAPI_KEY,
+    };
+  }
+  // In development, use environment variables from .env file
+  return {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    RAPIDAPI_KEY: process.env.RAPIDAPI_KEY,
+  };
+};
+
+// Load configuration
+const config = getConfig();
+
+// Validate required configuration at startup
+const validateEnvironment = () => {
+  const required = ['OPENAI_API_KEY', 'RAPIDAPI_KEY'];
+  const missing = required.filter(key => !config[key as keyof typeof config]);
+  
+  if (missing.length > 0) {
+    console.error(`Missing required configuration: ${missing.join(', ')}`);
+    console.error('Please set these in Firebase Functions configuration or .env file for local development');
+    console.error('For production: Run ./set-config.sh to set Firebase Functions configuration');
+    console.error('For development: Create a .env file with the required keys');
+  }
+};
+
+// Validate on startup
+validateEnvironment();
+
 // Initialize Firebase Admin
 admin.initializeApp();
 
@@ -13,9 +54,9 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-// Initialize OpenAI
+// Initialize OpenAI with secure API key from config
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'demo-key',
+  apiKey: config.OPENAI_API_KEY,
 });
 
 // Types
@@ -200,6 +241,15 @@ async function generateAIResponse(
   context?: Record<string, any>
 ): Promise<any> {
   try {
+    // Check if OpenAI API key is configured
+    if (!config.OPENAI_API_KEY) {
+      console.error('OpenAI API key is not configured');
+      return {
+        content: 'The AI service is currently unavailable. Please try again later.',
+        type: 'text',
+      };
+    }
+
     const systemPrompt = getSystemPrompt(chatType, context);
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -433,12 +483,15 @@ async function generatePersonalizedRecommendations(userId: string): Promise<any[
   return [];
 }
 
-// Secure RapidAPI config
-const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '92bc1b4fc7mshacea9f118bf7a3fp1b5a6cjsnd2287a72fcb9';
+// Secure RapidAPI config from configuration
+const RAPIDAPI_KEY = config.RAPIDAPI_KEY;
 const RAPIDAPI_BASE = 'https://real-time-events-search.p.rapidapi.com';
 const RAPIDAPI_HOST = 'real-time-events-search.p.rapidapi.com';
 
 function rapidApiHeaders() {
+  if (!RAPIDAPI_KEY) {
+    throw new Error('RapidAPI key is not configured. Please set RAPIDAPI_KEY environment variable.');
+  }
   return {
     'x-rapidapi-key': RAPIDAPI_KEY,
     'x-rapidapi-host': RAPIDAPI_HOST,
