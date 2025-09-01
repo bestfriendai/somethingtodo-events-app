@@ -336,35 +336,58 @@ class EventsProvider extends ChangeNotifier {
         return;
       }
 
-      // Load trending events first
-      final trendingEvents = await _rapidAPIService.getTrendingEvents(
-        location: _currentLocation,
-        limit: 50,
-      );
-
-      if (trendingEvents.isNotEmpty) {
-        _events = trendingEvents;
-        _featuredEvents = trendingEvents.take(5).toList();
-        print('Loaded ${trendingEvents.length} trending events');
-      } else {
-        // Fallback to general search
-        final searchEvents = await _rapidAPIService.searchEvents(
-          query: 'events',
+      try {
+        // Try to load trending events first
+        final trendingEvents = await _rapidAPIService.getTrendingEvents(
           location: _currentLocation,
           limit: 50,
         );
 
-        _events = searchEvents;
-        _featuredEvents = searchEvents.take(5).toList();
-        print('Loaded ${searchEvents.length} search events');
+        if (trendingEvents.isNotEmpty) {
+          _events = trendingEvents;
+          _featuredEvents = trendingEvents.take(5).toList();
+          print('Loaded ${trendingEvents.length} trending events');
+        } else {
+          // Fallback to general search
+          final searchEvents = await _rapidAPIService.searchEvents(
+            query: 'events',
+            location: _currentLocation,
+            limit: 50,
+          );
+
+          _events = searchEvents;
+          _featuredEvents = searchEvents.take(5).toList();
+          print('Loaded ${searchEvents.length} search events');
+        }
+
+        // Cache the loaded events
+        await CacheService.instance.cacheEvents(_events);
+        await CacheService.instance.cacheFeaturedEvents(_featuredEvents);
+
+        _hasMoreEvents = _events.length >= 50;
+        print('Total events loaded: ${_events.length}');
+      } catch (apiError) {
+        // Check if it's a rate limit error (429 status code)
+        if (apiError.toString().contains('429') || 
+            apiError.toString().contains('rate') ||
+            apiError.toString().contains('Too Many Requests')) {
+          print('RapidAPI rate limited - loading demo events');
+          _error = 'API rate limit reached - showing sample events';
+          
+          // Load demo events instead
+          _events = await SampleEvents.getDemoEvents();
+          _featuredEvents = await SampleEvents.getFeaturedEvents();
+          _nearbyEvents = _events.take(10).toList();
+          _hasMoreEvents = false;
+          
+          // Still cache these for offline use
+          await CacheService.instance.cacheEvents(_events);
+          await CacheService.instance.cacheFeaturedEvents(_featuredEvents);
+        } else {
+          // For other errors, try cache then demo
+          throw apiError;
+        }
       }
-
-      // Cache the loaded events
-      await CacheService.instance.cacheEvents(_events);
-      await CacheService.instance.cacheFeaturedEvents(_featuredEvents);
-
-      _hasMoreEvents = _events.length >= 50;
-      print('Total events loaded: ${_events.length}');
     } catch (e) {
       print('Failed to load real events: $e');
       _setError('Failed to load events: $e');
@@ -374,7 +397,8 @@ class EventsProvider extends ChangeNotifier {
       } else {
         // Create some demo events as last resort
         _events = await SampleEvents.getDemoEvents();
-        _featuredEvents = _events.take(5).toList();
+        _featuredEvents = await SampleEvents.getFeaturedEvents();
+        _nearbyEvents = _events.take(10).toList();
       }
     } finally {
       _setLoading(false);

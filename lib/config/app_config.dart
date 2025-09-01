@@ -17,8 +17,8 @@ class AppConfig {
   );
   static const bool useFunctionsEmulator = bool.fromEnvironment(
     'USE_FUNCTIONS_EMULATOR',
-    defaultValue: true,
-  ); // Enable for development
+    defaultValue: false,
+  ); // Use deployed functions
   static const int functionsEmulatorPort = int.fromEnvironment(
     'FUNCTIONS_EMULATOR_PORT',
     defaultValue: 5001,
