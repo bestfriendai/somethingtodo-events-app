@@ -5,12 +5,14 @@ import '../models/event.dart';
 import '../services/firestore_service.dart';
 import '../services/rapidapi_events_service.dart';
 import '../services/cache_service.dart';
+import '../services/location_service.dart';
 import '../config/app_config.dart';
 import '../data/sample_events.dart';
 
 class EventsProvider extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   final RapidAPIEventsService _rapidAPIService = RapidAPIEventsService();
+  final LocationService _locationService = LocationService();
 
   List<Event> _events = [];
   List<Event> _featuredEvents = [];
@@ -59,24 +61,57 @@ class EventsProvider extends ChangeNotifier {
 
   // Initialize
   Future<void> initialize({bool demoMode = false}) async {
-    _useDemoData = demoMode;
-    print('EventsProvider.initialize - demoMode: $demoMode, useRapidAPI: $_useRapidAPI');
-    
+    _useDemoData = false; // Always use real data
+    _useRapidAPI = true; // Always use RapidAPI
+
     // Initialize cache service
     await CacheService.instance.initialize();
-    
+
     // Try to load from cache first for better perceived performance
     await _loadFromCache();
-    
-    if (!demoMode && _useRapidAPI) {
-      await loadRealEvents();
-    } else {
-      await loadFeaturedEvents();
-      await loadEvents();
-    }
-    
+
+    // Always load real events
+    await loadRealEvents();
+
     // Start background refresh
     _startBackgroundRefresh();
+
+    // Load initial events
+    await _loadInitialEvents();
+  }
+
+  Future<void> _loadInitialEvents() async {
+    try {
+      // Always try to get user's location first
+      await _getCurrentLocation();
+      if (_userLatitude != null && _userLongitude != null) {
+        await loadNearbyEvents();
+      } else {
+        await loadRealEvents();
+      }
+    } catch (e) {
+      print('Error loading initial events: $e');
+      // Try to load real events anyway
+      try {
+        await loadRealEvents();
+      } catch (e2) {
+        print('Error loading real events: $e2');
+      }
+    }
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      if (!AppConfig.demoMode) {
+        final position = await _locationService.getCurrentPosition();
+        if (position != null) {
+          setUserLocation(position.latitude, position.longitude);
+        }
+      }
+    } catch (e) {
+      print('Error getting current location: $e');
+      // Continue with default location
+    }
   }
 
   // Load Real Events from RapidAPI
@@ -151,8 +186,14 @@ class EventsProvider extends ChangeNotifier {
 
   // Load Nearby Events
   Future<void> loadNearbyEvents() async {
-    if (_userLatitude == null || _userLongitude == null) return;
-    
+    if (_userLatitude == null || _userLongitude == null) {
+      print('Cannot load nearby events: location not set');
+      return;
+    }
+
+    _setLoading(true);
+    _clearError();
+
     try {
       final nearby = await _rapidAPIService.getEventsNearLocation(
         latitude: _userLatitude!,
@@ -160,11 +201,14 @@ class EventsProvider extends ChangeNotifier {
         radiusKm: _searchRadius,
         limit: 20,
       );
-      
+
       _nearbyEvents = nearby;
       notifyListeners();
     } catch (e) {
       print('Failed to load nearby events: $e');
+      _setError('Failed to load nearby events. Please try again.');
+    } finally {
+      _setLoading(false);
     }
   }
 
@@ -182,25 +226,15 @@ class EventsProvider extends ChangeNotifier {
     _clearError();
 
     try {
-      if (_useRapidAPI && !_useDemoData) {
-        final results = await _rapidAPIService.searchEvents(
-          query: query,
-          location: _currentLocation,
-          startDate: _startDateFilter,
-          endDate: _endDateFilter,
-          limit: 20,
-        );
-        
-        _searchResults = results;
-      } else {
-        // Search in demo data
-        _searchResults = _events.where((event) {
-          final queryLower = query!.toLowerCase();
-          return event.title.toLowerCase().contains(queryLower) ||
-                 event.description.toLowerCase().contains(queryLower) ||
-                 event.tags.any((tag) => tag.toLowerCase().contains(queryLower));
-        }).toList();
-      }
+      final results = await _rapidAPIService.searchEvents(
+        query: query,
+        location: _currentLocation,
+        startDate: _startDateFilter,
+        endDate: _endDateFilter,
+        limit: 20,
+      );
+
+      _searchResults = results;
     } catch (e) {
       _setError('Search failed: $e');
       _searchResults = [];
@@ -242,9 +276,8 @@ class EventsProvider extends ChangeNotifier {
         _events = categoryEvents;
       } else {
         // Filter demo data
-        _events = SampleEvents.getDemoEvents()
-            .where((event) => event.category == category)
-            .toList();
+        final demo = await SampleEvents.getDemoEvents();
+        _events = demo.where((event) => event.category == category).toList();
       }
     } catch (e) {
       _setError('Failed to load category events: $e');
@@ -299,11 +332,11 @@ class EventsProvider extends ChangeNotifier {
   void setUserLocation(double latitude, double longitude) {
     _userLatitude = latitude;
     _userLongitude = longitude;
+    _currentLocation = '$latitude,$longitude'; // Update current location string
     notifyListeners();
-    
-    if (_useRapidAPI && !_useDemoData) {
-      loadNearbyEvents();
-    }
+
+    // Always load nearby events when location is set
+    loadNearbyEvents();
   }
 
   // Clear Category Filter
@@ -320,8 +353,8 @@ class EventsProvider extends ChangeNotifier {
 
     try {
       await Future.delayed(const Duration(milliseconds: 500)); // Simulate network delay
-      _events = SampleEvents.getDemoEvents();
-      _featuredEvents = SampleEvents.getFeaturedEvents();
+      _events = await SampleEvents.getDemoEvents();
+      _featuredEvents = await SampleEvents.getFeaturedEvents();
       _hasMoreEvents = false; // Demo has finite events
     } catch (e) {
       _setError('Failed to load demo events: $e');
@@ -449,7 +482,7 @@ class EventsProvider extends ChangeNotifier {
   // Load Featured Events
   Future<void> loadFeaturedEvents() async {
     if (_useDemoData) {
-      _featuredEvents = SampleEvents.getFeaturedEvents();
+      _featuredEvents = await SampleEvents.getFeaturedEvents();
       notifyListeners();
       return;
     }

@@ -63,7 +63,7 @@ class AuthProvider extends ChangeNotifier {
       );
       
       print('Demo user created: ${_currentUser?.id}');
-      _isDemoMode = false; // Use real API even in guest mode for testing
+      _isDemoMode = true; // Enable demo mode for guest authentication
       _firebaseUser = null; // No Firebase user in guest mode
       
       print('Notifying listeners...');

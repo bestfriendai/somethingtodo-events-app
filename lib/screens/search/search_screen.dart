@@ -14,6 +14,7 @@ import '../../services/navigation_service.dart';
 import '../events/event_details_screen.dart';
 import '../map/map_screen.dart';
 import '../feed/vertical_feed_screen.dart';
+import '../../widgets/common/delightful_refresh.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -75,6 +76,16 @@ class _SearchScreenState extends State<SearchScreen>
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _refreshSearch() async {
+    final query = _searchController.text.trim();
+    if (query.isEmpty) return;
+    await context.read<EventsProvider>().searchEvents(query);
+    if (!mounted) return;
+    _resultsAnimationController
+      ..reset()
+      ..forward();
   }
 
   void _loadRecentSearches() {
@@ -172,6 +183,13 @@ class _SearchScreenState extends State<SearchScreen>
         children: [
           _buildSearchBar(),
           if (_showFilters) _buildFilters(),
+          Consumer<EventsProvider>(
+            builder: (context, provider, child) {
+              final error = provider.error;
+              if (error == null) return const SizedBox.shrink();
+              return _buildErrorBanner(error, onRetry: () => _refreshSearch());
+            },
+          ),
           Expanded(child: _buildContent()),
         ],
       ),
@@ -675,35 +693,73 @@ class _SearchScreenState extends State<SearchScreen>
           child: AnimatedBuilder(
             animation: _resultsAnimationController,
             builder: (context, child) {
-              return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: events.length,
-                itemBuilder: (context, index) {
-                  final event = events[index];
-                  return Transform.translate(
-                    offset: Offset(0, 50 * (1 - _resultsAnimationController.value)),
-                    child: Opacity(
-                      opacity: _resultsAnimationController.value,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: ModernEventCard(
-                          event: event,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EventDetailsScreen(event: event),
+              return DelightfulRefresh(
+                onRefresh: _refreshSearch,
+                refreshMessage: 'Refreshing your search results...',
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: events.length,
+                  itemBuilder: (context, index) {
+                    final event = events[index];
+                    return Transform.translate(
+                      offset: Offset(0, 50 * (1 - _resultsAnimationController.value)),
+                      child: Opacity(
+                        opacity: _resultsAnimationController.value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: ModernEventCard(
+                            event: event,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EventDetailsScreen(event: event),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               );
             },
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildErrorBanner(String message, {VoidCallback? onRetry}) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: ModernTheme.errorColor.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: ModernTheme.errorColor.withOpacity(0.3)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, color: ModernTheme.errorColor),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              message,
+              style: const TextStyle(
+                color: ModernTheme.errorColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          if (onRetry != null)
+            TextButton(
+              onPressed: onRetry,
+              child: const Text('Retry'),
+            ),
+        ],
+      ),
     );
   }
 

@@ -15,9 +15,9 @@ class FirestoreService {
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   bool _useDemoData = false;
 
-  // Set demo mode
+  // Set demo mode (deprecated - always use real data)
   void setDemoMode(bool demoMode) {
-    _useDemoData = demoMode;
+    _useDemoData = false; // Always use real data
   }
 
   // Collections
@@ -82,42 +82,6 @@ class FirestoreService {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    if (_useDemoData) {
-      // Simulate network delay
-      await Future.delayed(const Duration(milliseconds: 500));
-      
-      List<Event> events = SampleEvents.getDemoEvents();
-      
-      // Apply filters
-      if (category != null) {
-        events = events.where((event) => event.category == category).toList();
-      }
-      
-      if (isFree != null) {
-        events = events.where((event) => event.pricing.isFree == isFree).toList();
-      }
-      
-      if (startDate != null) {
-        events = events.where((event) => event.startDateTime.isAfter(startDate)).toList();
-      }
-      
-      if (endDate != null) {
-        events = events.where((event) => event.endDateTime.isBefore(endDate)).toList();
-      }
-      
-      // Apply location-based filtering if coordinates provided
-      if (latitude != null && longitude != null && radius != null) {
-        events = _filterEventsByDistance(events, latitude, longitude, radius);
-      }
-      
-      // Apply text search if query provided
-      if (searchQuery != null && searchQuery.isNotEmpty) {
-        events = _filterEventsBySearch(events, searchQuery);
-      }
-      
-      return events.take(limit).toList();
-    }
-
     try {
       Query query = _eventsCollection
           .where('status', isEqualTo: EventStatus.active.name)
@@ -133,12 +97,12 @@ class FirestoreService {
       }
 
       if (startDate != null) {
-        query = query.where('startDateTime', 
+        query = query.where('startDateTime',
             isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        query = query.where('endDateTime', 
+        query = query.where('endDateTime',
             isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
@@ -156,9 +120,9 @@ class FirestoreService {
       // Apply location-based filtering if coordinates provided
       if (latitude != null && longitude != null && radius != null) {
         events = _filterEventsByDistance(
-          events, 
-          latitude, 
-          longitude, 
+          events,
+          latitude,
+          longitude,
           radius,
         );
       }
@@ -175,11 +139,6 @@ class FirestoreService {
   }
 
   Future<List<Event>> getFeaturedEvents({int limit = 10}) async {
-    if (_useDemoData) {
-      await Future.delayed(const Duration(milliseconds: 300));
-      return SampleEvents.getFeaturedEvents().take(limit).toList();
-    }
-
     try {
       final querySnapshot = await _eventsCollection
           .where('isFeatured', isEqualTo: true)
@@ -226,14 +185,6 @@ class FirestoreService {
   }
 
   Future<List<Event>> getUserFavoriteEvents(String userId) async {
-    if (_useDemoData) {
-      await Future.delayed(const Duration(milliseconds: 200));
-      // Return some demo favorite events
-      final demoEvents = SampleEvents.getDemoEvents();
-      final favoriteIds = ['demo_1', 'demo_7', 'demo_12']; // Demo favorites
-      return demoEvents.where((event) => favoriteIds.contains(event.id)).toList();
-    }
-
     try {
       final userDoc = await _usersCollection.doc(userId).get();
       if (!userDoc.exists) return [];
@@ -254,7 +205,7 @@ class FirestoreService {
         final events = querySnapshot.docs
             .map((doc) => Event.fromJson(doc.data() as Map<String, dynamic>))
             .toList();
-        
+
         allEvents.addAll(events);
       }
 
@@ -304,12 +255,6 @@ class FirestoreService {
 
   // Favorites Management
   Future<void> addToFavorites(String userId, String eventId) async {
-    if (_useDemoData) {
-      // In demo mode, just simulate success
-      await Future.delayed(const Duration(milliseconds: 100));
-      return;
-    }
-
     try {
       await _usersCollection.doc(userId).update({
         'favoriteEventIds': FieldValue.arrayUnion([eventId]),
@@ -336,12 +281,6 @@ class FirestoreService {
   }
 
   Future<void> removeFromFavorites(String userId, String eventId) async {
-    if (_useDemoData) {
-      // In demo mode, just simulate success
-      await Future.delayed(const Duration(milliseconds: 100));
-      return;
-    }
-
     try {
       await _usersCollection.doc(userId).update({
         'favoriteEventIds': FieldValue.arrayRemove([eventId]),

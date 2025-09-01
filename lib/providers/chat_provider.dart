@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/chat.dart';
 import '../services/chat_service.dart';
 import '../data/sample_events.dart';
+import '../data/sample_chat_responses.dart';
 
 class ChatProvider extends ChangeNotifier {
   final ChatService _chatService = ChatService();

@@ -130,6 +130,16 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                 _buildModernAppBar(),
                 _buildSearchSection(),
                 _buildFeedViewPromo(),
+                // Error banner near top if exists
+                SliverToBoxAdapter(
+                  child: Consumer<EventsProvider>(
+                    builder: (context, provider, _) {
+                      final msg = provider.error;
+                      if (msg == null) return const SizedBox.shrink();
+                      return _buildErrorBanner(msg, onRetry: _refreshData);
+                    },
+                  ),
+                ),
                 _buildFeaturedEvents(),
                 _buildQuickStats(),
                 _buildCategoryFilters(),
@@ -1087,7 +1097,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
               enableSwipeActions: true,
               showFeedButton: false, // Already shown above
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              onRefresh: _refreshData,
+              onRefresh: () { _refreshData(); },
             ),
           ),
         );
@@ -1189,3 +1199,39 @@ class ParticleEffectPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
+
+Widget _buildErrorBanner(String message, {Future<void> Function()? onRetry}) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: ModernTheme.errorColor.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: ModernTheme.errorColor.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline, color: ModernTheme.errorColor),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              message,
+              style: const TextStyle(
+                color: ModernTheme.errorColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          if (onRetry != null)
+            TextButton(
+              onPressed: () {
+                PlatformInteractions.lightImpact();
+                onRetry();
+              },
+              child: const Text('Retry'),
+            ),
+        ],
+      ),
+    );
+  }

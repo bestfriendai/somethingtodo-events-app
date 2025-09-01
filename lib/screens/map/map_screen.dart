@@ -97,48 +97,31 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     });
 
     try {
-      // In demo mode or on web, use default San Francisco location
-      if (AppConfig.demoMode || kIsWeb) {
+      final position = await _locationService.getCurrentLocation();
+      if (position != null) {
         setState(() {
-          _currentLatitude = 37.7749; // San Francisco
-          _currentLongitude = -122.4194;
+          _currentLatitude = position.latitude;
+          _currentLongitude = position.longitude;
           _mapCenterLat = _currentLatitude!;
           _mapCenterLng = _currentLongitude!;
-          _isLocationEnabled = false; // Don't show location button on web
+          _isLocationEnabled = true;
         });
-        
+
+        // Update map center
+        _updateMapCenter(_currentLatitude!, _currentLongitude!);
+
         // Use Future.microtask to avoid calling during build
         Future.microtask(() {
           if (mounted) {
             context.read<EventsProvider>().setUserLocation(
-              _currentLatitude!,
-              _currentLongitude!,
+              position.latitude,
+              position.longitude,
             );
           }
         });
-      } else {
-        final position = await _locationService.getCurrentLocation();
-        if (position != null) {
-          setState(() {
-            _currentLatitude = position.latitude;
-            _currentLongitude = position.longitude;
-            _mapCenterLat = _currentLatitude!;
-            _mapCenterLng = _currentLongitude!;
-            _isLocationEnabled = true;
-          });
-          
-          // Use Future.microtask to avoid calling during build
-          Future.microtask(() {
-            if (mounted) {
-              context.read<EventsProvider>().setUserLocation(
-                position.latitude,
-                position.longitude,
-              );
-            }
-          });
-        }
       }
     } catch (e) {
+      print('Location error: $e');
       // Fallback to default location
       setState(() {
         _currentLatitude = 37.7749; // San Francisco
@@ -147,9 +130,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         _mapCenterLng = _currentLongitude!;
         _isLocationEnabled = false;
       });
-      if (!AppConfig.demoMode && !kIsWeb) {
-        _showLocationError();
-      }
+      _showLocationError();
     } finally {
       setState(() {
         _isLoading = false;
@@ -159,14 +140,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   Future<void> _loadEvents() async {
     final eventsProvider = context.read<EventsProvider>();
-    
-    // In demo mode, use all demo events
-    if (AppConfig.demoMode) {
-      final demoEvents = SampleEvents.getDemoEvents();
-      _setEventsMarkers(demoEvents);
-      return;
-    }
-    
+
     if (_currentLatitude != null && _currentLongitude != null) {
       eventsProvider.setUserLocation(_currentLatitude!, _currentLongitude!);
       await eventsProvider.loadNearbyEvents();
@@ -235,13 +209,11 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
               if (widget.events != null) {
                 events = widget.events!;
               } else {
-                events = AppConfig.demoMode 
-                    ? SampleEvents.getDemoEvents() 
-                    : eventsProvider.nearbyEvents.isNotEmpty 
-                        ? eventsProvider.nearbyEvents 
-                        : eventsProvider.events;
+                events = eventsProvider.nearbyEvents.isNotEmpty
+                    ? eventsProvider.nearbyEvents
+                    : eventsProvider.events;
               }
-              
+
               return UniversalMapWidget(
                 events: events,
                 onEventSelected: _onMarkerTapped,
@@ -441,14 +413,12 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                     int eventCount;
                     if (widget.events != null) {
                       eventCount = widget.events!.length;
-                    } else if (AppConfig.demoMode) {
-                      eventCount = SampleEvents.getDemoEvents().length;
                     } else {
-                      eventCount = eventsProvider.nearbyEvents.isNotEmpty 
-                          ? eventsProvider.nearbyEvents.length 
+                      eventCount = eventsProvider.nearbyEvents.isNotEmpty
+                          ? eventsProvider.nearbyEvents.length
                           : eventsProvider.events.length;
                     }
-                    
+
                     return FloatingActionButton(
                       heroTag: 'map_events_list_fab',
                       onPressed: _toggleEventsList,
@@ -551,14 +521,12 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       List<Event> events;
                       if (widget.events != null) {
                         events = widget.events!;
-                      } else if (AppConfig.demoMode) {
-                        events = SampleEvents.getDemoEvents();
                       } else {
-                        events = eventsProvider.nearbyEvents.isNotEmpty 
-                            ? eventsProvider.nearbyEvents 
+                        events = eventsProvider.nearbyEvents.isNotEmpty
+                            ? eventsProvider.nearbyEvents
                             : eventsProvider.events;
                       }
-                      
+
                       if (events.isEmpty) {
                         return const Center(
                           child: Column(
@@ -571,7 +539,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                           ),
                         );
                       }
-                      
+
                       return ListView.builder(
                         padding: const EdgeInsets.all(16),
                         itemCount: events.length,
@@ -725,10 +693,17 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     );
   }
 
+  void _updateMapCenter(double latitude, double longitude) {
+    setState(() {
+      _mapCenterLat = latitude;
+      _mapCenterLng = longitude;
+    });
+  }
+
   void _showLocationError() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Unable to get your location'),
+        content: const Text('Unable to get your location. Please check your location settings and permissions.'),
         action: SnackBarAction(
           label: 'Retry',
           onPressed: _getCurrentLocation,

@@ -1,8 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import * as cors from 'cors';
-import * as express from 'express';
+import cors from 'cors';
+import express, { Request, Response } from 'express';
 import { OpenAI } from 'openai';
+import axios from 'axios';
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -14,7 +15,7 @@ app.use(express.json());
 
 // Initialize OpenAI
 const openai = new OpenAI({
-  apiKey: functions.config().openai?.api_key || process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY || 'demo-key',
 });
 
 // Types
@@ -32,18 +33,16 @@ interface EventSyncRequest {
 }
 
 // API Routes
-app.post('/chat', async (req, res) => {
+app.post('/chat', async (req: Request, res: Response) => {
   try {
     const { sessionId, message, userId, chatType, context }: ChatRequest = req.body;
 
-    // Validate required fields
     if (!sessionId || !message || !userId || !chatType) {
       return res.status(400).json({
         error: 'Missing required fields: sessionId, message, userId, chatType'
       });
     }
 
-    // Get chat history from Firestore
     const messagesRef = admin.firestore()
       .collection('messages')
       .where('sessionId', '==', sessionId)
@@ -53,10 +52,8 @@ app.post('/chat', async (req, res) => {
     const messagesSnapshot = await messagesRef.get();
     const chatHistory = messagesSnapshot.docs.map(doc => doc.data()).reverse();
 
-    // Generate AI response
     const aiResponse = await generateAIResponse(message, chatHistory, chatType, context);
 
-    // Save user message to Firestore
     await admin.firestore().collection('messages').add({
       sessionId,
       userId,
@@ -65,7 +62,6 @@ app.post('/chat', async (req, res) => {
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    // Save AI response to Firestore
     await admin.firestore().collection('messages').add({
       sessionId,
       userId,
@@ -77,7 +73,6 @@ app.post('/chat', async (req, res) => {
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
 
-    // Update session timestamp
     await admin.firestore()
       .collection('chatSessions')
       .doc(sessionId)
@@ -85,13 +80,13 @@ app.post('/chat', async (req, res) => {
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
 
-    res.json({
+    return res.json({
       success: true,
       response: aiResponse,
     });
   } catch (error) {
     console.error('Chat API error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to process chat message',
       details: error instanceof Error ? error.message : 'Unknown error',
     });
@@ -99,7 +94,7 @@ app.post('/chat', async (req, res) => {
 });
 
 // Event sync endpoint
-app.post('/events/sync', async (req, res) => {
+app.post('/events/sync', async (req: Request, res: Response) => {
   try {
     const { eventId, action }: EventSyncRequest = req.body;
 
@@ -123,10 +118,10 @@ app.post('/events/sync', async (req, res) => {
         return res.status(400).json({ error: 'Invalid action' });
     }
 
-    res.json({ success: true });
+    return res.json({ success: true });
   } catch (error) {
     console.error('Event sync error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to sync event',
       details: error instanceof Error ? error.message : 'Unknown error',
     });
@@ -134,7 +129,7 @@ app.post('/events/sync', async (req, res) => {
 });
 
 // Generate recommendations endpoint
-app.post('/recommendations/generate', async (req, res) => {
+app.post('/recommendations/generate', async (req: Request, res: Response) => {
   try {
     const { userId } = req.body;
 
@@ -144,13 +139,13 @@ app.post('/recommendations/generate', async (req, res) => {
 
     const recommendations = await generatePersonalizedRecommendations(userId);
 
-    res.json({
+    return res.json({
       success: true,
       recommendations,
     });
   } catch (error) {
     console.error('Recommendations error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Failed to generate recommendations',
       details: error instanceof Error ? error.message : 'Unknown error',
     });
@@ -262,7 +257,7 @@ function getSystemPrompt(chatType: string, context?: Record<string, any>): strin
 }
 
 function getChatFunctions(chatType: string): any[] {
-  const baseFunctions = [
+  const baseFunctions: any[] = [
     {
       name: 'search_events',
       description: 'Search for events based on criteria',
@@ -356,7 +351,7 @@ async function handleEventCreated(eventId: string): Promise<void> {
     .get();
     
   if (eventDoc.exists) {
-    const eventData = eventDoc.data();
+    // const eventData = eventDoc.data();
     // Process new event...
   }
 }
@@ -429,7 +424,7 @@ async function generatePersonalizedRecommendations(userId: string): Promise<any[
     return [];
   }
   
-  const userData = userDoc.data();
+  // const userData = userDoc.data();
   
   // Query events based on user preferences
   // Generate recommendations using AI
@@ -437,3 +432,143 @@ async function generatePersonalizedRecommendations(userId: string): Promise<any[
   
   return [];
 }
+
+// Secure RapidAPI config
+const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '92bc1b4fc7mshacea9f118bf7a3fp1b5a6cjsnd2287a72fcb9';
+const RAPIDAPI_BASE = 'https://real-time-events-search.p.rapidapi.com';
+const RAPIDAPI_HOST = 'real-time-events-search.p.rapidapi.com';
+
+function rapidApiHeaders() {
+  return {
+    'x-rapidapi-key': RAPIDAPI_KEY,
+    'x-rapidapi-host': RAPIDAPI_HOST,
+  };
+}
+
+app.get('/events/search', async (req: Request, res: Response) => {
+  try {
+    const { query, location, start, end, limit } = req.query as any;
+    console.log('Search events request:', { query, location, start, end, limit });
+
+    const response = await axios.get(`${RAPIDAPI_BASE}/search-events`, {
+      params: {
+        ...(query ? { query } : {}),
+        ...(location ? { location } : {}),
+        ...(start ? { start } : {}),
+        ...(end ? { end } : {}),
+        ...(limit ? { limit } : {}),
+      },
+      headers: rapidApiHeaders(),
+      timeout: 15000, // Increased timeout
+    });
+
+    console.log('Search events response:', response.data);
+    res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error('RapidAPI /events/search error:', error?.response?.data || error.message);
+    res.status(error?.response?.status || 500).json({
+      error: 'Failed to search events',
+      details: error?.response?.data || error.message,
+    });
+  }
+});
+
+app.get('/events/trending', async (req: Request, res: Response) => {
+  try {
+    const { location, limit } = req.query as any;
+    console.log('Trending events request:', { location, limit });
+
+    const response = await axios.get(`${RAPIDAPI_BASE}/search-events`, {
+      params: {
+        query: 'events trending music concert sports',
+        ...(location ? { location } : {}),
+        ...(limit ? { limit } : { limit: '20' }),
+      },
+      headers: rapidApiHeaders(),
+      timeout: 15000, // Increased timeout
+    });
+
+    console.log('Trending events response:', response.data);
+    res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error('RapidAPI /events/trending error:', error?.response?.data || error.message);
+    res.status(error?.response?.status || 500).json({
+      error: 'Failed to get trending events',
+      details: error?.response?.data || error.message,
+    });
+  }
+});
+
+app.get('/events/nearby', async (req: Request, res: Response) => {
+  try {
+    const { lat, lng, radius, limit } = req.query as any;
+    console.log('Nearby events request:', { lat, lng, radius, limit });
+
+    // Use search-events with location-based query
+    const response = await axios.get(`${RAPIDAPI_BASE}/search-events`, {
+      params: {
+        query: 'events',
+        location: `${lat},${lng}`,
+        ...(radius ? { radius: Math.min(radius, 50) } : {}), // Limit radius to 50km
+        ...(limit ? { limit } : { limit: '20' }),
+      },
+      headers: rapidApiHeaders(),
+      timeout: 15000, // Increased timeout
+    });
+
+    console.log('Nearby events response:', response.data);
+    res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error('RapidAPI /events/nearby error:', error?.response?.data || error.message);
+    res.status(error?.response?.status || 500).json({
+      error: 'Failed to get nearby events',
+      details: error?.response?.data || error.message,
+    });
+  }
+});
+
+app.get('/events/details', async (req: Request, res: Response) => {
+  try {
+    const { event_id } = req.query as any;
+
+    const response = await axios.get(`${RAPIDAPI_BASE}/event-details`, {
+      params: {
+        ...(event_id ? { event_id } : {}),
+      },
+      headers: rapidApiHeaders(),
+      timeout: 10000,
+    });
+
+    res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error('RapidAPI /events/details error:', error?.response?.data || error.message);
+    res.status(error?.response?.status || 500).json({
+      error: 'Failed to get event details',
+      details: error?.response?.data || error.message,
+    });
+  }
+});
+
+app.get('/events/category', async (req: Request, res: Response) => {
+  try {
+    const { category, location, limit } = req.query as any;
+
+    const response = await axios.get(`${RAPIDAPI_BASE}/events-by-category`, {
+      params: {
+        ...(category ? { category } : {}),
+        ...(location ? { location } : {}),
+        ...(limit ? { limit } : {}),
+      },
+      headers: rapidApiHeaders(),
+      timeout: 10000,
+    });
+
+    res.status(200).json(response.data);
+  } catch (error: any) {
+    console.error('RapidAPI /events/category error:', error?.response?.data || error.message);
+    res.status(error?.response?.status || 500).json({
+      error: 'Failed to get events by category',
+      details: error?.response?.data || error.message,
+    });
+  }
+});

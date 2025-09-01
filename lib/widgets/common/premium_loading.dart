@@ -73,7 +73,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
           height: widget.size,
           child: _buildLoadingIndicator(colors),
         ),
-        if (widget.message != null) ..[
+        if (widget.message != null) ...[
           const SizedBox(height: 16),
           Text(
             widget.message!,

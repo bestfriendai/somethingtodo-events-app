@@ -8,6 +8,7 @@ import '../models/event.dart';
 import '../models/analytics.dart';
 import '../config/app_config.dart';
 import '../data/sample_events.dart';
+import '../data/sample_chat_responses.dart';
 
 class ChatService {
   static final ChatService _instance = ChatService._internal();

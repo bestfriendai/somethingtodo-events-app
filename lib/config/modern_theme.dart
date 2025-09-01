@@ -470,21 +470,101 @@ class ModernTheme {
     );
   }
 
-  // 2025 Ultra-vibrant category gradients
+  // 2025 Enhanced category-specific gradients with improved visual hierarchy
   static const Map<String, List<Color>> categoryGradients = {
-    'music': [Color(0xFFEC4899), Color(0xFFFF6B9D)], // Neon Pink to Hot Pink
-    'food': [Color(0xFFFF9F43), Color(0xFFFFBE0B)], // Orange to Gold
-    'sports': [Color(0xFF10B981), Color(0xFF34D399)], // Emerald to Light Green
-    'arts': [Color(0xFF7C3AED), Color(0xFF8B5CF6)], // Electric Purple to Violet
-    'business': [Color(0xFF06B6D4), Color(0xFF3B82F6)], // Cyber Blue to Blue
-    'education': [Color(0xFF06B6D4), Color(0xFF10B981)], // Blue to Green
-    'technology': [Color(0xFF7C3AED), Color(0xFF06B6D4)], // Purple to Cyan
+    // Technology: Cyber blue to electric purple
+    'technology': [Color(0xFF06B6D4), Color(0xFF7C3AED)], // Cyber Blue to Electric Purple
+    'tech': [Color(0xFF06B6D4), Color(0xFF7C3AED)], // Alias for technology
+    
+    // Arts: Sunset gradient (warm orange to deep pink)
+    'arts': [Color(0xFFFF6B35), Color(0xFFEC4899)], // Sunset Orange to Deep Pink
+    'art': [Color(0xFFFF6B35), Color(0xFFEC4899)], // Alias for arts
+    
+    // Sports: Forest gradient (deep green to bright emerald)
+    'sports': [Color(0xFF065F46), Color(0xFF10B981)], // Forest Green to Emerald
+    'sport': [Color(0xFF065F46), Color(0xFF10B981)], // Alias for sports
+    
+    // Food: Warm gradient (golden yellow to orange)
+    'food': [Color(0xFFFBBF24), Color(0xFFFF6B35)], // Golden Yellow to Warm Orange
+    'dining': [Color(0xFFFBBF24), Color(0xFFFF6B35)], // Alias for food
+    
+    // Music: Vibrant pink to purple
+    'music': [Color(0xFFEC4899), Color(0xFF8B5CF6)], // Neon Pink to Violet
+    'entertainment': [Color(0xFFEC4899), Color(0xFF8B5CF6)], // Alias for music
+    
+    // Business: Professional blue gradient
+    'business': [Color(0xFF1E40AF), Color(0xFF3B82F6)], // Deep Blue to Bright Blue
+    'professional': [Color(0xFF1E40AF), Color(0xFF3B82F6)], // Alias for business
+    
+    // Education: Knowledge gradient (blue to green)
+    'education': [Color(0xFF0EA5E9), Color(0xFF059669)], // Sky Blue to Green
+    'learning': [Color(0xFF0EA5E9), Color(0xFF059669)], // Alias for education
+    
+    // Health: Wellness gradient (pink to orange)
     'health': [Color(0xFFEC4899), Color(0xFFF97316)], // Pink to Orange
+    'wellness': [Color(0xFFEC4899), Color(0xFFF97316)], // Alias for health
+    
+    // Community: Social gradient (yellow to orange)
     'community': [Color(0xFFEAB308), Color(0xFFFF9F43)], // Yellow to Orange
+    'social': [Color(0xFFEAB308), Color(0xFFFF9F43)], // Alias for community
+    
+    // Default fallback
+    'other': [Color(0xFF6366F1), Color(0xFF8B5CF6)], // Purple gradient
   };
 
-  // Get category gradient
+  // Get category gradient with enhanced matching
   static List<Color> getCategoryGradient(String category) {
-    return categoryGradients[category.toLowerCase()] ?? purpleGradient;
+    final normalizedCategory = category.toLowerCase().trim();
+    
+    // Direct match first
+    if (categoryGradients.containsKey(normalizedCategory)) {
+      return categoryGradients[normalizedCategory]!;
+    }
+    
+    // Fuzzy matching for common variations
+    if (normalizedCategory.contains('tech')) {
+      return categoryGradients['technology']!;
+    } else if (normalizedCategory.contains('art')) {
+      return categoryGradients['arts']!;
+    } else if (normalizedCategory.contains('sport')) {
+      return categoryGradients['sports']!;
+    } else if (normalizedCategory.contains('food') || normalizedCategory.contains('restaurant')) {
+      return categoryGradients['food']!;
+    } else if (normalizedCategory.contains('music') || normalizedCategory.contains('concert')) {
+      return categoryGradients['music']!;
+    } else if (normalizedCategory.contains('business') || normalizedCategory.contains('work')) {
+      return categoryGradients['business']!;
+    } else if (normalizedCategory.contains('education') || normalizedCategory.contains('learn')) {
+      return categoryGradients['education']!;
+    } else if (normalizedCategory.contains('health') || normalizedCategory.contains('fitness')) {
+      return categoryGradients['health']!;
+    } else if (normalizedCategory.contains('community') || normalizedCategory.contains('social')) {
+      return categoryGradients['community']!;
+    }
+    
+    // Fallback to default gradient
+    return categoryGradients['other']!;
+  }
+  
+  // Get category gradient as LinearGradient widget
+  static LinearGradient getCategoryLinearGradient(String category, {
+    Alignment begin = Alignment.topLeft,
+    Alignment end = Alignment.bottomRight,
+  }) {
+    return LinearGradient(
+      begin: begin,
+      end: end,
+      colors: getCategoryGradient(category),
+    );
+  }
+  
+  // Get category primary color (first color of gradient)
+  static Color getCategoryPrimaryColor(String category) {
+    return getCategoryGradient(category).first;
+  }
+  
+  // Get category secondary color (second color of gradient)
+  static Color getCategorySecondaryColor(String category) {
+    return getCategoryGradient(category).last;
   }
 }

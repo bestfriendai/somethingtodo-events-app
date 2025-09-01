@@ -93,7 +93,7 @@ class SomethingToDoApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(
-          create: (_) => EventsProvider()..initialize(demoMode: AppConfig.demoMode),
+          create: (_) => EventsProvider()..initialize(),
         ),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
       ],
