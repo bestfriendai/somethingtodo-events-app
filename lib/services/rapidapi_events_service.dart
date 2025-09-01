@@ -28,12 +28,16 @@ class RapidAPIEventsService {
 
   RapidAPIEventsService() {
     _dio = Dio();
-    _dio.options.baseUrl = 'https://real-time-events-search.p.rapidapi.com';
+    // Use Firebase Functions instead of direct RapidAPI calls
+    // This routes through our backend which has the API key
+    final baseUrl = AppConfig.useFunctionsEmulator
+        ? 'http://localhost:${AppConfig.functionsEmulatorPort}/local-pulse-tanxr/${AppConfig.functionsRegion}/api'
+        : 'https://${AppConfig.functionsRegion}-local-pulse-tanxr.cloudfunctions.net/api';
+    
+    _dio.options.baseUrl = baseUrl;
     _dio.options.connectTimeout = const Duration(seconds: 20);
     _dio.options.receiveTimeout = const Duration(seconds: 20);
-    _dio.options.headers['x-rapidapi-key'] = AppConfig.rapidApiKey;
-    _dio.options.headers['x-rapidapi-host'] =
-        'real-time-events-search.p.rapidapi.com';
+    // No API key needed here - Firebase Functions handles it
 
     // Add request/response interceptors for logging and error handling
     _dio.interceptors.add(
@@ -217,7 +221,7 @@ class RapidAPIEventsService {
   }) async {
     return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
-        '/search-events',
+        '/events/search',
         queryParameters: {
           'query': query,
           if (location != null) 'location': location,
@@ -258,7 +262,7 @@ class RapidAPIEventsService {
   }) async {
     return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
-        '/search-events',
+        '/events/search',
         queryParameters: {
           'query': 'events',
           'location': '$latitude,$longitude',
@@ -296,9 +300,8 @@ class RapidAPIEventsService {
   }) async {
     return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
-        '/search-events',
+        '/events/trending',
         queryParameters: {
-          'query': 'trending events music concert sports',
           if (location != null) 'location': location,
           'limit': limit.toString(),
         },
@@ -331,7 +334,7 @@ class RapidAPIEventsService {
     try {
       return await _makeRequest<Event?>(() async {
         final response = await _dio.get(
-          '/event-details',
+          '/events/details',
           queryParameters: {'event_id': eventId},
         );
 
@@ -369,7 +372,7 @@ class RapidAPIEventsService {
   }) async {
     return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
-        '/search-events',
+        '/events/search',
         queryParameters: {
           'query': '$category events',
           if (location != null) 'location': location,
