@@ -9,7 +9,8 @@ import 'navigation_service.dart';
 
 class NotificationService {
   static NotificationService? _instance;
-  static NotificationService get instance => _instance ??= NotificationService._();
+  static NotificationService get instance =>
+      _instance ??= NotificationService._();
 
   NotificationService._();
 
@@ -52,9 +53,11 @@ class NotificationService {
       sound: true,
     );
 
-    if (notificationSettings.authorizationStatus == AuthorizationStatus.authorized) {
+    if (notificationSettings.authorizationStatus ==
+        AuthorizationStatus.authorized) {
       print('User granted permission');
-    } else if (notificationSettings.authorizationStatus == AuthorizationStatus.provisional) {
+    } else if (notificationSettings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
       print('User granted provisional permission');
     } else {
       print('User declined or has not accepted permission');
@@ -65,7 +68,9 @@ class NotificationService {
   }
 
   Future<void> _initializeLocalNotifications() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const iosSettings = DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
@@ -113,7 +118,7 @@ class NotificationService {
 
   void _handleForegroundMessage(RemoteMessage message) {
     print('Foreground message: ${message.notification?.title}');
-    
+
     // Show in-app notification with custom UI
     _showInAppNotification(
       title: message.notification?.title ?? 'New Notification',
@@ -131,7 +136,7 @@ class NotificationService {
     try {
       // Parse payload and navigate accordingly
       print('Handling notification payload: $payload');
-      
+
       // Example navigation based on payload
       if (payload.contains('event_id')) {
         final eventId = _extractEventId(payload);
@@ -148,7 +153,7 @@ class NotificationService {
 
   String? _extractEventId(String payload) {
     // Extract event ID from payload
-    final regex = RegExp(r'event_id["\':]\s*["\'](.*?)["\'"]');
+    final regex = RegExp(r'event_id.*?([a-zA-Z0-9_-]+)');
     final match = regex.firstMatch(payload);
     return match?.group(1);
   }
@@ -183,9 +188,7 @@ class NotificationService {
     );
   }
 
-  Future<void> notifyEventShared({
-    required String eventTitle,
-  }) async {
+  Future<void> notifyEventShared({required String eventTitle}) async {
     showInstantNotification(
       title: 'Event Shared!',
       body: 'You shared "$eventTitle"',
@@ -235,7 +238,7 @@ class NotificationService {
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Background message: ${message.messageId}');
-  
+
   // Handle background message
   if (message.notification != null) {
     print('Background notification: ${message.notification!.title}');

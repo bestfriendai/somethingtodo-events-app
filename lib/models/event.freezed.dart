@@ -44,6 +44,7 @@ mixin _$Event {
   String? get contactPhone => throw _privateConstructorUsedError;
   bool get isFeatured => throw _privateConstructorUsedError;
   bool get isPremium => throw _privateConstructorUsedError;
+  bool get isOnline => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
@@ -89,6 +90,7 @@ abstract class $EventCopyWith<$Res> {
       String? contactPhone,
       bool isFeatured,
       bool isPremium,
+      bool isOnline,
       @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? createdAt,
       @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
@@ -136,6 +138,7 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
     Object? contactPhone = freezed,
     Object? isFeatured = null,
     Object? isPremium = null,
+    Object? isOnline = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? createdBy = freezed,
@@ -229,6 +232,10 @@ class _$EventCopyWithImpl<$Res, $Val extends Event>
           ? _value.isPremium
           : isPremium // ignore: cast_nullable_to_non_nullable
               as bool,
+      isOnline: null == isOnline
+          ? _value.isOnline
+          : isOnline // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -297,6 +304,7 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       String? contactPhone,
       bool isFeatured,
       bool isPremium,
+      bool isOnline,
       @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? createdAt,
       @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
@@ -344,6 +352,7 @@ class __$$EventImplCopyWithImpl<$Res>
     Object? contactPhone = freezed,
     Object? isFeatured = null,
     Object? isPremium = null,
+    Object? isOnline = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? createdBy = freezed,
@@ -437,6 +446,10 @@ class __$$EventImplCopyWithImpl<$Res>
           ? _value.isPremium
           : isPremium // ignore: cast_nullable_to_non_nullable
               as bool,
+      isOnline: null == isOnline
+          ? _value.isOnline
+          : isOnline // ignore: cast_nullable_to_non_nullable
+              as bool,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -481,6 +494,7 @@ class _$EventImpl implements _Event {
       this.contactPhone,
       this.isFeatured = false,
       this.isPremium = false,
+      this.isOnline = false,
       @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       this.createdAt,
       @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
@@ -558,6 +572,9 @@ class _$EventImpl implements _Event {
   @JsonKey()
   final bool isPremium;
   @override
+  @JsonKey()
+  final bool isOnline;
+  @override
   @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   final DateTime? createdAt;
   @override
@@ -568,7 +585,7 @@ class _$EventImpl implements _Event {
 
   @override
   String toString() {
-    return 'Event(id: $id, title: $title, description: $description, organizerName: $organizerName, organizerImageUrl: $organizerImageUrl, venue: $venue, imageUrls: $imageUrls, category: $category, pricing: $pricing, startDateTime: $startDateTime, endDateTime: $endDateTime, tags: $tags, attendeeCount: $attendeeCount, maxAttendees: $maxAttendees, favoriteCount: $favoriteCount, status: $status, websiteUrl: $websiteUrl, ticketUrl: $ticketUrl, contactEmail: $contactEmail, contactPhone: $contactPhone, isFeatured: $isFeatured, isPremium: $isPremium, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy)';
+    return 'Event(id: $id, title: $title, description: $description, organizerName: $organizerName, organizerImageUrl: $organizerImageUrl, venue: $venue, imageUrls: $imageUrls, category: $category, pricing: $pricing, startDateTime: $startDateTime, endDateTime: $endDateTime, tags: $tags, attendeeCount: $attendeeCount, maxAttendees: $maxAttendees, favoriteCount: $favoriteCount, status: $status, websiteUrl: $websiteUrl, ticketUrl: $ticketUrl, contactEmail: $contactEmail, contactPhone: $contactPhone, isFeatured: $isFeatured, isPremium: $isPremium, isOnline: $isOnline, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy)';
   }
 
   @override
@@ -614,6 +631,8 @@ class _$EventImpl implements _Event {
                 other.isFeatured == isFeatured) &&
             (identical(other.isPremium, isPremium) ||
                 other.isPremium == isPremium) &&
+            (identical(other.isOnline, isOnline) ||
+                other.isOnline == isOnline) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -648,6 +667,7 @@ class _$EventImpl implements _Event {
         contactPhone,
         isFeatured,
         isPremium,
+        isOnline,
         createdAt,
         updatedAt,
         createdBy
@@ -695,6 +715,7 @@ abstract class _Event implements Event {
       final String? contactPhone,
       final bool isFeatured,
       final bool isPremium,
+      final bool isOnline,
       @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       final DateTime? createdAt,
       @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
@@ -749,6 +770,8 @@ abstract class _Event implements Event {
   bool get isFeatured;
   @override
   bool get isPremium;
+  @override
+  bool get isOnline;
   @override
   @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get createdAt;

@@ -6,8 +6,10 @@ import 'logging_service.dart';
 
 /// Enhanced caching service with aggressive API rate limit reduction
 class EnhancedCacheService {
-  static final EnhancedCacheService _instance = EnhancedCacheService._internal();
+  static final EnhancedCacheService _instance =
+      EnhancedCacheService._internal();
   factory EnhancedCacheService() => _instance;
+  static EnhancedCacheService get instance => _instance;
   EnhancedCacheService._internal();
 
   late Box<dynamic> _cacheBox;
@@ -25,13 +27,13 @@ class EnhancedCacheService {
 
     try {
       await Hive.initFlutter();
-      
+
       _cacheBox = await Hive.openBox('enhanced_cache');
       _metadataBox = await Hive.openBox('cache_metadata');
-      
+
       _isInitialized = true;
       LoggingService.info('Enhanced cache service initialized');
-      
+
       // Start background cleanup
       _startCleanupTimer();
     } catch (e) {
@@ -52,7 +54,7 @@ class EnhancedCacheService {
     try {
       // Determine TTL based on query type
       final effectiveTtl = ttl ?? _getTtlForQueryType(queryType);
-      
+
       final cacheEntry = {
         'data': events.map((e) => _eventToSimpleJson(e)).toList(),
         'timestamp': DateTime.now().millisecondsSinceEpoch,
@@ -62,7 +64,7 @@ class EnhancedCacheService {
       };
 
       await _cacheBox.put(key, cacheEntry);
-      
+
       // Update metadata
       await _metadataBox.put('${key}_meta', {
         'last_updated': DateTime.now().millisecondsSinceEpoch,
@@ -70,7 +72,9 @@ class EnhancedCacheService {
         'hits': 0,
       });
 
-      LoggingService.info('Cached ${events.length} events with key: $key (TTL: ${effectiveTtl.inMinutes}min)');
+      LoggingService.info(
+        'Cached ${events.length} events with key: $key (TTL: ${effectiveTtl.inMinutes}min)',
+      );
     } catch (e) {
       LoggingService.error('Failed to cache events: $e');
     }
@@ -105,7 +109,10 @@ class EnhancedCacheService {
       // Convert back to events
       final eventJsonList = cacheEntry['data'] as List<dynamic>;
       final events = eventJsonList
-          .map((json) => _eventFromSimpleJson(Map<String, dynamic>.from(json as Map)))
+          .map(
+            (json) =>
+                _eventFromSimpleJson(Map<String, dynamic>.from(json as Map)),
+          )
           .toList();
 
       LoggingService.info('Cache hit for key: $key (${events.length} events)');
@@ -129,8 +136,10 @@ class EnhancedCacheService {
   }) {
     final params = <String, dynamic>{
       if (query != null && query.isNotEmpty) 'q': query.toLowerCase(),
-      if (location != null && location.isNotEmpty) 'loc': location.toLowerCase(),
-      if (category != null && category.isNotEmpty) 'cat': category.toLowerCase(),
+      if (location != null && location.isNotEmpty)
+        'loc': location.toLowerCase(),
+      if (category != null && category.isNotEmpty)
+        'cat': category.toLowerCase(),
       if (startDate != null) 'start': startDate.millisecondsSinceEpoch,
       if (endDate != null) 'end': endDate.millisecondsSinceEpoch,
       if (latitude != null) 'lat': latitude.toStringAsFixed(3),
@@ -154,7 +163,7 @@ class EnhancedCacheService {
 
     final timestamp = cacheEntry['timestamp'] as int;
     final now = DateTime.now().millisecondsSinceEpoch;
-    
+
     // Check force refresh threshold
     if (forceRefreshAfter != null) {
       if (now - timestamp > forceRefreshAfter.inMilliseconds) {
@@ -199,7 +208,9 @@ class EnhancedCacheService {
       'total_size_bytes': totalSize,
       'total_hits': totalHits,
       'hit_ratio': totalEntries > 0 ? totalHits / totalEntries : 0.0,
-      'cache_efficiency': totalEntries > 0 ? (totalEntries - expiredCount) / totalEntries : 0.0,
+      'cache_efficiency': totalEntries > 0
+          ? (totalEntries - expiredCount) / totalEntries
+          : 0.0,
     };
   }
 
@@ -234,19 +245,19 @@ class EnhancedCacheService {
       case 'trending':
       case 'popular':
         return _shortTtl; // Trending data changes quickly
-      
+
       case 'location':
       case 'nearby':
         return _mediumTtl; // Location-based results fairly stable
-      
+
       case 'category':
       case 'search':
         return _longTtl; // Category results relatively stable
-      
+
       case 'featured':
       case 'recommended':
         return _veryLongTtl; // Featured content changes slowly
-      
+
       default:
         return _mediumTtl; // Default fallback
     }
@@ -262,12 +273,12 @@ class EnhancedCacheService {
   /// Pre-warm cache with popular queries
   Future<void> prewarmCache() async {
     LoggingService.info('Pre-warming cache with popular queries');
-    
+
     // This would be called during app initialization to cache
     // popular/common queries to reduce initial API calls
     final popularQueries = [
       'music events',
-      'food events', 
+      'food events',
       'sports events',
       'art events',
       'technology events',
@@ -280,10 +291,43 @@ class EnhancedCacheService {
     }
   }
 
+  /// Get cached nearby events
+  Future<List<Event>?> getCachedNearbyEvents(
+    double latitude,
+    double longitude, {
+    double radius = 10.0,
+  }) async {
+    final key = generateCacheKey(latitude: latitude, longitude: longitude);
+    return getCachedEvents(key);
+  }
+
+  /// Cache nearby events
+  Future<void> cacheNearbyEvents(
+    double latitude,
+    double longitude,
+    List<Event> events, {
+    double radius = 10.0,
+  }) async {
+    final key = generateCacheKey(latitude: latitude, longitude: longitude);
+    await cacheEvents(key, events, queryType: 'nearby');
+  }
+
+  /// Get cached featured events
+  Future<List<Event>?> getCachedFeaturedEvents() async {
+    const key = 'featured_events';
+    return getCachedEvents(key);
+  }
+
+  /// Cache featured events
+  Future<void> cacheFeaturedEvents(List<Event> events) async {
+    const key = 'featured_events';
+    await cacheEvents(key, events, queryType: 'featured');
+  }
+
   /// Clear all cache data
   Future<void> clearAll() async {
     if (!_isInitialized) await initialize();
-    
+
     await _cacheBox.clear();
     await _metadataBox.clear();
     LoggingService.info('All cache data cleared');
@@ -296,14 +340,52 @@ class EnhancedCacheService {
       _isInitialized = false;
     }
   }
-  
+
   /// Convert Event to simple JSON for Hive storage
   Map<String, dynamic> _eventToSimpleJson(Event event) {
     try {
-      // Convert to JSON and ensure simple types
-      final json = event.toJson();
-      // Recursively convert to simple types
-      return _toSimpleTypes(json);
+      // Create a simplified version manually to avoid freezed serialization issues
+      return {
+        'id': event.id,
+        'title': event.title,
+        'description': event.description,
+        'organizerName': event.organizerName,
+        'organizerImageUrl': event.organizerImageUrl,
+        'venue': {
+          'name': event.venue.name,
+          'address': event.venue.address,
+          'latitude': event.venue.latitude,
+          'longitude': event.venue.longitude,
+          'city': event.venue.city,
+          'state': event.venue.state,
+          'country': event.venue.country,
+          'zipCode': event.venue.zipCode,
+        },
+        'imageUrls': event.imageUrls,
+        'category': event.category.name,
+        'pricing': {
+          'price': event.pricing.price,
+          'currency': event.pricing.currency,
+          'isFree': event.pricing.isFree,
+        },
+        'startDateTime': event.startDateTime.toIso8601String(),
+        'endDateTime': event.endDateTime.toIso8601String(),
+        'tags': event.tags,
+        'attendeeCount': event.attendeeCount,
+        'maxAttendees': event.maxAttendees,
+        'favoriteCount': event.favoriteCount,
+        'status': event.status.name,
+        'websiteUrl': event.websiteUrl,
+        'ticketUrl': event.ticketUrl,
+        'contactEmail': event.contactEmail,
+        'contactPhone': event.contactPhone,
+        'isFeatured': event.isFeatured,
+        'isPremium': event.isPremium,
+        'isOnline': event.isOnline,
+        'createdAt': event.createdAt?.toIso8601String(),
+        'updatedAt': event.updatedAt?.toIso8601String(),
+        'createdBy': event.createdBy,
+      };
     } catch (e) {
       LoggingService.error('Error converting event to simple JSON: $e');
       // Return minimal event data
@@ -311,10 +393,13 @@ class EnhancedCacheService {
         'id': event.id,
         'title': event.title,
         'description': event.description,
+        'organizerName': event.organizerName,
+        'startDateTime': event.startDateTime.toIso8601String(),
+        'endDateTime': event.endDateTime.toIso8601String(),
       };
     }
   }
-  
+
   /// Convert complex types to simple types for Hive
   dynamic _toSimpleTypes(dynamic value) {
     if (value == null || value is String || value is num || value is bool) {
@@ -335,7 +420,7 @@ class EnhancedCacheService {
       return value.toString();
     }
   }
-  
+
   /// Create Event from simple JSON
   Event _eventFromSimpleJson(Map<String, dynamic> json) {
     try {

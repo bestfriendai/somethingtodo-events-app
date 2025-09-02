@@ -31,6 +31,7 @@ class Event with _$Event {
     String? contactPhone,
     @Default(false) bool isFeatured,
     @Default(false) bool isPremium,
+    @Default(false) bool isOnline,
     @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
     DateTime? createdAt,
     @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
@@ -58,7 +59,7 @@ class EventVenue with _$EventVenue {
     String? phoneNumber,
   }) = _EventVenue;
 
-  factory EventVenue.fromJson(Map<String, dynamic> json) => 
+  factory EventVenue.fromJson(Map<String, dynamic> json) =>
       _$EventVenueFromJson(json);
 }
 
@@ -72,7 +73,7 @@ class EventPricing with _$EventPricing {
     @Default([]) List<TicketTier> tiers,
   }) = _EventPricing;
 
-  factory EventPricing.fromJson(Map<String, dynamic> json) => 
+  factory EventPricing.fromJson(Map<String, dynamic> json) =>
       _$EventPricingFromJson(json);
 }
 
@@ -86,7 +87,7 @@ class TicketTier with _$TicketTier {
     @Default(0) int sold,
   }) = _TicketTier;
 
-  factory TicketTier.fromJson(Map<String, dynamic> json) => 
+  factory TicketTier.fromJson(Map<String, dynamic> json) =>
       _$TicketTierFromJson(json);
 }
 
@@ -176,6 +177,28 @@ extension EventCategoryExtension on EventCategory {
         return '📌';
     }
   }
+
+  String toLowerCase() => name.toLowerCase();
+}
+
+// Extension to provide backward compatibility for missing properties
+extension EventCompatibilityExtension on Event {
+  // Backward compatibility getters
+  DateTime get startDate => startDateTime;
+  DateTime get endDate => endDateTime;
+  String get imageUrl => imageUrls.isNotEmpty ? imageUrls.first : '';
+  String get location => venue.name;
+  String get organizer => organizerName;
+  double get price => pricing.price;
+  String get currency => pricing.currency;
+  int get capacity => maxAttendees;
+  int get attendees => attendeeCount;
+  int get currentAttendees => attendeeCount;
+  DateTime get startTime => startDateTime;
+  String get registrationUrl => ticketUrl ?? websiteUrl ?? '';
+
+  // User-specific properties (these should ideally come from a separate user-event relationship)
+  bool get isFavorite => false; // This should be determined by user context
 }
 
 // Helper functions for Firestore Timestamp conversion

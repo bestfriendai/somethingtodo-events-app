@@ -255,6 +255,7 @@ class RapidAPIEventsService {
     return await _rateLimitService.executeRequest<List<Event>>(
       endpoint: '/search-events',
       priority: 1,
+      timeout: const Duration(seconds: 15),
       request: () async {
         return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
@@ -350,6 +351,7 @@ class RapidAPIEventsService {
     return await _rateLimitService.executeRequest<List<Event>>(
       endpoint: '/search-events',
       priority: 2,
+      timeout: const Duration(seconds: 15),
       request: () async {
         return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
@@ -418,6 +420,7 @@ class RapidAPIEventsService {
     return await _rateLimitService.executeRequest<List<Event>>(
       endpoint: '/search-events',
       priority: 3,
+      timeout: const Duration(seconds: 10),
       request: () async {
         return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
@@ -539,6 +542,7 @@ class RapidAPIEventsService {
     return await _rateLimitService.executeRequest<List<Event>>(
       endpoint: '/search-events',
       priority: 2,
+      timeout: const Duration(seconds: 12),
       request: () async {
         return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
