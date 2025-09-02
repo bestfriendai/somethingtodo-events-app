@@ -74,6 +74,11 @@ class ChatService {
 
   Future<List<ChatSession>> getUserChatSessions(String userId) async {
     try {
+      // In demo mode, return empty list or mock sessions
+      if (AppConfig.demoMode) {
+        return [];
+      }
+      
       final querySnapshot = await _chatSessionsCollection
           .where('userId', isEqualTo: userId)
           .where('status', isEqualTo: ChatStatus.active.name)
@@ -85,7 +90,9 @@ class ChatService {
           .map((doc) => ChatSession.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw Exception('Failed to get chat sessions: $e');
+      // In case of permission errors or other issues, return empty list
+      print('Failed to get chat sessions: $e');
+      return [];
     }
   }
 

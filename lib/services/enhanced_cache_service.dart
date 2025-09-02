@@ -54,7 +54,7 @@ class EnhancedCacheService {
       final effectiveTtl = ttl ?? _getTtlForQueryType(queryType);
       
       final cacheEntry = {
-        'data': events.map((e) => e.toJson()).toList(),
+        'data': events.map((e) => _eventToSimpleJson(e)).toList(),
         'timestamp': DateTime.now().millisecondsSinceEpoch,
         'ttl': effectiveTtl.inMilliseconds,
         'query_type': queryType,
@@ -105,7 +105,7 @@ class EnhancedCacheService {
       // Convert back to events
       final eventJsonList = cacheEntry['data'] as List<dynamic>;
       final events = eventJsonList
-          .map((json) => Event.fromJson(json as Map<String, dynamic>))
+          .map((json) => _eventFromSimpleJson(Map<String, dynamic>.from(json as Map)))
           .toList();
 
       LoggingService.info('Cache hit for key: $key (${events.length} events)');
@@ -294,6 +294,74 @@ class EnhancedCacheService {
       await _cacheBox.close();
       await _metadataBox.close();
       _isInitialized = false;
+    }
+  }
+  
+  /// Convert Event to simple JSON for Hive storage
+  Map<String, dynamic> _eventToSimpleJson(Event event) {
+    try {
+      // Convert to JSON and ensure simple types
+      final json = event.toJson();
+      // Recursively convert to simple types
+      return _toSimpleTypes(json);
+    } catch (e) {
+      LoggingService.error('Error converting event to simple JSON: $e');
+      // Return minimal event data
+      return {
+        'id': event.id,
+        'title': event.title,
+        'description': event.description,
+      };
+    }
+  }
+  
+  /// Convert complex types to simple types for Hive
+  dynamic _toSimpleTypes(dynamic value) {
+    if (value == null || value is String || value is num || value is bool) {
+      return value;
+    } else if (value is DateTime) {
+      return value.toIso8601String();
+    } else if (value is List) {
+      return value.map((e) => _toSimpleTypes(e)).toList();
+    } else if (value is Map) {
+      final Map<String, dynamic> result = {};
+      value.forEach((key, val) {
+        if (key is String) {
+          result[key] = _toSimpleTypes(val);
+        }
+      });
+      return result;
+    } else {
+      return value.toString();
+    }
+  }
+  
+  /// Create Event from simple JSON
+  Event _eventFromSimpleJson(Map<String, dynamic> json) {
+    try {
+      return Event.fromJson(json);
+    } catch (e) {
+      LoggingService.error('Error creating event from JSON: $e');
+      // Return a minimal event
+      return Event(
+        id: json['id'] ?? 'unknown',
+        title: json['title'] ?? 'Unknown Event',
+        description: json['description'] ?? '',
+        organizerName: 'Unknown',
+        venue: const EventVenue(
+          name: 'Unknown Venue',
+          address: '',
+          latitude: 0.0,
+          longitude: 0.0,
+        ),
+        imageUrls: [],
+        category: EventCategory.other,
+        pricing: const EventPricing(isFree: true),
+        startDateTime: DateTime.now(),
+        endDateTime: DateTime.now().add(const Duration(hours: 2)),
+        status: EventStatus.active,
+        createdBy: 'system',
+      );
     }
   }
 }

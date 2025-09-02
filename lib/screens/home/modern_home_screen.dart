@@ -175,15 +175,17 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
             children: [
               // Subtle gradient overlay instead of aurora
               Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      center: Alignment.topLeft,
-                      radius: 1.5,
-                      colors: [
-                        const Color(0xFF7C3AED).withValues(alpha: 0.05),
-                        Colors.transparent,
-                      ],
+                child: IgnorePointer(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        center: Alignment.topLeft,
+                        radius: 1.5,
+                        colors: [
+                          const Color(0xFF7C3AED).withValues(alpha: 0.05),
+                          Colors.transparent,
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -231,28 +233,32 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
               
               // Particle effects overlay
               Positioned.fill(
-                child: CustomPaint(
-                  painter: ParticleEffectPainter(
-                    animation: _animationController,
-                    particleCount: 30,
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    painter: ParticleEffectPainter(
+                      animation: _animationController,
+                      particleCount: 30,
+                    ),
                   ),
                 ),
               ),
               
               // Mesh gradient overlay for depth
               Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        const Color(0xFF0A0A0B).withValues(alpha: 0.3),
-                        const Color(0xFF0A0A0B).withValues(alpha: 0.7),
-                        const Color(0xFF0A0A0B),
-                      ],
-                      stops: const [0.0, 0.3, 0.7, 1.0],
+                child: IgnorePointer(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          const Color(0xFF0A0A0B).withValues(alpha: 0.3),
+                          const Color(0xFF0A0A0B).withValues(alpha: 0.7),
+                          const Color(0xFF0A0A0B),
+                        ],
+                        stops: const [0.0, 0.3, 0.7, 1.0],
+                      ),
                     ),
                   ),
                 ),

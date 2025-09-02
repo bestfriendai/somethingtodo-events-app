@@ -74,7 +74,7 @@ class LocationService {
       await _analytics.logEvent(
         name: AnalyticsEvents.locationPermission,
         parameters: {
-          'granted': isGranted,
+          'granted': isGranted ? 'true' : 'false', // Firebase Analytics requires string or number
           'permission_level': permission.name,
           'platform': kIsWeb ? 'web' : 'mobile',
         },

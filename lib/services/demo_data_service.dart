@@ -5,6 +5,7 @@ class DemoDataService {
   static final Random _random = Random();
   static List<DemoUser>? _cachedUsers;
   static Map<String, List<String>>? _cachedInteractions;
+  static List<Event>? _cachedEvents;
 
   /// Generate realistic demo user profiles
   static List<DemoUser> getDemoUsers() {
@@ -464,4 +465,295 @@ enum NotificationType {
   priceAlert,
   weatherUpdate,
   systemNotification,
+}
+
+// Add static methods for getting demo events
+extension DemoEventMethods on DemoDataService {
+  /// Get demo events for a specific location
+  static Future<List<Event>> getDemoEvents({
+    required String location,
+    int limit = 50,
+  }) async {
+    // Generate diverse demo events
+    final events = <Event>[];
+    final categories = EventCategory.values;
+    final now = DateTime.now();
+    
+    for (int i = 0; i < limit && i < 100; i++) {
+      final category = categories[i % categories.length];
+      final dayOffset = (i ~/ 5) + 1;
+      final startTime = now.add(Duration(days: dayOffset, hours: (i % 24)));
+      
+      events.add(Event(
+        id: 'demo_event_$i',
+        title: _generateEventTitle(category, i),
+        description: _generateEventDescription(category),
+        organizerName: _getRandomOrganizer(),
+        venue: _generateVenue(location, i),
+        imageUrls: [_getEventImage(category, i)],
+        category: category,
+        pricing: _generatePricing(category, i),
+        startDateTime: startTime,
+        endDateTime: startTime.add(const Duration(hours: 3)),
+        tags: _generateTags(category),
+        attendeeCount: DemoDataService._random.nextInt(500) + 50,
+        maxAttendees: DemoDataService._random.nextInt(1000) + 100,
+        favoriteCount: DemoDataService._random.nextInt(200),
+        status: EventStatus.active,
+        isFeatured: i < 5,
+        isPremium: i % 10 == 0,
+        createdAt: now.subtract(Duration(days: 30 - i)),
+        updatedAt: now.subtract(Duration(days: 1)),
+        createdBy: 'demo_system',
+      ));
+    }
+    
+    return events;
+  }
+  
+  /// Get trending demo events
+  static Future<List<Event>> getTrendingEvents({int limit = 50}) async {
+    final events = await getDemoEvents(location: 'San Francisco', limit: limit * 2);
+    // Sort by favorite count to simulate trending
+    events.sort((a, b) => b.favoriteCount.compareTo(a.favoriteCount));
+    return events.take(limit).toList();
+  }
+  
+  static String _generateEventTitle(EventCategory category, int index) {
+    final titles = {
+      EventCategory.music: [
+        'Summer Music Festival',
+        'Jazz Night at the Park',
+        'Rock Concert Series',
+        'Classical Symphony',
+        'Indie Band Showcase',
+      ],
+      EventCategory.sports: [
+        'Basketball Tournament',
+        'Marathon Training Session',
+        'Yoga in the Park',
+        'Soccer League Finals',
+        'Tennis Championship',
+      ],
+      EventCategory.food: [
+        'Food Truck Festival',
+        'Wine Tasting Evening',
+        'Cooking Masterclass',
+        'Farmers Market',
+        'Restaurant Week',
+      ],
+      EventCategory.technology: [
+        'Tech Startup Pitch Night',
+        'AI Conference 2024',
+        'Coding Bootcamp',
+        'Web3 Workshop',
+        'Mobile Dev Meetup',
+      ],
+      EventCategory.arts: [
+        'Art Gallery Opening',
+        'Photography Exhibition',
+        'Street Art Tour',
+        'Pottery Workshop',
+        'Film Festival',
+      ],
+      EventCategory.business: [
+        'Networking Mixer',
+        'Entrepreneur Summit',
+        'Business Strategy Workshop',
+        'Leadership Conference',
+        'Sales Training',
+      ],
+      EventCategory.education: [
+        'University Open Day',
+        'Science Fair',
+        'History Lecture Series',
+        'Language Exchange',
+        'Study Skills Workshop',
+      ],
+      EventCategory.health: [
+        'Wellness Retreat',
+        'Mental Health Workshop',
+        'Fitness Bootcamp',
+        'Nutrition Seminar',
+        'Meditation Session',
+      ],
+      EventCategory.community: [
+        'Neighborhood Cleanup',
+        'Community BBQ',
+        'Volunteer Fair',
+        'Town Hall Meeting',
+        'Cultural Festival',
+      ],
+      EventCategory.other: [
+        'Special Event',
+        'Grand Opening',
+        'Anniversary Celebration',
+        'Pop-up Experience',
+        'Mystery Event',
+      ],
+    };
+    
+    final categoryTitles = titles[category] ?? titles[EventCategory.other]!;
+    return '${categoryTitles[index % categoryTitles.length]} ${index > 20 ? "#${index}" : ""}';
+  }
+  
+  static String _generateEventDescription(EventCategory category) {
+    final descriptions = {
+      EventCategory.music: 'Join us for an unforgettable musical experience featuring talented artists and amazing performances.',
+      EventCategory.sports: 'Get active and have fun with fellow sports enthusiasts in this exciting event.',
+      EventCategory.food: 'Discover delicious flavors and culinary delights at this food-focused gathering.',
+      EventCategory.technology: 'Explore the latest innovations and connect with tech professionals.',
+      EventCategory.arts: 'Immerse yourself in creativity and artistic expression at this cultural event.',
+      EventCategory.business: 'Network with professionals and learn valuable business insights.',
+      EventCategory.education: 'Expand your knowledge and learn something new at this educational event.',
+      EventCategory.health: 'Focus on your wellbeing and health at this wellness-focused gathering.',
+      EventCategory.community: 'Connect with your community and make a positive impact.',
+      EventCategory.other: 'Join us for this special event and create lasting memories.',
+    };
+    return descriptions[category] ?? descriptions[EventCategory.other]!;
+  }
+  
+  static String _getRandomOrganizer() {
+    final organizers = [
+      'City Events Co.',
+      'Community Connect',
+      'EventPro Productions',
+      'Local Happenings',
+      'Social Scene',
+      'Experience Creators',
+      'Urban Adventures',
+      'Cultural Collective',
+    ];
+    return organizers[DemoDataService._random.nextInt(organizers.length)];
+  }
+  
+  static EventVenue _generateVenue(String location, int index) {
+    final venues = [
+      EventVenue(
+        name: 'Golden Gate Park',
+        address: 'Golden Gate Park',
+        city: 'San Francisco',
+        state: 'CA',
+        country: 'USA',
+        latitude: 37.7694,
+        longitude: -122.4862,
+      ),
+      EventVenue(
+        name: 'Moscone Center',
+        address: '747 Howard St',
+        city: 'San Francisco',
+        state: 'CA',
+        country: 'USA',
+        latitude: 37.7842,
+        longitude: -122.4006,
+      ),
+      EventVenue(
+        name: 'Chase Center',
+        address: '1 Warriors Way',
+        city: 'San Francisco',
+        state: 'CA',
+        country: 'USA',
+        latitude: 37.7680,
+        longitude: -122.3878,
+      ),
+      EventVenue(
+        name: 'Ferry Building',
+        address: 'Ferry Building Marketplace',
+        city: 'San Francisco',
+        state: 'CA',
+        country: 'USA',
+        latitude: 37.7956,
+        longitude: -122.3933,
+      ),
+      EventVenue(
+        name: 'Union Square',
+        address: 'Union Square',
+        city: 'San Francisco',
+        state: 'CA',
+        country: 'USA',
+        latitude: 37.7880,
+        longitude: -122.4075,
+      ),
+    ];
+    return venues[index % venues.length];
+  }
+  
+  static String _getEventImage(EventCategory category, int index) {
+    final images = {
+      EventCategory.music: [
+        'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800',
+        'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800',
+        'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=800',
+      ],
+      EventCategory.sports: [
+        'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800',
+        'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800',
+        'https://images.unsplash.com/photo-1544298621-35a764866ff0?w=800',
+      ],
+      EventCategory.food: [
+        'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800',
+        'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800',
+        'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800',
+      ],
+      EventCategory.technology: [
+        'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
+        'https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=800',
+        'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800',
+      ],
+      EventCategory.arts: [
+        'https://images.unsplash.com/photo-1549490349-8643362247b5?w=800',
+        'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800',
+        'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800',
+      ],
+    };
+    
+    final categoryImages = images[category] ?? [
+      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800',
+      'https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800',
+    ];
+    return categoryImages[index % categoryImages.length];
+  }
+  
+  static EventPricing _generatePricing(EventCategory category, int index) {
+    if (index % 3 == 0) {
+      return const EventPricing(isFree: true, price: 0, currency: 'USD');
+    }
+    
+    final basePrice = {
+      EventCategory.music: 45.0,
+      EventCategory.sports: 25.0,
+      EventCategory.food: 35.0,
+      EventCategory.technology: 75.0,
+      EventCategory.arts: 20.0,
+      EventCategory.business: 50.0,
+      EventCategory.education: 15.0,
+      EventCategory.health: 30.0,
+      EventCategory.community: 0.0,
+      EventCategory.other: 25.0,
+    };
+    
+    final price = (basePrice[category] ?? 25.0) + (index % 5) * 10;
+    return EventPricing(
+      isFree: false,
+      price: price,
+      currency: 'USD',
+      priceDescription: 'Early bird pricing available',
+    );
+  }
+  
+  static List<String> _generateTags(EventCategory category) {
+    final tags = {
+      EventCategory.music: ['live music', 'concert', 'performance', 'entertainment'],
+      EventCategory.sports: ['fitness', 'active', 'outdoor', 'competition'],
+      EventCategory.food: ['dining', 'culinary', 'tasting', 'foodie'],
+      EventCategory.technology: ['tech', 'innovation', 'startup', 'digital'],
+      EventCategory.arts: ['creative', 'culture', 'exhibition', 'artistic'],
+      EventCategory.business: ['networking', 'professional', 'career', 'entrepreneur'],
+      EventCategory.education: ['learning', 'workshop', 'seminar', 'training'],
+      EventCategory.health: ['wellness', 'fitness', 'mindfulness', 'healthy'],
+      EventCategory.community: ['local', 'volunteer', 'social', 'neighborhood'],
+      EventCategory.other: ['special', 'unique', 'experience', 'fun'],
+    };
+    return tags[category] ?? tags[EventCategory.other]!;
+  }
 }
