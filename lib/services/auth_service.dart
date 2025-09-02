@@ -93,26 +93,58 @@ class AuthService {
   Future<UserCredential?> signInWithGoogle() async {
     try {
       // Check if Google Sign-In is available
-      if (kIsWeb || AppConfig.demoMode) {
-        throw UnsupportedError('Google Sign-In not available in demo mode or on web');
+      if (kIsWeb) {
+        throw UnsupportedError('Google Sign-In not available on web platform');
+      }
+      
+      if (AppConfig.demoMode) {
+        throw UnsupportedError('Google Sign-In not available in demo mode');
       }
 
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) return null;
+      print('Starting Google Sign-In process...');
+      
+      // Initialize Google Sign-In if needed
+      final GoogleSignIn googleSignInInstance = GoogleSignIn(
+        scopes: [
+          'email',
+          'profile',
+        ],
+      );
 
+      // Sign out first to ensure account selection dialog appears
+      await googleSignInInstance.signOut();
+      
+      print('Presenting Google Sign-In dialog...');
+      final GoogleSignInAccount? googleUser = await googleSignInInstance.signIn();
+      
+      if (googleUser == null) {
+        print('User cancelled Google Sign-In');
+        return null;
+      }
+
+      print('Google Sign-In successful, getting authentication tokens...');
       final GoogleSignInAuthentication googleAuth = 
           await googleUser.authentication;
 
+      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+        throw Exception('Failed to get authentication tokens from Google');
+      }
+
+      print('Creating Firebase credential...');
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
+      print('Signing in to Firebase with Google credential...');
       final userCredential = await _auth.signInWithCredential(credential);
       
       if (userCredential.user != null) {
+        print('Firebase sign-in successful, creating user profile...');
         await _createUserProfile(userCredential.user!, {
           'signup_method': 'google',
+          'google_email': googleUser.email,
+          'google_display_name': googleUser.displayName,
         });
         
         await _analytics.logEvent(
@@ -122,11 +154,25 @@ class AuthService {
             'user_id': userCredential.user!.uid,
           },
         );
+        
+        print('Google Sign-In completed successfully');
       }
 
       return userCredential;
-    } catch (e) {
-      throw Exception('Google sign in failed: $e');
+    } on FirebaseAuthException catch (e) {
+      print('FirebaseAuthException during Google Sign-In: ${e.code} - ${e.message}');
+      throw _handleAuthException(e);
+    } catch (e, stackTrace) {
+      print('Error during Google Sign-In: $e');
+      print('Stack trace: $stackTrace');
+      
+      if (e.toString().contains('PlatformException')) {
+        throw Exception('Google Sign-In configuration error. Please check your iOS/Android setup.');
+      } else if (e.toString().contains('network')) {
+        throw Exception('Network error. Please check your internet connection.');
+      } else {
+        throw Exception('Google sign-in failed: ${e.toString()}');
+      }
     }
   }
 
@@ -208,21 +254,29 @@ class AuthService {
 
   // Profile Management
   Future<void> _createUserProfile(User user, Map<String, dynamic> metadata) async {
-    final appUser = AppUser(
-      id: user.uid,
-      email: user.email ?? '',
-      displayName: user.displayName,
-      photoUrl: user.photoURL,
-      phoneNumber: user.phoneNumber,
-      preferences: const UserPreferences(),
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
+    try {
+      final appUser = AppUser(
+        id: user.uid,
+        email: user.email ?? metadata['google_email'] ?? '',
+        displayName: user.displayName ?? metadata['google_display_name'] ?? 'User',
+        photoUrl: user.photoURL,
+        phoneNumber: user.phoneNumber,
+        preferences: const UserPreferences(),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
 
-    await _firestore
-        .collection('users')
-        .doc(user.uid)
-        .set(appUser.toJson());
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .set(appUser.toJson());
+      
+      print('User profile created successfully for ${user.uid}');
+    } catch (e) {
+      print('Warning: Failed to create user profile in Firestore: $e');
+      // Don't throw the error - authentication was successful even if profile creation failed
+      // The app can still work without the Firestore profile in demo/development mode
+    }
   }
 
   Future<AppUser?> getUserProfile(String userId) async {
