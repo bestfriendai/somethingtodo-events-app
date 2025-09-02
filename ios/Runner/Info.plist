@@ -51,5 +51,14 @@
 	<string>SomethingToDo uses your location to show nearby events even when the app is in background</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>SomethingToDo needs location access to show you the best events in your area</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.98198399231-3ddb86ae05f9f110b384ca</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
