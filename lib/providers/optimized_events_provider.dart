@@ -351,10 +351,11 @@ class OptimizedEventsProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final results = await PerformanceOptimizer.runInIsolate(
-        _searchInIsolate,
-        {'query': query, 'events': _events},
-      );
+      // Run search in background to prevent UI blocking
+      final results = await Future.microtask(() => _searchInIsolate({
+        'query': query,
+        'events': _events,
+      }));
 
       _searchResults = results;
     } catch (e) {

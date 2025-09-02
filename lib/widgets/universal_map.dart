@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
 import 'package:latlong2/latlong.dart';
 import '../models/event.dart';
 import '../config/mapbox_config.dart';
@@ -74,11 +73,10 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
             },
           ),
           children: [
-            // Mapbox Tile Layer with cancellable provider for better web performance
+            // Mapbox Tile Layer
             TileLayer(
               urlTemplate: 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${MapboxConfig.accessToken}',
               userAgentPackageName: 'com.somethingtodo.app',
-              tileProvider: CancellableNetworkTileProvider(),
             ),
             
             // Event Markers

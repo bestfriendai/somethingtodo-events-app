@@ -27,9 +27,7 @@ mixin _$ChatSession {
   ChatType get type => throw _privateConstructorUsedError;
   ChatStatus get status => throw _privateConstructorUsedError;
   Map<String, dynamic>? get context => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get createdAt => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this ChatSession to a JSON map.
@@ -56,9 +54,7 @@ abstract class $ChatSessionCopyWith<$Res> {
       ChatType type,
       ChatStatus status,
       Map<String, dynamic>? context,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? updatedAt});
 }
 
@@ -144,9 +140,7 @@ abstract class _$$ChatSessionImplCopyWith<$Res>
       ChatType type,
       ChatStatus status,
       Map<String, dynamic>? context,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? updatedAt});
 }
 
@@ -225,9 +219,7 @@ class _$ChatSessionImpl implements _ChatSession {
       this.type = ChatType.eventDiscovery,
       this.status = ChatStatus.active,
       final Map<String, dynamic>? context,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       this.createdAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       this.updatedAt})
       : _messages = messages,
         _context = context;
@@ -267,10 +259,8 @@ class _$ChatSessionImpl implements _ChatSession {
   }
 
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime? createdAt;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime? updatedAt;
 
   @override
@@ -335,9 +325,7 @@ abstract class _ChatSession implements ChatSession {
       final ChatType type,
       final ChatStatus status,
       final Map<String, dynamic>? context,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       final DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       final DateTime? updatedAt}) = _$ChatSessionImpl;
 
   factory _ChatSession.fromJson(Map<String, dynamic> json) =
@@ -358,10 +346,8 @@ abstract class _ChatSession implements ChatSession {
   @override
   Map<String, dynamic>? get context;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get createdAt;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get updatedAt;
 
   /// Create a copy of ChatSession
@@ -388,7 +374,6 @@ mixin _$ChatMessage {
   List<MessageAction> get actions => throw _privateConstructorUsedError;
   List<EventRecommendation> get recommendations =>
       throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get timestamp => throw _privateConstructorUsedError;
 
   /// Serializes this ChatMessage to a JSON map.
@@ -417,7 +402,6 @@ abstract class $ChatMessageCopyWith<$Res> {
       Map<String, dynamic>? metadata,
       List<MessageAction> actions,
       List<EventRecommendation> recommendations,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? timestamp});
 }
 
@@ -510,7 +494,6 @@ abstract class _$$ChatMessageImplCopyWith<$Res>
       Map<String, dynamic>? metadata,
       List<MessageAction> actions,
       List<EventRecommendation> recommendations,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? timestamp});
 }
 
@@ -596,7 +579,6 @@ class _$ChatMessageImpl implements _ChatMessage {
       final Map<String, dynamic>? metadata,
       final List<MessageAction> actions = const [],
       final List<EventRecommendation> recommendations = const [],
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       this.timestamp})
       : _metadata = metadata,
         _actions = actions,
@@ -648,7 +630,6 @@ class _$ChatMessageImpl implements _ChatMessage {
   }
 
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime? timestamp;
 
   @override
@@ -718,7 +699,6 @@ abstract class _ChatMessage implements ChatMessage {
       final Map<String, dynamic>? metadata,
       final List<MessageAction> actions,
       final List<EventRecommendation> recommendations,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       final DateTime? timestamp}) = _$ChatMessageImpl;
 
   factory _ChatMessage.fromJson(Map<String, dynamic> json) =
@@ -743,7 +723,6 @@ abstract class _ChatMessage implements ChatMessage {
   @override
   List<EventRecommendation> get recommendations;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get timestamp;
 
   /// Create a copy of ChatMessage
@@ -1011,7 +990,6 @@ mixin _$ChatRecommendation {
   double get confidenceScore => throw _privateConstructorUsedError;
   List<String> get matchingCriteria => throw _privateConstructorUsedError;
   RecommendationStatus get status => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this ChatRecommendation to a JSON map.
@@ -1037,7 +1015,6 @@ abstract class $ChatRecommendationCopyWith<$Res> {
       double confidenceScore,
       List<String> matchingCriteria,
       RecommendationStatus status,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? createdAt});
 }
 
@@ -1112,7 +1089,6 @@ abstract class _$$ChatRecommendationImplCopyWith<$Res>
       double confidenceScore,
       List<String> matchingCriteria,
       RecommendationStatus status,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? createdAt});
 }
 
@@ -1180,7 +1156,6 @@ class _$ChatRecommendationImpl implements _ChatRecommendation {
       required this.confidenceScore,
       final List<String> matchingCriteria = const [],
       this.status = RecommendationStatus.pending,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       this.createdAt})
       : _matchingCriteria = matchingCriteria;
 
@@ -1209,7 +1184,6 @@ class _$ChatRecommendationImpl implements _ChatRecommendation {
   @JsonKey()
   final RecommendationStatus status;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime? createdAt;
 
   @override
@@ -1271,7 +1245,6 @@ abstract class _ChatRecommendation implements ChatRecommendation {
       required final double confidenceScore,
       final List<String> matchingCriteria,
       final RecommendationStatus status,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       final DateTime? createdAt}) = _$ChatRecommendationImpl;
 
   factory _ChatRecommendation.fromJson(Map<String, dynamic> json) =
@@ -1290,7 +1263,6 @@ abstract class _ChatRecommendation implements ChatRecommendation {
   @override
   RecommendationStatus get status;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get createdAt;
 
   /// Create a copy of ChatRecommendation
@@ -1314,7 +1286,6 @@ mixin _$EventRecommendation {
   double get confidenceScore => throw _privateConstructorUsedError;
   List<String> get reasons => throw _privateConstructorUsedError;
   RecommendationStatus get status => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this EventRecommendation to a JSON map.
@@ -1341,7 +1312,6 @@ abstract class $EventRecommendationCopyWith<$Res> {
       double confidenceScore,
       List<String> reasons,
       RecommendationStatus status,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? createdAt});
 }
 
@@ -1422,7 +1392,6 @@ abstract class _$$EventRecommendationImplCopyWith<$Res>
       double confidenceScore,
       List<String> reasons,
       RecommendationStatus status,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? createdAt});
 }
 
@@ -1496,7 +1465,6 @@ class _$EventRecommendationImpl implements _EventRecommendation {
       this.confidenceScore = 0.0,
       final List<String> reasons = const [],
       this.status = RecommendationStatus.pending,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       this.createdAt})
       : _reasons = reasons;
 
@@ -1527,7 +1495,6 @@ class _$EventRecommendationImpl implements _EventRecommendation {
   @JsonKey()
   final RecommendationStatus status;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime? createdAt;
 
   @override
@@ -1592,7 +1559,6 @@ abstract class _EventRecommendation implements EventRecommendation {
       final double confidenceScore,
       final List<String> reasons,
       final RecommendationStatus status,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       final DateTime? createdAt}) = _$EventRecommendationImpl;
 
   factory _EventRecommendation.fromJson(Map<String, dynamic> json) =
@@ -1613,7 +1579,6 @@ abstract class _EventRecommendation implements EventRecommendation {
   @override
   RecommendationStatus get status;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get createdAt;
 
   /// Create a copy of EventRecommendation

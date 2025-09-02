@@ -157,7 +157,7 @@ class _LoadingOverlayState extends State<LoadingOverlay>
                           .scale(duration: 1.seconds, curve: Curves.easeInOut)
                           .then()
                           .scale(
-                            end: 1.2,
+                            end: const Offset(1.2, 1.2),
                             duration: 1.seconds,
                             curve: Curves.easeInOut,
                           )

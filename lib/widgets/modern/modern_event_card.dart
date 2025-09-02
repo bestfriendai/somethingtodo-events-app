@@ -445,16 +445,14 @@ class _ModernEventCardState extends State<ModernEventCard>
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: widget.event.pricing.isFree 
-                                    ? [const Color(0xFF10B981), const Color(0xFF34D399)]
-                                    : [const Color(0xFF7C3AED), const Color(0xFF8B5CF6)],
+                                colors: widget.event.pricing.isFree
+                                    ? [const Color(0xFF000000), const Color(0xFF1A1A1A)]
+                                    : [const Color(0xFF000000), const Color(0xFF1A1A1A)],
                               ),
                               borderRadius: BorderRadius.circular(25),
                               boxShadow: [
                                 BoxShadow(
-                                  color: (widget.event.pricing.isFree 
-                                      ? const Color(0xFF10B981)
-                                      : const Color(0xFF7C3AED)).withValues(alpha: 0.4),
+                                  color: const Color(0xFF000000).withValues(alpha: 0.4),
                                   blurRadius: 12,
                                   offset: const Offset(0, 6),
                                 ),

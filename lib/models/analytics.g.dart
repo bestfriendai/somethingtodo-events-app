@@ -15,7 +15,9 @@ _$UserEventImpl _$$UserEventImplFromJson(Map<String, dynamic> json) =>
       parameters: json['parameters'] as Map<String, dynamic>?,
       sessionId: json['sessionId'] as String?,
       screenName: json['screenName'] as String?,
-      timestamp: _fromJsonTimestampNullable(json['timestamp']),
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
     );
 
 Map<String, dynamic> _$$UserEventImplToJson(_$UserEventImpl instance) =>
@@ -27,15 +29,17 @@ Map<String, dynamic> _$$UserEventImplToJson(_$UserEventImpl instance) =>
       'parameters': instance.parameters,
       'sessionId': instance.sessionId,
       'screenName': instance.screenName,
-      'timestamp': _toJsonTimestamp(instance.timestamp),
+      'timestamp': instance.timestamp?.toIso8601String(),
     };
 
 _$SessionDataImpl _$$SessionDataImplFromJson(Map<String, dynamic> json) =>
     _$SessionDataImpl(
       sessionId: json['sessionId'] as String,
       userId: json['userId'] as String,
-      startTime: _fromJsonTimestamp(json['startTime']),
-      endTime: _fromJsonTimestamp(json['endTime']),
+      startTime: DateTime.parse(json['startTime'] as String),
+      endTime: json['endTime'] == null
+          ? null
+          : DateTime.parse(json['endTime'] as String),
       duration: (json['duration'] as num?)?.toInt() ?? 0,
       screenViews: (json['screenViews'] as num?)?.toInt() ?? 0,
       eventsViewed: (json['eventsViewed'] as num?)?.toInt() ?? 0,
@@ -53,8 +57,8 @@ Map<String, dynamic> _$$SessionDataImplToJson(_$SessionDataImpl instance) =>
     <String, dynamic>{
       'sessionId': instance.sessionId,
       'userId': instance.userId,
-      'startTime': _toJsonTimestamp(instance.startTime),
-      'endTime': _toJsonTimestamp(instance.endTime),
+      'startTime': instance.startTime.toIso8601String(),
+      'endTime': instance.endTime?.toIso8601String(),
       'duration': instance.duration,
       'screenViews': instance.screenViews,
       'eventsViewed': instance.eventsViewed,
@@ -84,7 +88,9 @@ _$EventAnalyticsImpl _$$EventAnalyticsImplFromJson(Map<String, dynamic> json) =>
             (k, e) => MapEntry(k, (e as num).toInt()),
           ) ??
           const {},
-      lastUpdated: _fromJsonTimestampNullable(json['lastUpdated']),
+      lastUpdated: json['lastUpdated'] == null
+          ? null
+          : DateTime.parse(json['lastUpdated'] as String),
     );
 
 Map<String, dynamic> _$$EventAnalyticsImplToJson(
@@ -100,7 +106,7 @@ Map<String, dynamic> _$$EventAnalyticsImplToJson(
       'averageViewDuration': instance.averageViewDuration,
       'viewsByCategory': instance.viewsByCategory,
       'viewsByLocation': instance.viewsByLocation,
-      'lastUpdated': _toJsonTimestamp(instance.lastUpdated),
+      'lastUpdated': instance.lastUpdated?.toIso8601String(),
     };
 
 _$SearchAnalyticsImpl _$$SearchAnalyticsImplFromJson(
@@ -114,7 +120,9 @@ _$SearchAnalyticsImpl _$$SearchAnalyticsImplFromJson(
       location: json['location'] as String?,
       filters: json['filters'] as Map<String, dynamic>?,
       clickedResults: (json['clickedResults'] as num?)?.toInt() ?? 0,
-      timestamp: _fromJsonTimestampNullable(json['timestamp']),
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
     );
 
 Map<String, dynamic> _$$SearchAnalyticsImplToJson(
@@ -128,5 +136,5 @@ Map<String, dynamic> _$$SearchAnalyticsImplToJson(
       'location': instance.location,
       'filters': instance.filters,
       'clickedResults': instance.clickedResults,
-      'timestamp': _toJsonTimestamp(instance.timestamp),
+      'timestamp': instance.timestamp?.toIso8601String(),
     };

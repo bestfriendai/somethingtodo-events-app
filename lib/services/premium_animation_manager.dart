@@ -151,7 +151,6 @@ class PremiumAnimationManager {
               child: child,
             );
           },
-          child: child,
         );
   }
 

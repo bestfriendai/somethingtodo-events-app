@@ -22,7 +22,7 @@ class ShakeDetector {
     if (_isListening) return;
     
     _isListening = true;
-    _accelerometerSubscription = accelerometerEvents.listen((event) {
+    _accelerometerSubscription = accelerometerEventStream().listen((event) {
       _detectShake(event, context);
     });
   }

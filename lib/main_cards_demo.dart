@@ -25,7 +25,7 @@ void main() {
 }
 
 class EventCardsDemoApp extends StatelessWidget {
-  const EventCardsDemoApp({Key? key}) : super(key: key);
+  const EventCardsDemoApp({super.key});
 
   @override
   Widget build(BuildContext context) {

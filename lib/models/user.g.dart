@@ -35,8 +35,12 @@ _$AppUserImpl _$$AppUserImplFromJson(Map<String, dynamic> json) =>
       lastActiveAt: json['lastActiveAt'] == null
           ? null
           : DateTime.parse(json['lastActiveAt'] as String),
-      createdAt: _fromJsonTimestamp(json['createdAt']),
-      updatedAt: _fromJsonTimestamp(json['updatedAt']),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
@@ -53,8 +57,8 @@ Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
       'preferences': instance.preferences,
       'location': instance.location,
       'lastActiveAt': instance.lastActiveAt?.toIso8601String(),
-      'createdAt': _toJsonTimestamp(instance.createdAt),
-      'updatedAt': _toJsonTimestamp(instance.updatedAt),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
 _$UserPreferencesImpl _$$UserPreferencesImplFromJson(

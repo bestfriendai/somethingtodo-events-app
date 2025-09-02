@@ -14,9 +14,7 @@ class ChatSession with _$ChatSession {
     @Default(ChatType.eventDiscovery) ChatType type,
     @Default(ChatStatus.active) ChatStatus status,
     Map<String, dynamic>? context,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     DateTime? createdAt,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     DateTime? updatedAt,
   }) = _ChatSession;
 
@@ -36,7 +34,6 @@ class ChatMessage with _$ChatMessage {
     Map<String, dynamic>? metadata,
     @Default([]) List<MessageAction> actions,
     @Default([]) List<EventRecommendation> recommendations,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     DateTime? timestamp,
   }) = _ChatMessage;
 
@@ -67,7 +64,6 @@ class ChatRecommendation with _$ChatRecommendation {
     required double confidenceScore,
     @Default([]) List<String> matchingCriteria,
     @Default(RecommendationStatus.pending) RecommendationStatus status,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     DateTime? createdAt,
   }) = _ChatRecommendation;
 
@@ -140,7 +136,6 @@ class EventRecommendation with _$EventRecommendation {
     @Default(0.0) double confidenceScore,
     @Default([]) List<String> reasons,
     @Default(RecommendationStatus.pending) RecommendationStatus status,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     DateTime? createdAt,
   }) = _EventRecommendation;
 
@@ -168,15 +163,3 @@ enum RecommendationStatus {
   viewed,
 }
 
-// Helper functions for Firestore Timestamp conversion
-DateTime? _fromJsonTimestamp(dynamic timestamp) {
-  if (timestamp == null) return null;
-  if (timestamp is Timestamp) return timestamp.toDate();
-  if (timestamp is String) return DateTime.parse(timestamp);
-  return null;
-}
-
-dynamic _toJsonTimestamp(DateTime? dateTime) {
-  if (dateTime == null) return null;
-  return Timestamp.fromDate(dateTime);
-}

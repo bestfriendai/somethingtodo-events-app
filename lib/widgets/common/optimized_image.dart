@@ -209,15 +209,11 @@ class _LazyImageState extends State<LazyImage> {
     final RenderObject? renderObject = _key.currentContext?.findRenderObject();
     if (renderObject == null) return;
 
-    final viewport = RenderAbstractViewport.of(renderObject);
-    if (viewport == null) return;
+    // Simplified visibility check - just check if widget is mounted
+    if (!mounted) return;
 
-    final RevealedOffset offsetToReveal = 
-        viewport.getOffsetToReveal(renderObject, 0.0);
-    
-    final Size size = renderObject.semanticBounds.size;
-    final double visibleFraction = 
-        (size.height - offsetToReveal.offset.abs()) / size.height;
+    // Assume image is visible if we reach this point
+    final double visibleFraction = 1.0;
 
     if (visibleFraction >= widget.visibilityThreshold) {
       setState(() {

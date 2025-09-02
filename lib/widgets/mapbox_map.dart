@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import '../models/event.dart';
 import '../config/mapbox_config.dart';
 import '../config/theme.dart';
@@ -23,13 +24,13 @@ class MapboxMapWidget extends StatefulWidget {
 }
 
 class _MapboxMapWidgetState extends State<MapboxMapWidget> {
-  MapboxMap? mapboxMap;
+  MapController? mapController;
   Event? selectedEvent;
 
   @override
   void initState() {
     super.initState();
-    MapboxOptions.setAccessToken(MapboxConfig.accessToken);
+    mapController = MapController();
   }
 
   @override
@@ -38,23 +39,34 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
 
     return Stack(
       children: [
-        MapWidget(
-          onMapCreated: _onMapCreated,
-          styleUri: isDarkMode
-              ? MapboxConfig.darkStyle
-              : MapboxConfig.lightStyle,
-          cameraOptions: CameraOptions(
-            center: Point(
-              coordinates: Position(
-                widget.currentLongitude ?? MapboxConfig.defaultLongitude,
-                widget.currentLatitude ?? MapboxConfig.defaultLatitude,
-              ),
-            ).toJson(),
-            zoom: MapboxConfig.defaultZoom,
+        FlutterMap(
+          mapController: mapController,
+          options: MapOptions(
+            initialCenter: LatLng(
+              widget.currentLatitude ?? MapboxConfig.defaultLatitude,
+              widget.currentLongitude ?? MapboxConfig.defaultLongitude,
+            ),
+            initialZoom: MapboxConfig.defaultZoom,
+            onTap: (tapPosition, point) => _onMapTapped(),
           ),
-          onTapListener: (coordinate) {
-            _onMapTapped();
-          },
+          children: [
+            TileLayer(
+              urlTemplate: isDarkMode
+                  ? 'https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token=${MapboxConfig.accessToken}'
+                  : 'https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token=${MapboxConfig.accessToken}',
+              additionalOptions: const {
+                'accessToken': MapboxConfig.accessToken,
+                'id': 'mapbox.mapbox-streets-v8',
+              },
+            ),
+            MarkerLayer(
+              markers: _buildEventMarkers(),
+            ),
+            if (widget.currentLatitude != null && widget.currentLongitude != null)
+              MarkerLayer(
+                markers: [_buildCurrentLocationMarker()],
+              ),
+          ],
         ),
 
         // Selected event info card
@@ -87,63 +99,56 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
     );
   }
 
-  void _onMapCreated(MapboxMap map) async {
-    mapboxMap = map;
-    await _addEventMarkers();
-    if (widget.currentLatitude != null && widget.currentLongitude != null) {
-      await _addCurrentLocationMarker();
-    }
+  List<Marker> _buildEventMarkers() {
+    return widget.events.map((event) {
+      return Marker(
+        point: LatLng(event.venue.latitude, event.venue.longitude),
+        width: 40,
+        height: 40,
+        child: GestureDetector(
+          onTap: () => _onEventMarkerTapped(event),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+            ),
+            child: const Icon(
+              Icons.event,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+        ),
+      );
+    }).toList();
   }
 
-  Future<void> _addEventMarkers() async {
-    if (mapboxMap == null) return;
-
-    for (final event in widget.events) {
-      final point = Point(
-        coordinates: Position(event.venue.longitude, event.venue.latitude),
-      );
-
-      // Create annotation for each event
-      final annotation = PointAnnotationOptions(
-        geometry: point.toJson(),
-        iconImage: 'event-marker',
-        iconSize: 1.5,
-        textField: event.title,
-        textSize: 12.0,
-        textOffset: [0, -2],
-      );
-
-      await mapboxMap!.annotations.createPointAnnotationManager().then((
-        manager,
-      ) async {
-        await manager.create(annotation);
-
-        // Tap handling will be implemented separately
-      });
-    }
+  Marker _buildCurrentLocationMarker() {
+    return Marker(
+      point: LatLng(widget.currentLatitude!, widget.currentLongitude!),
+      width: 40,
+      height: 40,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 2),
+        ),
+        child: const Icon(
+          Icons.my_location,
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+    );
   }
 
-  Future<void> _addCurrentLocationMarker() async {
-    if (mapboxMap == null ||
-        widget.currentLatitude == null ||
-        widget.currentLongitude == null)
-      return;
-
-    final point = Point(
-      coordinates: Position(widget.currentLongitude!, widget.currentLatitude!),
-    );
-
-    final annotation = PointAnnotationOptions(
-      geometry: point.toJson(),
-      iconImage: 'current-location',
-      iconSize: 1.0,
-    );
-
-    await mapboxMap!.annotations.createPointAnnotationManager().then((
-      manager,
-    ) async {
-      await manager.create(annotation);
+  void _onEventMarkerTapped(Event event) {
+    setState(() {
+      selectedEvent = event;
     });
+    widget.onEventSelected?.call(event);
   }
 
   void _onMapTapped() {
@@ -153,32 +158,32 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
   }
 
   void _zoomIn() {
-    mapboxMap?.flyTo(
-      CameraOptions(zoom: 1.0),
-      MapAnimationOptions(duration: 300),
+    final currentZoom = mapController?.camera.zoom ?? MapboxConfig.defaultZoom;
+    mapController?.move(
+      mapController?.camera.center ?? LatLng(
+        MapboxConfig.defaultLatitude,
+        MapboxConfig.defaultLongitude,
+      ),
+      currentZoom + 1,
     );
   }
 
   void _zoomOut() {
-    mapboxMap?.flyTo(
-      CameraOptions(zoom: -1.0),
-      MapAnimationOptions(duration: 300),
+    final currentZoom = mapController?.camera.zoom ?? MapboxConfig.defaultZoom;
+    mapController?.move(
+      mapController?.camera.center ?? LatLng(
+        MapboxConfig.defaultLatitude,
+        MapboxConfig.defaultLongitude,
+      ),
+      currentZoom - 1,
     );
   }
 
   void _goToCurrentLocation() {
     if (widget.currentLatitude != null && widget.currentLongitude != null) {
-      mapboxMap?.flyTo(
-        CameraOptions(
-          center: Point(
-            coordinates: Position(
-              widget.currentLongitude!,
-              widget.currentLatitude!,
-            ),
-          ).toJson(),
-          zoom: 14.0,
-        ),
-        MapAnimationOptions(duration: 1000),
+      mapController?.move(
+        LatLng(widget.currentLatitude!, widget.currentLongitude!),
+        14.0,
       );
     }
   }
@@ -269,7 +274,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
                         fontWeight: FontWeight.bold,
                         color: event.pricing.isFree
                             ? Colors.green
-                            : AppTheme.primaryColor,
+                            : Theme.of(context).primaryColor,
                       ),
                     ),
                   ],
@@ -279,7 +284,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
               // Navigate button
               IconButton(
                 icon: const Icon(Icons.directions),
-                color: AppTheme.primaryColor,
+                color: Theme.of(context).primaryColor,
                 onPressed: () {
                   // Open in maps
                   widget.onEventSelected?.call(event);
@@ -292,30 +297,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
     );
   }
 
-  String _getCategoryColorString(EventCategory category) {
-    switch (category) {
-      case EventCategory.music:
-        return '#F44336';
-      case EventCategory.food:
-        return '#FF9800';
-      case EventCategory.sports:
-        return '#4CAF50';
-      case EventCategory.arts:
-        return '#9C27B0';
-      case EventCategory.business:
-        return '#2196F3';
-      case EventCategory.education:
-        return '#009688';
-      case EventCategory.technology:
-        return '#3F51B5';
-      case EventCategory.health:
-        return '#E91E63';
-      case EventCategory.community:
-        return '#795548';
-      default:
-        return '#9E9E9E';
-    }
-  }
+
 
   Color _getCategoryColor(EventCategory category) {
     switch (category) {

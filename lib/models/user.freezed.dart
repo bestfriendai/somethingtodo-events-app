@@ -32,9 +32,7 @@ mixin _$AppUser {
   UserPreferences? get preferences => throw _privateConstructorUsedError;
   UserLocation? get location => throw _privateConstructorUsedError;
   DateTime? get lastActiveAt => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get createdAt => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this AppUser to a JSON map.
@@ -64,9 +62,7 @@ abstract class $AppUserCopyWith<$Res> {
       UserPreferences? preferences,
       UserLocation? location,
       DateTime? lastActiveAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? updatedAt});
 
   $UserPreferencesCopyWith<$Res>? get preferences;
@@ -212,9 +208,7 @@ abstract class _$$AppUserImplCopyWith<$Res> implements $AppUserCopyWith<$Res> {
       UserPreferences? preferences,
       UserLocation? location,
       DateTime? lastActiveAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? updatedAt});
 
   @override
@@ -328,9 +322,7 @@ class _$AppUserImpl implements _AppUser {
       this.preferences,
       this.location,
       this.lastActiveAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       this.createdAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       this.updatedAt})
       : _interests = interests,
         _favoriteEventIds = favoriteEventIds;
@@ -379,10 +371,8 @@ class _$AppUserImpl implements _AppUser {
   @override
   final DateTime? lastActiveAt;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime? createdAt;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime? updatedAt;
 
   @override
@@ -472,9 +462,7 @@ abstract class _AppUser implements AppUser {
       final UserPreferences? preferences,
       final UserLocation? location,
       final DateTime? lastActiveAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       final DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       final DateTime? updatedAt}) = _$AppUserImpl;
 
   factory _AppUser.fromJson(Map<String, dynamic> json) = _$AppUserImpl.fromJson;
@@ -504,10 +492,8 @@ abstract class _AppUser implements AppUser {
   @override
   DateTime? get lastActiveAt;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get createdAt;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get updatedAt;
 
   /// Create a copy of AppUser

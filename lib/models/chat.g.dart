@@ -20,8 +20,12 @@ _$ChatSessionImpl _$$ChatSessionImplFromJson(Map<String, dynamic> json) =>
       status: $enumDecodeNullable(_$ChatStatusEnumMap, json['status']) ??
           ChatStatus.active,
       context: json['context'] as Map<String, dynamic>?,
-      createdAt: _fromJsonTimestamp(json['createdAt']),
-      updatedAt: _fromJsonTimestamp(json['updatedAt']),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$$ChatSessionImplToJson(_$ChatSessionImpl instance) =>
@@ -33,8 +37,8 @@ Map<String, dynamic> _$$ChatSessionImplToJson(_$ChatSessionImpl instance) =>
       'type': _$ChatTypeEnumMap[instance.type]!,
       'status': _$ChatStatusEnumMap[instance.status]!,
       'context': instance.context,
-      'createdAt': _toJsonTimestamp(instance.createdAt),
-      'updatedAt': _toJsonTimestamp(instance.updatedAt),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
     };
 
 const _$ChatTypeEnumMap = {
@@ -69,7 +73,9 @@ _$ChatMessageImpl _$$ChatMessageImplFromJson(Map<String, dynamic> json) =>
                   EventRecommendation.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      timestamp: _fromJsonTimestamp(json['timestamp']),
+      timestamp: json['timestamp'] == null
+          ? null
+          : DateTime.parse(json['timestamp'] as String),
     );
 
 Map<String, dynamic> _$$ChatMessageImplToJson(_$ChatMessageImpl instance) =>
@@ -83,7 +89,7 @@ Map<String, dynamic> _$$ChatMessageImplToJson(_$ChatMessageImpl instance) =>
       'metadata': instance.metadata,
       'actions': instance.actions,
       'recommendations': instance.recommendations,
-      'timestamp': _toJsonTimestamp(instance.timestamp),
+      'timestamp': instance.timestamp?.toIso8601String(),
     };
 
 const _$MessageRoleEnumMap = {
@@ -147,7 +153,9 @@ _$ChatRecommendationImpl _$$ChatRecommendationImplFromJson(
       status:
           $enumDecodeNullable(_$RecommendationStatusEnumMap, json['status']) ??
               RecommendationStatus.pending,
-      createdAt: _fromJsonTimestamp(json['createdAt']),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
     );
 
 Map<String, dynamic> _$$ChatRecommendationImplToJson(
@@ -159,7 +167,7 @@ Map<String, dynamic> _$$ChatRecommendationImplToJson(
       'confidenceScore': instance.confidenceScore,
       'matchingCriteria': instance.matchingCriteria,
       'status': _$RecommendationStatusEnumMap[instance.status]!,
-      'createdAt': _toJsonTimestamp(instance.createdAt),
+      'createdAt': instance.createdAt?.toIso8601String(),
     };
 
 const _$RecommendationStatusEnumMap = {
@@ -184,7 +192,9 @@ _$EventRecommendationImpl _$$EventRecommendationImplFromJson(
       status:
           $enumDecodeNullable(_$RecommendationStatusEnumMap, json['status']) ??
               RecommendationStatus.pending,
-      createdAt: _fromJsonTimestamp(json['createdAt']),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
     );
 
 Map<String, dynamic> _$$EventRecommendationImplToJson(
@@ -197,5 +207,5 @@ Map<String, dynamic> _$$EventRecommendationImplToJson(
       'confidenceScore': instance.confidenceScore,
       'reasons': instance.reasons,
       'status': _$RecommendationStatusEnumMap[instance.status]!,
-      'createdAt': _toJsonTimestamp(instance.createdAt),
+      'createdAt': instance.createdAt?.toIso8601String(),
     };

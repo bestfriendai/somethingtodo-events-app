@@ -29,9 +29,7 @@ mixin _$Event {
   List<String> get imageUrls => throw _privateConstructorUsedError;
   EventCategory get category => throw _privateConstructorUsedError;
   EventPricing get pricing => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime get startDateTime => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime get endDateTime => throw _privateConstructorUsedError;
   List<String> get tags => throw _privateConstructorUsedError;
   int get attendeeCount => throw _privateConstructorUsedError;
@@ -45,9 +43,7 @@ mixin _$Event {
   bool get isFeatured => throw _privateConstructorUsedError;
   bool get isPremium => throw _privateConstructorUsedError;
   bool get isOnline => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get createdAt => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   String? get createdBy => throw _privateConstructorUsedError;
 
@@ -75,9 +71,7 @@ abstract class $EventCopyWith<$Res> {
       List<String> imageUrls,
       EventCategory category,
       EventPricing pricing,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime startDateTime,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime endDateTime,
       List<String> tags,
       int attendeeCount,
@@ -91,9 +85,7 @@ abstract class $EventCopyWith<$Res> {
       bool isFeatured,
       bool isPremium,
       bool isOnline,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? updatedAt,
       String? createdBy});
 
@@ -289,9 +281,7 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       List<String> imageUrls,
       EventCategory category,
       EventPricing pricing,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime startDateTime,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime endDateTime,
       List<String> tags,
       int attendeeCount,
@@ -305,9 +295,7 @@ abstract class _$$EventImplCopyWith<$Res> implements $EventCopyWith<$Res> {
       bool isFeatured,
       bool isPremium,
       bool isOnline,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? updatedAt,
       String? createdBy});
 
@@ -479,9 +467,7 @@ class _$EventImpl implements _Event {
       required final List<String> imageUrls,
       required this.category,
       required this.pricing,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       required this.startDateTime,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       required this.endDateTime,
       final List<String> tags = const [],
       this.attendeeCount = 0,
@@ -495,9 +481,7 @@ class _$EventImpl implements _Event {
       this.isFeatured = false,
       this.isPremium = false,
       this.isOnline = false,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       this.createdAt,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       this.updatedAt,
       this.createdBy})
       : _imageUrls = imageUrls,
@@ -531,10 +515,8 @@ class _$EventImpl implements _Event {
   @override
   final EventPricing pricing;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime startDateTime;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime endDateTime;
   final List<String> _tags;
   @override
@@ -575,10 +557,8 @@ class _$EventImpl implements _Event {
   @JsonKey()
   final bool isOnline;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   final DateTime? createdAt;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   final DateTime? updatedAt;
   @override
   final String? createdBy;
@@ -700,9 +680,7 @@ abstract class _Event implements Event {
       required final List<String> imageUrls,
       required final EventCategory category,
       required final EventPricing pricing,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       required final DateTime startDateTime,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       required final DateTime endDateTime,
       final List<String> tags,
       final int attendeeCount,
@@ -716,9 +694,7 @@ abstract class _Event implements Event {
       final bool isFeatured,
       final bool isPremium,
       final bool isOnline,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       final DateTime? createdAt,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       final DateTime? updatedAt,
       final String? createdBy}) = _$EventImpl;
 
@@ -743,10 +719,8 @@ abstract class _Event implements Event {
   @override
   EventPricing get pricing;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime get startDateTime;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime get endDateTime;
   @override
   List<String> get tags;
@@ -773,10 +747,8 @@ abstract class _Event implements Event {
   @override
   bool get isOnline;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get createdAt;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get updatedAt;
   @override
   String? get createdBy;

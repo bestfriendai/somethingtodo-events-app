@@ -17,8 +17,8 @@ _$EventImpl _$$EventImplFromJson(Map<String, dynamic> json) => _$EventImpl(
           (json['imageUrls'] as List<dynamic>).map((e) => e as String).toList(),
       category: $enumDecode(_$EventCategoryEnumMap, json['category']),
       pricing: EventPricing.fromJson(json['pricing'] as Map<String, dynamic>),
-      startDateTime: _fromJsonTimestamp(json['startDateTime']),
-      endDateTime: _fromJsonTimestamp(json['endDateTime']),
+      startDateTime: DateTime.parse(json['startDateTime'] as String),
+      endDateTime: DateTime.parse(json['endDateTime'] as String),
       tags:
           (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
@@ -34,8 +34,12 @@ _$EventImpl _$$EventImplFromJson(Map<String, dynamic> json) => _$EventImpl(
       isFeatured: json['isFeatured'] as bool? ?? false,
       isPremium: json['isPremium'] as bool? ?? false,
       isOnline: json['isOnline'] as bool? ?? false,
-      createdAt: _fromJsonTimestampNullable(json['createdAt']),
-      updatedAt: _fromJsonTimestampNullable(json['updatedAt']),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
       createdBy: json['createdBy'] as String?,
     );
 
@@ -50,8 +54,8 @@ Map<String, dynamic> _$$EventImplToJson(_$EventImpl instance) =>
       'imageUrls': instance.imageUrls,
       'category': _$EventCategoryEnumMap[instance.category]!,
       'pricing': instance.pricing,
-      'startDateTime': _toJsonTimestamp(instance.startDateTime),
-      'endDateTime': _toJsonTimestamp(instance.endDateTime),
+      'startDateTime': instance.startDateTime.toIso8601String(),
+      'endDateTime': instance.endDateTime.toIso8601String(),
       'tags': instance.tags,
       'attendeeCount': instance.attendeeCount,
       'maxAttendees': instance.maxAttendees,
@@ -64,8 +68,8 @@ Map<String, dynamic> _$$EventImplToJson(_$EventImpl instance) =>
       'isFeatured': instance.isFeatured,
       'isPremium': instance.isPremium,
       'isOnline': instance.isOnline,
-      'createdAt': _toJsonTimestamp(instance.createdAt),
-      'updatedAt': _toJsonTimestamp(instance.updatedAt),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'updatedAt': instance.updatedAt?.toIso8601String(),
       'createdBy': instance.createdBy,
     };
 

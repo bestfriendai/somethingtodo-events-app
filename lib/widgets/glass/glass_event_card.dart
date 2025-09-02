@@ -317,28 +317,8 @@ class _GlassEventCardState extends State<GlassEventCard>
   }
 
   Color _getCategoryColor() {
-    switch (widget.event.category) {
-      case EventCategory.music:
-        return Colors.red;
-      case EventCategory.food:
-        return Colors.orange;
-      case EventCategory.sports:
-        return Colors.green;
-      case EventCategory.arts:
-        return Colors.purple;
-      case EventCategory.business:
-        return Colors.blue;
-      case EventCategory.education:
-        return Colors.teal;
-      case EventCategory.technology:
-        return Colors.indigo;
-      case EventCategory.health:
-        return Colors.pink;
-      case EventCategory.community:
-        return Colors.brown;
-      default:
-        return Colors.grey;
-    }
+    // Return black for all categories to match the black theme
+    return Colors.black;
   }
 
   IconData _getCategoryIcon() {

@@ -242,16 +242,8 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
   
   Widget _buildAnimatedBackground() {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.purple.shade900,
-            Colors.black,
-            Colors.blue.shade900,
-          ],
-        ),
+      decoration: const BoxDecoration(
+        color: Colors.black,
       ),
       child: Stack(
         children: [
@@ -1267,7 +1259,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
               onTap: () => _onNavItemTapped(index),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: isSelected ? 16 : 12,
                   vertical: 8,
                 ),

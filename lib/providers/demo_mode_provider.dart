@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
-import '../models/event.dart';
-import '../models/user.dart';
 import '../services/demo_data_service.dart';
 import 'auth_provider.dart';
 
@@ -35,7 +33,7 @@ class DemoModeProvider extends ChangeNotifier {
   DemoModeProvider({AuthProvider? authProvider}) 
       : _authProvider = authProvider {
     if (_authProvider != null) {
-      _authProvider!.addListener(_onAuthStateChanged);
+      _authProvider.addListener(_onAuthStateChanged);
     }
     _initializeDemoData();
   }
@@ -266,12 +264,6 @@ class DemoModeProvider extends ChangeNotifier {
     _demoStartTime = null;
   }
   
-  void _updateSessionDuration() {
-    if (_demoStartTime != null) {
-      _demoSessionDuration = DateTime.now().difference(_demoStartTime!).inMinutes;
-    }
-  }
-  
   // Event interaction helpers
   List<EventInteractionData> getEventInteractions(String eventId) {
     return _eventInteractions[eventId] ?? [];
@@ -284,7 +276,7 @@ class DemoModeProvider extends ChangeNotifier {
   
   void _onAuthStateChanged() {
     // Handle auth state changes if needed
-    if (_authProvider != null && !_authProvider!.isAuthenticated && _isDemoModeActive) {
+    if (_authProvider != null && !_authProvider.isAuthenticated && _isDemoModeActive) {
       // Could auto-disable demo mode if user logs out
     }
   }

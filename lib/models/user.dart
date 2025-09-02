@@ -19,9 +19,7 @@ class AppUser with _$AppUser {
     UserPreferences? preferences,
     UserLocation? location,
     DateTime? lastActiveAt,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     DateTime? createdAt,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     DateTime? updatedAt,
   }) = _AppUser;
 

@@ -13,6 +13,7 @@ import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../config/unified_design_system.dart';
+import '../../config/app_config.dart';
 import '../../models/chat.dart';
 import '../../providers/chat_provider.dart';
 import '../../widgets/chat/ai_assistant_avatar.dart';
@@ -732,7 +733,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
         borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
           image: NetworkImage(
-            'https://maps.googleapis.com/maps/api/staticmap?center=${message.metadata?['lat']},${message.metadata?['lng']}&zoom=15&size=400x300&key=YOUR_API_KEY',
+            'https://maps.googleapis.com/maps/api/staticmap?center=${message.metadata?['lat']},${message.metadata?['lng']}&zoom=15&size=400x300&key=${AppConfig.googleMapsApiKey}',
           ),
           fit: BoxFit.cover,
         ),

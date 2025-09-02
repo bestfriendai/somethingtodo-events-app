@@ -30,14 +30,11 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
     // Set up error handling for this boundary
     FlutterError.onError = (FlutterErrorDetails details) {
       // Log the error for debugging
-      LoggingService.recordError(
-        details.exception,
-        details.stack,
-        context: widget.errorContext ?? 'ErrorBoundary',
-        additionalData: {
-          'widget': widget.child.runtimeType.toString(),
-          'error_boundary': true,
-        },
+      LoggingService.error(
+        'Error caught by ErrorBoundary: ${details.exception}',
+        tag: widget.errorContext ?? 'ErrorBoundary',
+        error: details.exception,
+        stackTrace: details.stack,
       );
       
       // Update state to show error UI
@@ -152,10 +149,10 @@ class WidgetErrorBoundary extends StatelessWidget {
       fallbackWidget: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.errorContainer.withOpacity(0.1),
+          color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Theme.of(context).colorScheme.error.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),
           ),
         ),
         child: Column(
