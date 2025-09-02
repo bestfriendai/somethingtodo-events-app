@@ -1,5 +1,9 @@
 class MapboxConfig {
-  static const String accessToken = 'pk.eyJ1IjoidHJhcHBhdCIsImEiOiJjbTMzODBqYTYxbHcwMmpwdXpxeWljNXJ3In0.xKUEW2C1kjFBu7kr7Uxfow';
+  // Use environment variable for secure token management
+  static const String accessToken = String.fromEnvironment(
+    'MAPBOX_ACCESS_TOKEN',
+    defaultValue: '', // Never commit actual tokens
+  );
   
   // San Francisco center coordinates
   static const double defaultLatitude = 37.7749;
