@@ -16,9 +16,7 @@ class Event with _$Event {
     required List<String> imageUrls,
     required EventCategory category,
     required EventPricing pricing,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     required DateTime startDateTime,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     required DateTime endDateTime,
     @Default([]) List<String> tags,
     @Default(0) int attendeeCount,
@@ -32,9 +30,7 @@ class Event with _$Event {
     @Default(false) bool isFeatured,
     @Default(false) bool isPremium,
     @Default(false) bool isOnline,
-    @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
     DateTime? createdAt,
-    @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
     DateTime? updatedAt,
     String? createdBy,
   }) = _Event;
@@ -201,22 +197,4 @@ extension EventCompatibilityExtension on Event {
   bool get isFavorite => false; // This should be determined by user context
 }
 
-// Helper functions for Firestore Timestamp conversion
-DateTime _fromJsonTimestamp(dynamic timestamp) {
-  if (timestamp == null) return DateTime.now();
-  if (timestamp is Timestamp) return timestamp.toDate();
-  if (timestamp is String) return DateTime.parse(timestamp);
-  return DateTime.now();
-}
 
-DateTime? _fromJsonTimestampNullable(dynamic timestamp) {
-  if (timestamp == null) return null;
-  if (timestamp is Timestamp) return timestamp.toDate();
-  if (timestamp is String) return DateTime.parse(timestamp);
-  return null;
-}
-
-dynamic _toJsonTimestamp(DateTime? dateTime) {
-  if (dateTime == null) return null;
-  return Timestamp.fromDate(dateTime);
-}

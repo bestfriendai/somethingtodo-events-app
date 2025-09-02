@@ -68,13 +68,13 @@ class AnalyticsService {
     required double value,
     required String currency,
     String? transactionId,
-    Map<String, dynamic>? items,
+    List<AnalyticsEventItem>? items,
   }) async {
     await _analytics.logPurchase(
       value: value,
       currency: currency,
       transactionId: transactionId,
-      items: items != null ? [items] : null,
+      items: items,
     );
   }
   

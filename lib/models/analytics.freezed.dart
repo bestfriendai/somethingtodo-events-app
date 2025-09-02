@@ -27,7 +27,6 @@ mixin _$UserEvent {
   Map<String, dynamic>? get parameters => throw _privateConstructorUsedError;
   String? get sessionId => throw _privateConstructorUsedError;
   String? get screenName => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get timestamp => throw _privateConstructorUsedError;
 
   /// Serializes this UserEvent to a JSON map.
@@ -53,7 +52,6 @@ abstract class $UserEventCopyWith<$Res> {
       Map<String, dynamic>? parameters,
       String? sessionId,
       String? screenName,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? timestamp});
 }
 
@@ -134,7 +132,6 @@ abstract class _$$UserEventImplCopyWith<$Res>
       Map<String, dynamic>? parameters,
       String? sessionId,
       String? screenName,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? timestamp});
 }
 
@@ -208,7 +205,6 @@ class _$UserEventImpl implements _UserEvent {
       final Map<String, dynamic>? parameters,
       this.sessionId,
       this.screenName,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       this.timestamp})
       : _parameters = parameters;
 
@@ -238,7 +234,6 @@ class _$UserEventImpl implements _UserEvent {
   @override
   final String? screenName;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   final DateTime? timestamp;
 
   @override
@@ -305,7 +300,6 @@ abstract class _UserEvent implements UserEvent {
       final Map<String, dynamic>? parameters,
       final String? sessionId,
       final String? screenName,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       final DateTime? timestamp}) = _$UserEventImpl;
 
   factory _UserEvent.fromJson(Map<String, dynamic> json) =
@@ -326,7 +320,6 @@ abstract class _UserEvent implements UserEvent {
   @override
   String? get screenName;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get timestamp;
 
   /// Create a copy of UserEvent
@@ -345,9 +338,7 @@ SessionData _$SessionDataFromJson(Map<String, dynamic> json) {
 mixin _$SessionData {
   String get sessionId => throw _privateConstructorUsedError;
   String get userId => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime get startTime => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get endTime => throw _privateConstructorUsedError;
   int get duration => throw _privateConstructorUsedError; // in seconds
   int get screenViews => throw _privateConstructorUsedError;
@@ -377,9 +368,7 @@ abstract class $SessionDataCopyWith<$Res> {
   $Res call(
       {String sessionId,
       String userId,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime startTime,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? endTime,
       int duration,
       int screenViews,
@@ -483,9 +472,7 @@ abstract class _$$SessionDataImplCopyWith<$Res>
   $Res call(
       {String sessionId,
       String userId,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime startTime,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       DateTime? endTime,
       int duration,
       int screenViews,
@@ -582,9 +569,7 @@ class _$SessionDataImpl implements _SessionData {
   const _$SessionDataImpl(
       {required this.sessionId,
       required this.userId,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       required this.startTime,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       this.endTime,
       this.duration = 0,
       this.screenViews = 0,
@@ -605,10 +590,8 @@ class _$SessionDataImpl implements _SessionData {
   @override
   final String userId;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime startTime;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   final DateTime? endTime;
   @override
   @JsonKey()
@@ -719,9 +702,7 @@ abstract class _SessionData implements SessionData {
   const factory _SessionData(
       {required final String sessionId,
       required final String userId,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       required final DateTime startTime,
-      @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
       final DateTime? endTime,
       final int duration,
       final int screenViews,
@@ -740,10 +721,8 @@ abstract class _SessionData implements SessionData {
   @override
   String get userId;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime get startTime;
   @override
-  @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
   DateTime? get endTime;
   @override
   int get duration; // in seconds
@@ -786,7 +765,6 @@ mixin _$EventAnalytics {
   double get averageViewDuration => throw _privateConstructorUsedError;
   Map<String, int> get viewsByCategory => throw _privateConstructorUsedError;
   Map<String, int> get viewsByLocation => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get lastUpdated => throw _privateConstructorUsedError;
 
   /// Serializes this EventAnalytics to a JSON map.
@@ -816,7 +794,6 @@ abstract class $EventAnalyticsCopyWith<$Res> {
       double averageViewDuration,
       Map<String, int> viewsByCategory,
       Map<String, int> viewsByLocation,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? lastUpdated});
 }
 
@@ -915,7 +892,6 @@ abstract class _$$EventAnalyticsImplCopyWith<$Res>
       double averageViewDuration,
       Map<String, int> viewsByCategory,
       Map<String, int> viewsByLocation,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? lastUpdated});
 }
 
@@ -1007,7 +983,6 @@ class _$EventAnalyticsImpl implements _EventAnalytics {
       this.averageViewDuration = 0.0,
       final Map<String, int> viewsByCategory = const {},
       final Map<String, int> viewsByLocation = const {},
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       this.lastUpdated})
       : _viewsByCategory = viewsByCategory,
         _viewsByLocation = viewsByLocation;
@@ -1057,7 +1032,6 @@ class _$EventAnalyticsImpl implements _EventAnalytics {
   }
 
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   final DateTime? lastUpdated;
 
   @override
@@ -1136,7 +1110,6 @@ abstract class _EventAnalytics implements EventAnalytics {
       final double averageViewDuration,
       final Map<String, int> viewsByCategory,
       final Map<String, int> viewsByLocation,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       final DateTime? lastUpdated}) = _$EventAnalyticsImpl;
 
   factory _EventAnalytics.fromJson(Map<String, dynamic> json) =
@@ -1163,7 +1136,6 @@ abstract class _EventAnalytics implements EventAnalytics {
   @override
   Map<String, int> get viewsByLocation;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get lastUpdated;
 
   /// Create a copy of EventAnalytics
@@ -1188,7 +1160,6 @@ mixin _$SearchAnalytics {
   String? get location => throw _privateConstructorUsedError;
   Map<String, dynamic>? get filters => throw _privateConstructorUsedError;
   int get clickedResults => throw _privateConstructorUsedError;
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get timestamp => throw _privateConstructorUsedError;
 
   /// Serializes this SearchAnalytics to a JSON map.
@@ -1216,7 +1187,6 @@ abstract class $SearchAnalyticsCopyWith<$Res> {
       String? location,
       Map<String, dynamic>? filters,
       int clickedResults,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? timestamp});
 }
 
@@ -1303,7 +1273,6 @@ abstract class _$$SearchAnalyticsImplCopyWith<$Res>
       String? location,
       Map<String, dynamic>? filters,
       int clickedResults,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       DateTime? timestamp});
 }
 
@@ -1383,7 +1352,6 @@ class _$SearchAnalyticsImpl implements _SearchAnalytics {
       this.location,
       final Map<String, dynamic>? filters,
       this.clickedResults = 0,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       this.timestamp})
       : _filters = filters;
 
@@ -1417,7 +1385,6 @@ class _$SearchAnalyticsImpl implements _SearchAnalytics {
   @JsonKey()
   final int clickedResults;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   final DateTime? timestamp;
 
   @override
@@ -1487,7 +1454,6 @@ abstract class _SearchAnalytics implements SearchAnalytics {
       final String? location,
       final Map<String, dynamic>? filters,
       final int clickedResults,
-      @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
       final DateTime? timestamp}) = _$SearchAnalyticsImpl;
 
   factory _SearchAnalytics.fromJson(Map<String, dynamic> json) =
@@ -1510,7 +1476,6 @@ abstract class _SearchAnalytics implements SearchAnalytics {
   @override
   int get clickedResults;
   @override
-  @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
   DateTime? get timestamp;
 
   /// Create a copy of SearchAnalytics

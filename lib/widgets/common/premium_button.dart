@@ -194,8 +194,8 @@ class _PremiumButtonState extends State<PremiumButton>
                       // Glow effect
                       if (widget.enabled && !widget.isLoading)
                         BoxShadow(
-                          color: gradient.first.withOpacity(
-                            0.3 * _glowAnimation.value,
+                          color: gradient.first.withValues(
+                            alpha: 0.3 * _glowAnimation.value,
                           ),
                           blurRadius: 20 + (10 * _glowAnimation.value),
                           offset: const Offset(0, 8),

@@ -77,18 +77,18 @@ class AppColors {
   static const Color error = Color(0xFFF44336);
   static const Color info = Color(0xFF2196F3);
   
-  // Event category colors
+  // Event category colors - all black for consistent theme
   static const Map<String, Color> categoryColors = {
-    'Music': Color(0xFF9C27B0),
-    'Sports': Color(0xFF4CAF50),
-    'Art': Color(0xFFFF9800),
-    'Food': Color(0xFFE91E63),
-    'Tech': Color(0xFF2196F3),
-    'Comedy': Color(0xFFFFC107),
-    'Theater': Color(0xFF795548),
-    'Dance': Color(0xFF00BCD4),
-    'Business': Color(0xFF607D8B),
-    'Other': Color(0xFF9E9E9E),
+    'Music': Color(0xFF000000),
+    'Sports': Color(0xFF000000),
+    'Art': Color(0xFF000000),
+    'Food': Color(0xFF000000),
+    'Tech': Color(0xFF000000),
+    'Comedy': Color(0xFF000000),
+    'Theater': Color(0xFF000000),
+    'Dance': Color(0xFF000000),
+    'Business': Color(0xFF000000),
+    'Other': Color(0xFF000000),
   };
   
   // Get category color with fallback

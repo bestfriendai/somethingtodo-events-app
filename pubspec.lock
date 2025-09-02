@@ -828,10 +828,10 @@ packages:
     dependency: "direct dev"
     description:
       name: flutter_lints
-      sha256: "5398f14efa795ffb7a33e9b6a08798b26a180edac4ad7db3f231e40f82ce11e1"
+      sha256: "3105dc8492f6183fb076ccf1f351ac3d60564bff92e20bfc4af9cc1651f4e7e1"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.0"
+    version: "6.0.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -869,14 +869,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.1"
-  flutter_map_cancellable_tile_provider:
-    dependency: "direct main"
-    description:
-      name: flutter_map_cancellable_tile_provider
-      sha256: ae18dd59faf74f3eca1d28f83e59b47741bbff962e123bbebe9335c04d432f44
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   flutter_native_splash:
     dependency: "direct main"
     description:
@@ -1128,10 +1120,10 @@ packages:
     dependency: "direct main"
     description:
       name: google_maps_flutter_web
-      sha256: "9d57993ba29b80bb637bb7b9784159ca93071d5940e4d0383ae2358ad371e375"
+      sha256: "68baf1e22428875f3c2781110a9bb25fddbbc2bff1be867a3cd667c3f816ae04"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.13"
+    version: "0.5.14"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -1429,10 +1421,10 @@ packages:
     dependency: transitive
     description:
       name: lints
-      sha256: c35bb79562d980e9a453fc715854e1ed39e24e7d0297a880ef54e17f9874a9d7
+      sha256: a5e2b223cb7c9c8efdc663ef484fdd95bb243bff242ef5b13e26883547fce9a0
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "6.0.0"
   liquid_pull_to_refresh:
     dependency: "direct main"
     description:

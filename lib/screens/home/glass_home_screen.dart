@@ -96,28 +96,8 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
             animation: _animationController,
             builder: (context, child) {
               return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.lerp(
-                        const Color(0xFF667EEA),
-                        const Color(0xFF764BA2),
-                        _animationController.value,
-                      )!,
-                      Color.lerp(
-                        const Color(0xFF764BA2),
-                        const Color(0xFFF093FB),
-                        _animationController.value,
-                      )!,
-                      Color.lerp(
-                        const Color(0xFFF093FB),
-                        const Color(0xFF667EEA),
-                        _animationController.value,
-                      )!,
-                    ],
-                  ),
+                decoration: const BoxDecoration(
+                  color: Colors.black,
                 ),
               );
             },

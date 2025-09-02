@@ -445,8 +445,8 @@ class FloatingParticlesPainter extends CustomPainter {
       final y = (cos(seed * 1.5) * 0.5 + 0.5) * size.height + 
                (20 * sin(particleProgress * 3 * pi));
       
-      paint.color = colors[i % colors.length].withOpacity(
-        0.3 + 0.4 * sin(particleProgress * pi),
+      paint.color = colors[i % colors.length].withValues(
+        alpha: 0.3 + 0.4 * sin(particleProgress * pi),
       );
       
       // Draw glowing particle
@@ -488,8 +488,8 @@ class SparklePainter extends CustomPainter {
       
       // Use modern theme colors
       final colorIndex = i % ModernTheme.auroraGradient.length;
-      paint.color = ModernTheme.auroraGradient[colorIndex].withOpacity(
-        0.6 + 0.4 * sin(progress * 2 * pi + i),
+      paint.color = ModernTheme.auroraGradient[colorIndex].withValues(
+        alpha: 0.6 + 0.4 * sin(progress * 2 * pi + i),
       );
       
       // Draw enhanced sparkle with glow

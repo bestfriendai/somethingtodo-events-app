@@ -47,7 +47,7 @@ class EventsProvider extends ChangeNotifier {
   bool? _isFreeFilter;
   DateTime? _startDateFilter;
   DateTime? _endDateFilter;
-  String _currentLocation = 'San Francisco, CA';
+  final String _currentLocation = 'San Francisco, CA';
 
   // Getters
   List<Event> get events => _events;
@@ -273,8 +273,8 @@ class EventsProvider extends ChangeNotifier {
   void setUserLocation(double latitude, double longitude) {
     _userLatitude = latitude;
     _userLongitude = longitude;
-    print('EventsProvider: User location set to $latitude, $longitude');
-    print(
+    debugPrint('EventsProvider: User location set to $latitude, $longitude');
+    debugPrint(
       'EventsProvider: Loading nearby events for location $latitude, $longitude',
     );
     loadNearbyEvents();
@@ -283,11 +283,11 @@ class EventsProvider extends ChangeNotifier {
   // Load Nearby Events
   Future<void> loadNearbyEvents() async {
     if (_userLatitude == null || _userLongitude == null) {
-      print('EventsProvider: Cannot load nearby events: location not set');
+      debugPrint('EventsProvider: Cannot load nearby events: location not set');
       return;
     }
 
-    print(
+    debugPrint(
       'EventsProvider: Loading nearby events for $_userLatitude, $_userLongitude',
     );
     _setLoading(true);
@@ -302,10 +302,10 @@ class EventsProvider extends ChangeNotifier {
       );
 
       _nearbyEvents = events;
-      print('EventsProvider: Loaded ${events.length} nearby events');
+      debugPrint('EventsProvider: Loaded ${events.length} nearby events');
       notifyListeners();
     } catch (e) {
-      print('EventsProvider: Failed to load nearby events: $e');
+      debugPrint('EventsProvider: Failed to load nearby events: $e');
       _setError('Failed to load nearby events: $e');
     } finally {
       _setLoading(false);
@@ -325,7 +325,7 @@ class EventsProvider extends ChangeNotifier {
     _clearError();
 
     try {
-      print('Loading real events from RapidAPI');
+      debugPrint('Loading real events from RapidAPI');
 
       // Check connectivity
       final isConnected = await CacheService.instance.isConnected;
@@ -346,7 +346,7 @@ class EventsProvider extends ChangeNotifier {
         if (trendingEvents.isNotEmpty) {
           _events = trendingEvents;
           _featuredEvents = trendingEvents.take(5).toList();
-          print('Loaded ${trendingEvents.length} trending events');
+          debugPrint('Loaded ${trendingEvents.length} trending events');
         } else {
           // Fallback to general search
           final searchEvents = await _rapidAPIService.searchEvents(
@@ -357,7 +357,7 @@ class EventsProvider extends ChangeNotifier {
 
           _events = searchEvents;
           _featuredEvents = searchEvents.take(5).toList();
-          print('Loaded ${searchEvents.length} search events');
+          debugPrint('Loaded ${searchEvents.length} search events');
         }
 
         // Cache the loaded events
@@ -365,13 +365,13 @@ class EventsProvider extends ChangeNotifier {
         await CacheService.instance.cacheFeaturedEvents(_featuredEvents);
 
         _hasMoreEvents = _events.length >= 50;
-        print('Total events loaded: ${_events.length}');
+        debugPrint('Total events loaded: ${_events.length}');
       } catch (apiError) {
         // Check if it's a rate limit error (429 status code)
         if (apiError.toString().contains('429') || 
             apiError.toString().contains('rate') ||
             apiError.toString().contains('Too Many Requests')) {
-          print('RapidAPI rate limited - loading demo events');
+          debugPrint('RapidAPI rate limited - loading demo events');
           _error = 'API rate limit reached - showing sample events';
           
           // Load demo events instead
@@ -389,11 +389,11 @@ class EventsProvider extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print('Failed to load real events: $e');
+      debugPrint('Failed to load real events: $e');
       _setError('Failed to load events: $e');
       // Fallback to cached data
       if (await _loadFromCache()) {
-        print('Loaded from cache due to API error');
+        debugPrint('Loaded from cache due to API error');
       } else {
         // Create some demo events as last resort
         _events = await SampleEvents.getDemoEvents();
@@ -417,7 +417,7 @@ class EventsProvider extends ChangeNotifier {
       _events = await SampleEvents.getDemoEvents();
       _featuredEvents = await SampleEvents.getFeaturedEvents();
       _hasMoreEvents = false;
-      print('Loaded ${_events.length} demo events');
+      debugPrint('Loaded ${_events.length} demo events');
     } catch (e) {
       _setError('Failed to load demo events: $e');
     } finally {
@@ -465,7 +465,7 @@ class EventsProvider extends ChangeNotifier {
       // This is a simplified version
       _hasMoreEvents = events.length == AppConfig.eventsPerPage;
 
-      print('Loaded ${events.length} events from Firestore');
+      debugPrint('Loaded ${events.length} events from Firestore');
     } catch (e) {
       _setError('Failed to load events: $e');
     } finally {
@@ -499,9 +499,9 @@ class EventsProvider extends ChangeNotifier {
         _events.addAll(newEvents);
         _hasMoreEvents = newEvents.isNotEmpty;
 
-        print('Loaded ${newEvents.length} more events via enhanced method');
+        debugPrint('Loaded ${newEvents.length} more events via enhanced method');
       } catch (e) {
-        print('Failed to load more events: $e');
+        debugPrint('Failed to load more events: $e');
       } finally {
         _isLoadingMore = false;
         notifyListeners();
@@ -525,7 +525,7 @@ class EventsProvider extends ChangeNotifier {
       _featuredEvents = _events.take(5).toList();
       notifyListeners();
     } catch (e) {
-      print('Failed to load featured events: $e');
+      debugPrint('Failed to load featured events: $e');
     }
   }
 
@@ -555,7 +555,7 @@ class EventsProvider extends ChangeNotifier {
       _favoriteEvents.addAll(favoriteEvents);
       notifyListeners();
     } catch (e) {
-      print('Failed to load favorite events: $e');
+      debugPrint('Failed to load favorite events: $e');
     }
   }
 
@@ -577,7 +577,7 @@ class EventsProvider extends ChangeNotifier {
 
         // If we have user's coordinates, use location-based search for better results
         if (_userLatitude != null && _userLongitude != null) {
-          print(
+          debugPrint(
             'Searching events near user location: $_userLatitude, $_userLongitude',
           );
           results = await _rapidAPIService.getEventsNearLocation(
@@ -629,11 +629,11 @@ class EventsProvider extends ChangeNotifier {
       }
 
       _searchQuery = searchQuery;
-      print(
+      debugPrint(
         'Search completed: ${_searchResults.length} results for "$searchQuery"',
       );
     } catch (e) {
-      print('Search failed: $e');
+      debugPrint('Search failed: $e');
       _setError('Search failed: $e');
       // Fallback to local search
       _searchResults = _events.where((event) {
@@ -712,7 +712,7 @@ class EventsProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Failed to toggle favorite: $e');
+      debugPrint('Failed to toggle favorite: $e');
     }
   }
 
@@ -802,7 +802,7 @@ class EventsProvider extends ChangeNotifier {
         return true;
       }
     } catch (e) {
-      print('Failed to load from cache: $e');
+      debugPrint('Failed to load from cache: $e');
     }
     return false;
   }
@@ -826,18 +826,18 @@ class EventsProvider extends ChangeNotifier {
         .toList();
 
     // This would be implemented with proper image preloading
-    print('Preloading ${imageUrls.length} event images');
+    debugPrint('Preloading ${imageUrls.length} event images');
   }
 
   // Analytics methods
   Future<void> logEventView(String userId, String eventId) async {
     // Log event view for analytics
-    print('Event viewed: $eventId by user: $userId');
+    debugPrint('Event viewed: $eventId by user: $userId');
   }
 
   Future<void> logEventShare(String eventId, String userId) async {
     // Log event share for analytics
-    print('Event shared: $eventId by user: $userId');
+    debugPrint('Event shared: $eventId by user: $userId');
   }
 
   // Weekend events helper

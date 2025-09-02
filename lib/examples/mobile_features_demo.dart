@@ -126,11 +126,11 @@ class MobileFeaturesDemo {
     
     // Check connectivity
     final isConnected = await CacheService.instance.isConnected;
-    print('Connected: $isConnected');
-    
+    debugPrint('Connected: $isConnected');
+
     // Get cached data
     final cachedEvents = await CacheService.instance.getCachedEvents();
-    print('Cached events: ${cachedEvents?.length ?? 0}');
+    debugPrint('Cached events: ${cachedEvents?.length ?? 0}');
   }
 
   /// Example: Platform-specific toast

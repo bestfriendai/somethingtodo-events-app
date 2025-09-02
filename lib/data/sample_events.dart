@@ -13,7 +13,7 @@ class SampleEvents {
     // Check cache first
     if (_cachedEvents != null && _lastFetchTime != null) {
       final cacheAge = DateTime.now().difference(_lastFetchTime!);
-      if (cacheAge.inHours < 2) {
+      if (cacheAge < _cacheExpiry) {
         return _cachedEvents!;
       }
     }

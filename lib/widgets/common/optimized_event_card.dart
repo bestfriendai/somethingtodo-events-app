@@ -66,7 +66,7 @@ class _EventCardContent extends StatelessWidget {
         height: cardHeight,
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
-          color: isDark ? ModernTheme.darkCard : Colors.white,
+          color: isDark ? ModernTheme.darkCardSurface : Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -155,7 +155,7 @@ class _EventCardContent extends StatelessWidget {
             Positioned(
               top: 12,
               left: 12,
-              child: _CategoryBadge(category: event.category),
+              child: _CategoryBadge(category: event.category.toString().split('.').last),
             ),
             // Price badge
             if (event.price != null)
@@ -304,22 +304,8 @@ class _CategoryBadge extends StatelessWidget {
   }
 
   Color _getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case 'music':
-        return Colors.purple;
-      case 'sports':
-        return Colors.blue;
-      case 'food':
-        return Colors.orange;
-      case 'arts':
-        return Colors.pink;
-      case 'tech':
-        return Colors.green;
-      case 'business':
-        return Colors.indigo;
-      default:
-        return Colors.grey;
-    }
+    // Return black for all categories to match the black theme
+    return Colors.black;
   }
 }
 
@@ -432,7 +418,10 @@ class _FavoriteButtonState extends State<_FavoriteButton>
       // Update in provider
       final authProvider = context.read<AuthProvider>();
       if (authProvider.isAuthenticated) {
-        await context.read<EventsProvider>().toggleFavorite(widget.eventId);
+        await context.read<EventsProvider>().toggleFavorite(
+          widget.eventId,
+          authProvider.currentUser?.id ?? '',
+        );
       }
     } catch (e) {
       // Revert on error

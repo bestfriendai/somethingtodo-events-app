@@ -14,7 +14,6 @@ class UserEvent with _$UserEvent {
     Map<String, dynamic>? parameters,
     String? sessionId,
     String? screenName,
-    @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
     DateTime? timestamp,
   }) = _UserEvent;
 
@@ -27,9 +26,7 @@ class SessionData with _$SessionData {
   const factory SessionData({
     required String sessionId,
     required String userId,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     required DateTime startTime,
-    @JsonKey(fromJson: _fromJsonTimestamp, toJson: _toJsonTimestamp)
     DateTime? endTime,
     @Default(0) int duration, // in seconds
     @Default(0) int screenViews,
@@ -58,7 +55,6 @@ class EventAnalytics with _$EventAnalytics {
     @Default(0.0) double averageViewDuration,
     @Default({}) Map<String, int> viewsByCategory,
     @Default({}) Map<String, int> viewsByLocation,
-    @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
     DateTime? lastUpdated,
   }) = _EventAnalytics;
 
@@ -77,7 +73,6 @@ class SearchAnalytics with _$SearchAnalytics {
     String? location,
     Map<String, dynamic>? filters,
     @Default(0) int clickedResults,
-    @JsonKey(fromJson: _fromJsonTimestampNullable, toJson: _toJsonTimestamp)
     DateTime? timestamp,
   }) = _SearchAnalytics;
 
@@ -122,22 +117,3 @@ class ScreenNames {
   static const String search = 'search';
 }
 
-// Helper functions for Firestore Timestamp conversion
-DateTime _fromJsonTimestamp(dynamic timestamp) {
-  if (timestamp == null) return DateTime.now();
-  if (timestamp is Timestamp) return timestamp.toDate();
-  if (timestamp is String) return DateTime.parse(timestamp);
-  return DateTime.now();
-}
-
-DateTime? _fromJsonTimestampNullable(dynamic timestamp) {
-  if (timestamp == null) return null;
-  if (timestamp is Timestamp) return timestamp.toDate();
-  if (timestamp is String) return DateTime.parse(timestamp);
-  return null;
-}
-
-dynamic _toJsonTimestamp(DateTime? dateTime) {
-  if (dateTime == null) return null;
-  return Timestamp.fromDate(dateTime);
-}

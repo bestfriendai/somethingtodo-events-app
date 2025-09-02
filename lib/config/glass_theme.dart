@@ -300,16 +300,8 @@ class GlassTheme {
   
   // Background decoration for screens
   static BoxDecoration screenBackground() {
-    return BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          primaryGradient[0],
-          primaryGradient[1],
-          secondaryGradient[0],
-        ],
-      ),
+    return const BoxDecoration(
+      color: Colors.black,
     );
   }
   

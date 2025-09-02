@@ -191,45 +191,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                 ),
               ),
               
-              // Static purple accent orb (no animation for better performance)
-              Positioned(
-                top: 80,
-                left: -80,
-                child: Container(
-                  width: 300,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        const Color(0xFF7C3AED).withValues(alpha: 0.15), // Electric Purple
-                        const Color(0xFF7C3AED).withValues(alpha: 0.05),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              
-              // Static blue accent orb (no animation for better performance)
-              Positioned(
-                bottom: 150,
-                right: -100,
-                child: Container(
-                  width: 250,
-                  height: 250,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        const Color(0xFF06B6D4).withValues(alpha: 0.1), // Cyber Blue
-                        const Color(0xFF06B6D4).withValues(alpha: 0.06),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Removed colored accent orbs for clean black background
               
               // Particle effects overlay
               Positioned.fill(

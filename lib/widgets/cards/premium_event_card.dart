@@ -181,8 +181,8 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.purpleAccent.withOpacity(
-                              0.3 * _glowController.value,
+                            color: Colors.purpleAccent.withValues(
+                              alpha: 0.3 * _glowController.value,
                             ),
                             blurRadius: 20 + 10 * _glowController.value,
                             spreadRadius: 5,
@@ -630,21 +630,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
   }
 
   Color _getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case 'music':
-        return Colors.purple;
-      case 'sports':
-        return Colors.blue;
-      case 'food':
-        return Colors.orange;
-      case 'art':
-        return Colors.pink;
-      case 'tech':
-        return Colors.cyan;
-      case 'business':
-        return Colors.green;
-      default:
-        return Colors.indigo;
-    }
+    // Return black for all categories to match the black theme
+    return Colors.black;
   }
 }

@@ -466,46 +466,46 @@ class ModernTheme {
     );
   }
 
-  // 2025 Enhanced category-specific gradients with improved visual hierarchy
+  // Black gradient variations for all categories
   static const Map<String, List<Color>> categoryGradients = {
-    // Technology: Cyber blue to electric purple
-    'technology': [Color(0xFF06B6D4), Color(0xFF7C3AED)], // Cyber Blue to Electric Purple
-    'tech': [Color(0xFF06B6D4), Color(0xFF7C3AED)], // Alias for technology
-    
-    // Arts: Sunset gradient (warm orange to deep pink)
-    'arts': [Color(0xFFFF6B35), Color(0xFFEC4899)], // Sunset Orange to Deep Pink
-    'art': [Color(0xFFFF6B35), Color(0xFFEC4899)], // Alias for arts
-    
-    // Sports: Forest gradient (deep green to bright emerald)
-    'sports': [Color(0xFF065F46), Color(0xFF10B981)], // Forest Green to Emerald
-    'sport': [Color(0xFF065F46), Color(0xFF10B981)], // Alias for sports
-    
-    // Food: Warm gradient (golden yellow to orange)
-    'food': [Color(0xFFFBBF24), Color(0xFFFF6B35)], // Golden Yellow to Warm Orange
-    'dining': [Color(0xFFFBBF24), Color(0xFFFF6B35)], // Alias for food
-    
-    // Music: Vibrant pink to purple
-    'music': [Color(0xFFEC4899), Color(0xFF8B5CF6)], // Neon Pink to Violet
-    'entertainment': [Color(0xFFEC4899), Color(0xFF8B5CF6)], // Alias for music
-    
-    // Business: Professional blue gradient
-    'business': [Color(0xFF1E40AF), Color(0xFF3B82F6)], // Deep Blue to Bright Blue
-    'professional': [Color(0xFF1E40AF), Color(0xFF3B82F6)], // Alias for business
-    
-    // Education: Knowledge gradient (blue to green)
-    'education': [Color(0xFF0EA5E9), Color(0xFF059669)], // Sky Blue to Green
-    'learning': [Color(0xFF0EA5E9), Color(0xFF059669)], // Alias for education
-    
-    // Health: Wellness gradient (pink to orange)
-    'health': [Color(0xFFEC4899), Color(0xFFF97316)], // Pink to Orange
-    'wellness': [Color(0xFFEC4899), Color(0xFFF97316)], // Alias for health
-    
-    // Community: Social gradient (yellow to orange)
-    'community': [Color(0xFFEAB308), Color(0xFFFF9F43)], // Yellow to Orange
-    'social': [Color(0xFFEAB308), Color(0xFFFF9F43)], // Alias for community
-    
+    // Technology: Black gradient
+    'technology': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'tech': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for technology
+
+    // Arts: Black gradient
+    'arts': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'art': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for arts
+
+    // Sports: Black gradient
+    'sports': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'sport': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for sports
+
+    // Food: Black gradient
+    'food': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'dining': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for food
+
+    // Music: Black gradient
+    'music': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'entertainment': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for music
+
+    // Business: Black gradient
+    'business': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'professional': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for business
+
+    // Education: Black gradient
+    'education': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'learning': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for education
+
+    // Health: Black gradient
+    'health': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'wellness': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for health
+
+    // Community: Black gradient
+    'community': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'social': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for community
+
     // Default fallback
-    'other': [Color(0xFF6366F1), Color(0xFF8B5CF6)], // Purple gradient
+    'other': [Color(0xFF000000), Color(0xFF1A1A1A)], // Black gradient
   };
 
   // Get category gradient with enhanced matching
