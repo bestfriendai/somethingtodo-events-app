@@ -331,7 +331,7 @@ class _SearchScreenState extends State<SearchScreen>
         label: Text(label),
         onDeleted: onRemove,
         deleteIcon: const Icon(Icons.close, size: 16),
-        backgroundColor: ModernTheme.primaryColor.withOpacity(0.1),
+        backgroundColor: ModernTheme.primaryColor.withValues(alpha: 0.1),
         side: BorderSide(color: ModernTheme.primaryColor),
       ),
     );
@@ -756,9 +756,9 @@ class _SearchScreenState extends State<SearchScreen>
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: ModernTheme.errorColor.withOpacity(0.08),
+        color: ModernTheme.errorColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ModernTheme.errorColor.withOpacity(0.3)),
+        border: Border.all(color: ModernTheme.errorColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

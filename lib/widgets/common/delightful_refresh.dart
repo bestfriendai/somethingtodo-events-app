@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import '../../services/delight_service.dart';
 import '../../services/platform_interactions.dart';
@@ -87,7 +86,7 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
                   valueColor: AlwaysStoppedAnimation<Color>(ModernTheme.primaryColor),
-                  backgroundColor: Colors.white.withOpacity(0.3),
+                  backgroundColor: Colors.white.withValues(alpha: 0.3),
                 ),
               ),
               const SizedBox(width: 12),
@@ -102,7 +101,7 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
               ),
             ],
           ),
-          backgroundColor: ModernTheme.darkCardSurface.withOpacity(0.95),
+          backgroundColor: ModernTheme.darkCardSurface.withValues(alpha: 0.95),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -213,7 +212,7 @@ class AuroraRefreshPainter extends CustomPainter {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          colors[i % colors.length].withOpacity(0.1 * (1 - waveProgress)),
+          colors[i % colors.length].withValues(alpha: 0.1 * (1 - waveProgress)),
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, waveHeight));
@@ -343,7 +342,7 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
   Widget _buildLiquidRefresh() {
     return LiquidPullToRefresh(
       onRefresh: _handleRefresh,
-      color: ModernTheme.primaryColor.withOpacity(0.1),
+      color: ModernTheme.primaryColor.withValues(alpha: 0.1),
       backgroundColor: ModernTheme.primaryColor,
       height: 150,
       animSpeedFactor: 3,

@@ -285,7 +285,7 @@ class _PremiumScreenState extends State<PremiumScreen>
               end: Alignment.bottomRight,
               colors: [
                 AppTheme.warningColor,
-                AppTheme.warningColor.withOpacity(0.8),
+                AppTheme.warningColor.withValues(alpha: 0.8),
               ],
             ),
           ),
@@ -321,7 +321,7 @@ class _PremiumScreenState extends State<PremiumScreen>
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -424,7 +424,7 @@ class _PremiumScreenState extends State<PremiumScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: feature.color.withOpacity(0.1),
+                color: feature.color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -507,7 +507,7 @@ class _PremiumScreenState extends State<PremiumScreen>
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryColor.withOpacity(0.1) : null,
+          color: isSelected ? AppTheme.primaryColor.withValues(alpha: 0.1) : null,
           border: Border.all(
             color: isSelected ? AppTheme.primaryColor : Colors.grey[300]!,
             width: isSelected ? 2 : 1,

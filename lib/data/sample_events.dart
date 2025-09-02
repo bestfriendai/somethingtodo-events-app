@@ -1,5 +1,6 @@
 import '../models/event.dart';
 import '../services/rapidapi_events_service.dart';
+import '../services/logging_service.dart';
 
 class SampleEvents {
   static final RapidAPIEventsService _rapidApiService = RapidAPIEventsService();
@@ -90,7 +91,7 @@ class SampleEvents {
       
       return enhancedEvents.take(50).toList();
     } catch (e) {
-      print('Error fetching real events: \$e');
+      LoggingService.error('Error fetching real events', tag: 'SampleEvents', error: e);
       return [];
     }
   }

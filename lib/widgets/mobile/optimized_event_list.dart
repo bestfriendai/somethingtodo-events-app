@@ -195,7 +195,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: ModernTheme.primaryColor.withOpacity(0.3),
+            color: ModernTheme.primaryColor.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -208,7 +208,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Icon(
@@ -234,7 +234,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
                   Text(
                     'Swipe through events like TikTok',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -289,12 +289,12 @@ class _OptimizedEventListState extends State<OptimizedEventList>
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
               child: Icon(
                 Icons.event_busy_rounded,
                 size: 48,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
               ),
             ),
             const SizedBox(height: 24),
@@ -309,7 +309,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
             Text(
               'Pull down to refresh or try adjusting your filters',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -630,7 +630,7 @@ class _OptimizedEventCarouselState extends State<OptimizedEventCarousel>
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

@@ -172,7 +172,7 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   blurRadius: isSelected ? 8 : 4,
                   offset: const Offset(0, 2),
                 ),
@@ -206,7 +206,7 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
               border: Border.all(color: Colors.white, width: 3),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryColor.withOpacity(0.3 * (1 - _pulseController.value)),
+                  color: AppTheme.primaryColor.withValues(alpha: 0.3 * (1 - _pulseController.value)),
                   blurRadius: 20 * _pulseController.value,
                   spreadRadius: 10 * _pulseController.value,
                 ),
@@ -260,7 +260,7 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: _getCategoryColor(event.category).withOpacity(0.1),
+                  color: _getCategoryColor(event.category).withValues(alpha: 0.1),
                 ),
                 child: Center(
                   child: Icon(

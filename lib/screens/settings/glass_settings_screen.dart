@@ -76,7 +76,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Settings saved successfully'),
-        backgroundColor: Colors.green.withOpacity(0.8),
+        backgroundColor: Colors.green.withValues(alpha: 0.8),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -292,16 +292,16 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.1),
-                Colors.white.withOpacity(0.05),
+                Colors.white.withValues(alpha: 0.1),
+                Colors.white.withValues(alpha: 0.05),
               ],
             ),
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.2),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             child: const Icon(
@@ -328,16 +328,16 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppTheme.primaryColor.withOpacity(0.3),
-                  AppTheme.primaryColor.withOpacity(0.1),
+                  AppTheme.primaryColor.withValues(alpha: 0.3),
+                  AppTheme.primaryColor.withValues(alpha: 0.1),
                 ],
               ),
               borderGradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppTheme.primaryColor.withOpacity(0.6),
-                  AppTheme.primaryColor.withOpacity(0.2),
+                  AppTheme.primaryColor.withValues(alpha: 0.6),
+                  AppTheme.primaryColor.withValues(alpha: 0.2),
                 ],
               ),
               child: const Text(
@@ -372,8 +372,8 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      AppTheme.primaryColor.withOpacity(0.3),
-                      AppTheme.primaryColor.withOpacity(0.0),
+                      AppTheme.primaryColor.withValues(alpha: 0.3),
+                      AppTheme.primaryColor.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -391,8 +391,8 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      AppTheme.secondaryColor.withOpacity(0.2),
-                      AppTheme.secondaryColor.withOpacity(0.0),
+                      AppTheme.secondaryColor.withValues(alpha: 0.2),
+                      AppTheme.secondaryColor.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -410,8 +410,8 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      Colors.purple.withOpacity(0.2),
-                      Colors.purple.withOpacity(0.0),
+                      Colors.purple.withValues(alpha: 0.2),
+                      Colors.purple.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -435,16 +435,16 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(0.1),
-          Colors.white.withOpacity(0.05),
+          Colors.white.withValues(alpha: 0.1),
+          Colors.white.withValues(alpha: 0.05),
         ],
       ),
       borderGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(0.2),
-          Colors.white.withOpacity(0.1),
+          Colors.white.withValues(alpha: 0.2),
+          Colors.white.withValues(alpha: 0.1),
         ],
       ),
       child: Column(
@@ -462,8 +462,8 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        AppTheme.primaryColor.withOpacity(0.3),
-                        AppTheme.primaryColor.withOpacity(0.1),
+                        AppTheme.primaryColor.withValues(alpha: 0.3),
+                        AppTheme.primaryColor.withValues(alpha: 0.1),
                       ],
                     ),
                   ),
@@ -492,7 +492,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                     gradient: LinearGradient(
                       colors: [
                         Colors.transparent,
-                        Colors.white.withOpacity(0.1),
+                        Colors.white.withValues(alpha: 0.1),
                         Colors.transparent,
                       ],
                     ),
@@ -532,7 +532,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 Text(
                   subtitle,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 14,
                   ),
                 ),
@@ -560,18 +560,18 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
           gradient: LinearGradient(
             colors: value
                 ? [
-                    AppTheme.primaryColor.withOpacity(0.8),
-                    AppTheme.primaryColor.withOpacity(0.6),
+                    AppTheme.primaryColor.withValues(alpha: 0.8),
+                    AppTheme.primaryColor.withValues(alpha: 0.6),
                   ]
                 : [
-                    Colors.white.withOpacity(0.2),
-                    Colors.white.withOpacity(0.1),
+                    Colors.white.withValues(alpha: 0.2),
+                    Colors.white.withValues(alpha: 0.1),
                   ],
           ),
           border: Border.all(
             color: value
-                ? AppTheme.primaryColor.withOpacity(0.5)
-                : Colors.white.withOpacity(0.3),
+                ? AppTheme.primaryColor.withValues(alpha: 0.5)
+                : Colors.white.withValues(alpha: 0.3),
           ),
         ),
         child: AnimatedAlign(
@@ -586,7 +586,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -624,7 +624,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
           Text(
             subtitle,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),
@@ -632,9 +632,9 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: AppTheme.primaryColor,
-              inactiveTrackColor: Colors.white.withOpacity(0.2),
+              inactiveTrackColor: Colors.white.withValues(alpha: 0.2),
               thumbColor: Colors.white,
-              overlayColor: AppTheme.primaryColor.withOpacity(0.2),
+              overlayColor: AppTheme.primaryColor.withValues(alpha: 0.2),
               trackHeight: 4,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
             ),
@@ -652,7 +652,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
           Text(
             valueLabel,
             style: TextStyle(
-              color: AppTheme.primaryColor.withOpacity(0.9),
+              color: AppTheme.primaryColor.withValues(alpha: 0.9),
               fontWeight: FontWeight.w600,
               fontSize: 14,
             ),
@@ -686,7 +686,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
           Text(
             subtitle,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               fontSize: 14,
             ),
           ),
@@ -697,12 +697,12 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
               borderRadius: BorderRadius.circular(12),
               gradient: LinearGradient(
                 colors: [
-                  Colors.white.withOpacity(0.1),
-                  Colors.white.withOpacity(0.05),
+                  Colors.white.withValues(alpha: 0.1),
+                  Colors.white.withValues(alpha: 0.05),
                 ],
               ),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
               ),
             ),
             child: DropdownButtonHideUnderline(
@@ -725,7 +725,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 dropdownColor: Colors.grey.shade900,
                 icon: Icon(
                   Icons.keyboard_arrow_down,
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                 ),
                 isExpanded: true,
                 style: const TextStyle(color: Colors.white),
@@ -761,14 +761,14 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 borderRadius: BorderRadius.circular(10),
                 gradient: LinearGradient(
                   colors: [
-                    (textColor ?? Colors.white).withOpacity(0.2),
-                    (textColor ?? Colors.white).withOpacity(0.1),
+                    (textColor ?? Colors.white).withValues(alpha: 0.2),
+                    (textColor ?? Colors.white).withValues(alpha: 0.1),
                   ],
                 ),
               ),
               child: Icon(
                 icon, 
-                color: textColor ?? Colors.white.withOpacity(0.9),
+                color: textColor ?? Colors.white.withValues(alpha: 0.9),
                 size: 20,
               ),
             ),
@@ -789,7 +789,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: (textColor ?? Colors.white).withOpacity(0.7),
+                      color: (textColor ?? Colors.white).withValues(alpha: 0.7),
                       fontSize: 14,
                     ),
                   ),
@@ -799,7 +799,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
             if (onTap != null)
               Icon(
                 Icons.arrow_forward_ios,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 size: 16,
               ),
           ],
@@ -843,7 +843,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: const Text('Categories updated'),
-                backgroundColor: Colors.green.withOpacity(0.8),
+                backgroundColor: Colors.green.withValues(alpha: 0.8),
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -897,7 +897,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: const Text('Password updated successfully'),
-                backgroundColor: Colors.green.withOpacity(0.8),
+                backgroundColor: Colors.green.withValues(alpha: 0.8),
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -971,7 +971,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: const Text('Account deletion initiated'),
-                backgroundColor: Colors.red.withOpacity(0.8),
+                backgroundColor: Colors.red.withValues(alpha: 0.8),
                 behavior: SnackBarBehavior.floating,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -1082,16 +1082,16 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.black.withOpacity(0.8),
-            Colors.black.withOpacity(0.6),
+            Colors.black.withValues(alpha: 0.8),
+            Colors.black.withValues(alpha: 0.6),
           ],
         ),
         borderGradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white.withOpacity(0.2),
-            Colors.white.withOpacity(0.1),
+            Colors.white.withValues(alpha: 0.2),
+            Colors.white.withValues(alpha: 0.1),
           ],
         ),
         child: Padding(
@@ -1143,24 +1143,24 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 ? LinearGradient(
                     colors: isDestructive
                         ? [
-                            Colors.red.withOpacity(0.8),
-                            Colors.red.withOpacity(0.6),
+                            Colors.red.withValues(alpha: 0.8),
+                            Colors.red.withValues(alpha: 0.6),
                           ]
                         : [
-                            AppTheme.primaryColor.withOpacity(0.8),
-                            AppTheme.primaryColor.withOpacity(0.6),
+                            AppTheme.primaryColor.withValues(alpha: 0.8),
+                            AppTheme.primaryColor.withValues(alpha: 0.6),
                           ],
                   )
                 : LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.1),
-                      Colors.white.withOpacity(0.05),
+                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withValues(alpha: 0.05),
                     ],
                   ),
             border: Border.all(
               color: isPrimary
-                  ? (isDestructive ? Colors.red : AppTheme.primaryColor).withOpacity(0.3)
-                  : Colors.white.withOpacity(0.2),
+                  ? (isDestructive ? Colors.red : AppTheme.primaryColor).withValues(alpha: 0.3)
+                  : Colors.white.withValues(alpha: 0.2),
             ),
           ),
           child: Text(
@@ -1187,12 +1187,12 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
         borderRadius: BorderRadius.circular(12),
         gradient: LinearGradient(
           colors: [
-            Colors.white.withOpacity(0.1),
-            Colors.white.withOpacity(0.05),
+            Colors.white.withValues(alpha: 0.1),
+            Colors.white.withValues(alpha: 0.05),
           ],
         ),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
         ),
       ),
       child: TextField(
@@ -1201,8 +1201,8 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-          prefixIcon: Icon(icon, color: Colors.white.withOpacity(0.7)),
+          labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+          prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.7)),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),

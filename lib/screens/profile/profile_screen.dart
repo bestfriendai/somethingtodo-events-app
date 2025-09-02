@@ -280,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: AppTheme.warningColor.withOpacity(0.1),
+                        color: AppTheme.warningColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(

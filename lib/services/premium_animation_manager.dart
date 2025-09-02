@@ -101,7 +101,7 @@ class PremiumAnimationManager {
     
     return child.animate(onPlay: (controller) => controller.repeat()).shimmer(
       duration: instance.scaledDuration(duration ?? const Duration(seconds: 2)),
-      color: color ?? Colors.white.withOpacity(0.3),
+      color: color ?? Colors.white.withValues(alpha: 0.3),
     );
   }
 
@@ -142,7 +142,7 @@ class PremiumAnimationManager {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: glowColors.first.withOpacity(value * 0.3),
+                    color: glowColors.first.withValues(alpha: value * 0.3),
                     blurRadius: 20 * value,
                     spreadRadius: 5 * value,
                   ),
@@ -370,7 +370,7 @@ class PremiumAnimationManager {
           duration: const Duration(milliseconds: 1000),
         )
         .then()
-        .tint(color: Colors.yellow.withOpacity(0.3));
+        .tint(color: Colors.yellow.withValues(alpha: 0.3));
   }
 }
 

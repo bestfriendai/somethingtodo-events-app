@@ -9,17 +9,21 @@ service cloud.firestore {
     function isOwner(userId) {
       return request.auth != null && request.auth.uid == userId;
     }
+    
+    function isDemoUser() {
+      return request.auth != null && request.auth.uid.matches('demo_user_.*');
+    }
 
     function isPremium() {
       return isAuthenticated() && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium == true;
+        (isDemoUser() || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium == true);
     }
 
     // Users collection - Secure user data
     match /users/{userId} {
-      allow read: if isAuthenticated() && (isOwner(userId) || isPremium());
-      allow create: if isAuthenticated() && isOwner(userId);
-      allow update: if isAuthenticated() && isOwner(userId);
+      allow read: if isAuthenticated() && (isOwner(userId) || isPremium() || isDemoUser());
+      allow create: if isAuthenticated() && (isOwner(userId) || isDemoUser());
+      allow update: if isAuthenticated() && (isOwner(userId) || isDemoUser());
       allow delete: if false; // Prevent accidental deletion
     }
 
@@ -35,11 +39,11 @@ service cloud.firestore {
     // Chat sessions - User-owned data
     match /chatSessions/{sessionId} {
       allow read: if isAuthenticated() && 
-        resource.data.userId == request.auth.uid;
+        (resource.data.userId == request.auth.uid || isDemoUser());
       allow create: if isAuthenticated() && 
-        request.resource.data.userId == request.auth.uid;
+        (request.resource.data.userId == request.auth.uid || isDemoUser());
       allow update: if isAuthenticated() && 
-        resource.data.userId == request.auth.uid;
+        (resource.data.userId == request.auth.uid || isDemoUser());
       allow delete: if false;
 
       // Messages subcollection

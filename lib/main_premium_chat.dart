@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'screens/chat/premium_chat_screen.dart';
-import 'providers/auth_provider.dart';
 import 'providers/chat_provider.dart';
 import 'config/unified_design_system.dart';
 
@@ -104,9 +103,9 @@ class _ChatDemoScreenState extends ConsumerState<ChatDemoScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  UnifiedDesignSystem.primaryBrand.withOpacity(0.05),
+                  UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.05),
                   Colors.black,
-                  UnifiedDesignSystem.accentBrand.withOpacity(0.03),
+                  UnifiedDesignSystem.accentBrand.withValues(alpha: 0.03),
                 ],
               ),
             ),
@@ -121,7 +120,7 @@ class _ChatDemoScreenState extends ConsumerState<ChatDemoScreen> {
             right: 16,
             child: FloatingActionButton(
               mini: true,
-              backgroundColor: Colors.white.withOpacity(0.1),
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
               onPressed: _showFeatureInfo,
               child: const Icon(
                 Icons.info_outline,
@@ -224,9 +223,9 @@ class PremiumChatLauncher extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              UnifiedDesignSystem.primaryBrand.withOpacity(0.2),
+              UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.2),
               Colors.black,
-              UnifiedDesignSystem.accentBrand.withOpacity(0.1),
+              UnifiedDesignSystem.accentBrand.withValues(alpha: 0.1),
             ],
           ),
         ),

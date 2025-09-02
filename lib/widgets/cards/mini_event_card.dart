@@ -193,7 +193,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.purpleAccent.withOpacity(0.3),
+                                  color: Colors.purpleAccent.withValues(alpha: 0.3),
                                   blurRadius: 15,
                                   spreadRadius: 2,
                                 ),
@@ -212,13 +212,13 @@ class _MiniEventCardState extends State<MiniEventCard>
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    Colors.white.withOpacity(0.1),
-                                    Colors.white.withOpacity(0.05),
+                                    Colors.white.withValues(alpha: 0.1),
+                                    Colors.white.withValues(alpha: 0.05),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   width: 1,
                                 ),
                               ),
@@ -274,7 +274,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                                             decoration: BoxDecoration(
                                               color: _getCategoryColor(
                                                       widget.category)
-                                                  .withOpacity(0.9),
+                                                  .withValues(alpha: 0.9),
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                             ),
@@ -351,7 +351,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                                                 ).shimmer(
                                                   duration: 2.seconds,
                                                   color: Colors.white
-                                                      .withOpacity(0.3),
+                                                      .withValues(alpha: 0.3),
                                                 ),
                                             ],
                                           ),
@@ -361,7 +361,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                                             style: TextStyle(
                                               fontSize: 13,
                                               color:
-                                                  Colors.white.withOpacity(0.7),
+                                                  Colors.white.withValues(alpha: 0.7),
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -373,7 +373,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                                                 Icons.access_time,
                                                 size: 14,
                                                 color: Colors.white
-                                                    .withOpacity(0.6),
+                                                    .withValues(alpha: 0.6),
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
@@ -381,7 +381,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   color: Colors.white
-                                                      .withOpacity(0.6),
+                                                      .withValues(alpha: 0.6),
                                                 ),
                                               ),
                                               if (widget.price != null) ...[
@@ -395,9 +395,9 @@ class _MiniEventCardState extends State<MiniEventCard>
                                                   decoration: BoxDecoration(
                                                     color: widget.price == 0
                                                         ? Colors.green
-                                                            .withOpacity(0.8)
+                                                            .withValues(alpha: 0.8)
                                                         : Colors.blue
-                                                            .withOpacity(0.8),
+                                                            .withValues(alpha: 0.8),
                                                     borderRadius:
                                                         BorderRadius.circular(10),
                                                   ),
@@ -447,7 +447,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 width: 2,
                               ),
                             ),

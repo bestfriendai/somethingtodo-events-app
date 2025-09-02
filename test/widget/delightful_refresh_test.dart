@@ -212,22 +212,21 @@ void main() {
     });
   });
 
-  group('BouncyRefreshIndicator Widget Tests', () {
+  group('PremiumRefreshIndicator Widget Tests', () {
     testWidgets('should render child widget', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: BouncyRefreshIndicator(
+          home: PremiumRefreshIndicator(
             onRefresh: () async {
               await Future.delayed(const Duration(milliseconds: 100));
             },
-            child: const Text('Bouncy Content'),
+            child: const Text('Premium Content'),
           ),
         ),
       );
 
-      expect(find.byType(BouncyRefreshIndicator), findsOneWidget);
-      expect(find.byType(RefreshIndicator), findsOneWidget);
-      expect(find.text('Bouncy Content'), findsOneWidget);
+      expect(find.byType(PremiumRefreshIndicator), findsOneWidget);
+      expect(find.text('Premium Content'), findsOneWidget);
     });
 
     testWidgets('should handle refresh with animation', (WidgetTester tester) async {
@@ -235,15 +234,15 @@ void main() {
       
       await tester.pumpWidget(
         MaterialApp(
-          home: BouncyRefreshIndicator(
+          home: PremiumRefreshIndicator(
             onRefresh: () async {
               refreshCalled = true;
               await Future.delayed(const Duration(milliseconds: 100));
             },
             child: ListView(
               children: const [
-                ListTile(title: Text('Bouncy Item 1')),
-                ListTile(title: Text('Bouncy Item 2')),
+                ListTile(title: Text('Premium Item 1')),
+                ListTile(title: Text('Premium Item 2')),
               ],
             ),
           ),
@@ -266,13 +265,13 @@ void main() {
     testWidgets('should show success message after refresh', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: BouncyRefreshIndicator(
+          home: PremiumRefreshIndicator(
             onRefresh: () async {
               await Future.delayed(const Duration(milliseconds: 100));
             },
             child: ListView(
               children: const [
-                ListTile(title: Text('Bouncy Item')),
+                ListTile(title: Text('Premium Item')),
               ],
             ),
           ),
@@ -291,7 +290,7 @@ void main() {
 
       // Success message should be shown via DelightService confetti
       // This would trigger overlays that are hard to test directly
-      expect(find.byType(BouncyRefreshIndicator), findsOneWidget);
+      expect(find.byType(PremiumRefreshIndicator), findsOneWidget);
     });
   });
 

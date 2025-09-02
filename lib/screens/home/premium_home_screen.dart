@@ -203,7 +203,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                 child: RefreshIndicator(
                   key: _refreshKey,
                   onRefresh: _onRefresh,
-                  backgroundColor: Colors.white.withOpacity(0.9),
+                  backgroundColor: Colors.white.withValues(alpha: 0.9),
                   color: theme.primaryColor,
                   child: SizedBox(
                     height: size.height * 2, // Ensure scrollable area
@@ -271,7 +271,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                       decoration: BoxDecoration(
                         gradient: RadialGradient(
                           colors: [
-                            Colors.purple.withOpacity(0.3),
+                            Colors.purple.withValues(alpha: 0.3),
                             Colors.transparent,
                           ],
                         ),
@@ -294,7 +294,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
             child: Container(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
             ),
           ),
         ],
@@ -319,14 +319,14 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
           border: 0,
           linearGradient: LinearGradient(
             colors: [
-              Colors.white.withOpacity(0.1),
-              Colors.white.withOpacity(0.05),
+              Colors.white.withValues(alpha: 0.1),
+              Colors.white.withValues(alpha: 0.05),
             ],
           ),
           borderGradient: LinearGradient(
             colors: [
-              Colors.white.withOpacity(0.2),
-              Colors.white.withOpacity(0.1),
+              Colors.white.withValues(alpha: 0.2),
+              Colors.white.withValues(alpha: 0.1),
             ],
           ),
           child: SafeArea(
@@ -343,7 +343,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                       Text(
                         'Good ${_getTimeOfDay()}',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withValues(alpha: 0.7),
                           fontSize: 14,
                         ),
                       ).animate().fadeIn(duration: 600.ms),
@@ -384,10 +384,10 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -461,7 +461,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                                   end: Alignment.bottomCenter,
                                   colors: [
                                     Colors.transparent,
-                                    Colors.black.withOpacity(0.8),
+                                    Colors.black.withValues(alpha: 0.8),
                                   ],
                                 ),
                               ),
@@ -485,10 +485,10 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
+                                color: Colors.white.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: Colors.white.withOpacity(0.3),
+                                  color: Colors.white.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: Text(
@@ -521,21 +521,21 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                               children: [
                                 Icon(
                                   Icons.calendar_today_rounded,
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: Colors.white.withValues(alpha: 0.8),
                                   size: 14,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   _formatDate(event.startDateTime),
                                   style: TextStyle(
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 12,
                                   ),
                                 ),
                                 const SizedBox(width: 16),
                                 Icon(
                                   Icons.location_on_rounded,
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: Colors.white.withValues(alpha: 0.8),
                                   size: 14,
                                 ),
                                 const SizedBox(width: 4),
@@ -543,7 +543,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                                   child: Text(
                                     event.venue.name,
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.8),
+                                      color: Colors.white.withValues(alpha: 0.8),
                                       fontSize: 12,
                                     ),
                                     maxLines: 1,
@@ -564,7 +564,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                           child: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.amber.withOpacity(0.9),
+                              color: Colors.amber.withValues(alpha: 0.9),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
@@ -640,17 +640,17 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                 gradient: isSelected
                     ? LinearGradient(
                         colors: [
-                          category['color'].withOpacity(0.8),
-                          category['color'].withOpacity(0.6),
+                          category['color'].withValues(alpha: 0.8),
+                          category['color'].withValues(alpha: 0.6),
                         ],
                       )
                     : null,
-                color: isSelected ? null : Colors.white.withOpacity(0.1),
+                color: isSelected ? null : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(25),
                 border: Border.all(
                   color: isSelected 
                     ? Colors.transparent 
-                    : Colors.white.withOpacity(0.2),
+                    : Colors.white.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -714,8 +714,8 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              (action['color'] as Color).withOpacity(0.8),
-                              (action['color'] as Color).withOpacity(0.4),
+                              (action['color'] as Color).withValues(alpha: 0.8),
+                              (action['color'] as Color).withValues(alpha: 0.4),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -723,7 +723,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: (action['color'] as Color).withOpacity(0.3),
+                              color: (action['color'] as Color).withValues(alpha: 0.3),
                               blurRadius: 15,
                               offset: const Offset(0, 5),
                             ),
@@ -742,7 +742,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                 Text(
                   action['label'] as String,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -795,7 +795,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                     Text(
                       'Popular events in your area',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha: 0.6),
                         fontSize: 14,
                       ),
                     ),
@@ -920,14 +920,14 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                             children: [
                               Icon(
                                 Icons.calendar_today_outlined,
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 size: 12,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 _formatDate(event.startDateTime),
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: Colors.white.withValues(alpha: 0.5),
                                   fontSize: 12,
                                 ),
                               ),
@@ -939,14 +939,14 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                             children: [
                               Icon(
                                 Icons.people_outline,
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 size: 12,
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 '${event.attendeeCount} attending',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: Colors.white.withValues(alpha: 0.5),
                                   fontSize: 12,
                                 ),
                               ),
@@ -1058,7 +1058,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                     Text(
                       'Based on your interests',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withValues(alpha: 0.6),
                         fontSize: 14,
                       ),
                     ),
@@ -1099,14 +1099,14 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                   border: 1,
                   linearGradient: LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.1),
-                      Colors.white.withOpacity(0.05),
+                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withValues(alpha: 0.05),
                     ],
                   ),
                   borderGradient: LinearGradient(
                     colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
+                      Colors.white.withValues(alpha: 0.2),
+                      Colors.white.withValues(alpha: 0.1),
                     ],
                   ),
                   child: Padding(
@@ -1147,7 +1147,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                               Text(
                                 event.venue.name,
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                   fontSize: 14,
                                 ),
                                 maxLines: 1,
@@ -1158,14 +1158,14 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                                 children: [
                                   Icon(
                                     Icons.access_time,
-                                    color: Colors.white.withOpacity(0.5),
+                                    color: Colors.white.withValues(alpha: 0.5),
                                     size: 14,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     _formatTime(event.startDateTime),
                                     style: TextStyle(
-                                      color: Colors.white.withOpacity(0.5),
+                                      color: Colors.white.withValues(alpha: 0.5),
                                       fontSize: 12,
                                     ),
                                   ),
@@ -1177,8 +1177,8 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                                     ),
                                     decoration: BoxDecoration(
                                       color: event.pricing.isFree
-                                          ? Colors.green.withOpacity(0.3)
-                                          : Colors.orange.withOpacity(0.3),
+                                          ? Colors.green.withValues(alpha: 0.3)
+                                          : Colors.orange.withValues(alpha: 0.3),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
@@ -1207,7 +1207,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                           },
                           icon: Icon(
                             Icons.bookmark_border_rounded,
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                           ),
                         ),
                       ],
@@ -1246,14 +1246,14 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
         border: 1,
         linearGradient: LinearGradient(
           colors: [
-            Colors.white.withOpacity(0.15),
-            Colors.white.withOpacity(0.05),
+            Colors.white.withValues(alpha: 0.15),
+            Colors.white.withValues(alpha: 0.05),
           ],
         ),
         borderGradient: LinearGradient(
           colors: [
-            Colors.white.withOpacity(0.3),
-            Colors.white.withOpacity(0.1),
+            Colors.white.withValues(alpha: 0.3),
+            Colors.white.withValues(alpha: 0.1),
           ],
         ),
         child: Row(
@@ -1273,7 +1273,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.white.withOpacity(0.15)
+                      ? Colors.white.withValues(alpha: 0.15)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -1286,7 +1286,7 @@ class _PremiumHomeScreenState extends State<PremiumHomeScreen>
                         item['icon'] as IconData,
                         color: isSelected
                             ? Colors.white
-                            : Colors.white.withOpacity(0.5),
+                            : Colors.white.withValues(alpha: 0.5),
                         size: isSelected ? 28 : 24,
                       ),
                     ),

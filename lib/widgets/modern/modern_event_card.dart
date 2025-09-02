@@ -142,16 +142,16 @@ class _ModernEventCardState extends State<ModernEventCard>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Colors.white.withOpacity(0.15),
-                  Colors.white.withOpacity(0.05),
+                  Colors.white.withValues(alpha: 0.15),
+                  Colors.white.withValues(alpha: 0.05),
                 ],
               ),
               borderGradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  ModernTheme.getCategoryGradient(widget.event.category.name)[0].withOpacity(0.3),
-                  Colors.white.withOpacity(0.1),
+                  ModernTheme.getCategoryGradient(widget.event.category.name)[0].withValues(alpha: 0.3),
+                  Colors.white.withValues(alpha: 0.1),
                 ],
               ),
               child: widget.isHorizontal ? _buildHorizontalCard() : _buildVerticalCard(),
@@ -276,8 +276,8 @@ class _ModernEventCardState extends State<ModernEventCard>
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withOpacity(0.2),
-                        Colors.black.withOpacity(0.6),
+                        Colors.black.withValues(alpha: 0.2),
+                        Colors.black.withValues(alpha: 0.6),
                       ],
                     ),
                   ),
@@ -294,10 +294,10 @@ class _ModernEventCardState extends State<ModernEventCard>
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: 0.3),
                             width: 1,
                           ),
                         ),
@@ -336,7 +336,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                           borderRadius: BorderRadius.circular(25),
                           boxShadow: [
                             BoxShadow(
-                              color: categoryGradient[0].withOpacity(0.3),
+                              color: categoryGradient[0].withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -380,13 +380,13 @@ class _ModernEventCardState extends State<ModernEventCard>
                                 Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
+                                    color: Colors.white.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Icon(
                                     Icons.schedule_rounded,
                                     size: 14,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -394,7 +394,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                                   child: Text(
                                     DateFormat('MMM d • h:mm a').format(widget.event.startDateTime),
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: Colors.white.withOpacity(0.8),
+                                      color: Colors.white.withValues(alpha: 0.8),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 12,
                                     ),
@@ -409,13 +409,13 @@ class _ModernEventCardState extends State<ModernEventCard>
                                 Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
+                                    color: Colors.white.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Icon(
                                     Icons.location_on_rounded,
                                     size: 14,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -423,7 +423,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                                   child: Text(
                                     widget.event.venue.name,
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: Colors.white.withOpacity(0.8),
+                                      color: Colors.white.withValues(alpha: 0.8),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 12,
                                     ),
@@ -454,7 +454,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                                 BoxShadow(
                                   color: (widget.event.pricing.isFree 
                                       ? const Color(0xFF10B981)
-                                      : const Color(0xFF7C3AED)).withOpacity(0.4),
+                                      : const Color(0xFF7C3AED)).withValues(alpha: 0.4),
                                   blurRadius: 12,
                                   offset: const Offset(0, 6),
                                 ),
@@ -491,17 +491,17 @@ class _ModernEventCardState extends State<ModernEventCard>
                                   child: Container(
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
+                                      color: Colors.white.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
-                                        color: Colors.white.withOpacity(0.2),
+                                        color: Colors.white.withValues(alpha: 0.2),
                                         width: 1,
                                       ),
                                     ),
                                     child: Icon(
                                       Icons.favorite_border_rounded,
                                       size: 18,
-                                      color: Colors.white.withOpacity(0.8),
+                                      color: Colors.white.withValues(alpha: 0.8),
                                     ),
                                   ),
                                 ),
@@ -561,7 +561,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.4),
+                      Colors.black.withValues(alpha: 0.4),
                     ],
                   ),
                 ),
@@ -577,7 +577,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
@@ -601,7 +601,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
@@ -637,13 +637,13 @@ class _ModernEventCardState extends State<ModernEventCard>
                   Icon(
                     Icons.calendar_today_rounded,
                     size: 14,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   const SizedBox(width: 6),
                   Text(
                     DateFormat('MMM d • h:mm a').format(widget.event.startDateTime),
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -654,14 +654,14 @@ class _ModernEventCardState extends State<ModernEventCard>
                   Icon(
                     Icons.location_on_rounded,
                     size: 14,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       widget.event.venue.name,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -710,7 +710,7 @@ class _ModernEventCardState extends State<ModernEventCard>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: const CircularProgressIndicator(
@@ -722,7 +722,7 @@ class _ModernEventCardState extends State<ModernEventCard>
             Text(
               'Loading...',
               style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
               ),
@@ -750,10 +750,10 @@ class _ModernEventCardState extends State<ModernEventCard>
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withValues(alpha: 0.3),
                   width: 2,
                 ),
               ),
@@ -767,7 +767,7 @@ class _ModernEventCardState extends State<ModernEventCard>
             Text(
               widget.event.category.displayName,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
                 letterSpacing: 0.5,

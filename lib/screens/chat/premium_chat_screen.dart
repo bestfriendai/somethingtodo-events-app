@@ -150,7 +150,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
         height: 120,
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.9),
+          color: Colors.black.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Center(
@@ -204,9 +204,9 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              UnifiedDesignSystem.primaryBrand.withOpacity(0.1),
+              UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.1),
               Colors.black,
-              UnifiedDesignSystem.accentBrand.withOpacity(0.05),
+              UnifiedDesignSystem.accentBrand.withValues(alpha: 0.05),
             ],
           ),
         ),
@@ -244,14 +244,14 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
       border: 0,
       linearGradient: LinearGradient(
         colors: [
-          Colors.white.withOpacity(0.05),
-          Colors.white.withOpacity(0.02),
+          Colors.white.withValues(alpha: 0.05),
+          Colors.white.withValues(alpha: 0.02),
         ],
       ),
       borderGradient: LinearGradient(
         colors: [
-          Colors.white.withOpacity(0.1),
-          Colors.white.withOpacity(0.05),
+          Colors.white.withValues(alpha: 0.1),
+          Colors.white.withValues(alpha: 0.05),
         ],
       ),
       child: Padding(
@@ -431,7 +431,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                 gradient: LinearGradient(
                   colors: [
                     Colors.transparent,
-                    Colors.white.withOpacity(0.1),
+                    Colors.white.withValues(alpha: 0.1),
                   ],
                 ),
               ),
@@ -441,10 +441,10 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -462,7 +462,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.white.withOpacity(0.1),
+                    Colors.white.withValues(alpha: 0.1),
                     Colors.transparent,
                   ],
                 ),
@@ -487,7 +487,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
         children: [
           SlidableAction(
             onPressed: (_) => _setReplyTo(message),
-            backgroundColor: Colors.blue.withOpacity(0.3),
+            backgroundColor: Colors.blue.withValues(alpha: 0.3),
             foregroundColor: Colors.white,
             icon: Icons.reply,
             label: 'Reply',
@@ -522,8 +522,8 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                   ],
                   Flexible(
                     child: GlassmorphicContainer(
-                      width: null,
-                      height: null,
+                      width: double.infinity,
+                      height: double.infinity,
                       borderRadius: 20,
                       blur: 20,
                       alignment: Alignment.center,
@@ -531,18 +531,18 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                       linearGradient: LinearGradient(
                         colors: isUser
                             ? [
-                                UnifiedDesignSystem.primaryBrand.withOpacity(0.3),
-                                UnifiedDesignSystem.primaryBrand.withOpacity(0.1),
+                                UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.3),
+                                UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.1),
                               ]
                             : [
-                                Colors.white.withOpacity(0.1),
-                                Colors.white.withOpacity(0.05),
+                                Colors.white.withValues(alpha: 0.1),
+                                Colors.white.withValues(alpha: 0.05),
                               ],
                       ),
                       borderGradient: LinearGradient(
                         colors: [
-                          Colors.white.withOpacity(0.2),
-                          Colors.white.withOpacity(0.1),
+                          Colors.white.withValues(alpha: 0.2),
+                          Colors.white.withValues(alpha: 0.1),
                         ],
                       ),
                       child: Container(
@@ -622,7 +622,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -658,7 +658,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
             fit: BoxFit.cover,
             placeholder: (context, url) => Shimmer.fromColors(
               baseColor: Colors.white10,
-              highlightColor: Colors.white20,
+              highlightColor: Colors.white24,
               child: Container(
                 width: 200,
                 height: 200,
@@ -677,10 +677,10 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
       width: 250,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
         ),
       ),
       child: Column(
@@ -745,7 +745,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
             end: Alignment.bottomCenter,
             colors: [
               Colors.transparent,
-              Colors.black.withOpacity(0.7),
+              Colors.black.withValues(alpha: 0.7),
             ],
           ),
         ),
@@ -802,7 +802,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: UnifiedDesignSystem.primaryBrand.withOpacity(0.5),
+                      color: UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.5),
                       width: 1,
                     ),
                   ),
@@ -836,10 +836,10 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withValues(alpha: 0.05),
         border: Border(
           top: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -896,21 +896,21 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
   Widget _buildInputArea(ThemeData theme) {
     return GlassmorphicContainer(
       width: double.infinity,
-      height: null,
+      height: 100,
       borderRadius: 0,
       blur: 20,
       alignment: Alignment.center,
       border: 0,
       linearGradient: LinearGradient(
         colors: [
-          Colors.white.withOpacity(0.1),
-          Colors.white.withOpacity(0.05),
+          Colors.white.withValues(alpha: 0.1),
+          Colors.white.withValues(alpha: 0.05),
         ],
       ),
       borderGradient: LinearGradient(
         colors: [
-          Colors.white.withOpacity(0.2),
-          Colors.white.withOpacity(0.1),
+          Colors.white.withValues(alpha: 0.2),
+          Colors.white.withValues(alpha: 0.1),
         ],
       ),
       child: SafeArea(
@@ -931,10 +931,10 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                 child: Container(
                   constraints: const BoxConstraints(maxHeight: 120),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(24),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                     ),
                   ),
                   child: Row(
@@ -1005,11 +1005,11 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                   ? LinearGradient(
                       colors: [
                         UnifiedDesignSystem.primaryBrand,
-                        UnifiedDesignSystem.primaryBrand.withOpacity(0.7),
+                        UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.7),
                       ],
                     )
                   : null,
-              color: hasContent ? null : Colors.white.withOpacity(0.1),
+              color: hasContent ? null : Colors.white.withValues(alpha: 0.1),
             ),
             child: Icon(
               hasContent 
@@ -1028,7 +1028,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
             )
             .shimmer(
               duration: const Duration(seconds: 1),
-              color: UnifiedDesignSystem.accentBrand.withOpacity(0.3),
+              color: UnifiedDesignSystem.accentBrand.withValues(alpha: 0.3),
             ),
         );
       },
@@ -1051,14 +1051,14 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
           border: 1,
           linearGradient: LinearGradient(
             colors: [
-              Colors.white.withOpacity(0.2),
-              Colors.white.withOpacity(0.1),
+              Colors.white.withValues(alpha: 0.2),
+              Colors.white.withValues(alpha: 0.1),
             ],
           ),
           borderGradient: LinearGradient(
             colors: [
-              Colors.white.withOpacity(0.3),
-              Colors.white.withOpacity(0.1),
+              Colors.white.withValues(alpha: 0.3),
+              Colors.white.withValues(alpha: 0.1),
             ],
           ),
           child: IconButton(
@@ -1092,7 +1092,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
         height: 200,
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.9),
+          color: Colors.black.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(
@@ -1142,7 +1142,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 20),

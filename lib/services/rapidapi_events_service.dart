@@ -28,16 +28,15 @@ class RapidAPIEventsService {
 
   RapidAPIEventsService() {
     _dio = Dio();
-    // Use Firebase Functions instead of direct RapidAPI calls
-    // This routes through our backend which has the API key
-    final baseUrl = AppConfig.useFunctionsEmulator
-        ? 'http://localhost:${AppConfig.functionsEmulatorPort}/local-pulse-tanxr/${AppConfig.functionsRegion}/api'
-        : 'https://${AppConfig.functionsRegion}-local-pulse-tanxr.cloudfunctions.net/api';
-    
-    _dio.options.baseUrl = baseUrl;
+    // Direct RapidAPI configuration with your API key - Updated!
+    _dio.options.baseUrl = 'https://real-time-events-search.p.rapidapi.com';
     _dio.options.connectTimeout = const Duration(seconds: 20);
     _dio.options.receiveTimeout = const Duration(seconds: 20);
-    // No API key needed here - Firebase Functions handles it
+    _dio.options.headers = {
+      'X-RapidAPI-Key': '92bc1b4fc7mshacea9f118bf7a3fp1b5a6cjsnd2287a72fcb9',
+      'X-RapidAPI-Host': 'real-time-events-search.p.rapidapi.com',
+      'Content-Type': 'application/json',
+    };
 
     // Add request/response interceptors for logging and error handling
     _dio.interceptors.add(
@@ -221,27 +220,47 @@ class RapidAPIEventsService {
   }) async {
     return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
-        '/events/search',
+        '/search-events',
         queryParameters: {
           'query': query,
           if (location != null) 'location': location,
-          if (startDate != null) 'start': startDate.toIso8601String(),
-          if (endDate != null) 'end': endDate.toIso8601String(),
+          if (startDate != null) 'start_date': startDate.toIso8601String().split('T')[0],
+          if (endDate != null) 'end_date': endDate.toIso8601String().split('T')[0],
           'limit': limit.toString(),
         },
       );
 
       if (response.statusCode == 200) {
-        final data = response.data;
-        if (data is Map && data['data'] is List) {
+        final responseData = response.data;
+        
+        // Handle both direct array and wrapped response
+        List<dynamic> eventsList = [];
+        
+        if (responseData is List) {
+          // Direct array response
+          eventsList = responseData;
+        } else if (responseData is Map) {
+          // Check for wrapped response formats
+          if (responseData['data'] is List) {
+            eventsList = responseData['data'] as List;
+          } else if (responseData['events'] is List) {
+            eventsList = responseData['events'] as List;
+          } else if (responseData['results'] is List) {
+            eventsList = responseData['results'] as List;
+          }
+        }
+        
+        if (eventsList.isNotEmpty) {
           try {
-            return (data['data'] as List)
-                .map(
-                  (e) =>
-                      _parseEventFromAPI(Map<String, dynamic>.from(e as Map)),
-                )
+            final events = eventsList
+                .map((e) => _parseEventFromAPI(Map<String, dynamic>.from(e as Map)))
+                .where((event) => event != null)
                 .toList();
+            
+            print('Parsed ${events.length} events from API response');
+            return events;
           } catch (e) {
+            print('Error parsing events: $e');
             throw RapidAPIException(
               'Failed to parse events data',
               type: RapidAPIErrorType.parsingError,
@@ -250,6 +269,7 @@ class RapidAPIEventsService {
           }
         }
       }
+      print('No events found in response');
       return <Event>[];
     }, operation: 'search events');
   }
@@ -262,12 +282,12 @@ class RapidAPIEventsService {
   }) async {
     return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
-        '/events/search',
+        '/search-events',
         queryParameters: {
-          'query': 'events',
+          'query': 'events near me',
           'location': '$latitude,$longitude',
-          'radius': radiusKm.toString(),
-          'limit': limit.toString(),
+          'radius': radiusKm.toInt(),
+          'limit': limit,
         },
       );
 
@@ -300,10 +320,11 @@ class RapidAPIEventsService {
   }) async {
     return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
-        '/events/trending',
+        '/search-events',
         queryParameters: {
+          'query': 'popular events',
           if (location != null) 'location': location,
-          'limit': limit.toString(),
+          'limit': limit,
         },
       );
 
@@ -334,7 +355,7 @@ class RapidAPIEventsService {
     try {
       return await _makeRequest<Event?>(() async {
         final response = await _dio.get(
-          '/events/details',
+          '/event-details',
           queryParameters: {'event_id': eventId},
         );
 
@@ -372,9 +393,9 @@ class RapidAPIEventsService {
   }) async {
     return await _makeRequest<List<Event>>(() async {
       final response = await _dio.get(
-        '/events/search',
+        '/search-events',
         queryParameters: {
-          'query': '$category events',
+          'query': category,
           if (location != null) 'location': location,
           'limit': limit.toString(),
         },

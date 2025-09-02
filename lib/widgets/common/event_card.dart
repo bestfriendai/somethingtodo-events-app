@@ -173,7 +173,7 @@ class _EventCardState extends State<EventCard> {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                             shape: BoxShape.circle,
                           ),
                           child: _isToggling
@@ -276,8 +276,8 @@ class _EventCardState extends State<EventCard> {
                         ),
                         decoration: BoxDecoration(
                           color: widget.event.pricing.isFree 
-                              ? AppTheme.successColor.withOpacity(0.1)
-                              : AppTheme.warningColor.withOpacity(0.1),
+                              ? AppTheme.successColor.withValues(alpha: 0.1)
+                              : AppTheme.warningColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(

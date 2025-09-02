@@ -100,10 +100,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: AppTheme.warningColor.withOpacity(0.9),
+        color: AppTheme.warningColor.withValues(alpha: 0.9),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -209,7 +209,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.amber.withOpacity(0.3),
+                  color: Colors.amber.withValues(alpha: 0.3),
                   blurRadius: 20,
                   spreadRadius: 2,
                 ),
@@ -230,16 +230,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.amber.withOpacity(0.3),
-                      Colors.orange.withOpacity(0.2),
+                      Colors.amber.withValues(alpha: 0.3),
+                      Colors.orange.withValues(alpha: 0.2),
                     ],
                   ),
                   borderGradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.amber.withOpacity(0.8),
-                      Colors.orange.withOpacity(0.4),
+                      Colors.amber.withValues(alpha: 0.8),
+                      Colors.orange.withValues(alpha: 0.4),
                     ],
                   ),
                   child: Material(
@@ -282,7 +282,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
-                color: Colors.purple.withOpacity(0.3),
+                color: Colors.purple.withValues(alpha: 0.3),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -303,16 +303,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.purple.withOpacity(0.3),
-                    Colors.blue.withOpacity(0.2),
+                    Colors.purple.withValues(alpha: 0.3),
+                    Colors.blue.withValues(alpha: 0.2),
                   ],
                 ),
                 borderGradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.purple.withOpacity(0.8),
-                    Colors.blue.withOpacity(0.4),
+                    Colors.purple.withValues(alpha: 0.8),
+                    Colors.blue.withValues(alpha: 0.4),
                   ],
                 ),
                 child: Material(

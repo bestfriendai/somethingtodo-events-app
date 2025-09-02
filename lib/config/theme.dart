@@ -110,9 +110,7 @@ class AppTheme {
       seedColor: primaryColor,
       brightness: Brightness.light,
       surface: lightSurface,
-      background: lightBackground,
       onSurface: lightOnSurface,
-      onBackground: lightOnBackground,
       error: errorColor,
     ),
     textTheme: _textTheme.apply(
@@ -205,9 +203,7 @@ class AppTheme {
       seedColor: primaryColor,
       brightness: Brightness.dark,
       surface: darkSurface,
-      background: darkBackground,
       onSurface: darkOnSurface,
-      onBackground: darkOnBackground,
       error: errorColor,
     ),
     textTheme: _textTheme.apply(

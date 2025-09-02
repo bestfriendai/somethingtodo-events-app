@@ -211,8 +211,8 @@ class _EventCardsDemoState extends State<EventCardsDemo> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.black.withOpacity(0.9),
-              Colors.grey[900]!.withOpacity(0.9),
+              Colors.black.withValues(alpha: 0.9),
+              Colors.grey[900]!.withValues(alpha: 0.9),
             ],
           ),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -224,7 +224,7 @@ class _EventCardsDemoState extends State<EventCardsDemo> {
               height: 4,
               margin: const EdgeInsets.only(top: 12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

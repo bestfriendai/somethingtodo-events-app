@@ -104,7 +104,7 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -158,7 +158,7 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
         border: widget.title != null
             ? Border(
                 bottom: BorderSide(
-                  color: theme.dividerColor.withOpacity(0.1),
+                  color: theme.dividerColor.withValues(alpha: 0.1),
                   width: 1,
                 ),
               )
@@ -173,7 +173,7 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: theme.dividerColor.withOpacity(0.3),
+                color: theme.dividerColor.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -485,7 +485,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
                         Text(
                           'No ticket required - just show up!',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             fontSize: 14,
                           ),
                         ),
@@ -592,7 +592,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
         color: Theme.of(context).cardColor,
         border: Border(
           top: BorderSide(
-            color: Theme.of(context).dividerColor.withOpacity(0.1),
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
             width: 1,
           ),
         ),

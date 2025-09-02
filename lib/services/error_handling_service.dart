@@ -313,3 +313,37 @@ class ErrorHandlingService {
     _lastErrorTimes.clear();
   }
 }
+
+/// Error handling result with comprehensive information
+class ErrorHandlingResult {
+  final ErrorType type;
+  final String userMessage;
+  final String? technicalMessage;
+  final bool shouldRetry;
+  final bool shouldEnableOfflineMode;
+  final String? recoveryAction;
+  final dynamic originalError;
+
+  ErrorHandlingResult({
+    required this.type,
+    required this.userMessage,
+    this.technicalMessage,
+    required this.shouldRetry,
+    required this.shouldEnableOfflineMode,
+    this.recoveryAction,
+    this.originalError,
+  });
+}
+
+/// Error types for categorization
+enum ErrorType {
+  network,
+  timeout,
+  authentication,
+  rateLimited,
+  server,
+  serviceUnavailable,
+  maxRetriesExceeded,
+  parsing,
+  unknown,
+}

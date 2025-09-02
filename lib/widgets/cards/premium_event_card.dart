@@ -204,13 +204,13 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Colors.white.withOpacity(0.15),
-                          Colors.white.withOpacity(0.05),
+                          Colors.white.withValues(alpha: 0.15),
+                          Colors.white.withValues(alpha: 0.05),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         width: 1.5,
                       ),
                     ),
@@ -258,7 +258,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                     end: Alignment.bottomCenter,
                                     colors: [
                                       Colors.transparent,
-                                      Colors.black.withOpacity(0.7),
+                                      Colors.black.withValues(alpha: 0.7),
                                     ],
                                   ),
                                 ),
@@ -278,13 +278,13 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                       colors: [
                                         _getCategoryColor(widget.category),
                                         _getCategoryColor(widget.category)
-                                            .withOpacity(0.7),
+                                            .withValues(alpha: 0.7),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(20),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
+                                        color: Colors.black.withValues(alpha: 0.2),
                                         blurRadius: 8,
                                         offset: const Offset(0, 2),
                                       ),
@@ -316,7 +316,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                     vertical: 6,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.6),
+                                    color: Colors.black.withValues(alpha: 0.6),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Row(
@@ -397,7 +397,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                   widget.description,
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                     height: 1.4,
                                   ),
                                   maxLines: 2,
@@ -476,7 +476,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                                 decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
                                                   color: Colors.white
-                                                      .withOpacity(0.3),
+                                                      .withValues(alpha: 0.3),
                                                 ),
                                               ).animate().scale(
                                                 begin: const Offset(0, 0),
@@ -548,7 +548,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -606,7 +606,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                 height: 32,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.black.withOpacity(0.6),
+                  color: Colors.black.withValues(alpha: 0.6),
                   border: Border.all(
                     color: Colors.white,
                     width: 2,

@@ -122,7 +122,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
-            backgroundColor: Colors.red.withOpacity(0.8),
+            backgroundColor: Colors.red.withValues(alpha: 0.8),
           ),
         );
       }
@@ -152,7 +152,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
-            backgroundColor: Colors.red.withOpacity(0.8),
+            backgroundColor: Colors.red.withValues(alpha: 0.8),
           ),
         );
       }
@@ -189,7 +189,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
-            backgroundColor: Colors.red.withOpacity(0.8),
+            backgroundColor: Colors.red.withValues(alpha: 0.8),
           ),
         );
       }
@@ -283,8 +283,8 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Colors.purple.withOpacity(0.2),
-                    Colors.purple.withOpacity(0.0),
+                    Colors.purple.withValues(alpha: 0.2),
+                    Colors.purple.withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -305,8 +305,8 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Colors.blue.withOpacity(0.15),
-                    Colors.blue.withOpacity(0.0),
+                    Colors.blue.withValues(alpha: 0.15),
+                    Colors.blue.withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -331,16 +331,16 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.purple.withOpacity(0.2),
-              Colors.blue.withOpacity(0.1),
+              Colors.purple.withValues(alpha: 0.2),
+              Colors.blue.withValues(alpha: 0.1),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.purple.withOpacity(0.5),
-              Colors.blue.withOpacity(0.2),
+              Colors.purple.withValues(alpha: 0.5),
+              Colors.blue.withValues(alpha: 0.2),
             ],
           ),
           child: const Icon(
@@ -366,7 +366,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
           _isSignIn ? 'Welcome back!' : 'Create your account',
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
           ),
         ).animate().fadeIn(duration: 1000.ms),
       ],
@@ -385,16 +385,16 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(0.1),
-          Colors.white.withOpacity(0.05),
+          Colors.white.withValues(alpha: 0.1),
+          Colors.white.withValues(alpha: 0.05),
         ],
       ),
       borderGradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Colors.white.withOpacity(0.3),
-          Colors.white.withOpacity(0.1),
+          Colors.white.withValues(alpha: 0.3),
+          Colors.white.withValues(alpha: 0.1),
         ],
       ),
       padding: const EdgeInsets.all(20),
@@ -445,7 +445,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                 ),
                 onPressed: () {
                   setState(() {
@@ -475,7 +475,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
                   onPressed: () {
                     setState(() {
@@ -508,16 +508,16 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.purple.withOpacity(0.3),
-                    Colors.blue.withOpacity(0.2),
+                    Colors.purple.withValues(alpha: 0.3),
+                    Colors.blue.withValues(alpha: 0.2),
                   ],
                 ),
                 borderGradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.purple.withOpacity(0.8),
-                    Colors.blue.withOpacity(0.4),
+                    Colors.purple.withValues(alpha: 0.8),
+                    Colors.blue.withValues(alpha: 0.4),
                   ],
                 ),
                 child: _isLoading
@@ -550,7 +550,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
                     ? "Don't have an account? Sign Up"
                     : "Already have an account? Sign In",
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   fontSize: 14,
                 ),
               ),
@@ -584,44 +584,44 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
-          color: Colors.white.withOpacity(0.5),
+          color: Colors.white.withValues(alpha: 0.5),
         ),
         prefixIcon: Icon(
           icon,
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.white.withValues(alpha: 0.7),
         ),
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: Colors.white.withOpacity(0.05),
+        fillColor: Colors.white.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha: 0.4),
             width: 2,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.red.withOpacity(0.5),
+            color: Colors.red.withValues(alpha: 0.5),
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.red.withOpacity(0.7),
+            color: Colors.red.withValues(alpha: 0.7),
             width: 2,
           ),
         ),
@@ -636,7 +636,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
           children: [
             Expanded(
               child: Divider(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
               ),
             ),
             Padding(
@@ -644,14 +644,14 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
               child: Text(
                 'OR',
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                   fontSize: 12,
                 ),
               ),
             ),
             Expanded(
               child: Divider(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
               ),
             ),
           ],
@@ -670,16 +670,16 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.1),
-                Colors.white.withOpacity(0.05),
+                Colors.white.withValues(alpha: 0.1),
+                Colors.white.withValues(alpha: 0.05),
               ],
             ),
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.3),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.3),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             child: Row(
@@ -728,7 +728,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
       child: Text(
         'Continue as Guest (Demo Mode)',
         style: TextStyle(
-          color: Colors.white.withOpacity(0.5),
+          color: Colors.white.withValues(alpha: 0.5),
           fontSize: 14,
           decoration: TextDecoration.underline,
         ),

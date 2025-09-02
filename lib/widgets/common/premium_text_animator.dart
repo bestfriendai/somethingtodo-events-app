@@ -178,7 +178,7 @@ class _PremiumTextAnimatorState extends State<PremiumTextAnimator>
               foreground: Paint()
                 ..style = PaintingStyle.stroke
                 ..strokeWidth = (index + 1) * 2.0
-                ..color = ModernTheme.primaryColor.withOpacity(0.3 / (index + 1)),
+                ..color = ModernTheme.primaryColor.withValues(alpha: 0.3 / (index + 1)),
             ),
           );
         }),
@@ -206,7 +206,7 @@ class _PremiumTextAnimatorState extends State<PremiumTextAnimator>
     .then()
     .shimmer(
       duration: 2000.ms,
-      color: Colors.white.withOpacity(0.5),
+      color: Colors.white.withValues(alpha: 0.5),
     );
   }
 }
