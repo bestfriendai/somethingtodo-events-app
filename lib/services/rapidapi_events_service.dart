@@ -32,8 +32,18 @@ class RapidAPIEventsService {
     _dio.options.baseUrl = 'https://real-time-events-search.p.rapidapi.com';
     _dio.options.connectTimeout = const Duration(seconds: 20);
     _dio.options.receiveTimeout = const Duration(seconds: 20);
+    // Use environment variable for API key instead of hardcoding
+    final apiKey = const String.fromEnvironment(
+      'RAPIDAPI_KEY',
+      defaultValue: '', // Never commit actual keys
+    );
+    
+    if (apiKey.isEmpty) {
+      LoggingService.warning('RapidAPI key not configured. Using mock data.');
+    }
+    
     _dio.options.headers = {
-      'X-RapidAPI-Key': '92bc1b4fc7mshacea9f118bf7a3fp1b5a6cjsnd2287a72fcb9',
+      if (apiKey.isNotEmpty) 'X-RapidAPI-Key': apiKey,
       'X-RapidAPI-Host': 'real-time-events-search.p.rapidapi.com',
       'Content-Type': 'application/json',
     };
