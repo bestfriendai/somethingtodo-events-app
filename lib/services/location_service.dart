@@ -3,7 +3,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:html' as html;
 import 'dart:async';
 import '../models/user.dart';
 import '../models/analytics.dart';

@@ -493,7 +493,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
         decoration: BoxDecoration(
           color: notification.isRead 
               ? null 
-              : AppTheme.primaryColor.withOpacity(0.05),
+              : AppTheme.primaryColor.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(12),
           border: _isSelectionMode && isSelected
               ? Border.all(color: AppTheme.primaryColor, width: 2)
@@ -505,7 +505,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: _getNotificationColor(notification.type).withOpacity(0.1),
+                  color: _getNotificationColor(notification.type).withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

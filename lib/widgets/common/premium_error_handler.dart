@@ -169,7 +169,7 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
           end: Alignment.bottomRight,
           colors: [
             ModernTheme.darkBackground,
-            ModernTheme.errorColor.withOpacity(0.1),
+            ModernTheme.errorColor.withValues(alpha: 0.1),
             ModernTheme.darkBackground,
           ],
         ),
@@ -208,10 +208,10 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                               height: 4,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: ModernTheme.errorColor.withOpacity(0.6),
+                                color: ModernTheme.errorColor.withValues(alpha: 0.6),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: ModernTheme.errorColor.withOpacity(0.3),
+                                    color: ModernTheme.errorColor.withValues(alpha: 0.3),
                                     blurRadius: 4,
                                   ),
                                 ],
@@ -229,12 +229,12 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                             gradient: LinearGradient(
                               colors: [
                                 ModernTheme.errorColor,
-                                ModernTheme.errorColor.withOpacity(0.7),
+                                ModernTheme.errorColor.withValues(alpha: 0.7),
                               ],
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: ModernTheme.errorColor.withOpacity(0.4),
+                                color: ModernTheme.errorColor.withValues(alpha: 0.4),
                                 blurRadius: 20,
                                 spreadRadius: 2,
                               ),
@@ -321,10 +321,10 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                     padding: const EdgeInsets.all(16),
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                       ),
                     ),
                     child: Text(
@@ -374,7 +374,7 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
               gradient: LinearGradient(
                 colors: [
                   Colors.black,
-                  ModernTheme.errorColor.withOpacity(0.2),
+                  ModernTheme.errorColor.withValues(alpha: 0.2),
                   Colors.black,
                 ],
               ),
@@ -390,9 +390,9 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Colors.red.withOpacity(_glitchController.value * 0.3),
-                            Colors.blue.withOpacity(_glitchController.value * 0.2),
-                            Colors.green.withOpacity(_glitchController.value * 0.1),
+                            Colors.red.withValues(alpha: _glitchController.value * 0.3),
+                            Colors.blue.withValues(alpha: _glitchController.value * 0.2),
+                            Colors.green.withValues(alpha: _glitchController.value * 0.1),
                           ],
                         ),
                       ),
@@ -466,7 +466,7 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
 class StarFieldPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white.withOpacity(0.6);
+    final paint = Paint()..color = Colors.white.withValues(alpha: 0.6);
     final random = math.Random(42); // Fixed seed for consistent stars
     
     for (int i = 0; i < 100; i++) {

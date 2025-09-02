@@ -190,7 +190,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('You already love this! Great minds think alike! 🤩'),
-          backgroundColor: Colors.pink.withOpacity(0.9),
+          backgroundColor: Colors.pink.withValues(alpha: 0.9),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           duration: const Duration(seconds: 2),
@@ -358,7 +358,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.amber.withOpacity(0.3),
+              color: Colors.amber.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -394,10 +394,10 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                 Container(
                   padding: const EdgeInsets.all(40),
                   decoration: BoxDecoration(
-                    color: Colors.pink.withOpacity(0.1),
+                    color: Colors.pink.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.pink.withOpacity(0.3),
+                      color: Colors.pink.withValues(alpha: 0.3),
                       width: 2,
                     ),
                   ),
@@ -406,11 +406,11 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.pink.withOpacity(0.2),
+                    color: Colors.pink.withValues(alpha: 0.2),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.pink.withOpacity(0.4),
+                        color: Colors.pink.withValues(alpha: 0.4),
                         blurRadius: 20,
                         spreadRadius: 10,
                       ),
@@ -432,7 +432,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                     ),
                     child: Icon(
                       Icons.favorite,
-                      color: Colors.pink.withOpacity(0.7),
+                      color: Colors.pink.withValues(alpha: 0.7),
                       size: 16,
                     ),
                   );
@@ -460,10 +460,10 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                   width: 200 * _shareScale.value,
                   height: 200 * _shareScale.value,
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
+                    color: Colors.blue.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: Colors.blue.withOpacity(0.3),
+                      color: Colors.blue.withValues(alpha: 0.3),
                       width: 2,
                     ),
                   ),
@@ -481,7 +481,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.blue.withOpacity(0.4),
+                        color: Colors.blue.withValues(alpha: 0.4),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -505,7 +505,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                       angle: _shareScale.value * pi * 2,
                       child: Icon(
                         [Icons.facebook, Icons.telegram, Icons.email, Icons.link][index],
-                        color: Colors.blue.withOpacity(0.8),
+                        color: Colors.blue.withValues(alpha: 0.8),
                         size: 24,
                       ),
                     ),
@@ -534,11 +534,11 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
               width: 6,
               height: 6,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     blurRadius: 4,
                     spreadRadius: 1,
                   ),
@@ -614,7 +614,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
               ),
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -656,18 +656,18 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
               height: 50,
               decoration: BoxDecoration(
                 color: isActive 
-                    ? glowColor.withOpacity(0.3)
-                    : Colors.black.withOpacity(0.3),
+                    ? glowColor.withValues(alpha: 0.3)
+                    : Colors.black.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(25),
                 border: Border.all(
                   color: isActive 
-                      ? glowColor.withOpacity(0.5)
-                      : Colors.white.withOpacity(0.2),
+                      ? glowColor.withValues(alpha: 0.5)
+                      : Colors.white.withValues(alpha: 0.2),
                   width: isActive ? 2 : 1,
                 ),
                 boxShadow: isActive ? [
                   BoxShadow(
-                    color: glowColor.withOpacity(0.4),
+                    color: glowColor.withValues(alpha: 0.4),
                     blurRadius: 15,
                     spreadRadius: 3,
                   ),
@@ -680,7 +680,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
               ),
             ).animate()
               .then(delay: Random().nextInt(3).seconds)
-              .shimmer(duration: 2.seconds, color: glowColor.withOpacity(0.3)),
+              .shimmer(duration: 2.seconds, color: glowColor.withValues(alpha: 0.3)),
             const SizedBox(height: 4),
             Text(
               label,
@@ -833,10 +833,10 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: (color ?? Colors.white).withOpacity(0.2),
+        color: (color ?? Colors.white).withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: (color ?? Colors.white).withOpacity(0.3),
+          color: (color ?? Colors.white).withValues(alpha: 0.3),
           width: 1,
         ),
       ),

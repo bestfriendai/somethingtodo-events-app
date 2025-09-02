@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/chat.dart';
 import '../services/chat_service.dart';
-import '../data/sample_events.dart';
 import '../data/sample_chat_responses.dart';
 
 // Create a StateNotifier for better state management with Riverpod

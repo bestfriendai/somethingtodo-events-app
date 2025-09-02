@@ -110,7 +110,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 30,
             offset: const Offset(0, -10),
             spreadRadius: 5,
@@ -129,13 +129,13 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.white.withOpacity(0.1),
-                      Colors.black.withOpacity(0.8),
+                      Colors.white.withValues(alpha: 0.1),
+                      Colors.black.withValues(alpha: 0.8),
                     ],
                   ),
                   border: Border(
                     top: BorderSide(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       width: 0.5,
                     ),
                   ),
@@ -156,8 +156,8 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.05),
-                Colors.white.withOpacity(0.02),
+                Colors.white.withValues(alpha: 0.05),
+                Colors.white.withValues(alpha: 0.02),
               ],
             ),
             borderGradient: LinearGradient(
@@ -188,7 +188,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: _items[widget.currentIndex].gradient[0].withOpacity(0.5),
+                              color: _items[widget.currentIndex].gradient[0].withValues(alpha: 0.5),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -220,9 +220,9 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                                 gradient: RadialGradient(
                                   colors: [
                                     _items[widget.currentIndex].gradient[0]
-                                        .withOpacity(0.3 * (1 - _rippleController.value)),
+                                        .withValues(alpha: 0.3 * (1 - _rippleController.value)),
                                     _items[widget.currentIndex].gradient[1]
-                                        .withOpacity(0.1 * (1 - _rippleController.value)),
+                                        .withValues(alpha: 0.1 * (1 - _rippleController.value)),
                                     Colors.transparent,
                                   ],
                                 ),
@@ -277,17 +277,17 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                             borderRadius: BorderRadius.circular(20),
                             gradient: LinearGradient(
                               colors: [
-                                item.gradient[0].withOpacity(0.2 * _itemControllers[index].value),
-                                item.gradient[1].withOpacity(0.1 * _itemControllers[index].value),
+                                item.gradient[0].withValues(alpha: 0.2 * _itemControllers[index].value),
+                                item.gradient[1].withValues(alpha: 0.1 * _itemControllers[index].value),
                               ],
                             ),
                             border: Border.all(
-                              color: item.gradient[0].withOpacity(0.3 * _itemControllers[index].value),
+                              color: item.gradient[0].withValues(alpha: 0.3 * _itemControllers[index].value),
                               width: 1,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: item.gradient[0].withOpacity(0.3 * _itemControllers[index].value),
+                                color: item.gradient[0].withValues(alpha: 0.3 * _itemControllers[index].value),
                                 blurRadius: 12,
                                 spreadRadius: 2,
                               ),
@@ -318,7 +318,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                                 size: 28,
                                 color: isSelected
                                     ? Colors.white
-                                    : Colors.white.withOpacity(0.4),
+                                    : Colors.white.withValues(alpha: 0.4),
                               ),
                             ),
                           );
@@ -367,7 +367,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                       color: isSelected
                           ? Colors.white
-                          : Colors.white.withOpacity(0.5),
+                          : Colors.white.withValues(alpha: 0.5),
                     ),
                     child: Text(
                       item.label,

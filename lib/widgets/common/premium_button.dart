@@ -202,7 +202,7 @@ class _PremiumButtonState extends State<PremiumButton>
                   // Main shadow
                   BoxShadow(
                     color: widget.enabled
-                        ? gradient.first.withOpacity(0.4)
+                        ? gradient.first.withValues(alpha: 0.4)
                         : Colors.black26,
                     blurRadius: 12,
                     offset: const Offset(0, 6),
@@ -219,7 +219,7 @@ class _PremiumButtonState extends State<PremiumButton>
                   // Press shadow
                   if (_isPressed)
                     BoxShadow(
-                      color: gradient.first.withOpacity(0.6),
+                      color: gradient.first.withValues(alpha: 0.6),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -240,7 +240,7 @@ class _PremiumButtonState extends State<PremiumButton>
                               end: Alignment(1.0 + _glowAnimation.value, 0.0),
                               colors: [
                                 Colors.transparent,
-                                Colors.white.withOpacity(0.1),
+                                Colors.white.withValues(alpha: 0.1),
                                 Colors.transparent,
                               ],
                             ),
@@ -253,7 +253,7 @@ class _PremiumButtonState extends State<PremiumButton>
                         child: CustomPaint(
                           painter: RipplePainter(
                             progress: _rippleAnimation.value,
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                           ),
                         ),
                       ),
@@ -323,7 +323,7 @@ class RipplePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(1 - progress)
+      ..color = color.withValues(alpha: 1 - progress)
       ..style = PaintingStyle.fill;
     
     final center = Offset(size.width / 2, size.height / 2);

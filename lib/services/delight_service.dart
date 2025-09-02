@@ -388,11 +388,11 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.8),
+                color: Colors.black.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -580,7 +580,7 @@ class HeartExplosionPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.pink.withOpacity(1 - progress)
+      ..color = Colors.pink.withValues(alpha: 1 - progress)
       ..style = PaintingStyle.fill;
     
     for (final heart in hearts) {
@@ -703,7 +703,7 @@ class SparkleEffectPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.amber.withOpacity(1 - progress)
+      ..color = Colors.amber.withValues(alpha: 1 - progress)
       ..style = PaintingStyle.fill;
     
     for (final sparkle in sparkles) {
@@ -778,7 +778,7 @@ class _AchievementToastState extends State<AchievementToast> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.amber.withOpacity(0.3),
+                color: Colors.amber.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -865,11 +865,11 @@ class _DelightToastState extends State<DelightToast> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: widget.color.withOpacity(0.9),
+            color: widget.color.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(25),
             boxShadow: [
               BoxShadow(
-                color: widget.color.withOpacity(0.3),
+                color: widget.color.withValues(alpha: 0.3),
                 blurRadius: 15,
                 offset: const Offset(0, 8),
               ),

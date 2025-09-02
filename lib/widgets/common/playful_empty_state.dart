@@ -233,15 +233,15 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          color: accentColor.withOpacity(0.1),
+                          color: accentColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(60),
                           border: Border.all(
-                            color: accentColor.withOpacity(0.3),
+                            color: accentColor.withValues(alpha: 0.3),
                             width: 2,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: accentColor.withOpacity(0.2),
+                              color: accentColor.withValues(alpha: 0.2),
                               blurRadius: 20,
                               spreadRadius: 5,
                             ),
@@ -287,7 +287,7 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
               Text(
                 widget.subtitle!,
                 style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
                 textAlign: TextAlign.center,
               ).animate(delay: 900.ms)
@@ -301,10 +301,10 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
-                color: accentColor.withOpacity(0.1),
+                color: accentColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: accentColor.withOpacity(0.2),
+                  color: accentColor.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -321,7 +321,7 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
                     child: Text(
                       _currentFunFact,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.8),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                         fontStyle: FontStyle.italic,
                       ),
                       textAlign: TextAlign.center,
@@ -345,7 +345,7 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
                     borderRadius: BorderRadius.circular(25),
                   ),
                   elevation: 8,
-                  shadowColor: accentColor.withOpacity(0.3),
+                  shadowColor: accentColor.withValues(alpha: 0.3),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -375,7 +375,7 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
             Text(
               'Psst... tap the icon above for surprises! 😉',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.4),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                 fontSize: 12,
               ),
               textAlign: TextAlign.center,

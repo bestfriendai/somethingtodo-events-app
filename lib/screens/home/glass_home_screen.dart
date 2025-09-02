@@ -162,8 +162,8 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      Colors.white.withOpacity(0.3),
-                      Colors.white.withOpacity(0.1),
+                      Colors.white.withValues(alpha: 0.3),
+                      Colors.white.withValues(alpha: 0.1),
                       Colors.transparent,
                     ],
                   ),
@@ -188,8 +188,8 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      Colors.purple.withOpacity(0.3),
-                      Colors.purple.withOpacity(0.1),
+                      Colors.purple.withValues(alpha: 0.3),
+                      Colors.purple.withValues(alpha: 0.1),
                       Colors.transparent,
                     ],
                   ),
@@ -220,8 +220,8 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
+                      Colors.white.withValues(alpha: 0.2),
+                      Colors.white.withValues(alpha: 0.1),
                     ],
                   ),
                 ),
@@ -235,7 +235,7 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                         Text(
                           'Good ${_getTimeOfDay()},',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             fontSize: 14,
                           ),
                         ).animate().fadeIn(duration: 600.ms),
@@ -261,7 +261,7 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                 ),
                 child: const Icon(Icons.notifications_outlined, color: Colors.white),
               ),
@@ -297,27 +297,27 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.2),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.5),
-                Colors.white.withOpacity(0.2),
+                Colors.white.withValues(alpha: 0.5),
+                Colors.white.withValues(alpha: 0.2),
               ],
             ),
             child: Row(
               children: [
                 const SizedBox(width: 20),
-                Icon(Icons.search, color: Colors.white.withOpacity(0.7)),
+                Icon(Icons.search, color: Colors.white.withValues(alpha: 0.7)),
                 const SizedBox(width: 12),
                 Text(
                   'Search events...',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     fontSize: 16,
                   ),
                 ),
@@ -389,16 +389,16 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.white.withOpacity(0.15),
-                              Colors.white.withOpacity(0.05),
+                              Colors.white.withValues(alpha: 0.15),
+                              Colors.white.withValues(alpha: 0.05),
                             ],
                           ),
                           borderGradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.white.withOpacity(0.6),
-                              Colors.white.withOpacity(0.2),
+                              Colors.white.withValues(alpha: 0.6),
+                              Colors.white.withValues(alpha: 0.2),
                             ],
                           ),
                           child: Stack(
@@ -430,7 +430,7 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                                               end: Alignment.bottomCenter,
                                               colors: [
                                                 Colors.transparent,
-                                                Colors.black.withOpacity(0.7),
+                                                Colors.black.withValues(alpha: 0.7),
                                               ],
                                             ),
                                           ),
@@ -453,7 +453,7 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                                         vertical: 6,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: AppTheme.primaryColor.withOpacity(0.8),
+                                        color: AppTheme.primaryColor.withValues(alpha: 0.8),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
@@ -481,14 +481,14 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                                       children: [
                                         Icon(
                                           Icons.location_on,
-                                          color: Colors.white.withOpacity(0.8),
+                                          color: Colors.white.withValues(alpha: 0.8),
                                           size: 16,
                                         ),
                                         const SizedBox(width: 4),
                                         Text(
                                           event.venue.name,
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(0.8),
+                                            color: Colors.white.withValues(alpha: 0.8),
                                             fontSize: 14,
                                           ),
                                         ),
@@ -523,7 +523,7 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                       borderRadius: BorderRadius.circular(4),
                       color: _currentFeaturedIndex == index
                           ? Colors.white
-                          : Colors.white.withOpacity(0.3),
+                          : Colors.white.withValues(alpha: 0.3),
                     ),
                   ),
                 ),
@@ -596,11 +596,11 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                     colors: GlassTheme.primaryGradient,
                   )
                 : null,
-            color: isSelected ? null : Colors.white.withOpacity(0.1),
+            color: isSelected ? null : Colors.white.withValues(alpha: 0.1),
             border: Border.all(
               color: isSelected
                   ? Colors.transparent
-                  : Colors.white.withOpacity(0.3),
+                  : Colors.white.withValues(alpha: 0.3),
               width: 1.5,
             ),
           ),
@@ -645,14 +645,14 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
                       Icon(
                         Icons.event_busy,
                         size: 64,
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         'No events found',
                         style: TextStyle(
                           fontSize: 18,
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                         ),
                       ),
                     ],
@@ -709,16 +709,16 @@ class _GlassHomeScreenState extends State<GlassHomeScreen>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white.withOpacity(0.1),
-            Colors.white.withOpacity(0.05),
+            Colors.white.withValues(alpha: 0.1),
+            Colors.white.withValues(alpha: 0.05),
           ],
         ),
         borderGradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white.withOpacity(0.3),
-            Colors.white.withOpacity(0.1),
+            Colors.white.withValues(alpha: 0.3),
+            Colors.white.withValues(alpha: 0.1),
           ],
         ),
         child: const Center(

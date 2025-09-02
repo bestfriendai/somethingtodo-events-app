@@ -124,11 +124,11 @@ class _PremiumPageIndicatorState extends State<PremiumPageIndicator>
                           ? LinearGradient(colors: colors)
                           : null,
                       color: !isActive
-                          ? colors.first.withOpacity(0.3)
+                          ? colors.first.withValues(alpha: 0.3)
                           : null,
                       boxShadow: isActive ? [
                         BoxShadow(
-                          color: colors.first.withOpacity(0.4 + glow),
+                          color: colors.first.withValues(alpha: 0.4 + glow),
                           blurRadius: 8 + (glow * 10),
                           offset: const Offset(0, 2),
                         ),
@@ -175,11 +175,11 @@ class _PremiumPageIndicatorState extends State<PremiumPageIndicator>
                           ? LinearGradient(colors: colors)
                           : null,
                       color: !isActive
-                          ? colors.first.withOpacity(0.3)
+                          ? colors.first.withValues(alpha: 0.3)
                           : null,
                       boxShadow: isActive ? [
                         BoxShadow(
-                          color: colors.first.withOpacity(0.5),
+                          color: colors.first.withValues(alpha: 0.5),
                           blurRadius: 10,
                           offset: const Offset(0, 3),
                         ),
@@ -210,7 +210,7 @@ class _PremiumPageIndicatorState extends State<PremiumPageIndicator>
                 height: widget.size,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: colors.first.withOpacity(0.2),
+                  color: colors.first.withValues(alpha: 0.2),
                 ),
               );
             }),
@@ -228,7 +228,7 @@ class _PremiumPageIndicatorState extends State<PremiumPageIndicator>
                 gradient: LinearGradient(colors: colors),
                 boxShadow: [
                   BoxShadow(
-                    color: colors.first.withOpacity(0.4),
+                    color: colors.first.withValues(alpha: 0.4),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -286,7 +286,7 @@ class _PremiumPageIndicatorState extends State<PremiumPageIndicator>
                   gradient: LinearGradient(colors: colors),
                   boxShadow: [
                     BoxShadow(
-                      color: colors.first.withOpacity(0.3 + (_glowController.value * 0.3)),
+                      color: colors.first.withValues(alpha: 0.3 + (_glowController.value * 0.3)),
                       blurRadius: 8 + (_glowController.value * 8),
                     ),
                   ],
@@ -311,10 +311,10 @@ class _PremiumPageIndicatorState extends State<PremiumPageIndicator>
                       shape: BoxShape.circle,
                       color: isActive
                           ? Colors.white
-                          : colors.first.withOpacity(0.5),
+                          : colors.first.withValues(alpha: 0.5),
                       boxShadow: isActive ? [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                           blurRadius: 6,
                         ),
                       ] : null,
@@ -357,7 +357,7 @@ class LiquidIndicatorPainter extends CustomPainter {
       final x = (i * (size + spacing)) + (size / 2);
       final y = size / 2;
       
-      paint.color = colors.first.withOpacity(0.2);
+      paint.color = colors.first.withValues(alpha: 0.2);
       canvas.drawCircle(Offset(x, y), size / 2, paint);
     }
     
@@ -530,7 +530,7 @@ class _PremiumProgressBarState extends State<PremiumProgressBar>
       height: widget.height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(widget.height / 2),
-        color: colors.first.withOpacity(0.1),
+        color: colors.first.withValues(alpha: 0.1),
       ),
       child: Stack(
         children: [
@@ -542,7 +542,7 @@ class _PremiumProgressBarState extends State<PremiumProgressBar>
                 gradient: LinearGradient(colors: colors),
                 boxShadow: [
                   BoxShadow(
-                    color: colors.first.withOpacity(0.3),
+                    color: colors.first.withValues(alpha: 0.3),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -562,7 +562,7 @@ class _PremiumProgressBarState extends State<PremiumProgressBar>
         borderRadius: BorderRadius.circular(widget.height / 2),
         color: ModernTheme.darkCardSurface,
         border: Border.all(
-          color: colors.first.withOpacity(0.3),
+          color: colors.first.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -594,7 +594,7 @@ class _PremiumProgressBarState extends State<PremiumProgressBar>
       borderRadius: BorderRadius.circular(widget.height / 2),
       child: Container(
         height: widget.height,
-        color: colors.first.withOpacity(0.1),
+        color: colors.first.withValues(alpha: 0.1),
         child: FractionallySizedBox(
           widthFactor: progress,
           child: CustomPaint(

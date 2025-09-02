@@ -148,7 +148,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: colors.first.withOpacity(opacity * 0.3),
+                    color: colors.first.withValues(alpha: opacity * 0.3),
                   ),
                 ),
               ),
@@ -177,7 +177,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: colors.first.withOpacity(0.5),
+                    color: colors.first.withValues(alpha: 0.5),
                     blurRadius: 10,
                   ),
                 ],
@@ -201,7 +201,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
                     color: colors[index % colors.length],
                     boxShadow: [
                       BoxShadow(
-                        color: colors[index % colors.length].withOpacity(0.5),
+                        color: colors[index % colors.length].withValues(alpha: 0.5),
                         blurRadius: 5,
                       ),
                     ],
@@ -240,7 +240,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: colors.first.withOpacity(0.3),
+                    color: colors.first.withValues(alpha: 0.3),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -279,8 +279,8 @@ class AuroraLoadingPainter extends CustomPainter {
       final paint = Paint()
         ..shader = LinearGradient(
           colors: [
-            colors[i % colors.length].withOpacity(opacity * 0.7),
-            colors[(i + 1) % colors.length].withOpacity(opacity * 0.3),
+            colors[i % colors.length].withValues(alpha: opacity * 0.7),
+            colors[(i + 1) % colors.length].withValues(alpha: opacity * 0.3),
           ],
         ).createShader(Rect.fromCircle(center: center, radius: ringRadius))
         ..style = PaintingStyle.stroke
@@ -299,7 +299,7 @@ class AuroraLoadingPainter extends CustomPainter {
       );
       
       final particlePaint = Paint()
-        ..color = colors[i % colors.length].withOpacity(0.8)
+        ..color = colors[i % colors.length].withValues(alpha: 0.8)
         ..style = PaintingStyle.fill;
       
       canvas.drawCircle(particlePos, 2.0 + math.sin(progress * 4 * math.pi + i), particlePaint);
@@ -372,7 +372,7 @@ class _PremiumSkeletonState extends State<PremiumSkeleton>
     
     final shimmerColors = widget.shimmerColors ?? [
       ModernTheme.darkCardSurface,
-      ModernTheme.darkCardSurface.withOpacity(0.5),
+      ModernTheme.darkCardSurface.withValues(alpha: 0.5),
       ModernTheme.darkCardSurface,
     ];
     

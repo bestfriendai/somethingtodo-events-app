@@ -161,16 +161,16 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.white.withOpacity(0.1),
-                              Colors.white.withOpacity(0.05),
+                              Colors.white.withValues(alpha: 0.1),
+                              Colors.white.withValues(alpha: 0.05),
                             ],
                           ),
                           borderGradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.white.withOpacity(0.3),
-                              Colors.white.withOpacity(0.1),
+                              Colors.white.withValues(alpha: 0.3),
+                              Colors.white.withValues(alpha: 0.1),
                             ],
                           ),
                           child: const Text(
@@ -227,20 +227,20 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                                 end: Alignment.bottomRight,
                                 colors: _currentPage == index
                                     ? [
-                                        _pages[_currentPage].gradientColors[0].withOpacity(0.6),
-                                        _pages[_currentPage].gradientColors[1].withOpacity(0.3),
+                                        _pages[_currentPage].gradientColors[0].withValues(alpha: 0.6),
+                                        _pages[_currentPage].gradientColors[1].withValues(alpha: 0.3),
                                       ]
                                     : [
-                                        Colors.white.withOpacity(0.2),
-                                        Colors.white.withOpacity(0.1),
+                                        Colors.white.withValues(alpha: 0.2),
+                                        Colors.white.withValues(alpha: 0.1),
                                       ],
                               ),
                               borderGradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Colors.white.withOpacity(0.2),
-                                  Colors.white.withOpacity(0.1),
+                                  Colors.white.withValues(alpha: 0.2),
+                                  Colors.white.withValues(alpha: 0.1),
                                 ],
                               ),
                             ),
@@ -268,16 +268,16 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      Colors.white.withOpacity(0.1),
-                                      Colors.white.withOpacity(0.05),
+                                      Colors.white.withValues(alpha: 0.1),
+                                      Colors.white.withValues(alpha: 0.05),
                                     ],
                                   ),
                                   borderGradient: LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      Colors.white.withOpacity(0.5),
-                                      Colors.white.withOpacity(0.2),
+                                      Colors.white.withValues(alpha: 0.5),
+                                      Colors.white.withValues(alpha: 0.2),
                                     ],
                                   ),
                                   child: const Text(
@@ -309,16 +309,16 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    _pages[_currentPage].gradientColors[0].withOpacity(0.3),
-                                    _pages[_currentPage].gradientColors[1].withOpacity(0.2),
+                                    _pages[_currentPage].gradientColors[0].withValues(alpha: 0.3),
+                                    _pages[_currentPage].gradientColors[1].withValues(alpha: 0.2),
                                   ],
                                 ),
                                 borderGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    _pages[_currentPage].gradientColors[0].withOpacity(0.8),
-                                    _pages[_currentPage].gradientColors[1].withOpacity(0.4),
+                                    _pages[_currentPage].gradientColors[0].withValues(alpha: 0.8),
+                                    _pages[_currentPage].gradientColors[1].withValues(alpha: 0.4),
                                   ],
                                 ),
                                 child: Text(
@@ -362,8 +362,8 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Colors.purple.withOpacity(0.3),
-                    Colors.purple.withOpacity(0.0),
+                    Colors.purple.withValues(alpha: 0.3),
+                    Colors.purple.withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -384,8 +384,8 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Colors.blue.withOpacity(0.2),
-                    Colors.blue.withOpacity(0.0),
+                    Colors.blue.withValues(alpha: 0.2),
+                    Colors.blue.withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -407,8 +407,8 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    Colors.cyan.withOpacity(0.25),
-                    Colors.cyan.withOpacity(0.0),
+                    Colors.cyan.withValues(alpha: 0.25),
+                    Colors.cyan.withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -437,22 +437,22 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                page.gradientColors[0].withOpacity(0.2),
-                page.gradientColors[1].withOpacity(0.1),
+                page.gradientColors[0].withValues(alpha: 0.2),
+                page.gradientColors[1].withValues(alpha: 0.1),
               ],
             ),
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                page.gradientColors[0].withOpacity(0.5),
-                page.gradientColors[1].withOpacity(0.2),
+                page.gradientColors[0].withValues(alpha: 0.5),
+                page.gradientColors[1].withValues(alpha: 0.2),
               ],
             ),
             child: Icon(
               page.icon,
               size: 80,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ).animate()
               .scale(duration: 600.ms, curve: Curves.easeOutBack)
@@ -488,16 +488,16 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.08),
-                Colors.white.withOpacity(0.03),
+                Colors.white.withValues(alpha: 0.08),
+                Colors.white.withValues(alpha: 0.03),
               ],
             ),
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.2),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             padding: const EdgeInsets.all(20),
@@ -505,7 +505,7 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
               page.description,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 height: 1.5,
               ),
               textAlign: TextAlign.center,

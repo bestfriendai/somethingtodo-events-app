@@ -95,9 +95,11 @@ class SomethingToDoApp extends StatelessWidget {
       ],
       child: Consumer2<AuthProvider, ThemeProvider>(
         builder: (context, authProvider, themeProvider, child) {
-          // Update theme based on system brightness if following system theme
-          final brightness = MediaQuery.platformBrightnessOf(context);
-          themeProvider.updateSystemTheme(brightness);
+          // Schedule theme update after build
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final brightness = MediaQuery.platformBrightnessOf(context);
+            themeProvider.updateSystemTheme(brightness);
+          });
 
           return MaterialApp(
             title: AppConfig.appName,

@@ -54,7 +54,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
     _animationController = AnimationController(
       duration: const Duration(seconds: 4),
       vsync: this,
-    )..repeat();
+    ); // Don't auto-repeat for better performance
     
     _headerAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
@@ -158,28 +158,41 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
 
   Widget _buildAnimatedBackground() {
     return Container(
-      decoration: ModernTheme.modernBackgroundDecoration(
-        useAuroraEffect: true,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF0A0A0B), // Rich black
+            Color(0xFF111111), // Slightly lighter black
+          ],
+        ),
       ),
       child: AnimatedBuilder(
         animation: _animationController,
         builder: (context, child) {
           return Stack(
             children: [
-              // Aurora Borealis effect with animated gradients
+              // Subtle gradient overlay instead of aurora
               Positioned.fill(
-                child: CustomPaint(
-                  painter: AuroraBoreailisPainter(
-                    animation: _animationController,
-                    colors: ModernTheme.auroraGradient,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(
+                      center: Alignment.topLeft,
+                      radius: 1.5,
+                      colors: [
+                        const Color(0xFF7C3AED).withValues(alpha: 0.05),
+                        Colors.transparent,
+                      ],
+                    ),
                   ),
                 ),
               ),
               
-              // Floating electric purple orb
+              // Static purple accent orb (no animation for better performance)
               Positioned(
-                top: 80 + (60 * sin(_animationController.value * 2 * pi)),
-                left: -80 + (40 * cos(_animationController.value * pi)),
+                top: 80,
+                left: -80,
                 child: Container(
                   width: 300,
                   height: 300,
@@ -187,8 +200,8 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF7C3AED).withOpacity(0.3), // Electric Purple
-                        const Color(0xFF7C3AED).withOpacity(0.1),
+                        const Color(0xFF7C3AED).withValues(alpha: 0.15), // Electric Purple
+                        const Color(0xFF7C3AED).withValues(alpha: 0.05),
                         Colors.transparent,
                       ],
                     ),
@@ -196,10 +209,10 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                 ),
               ),
               
-              // Floating neon pink orb
+              // Static blue accent orb (no animation for better performance)
               Positioned(
-                bottom: 150 - (80 * cos(_animationController.value * 1.5 * pi)),
-                right: -100 - (60 * sin(_animationController.value * 1.2 * pi)),
+                bottom: 150,
+                right: -100,
                 child: Container(
                   width: 250,
                   height: 250,
@@ -207,28 +220,8 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFFEC4899).withOpacity(0.25), // Neon Pink
-                        const Color(0xFFEC4899).withOpacity(0.08),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              
-              // Cyber blue orb
-              Positioned(
-                top: 200 + (40 * cos(_animationController.value * 0.8 * pi)),
-                right: 50 + (30 * sin(_animationController.value * 1.3 * pi)),
-                child: Container(
-                  width: 180,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        const Color(0xFF06B6D4).withOpacity(0.2), // Cyber Blue
-                        const Color(0xFF06B6D4).withOpacity(0.06),
+                        const Color(0xFF06B6D4).withValues(alpha: 0.1), // Cyber Blue
+                        const Color(0xFF06B6D4).withValues(alpha: 0.06),
                         Colors.transparent,
                       ],
                     ),
@@ -255,8 +248,8 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        const Color(0xFF0A0A0B).withOpacity(0.3),
-                        const Color(0xFF0A0A0B).withOpacity(0.7),
+                        const Color(0xFF0A0A0B).withValues(alpha: 0.3),
+                        const Color(0xFF0A0A0B).withValues(alpha: 0.7),
                         const Color(0xFF0A0A0B),
                       ],
                       stops: const [0.0, 0.3, 0.7, 1.0],
@@ -278,7 +271,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
           floating: false,
           pinned: true,
           snap: false,
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color(0xFF0A0A0B),
           elevation: 0,
           expandedHeight: 140,
           flexibleSpace: FlexibleSpaceBar(
@@ -288,8 +281,8 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.0),
-                    Colors.black.withOpacity(0.0),
+                    const Color(0xFF1A0A1A),
+                    const Color(0xFF0A0A0B),
                   ],
                 ),
               ),
@@ -315,7 +308,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                                 child: Text(
                                   'Good ${_getTimeOfDay()} 👋',
                                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.white.withOpacity(0.7),
+                                    color: Colors.white.withValues(alpha: 0.7),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -367,9 +360,9 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                       margin: const EdgeInsets.only(right: 20, top: 8),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),
@@ -434,14 +427,14 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                 border: 1,
                 linearGradient: LinearGradient(
                   colors: [
-                    Colors.white.withOpacity(0.1),
-                    Colors.white.withOpacity(0.05),
+                    Colors.white.withValues(alpha: 0.1),
+                    Colors.white.withValues(alpha: 0.05),
                   ],
                 ),
                 borderGradient: LinearGradient(
                   colors: [
-                    Colors.white.withOpacity(0.2),
-                    Colors.white.withOpacity(0.1),
+                    Colors.white.withValues(alpha: 0.2),
+                    Colors.white.withValues(alpha: 0.1),
                   ],
                 ),
                 child: Padding(
@@ -472,7 +465,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                             'Discover something amazing...',
                           ][Random().nextInt(4)],
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -480,16 +473,16 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
                         child: Icon(
                           Icons.tune_rounded,
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           size: 18,
                         ),
                       ),
@@ -557,7 +550,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     'Swipe through events like a social media pro! 📱',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ],
@@ -630,7 +623,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     Text(
                       'Events',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -673,7 +666,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     Text(
                       'Favorites',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -778,7 +771,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                       borderRadius: BorderRadius.circular(4),
                       color: _currentFeaturedIndex == index
                           ? ModernTheme.primaryColor
-                          : Colors.white.withOpacity(0.3),
+                          : Colors.white.withValues(alpha: 0.3),
                     ),
                   ),
                 ),
@@ -904,7 +897,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                       children: [
                         Icon(
                           Icons.location_on_rounded,
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           size: 18,
                         ),
                         const SizedBox(width: 6),
@@ -912,7 +905,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                           child: Text(
                             event.venue.name,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.white.withOpacity(0.8),
+                              color: Colors.white.withValues(alpha: 0.8),
                               fontWeight: FontWeight.w500,
                             ),
                             maxLines: 1,
@@ -995,24 +988,27 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
     return Container(
       margin: const EdgeInsets.only(right: 12),
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
           PlatformInteractions.lightImpact();
           setState(() {
             _selectedCategory = category;
           });
-          context.read<EventsProvider>().setCategory(category);
+          final provider = context.read<EventsProvider>();
+          provider.setCategory(category);
+          // Force refresh with the new category filter
+          await provider.loadEvents(refresh: true);
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           decoration: BoxDecoration(
             gradient: isSelected ? LinearGradient(colors: gradient) : null,
-            color: isSelected ? null : Colors.white.withOpacity(0.1),
+            color: isSelected ? null : Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
               color: isSelected 
                   ? Colors.transparent
-                  : Colors.white.withOpacity(0.2),
+                  : Colors.white.withValues(alpha: 0.2),
               width: 1.5,
             ),
           ),
@@ -1058,12 +1054,12 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                     ),
                     child: Icon(
                       Icons.event_busy_rounded,
                       size: 48,
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -1078,7 +1074,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                   Text(
                     'Try adjusting your filters or check back later',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -1140,7 +1136,7 @@ class AuroraBoreailisPainter extends CustomPainter {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          colors[i % colors.length].withOpacity(0.1 - i * 0.02),
+          colors[i % colors.length].withValues(alpha: 0.1 - i * 0.02),
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -1186,12 +1182,12 @@ class ParticleEffectPainter extends CustomPainter {
         const Color(0xFFEC4899), // Neon Pink
         const Color(0xFF06B6D4), // Cyber Blue
         Colors.white,
-      ][i % 4].withOpacity(opacity);
+      ][i % 4].withValues(alpha: opacity);
       
       canvas.drawCircle(Offset(x, y), particleSize, paint);
       
       // Add a subtle glow effect
-      paint.color = paint.color.withOpacity(opacity * 0.3);
+      paint.color = paint.color.withValues(alpha: opacity * 0.3);
       canvas.drawCircle(Offset(x, y), particleSize * 2, paint);
     }
   }
@@ -1206,9 +1202,9 @@ Widget _buildErrorBanner(String message, {Future<void> Function()? onRetry}) {
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: ModernTheme.errorColor.withOpacity(0.08),
+        color: ModernTheme.errorColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ModernTheme.errorColor.withOpacity(0.3)),
+        border: Border.all(color: ModernTheme.errorColor.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [

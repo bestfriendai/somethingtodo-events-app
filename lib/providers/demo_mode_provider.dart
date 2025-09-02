@@ -7,7 +7,7 @@ import '../services/demo_data_service.dart';
 import 'auth_provider.dart';
 
 class DemoModeProvider extends ChangeNotifier {
-  final AuthProvider _authProvider;
+  final AuthProvider? _authProvider;
   final Random _random = Random();
   
   // Demo state
@@ -32,8 +32,11 @@ class DemoModeProvider extends ChangeNotifier {
   int _interactionsSimulated = 0;
   DateTime? _demoStartTime;
   
-  DemoModeProvider(this._authProvider) {
-    _authProvider.addListener(_onAuthStateChanged);
+  DemoModeProvider({AuthProvider? authProvider}) 
+      : _authProvider = authProvider {
+    if (_authProvider != null) {
+      _authProvider!.addListener(_onAuthStateChanged);
+    }
     _initializeDemoData();
   }
 
@@ -275,3 +278,21 @@ class DemoModeProvider extends ChangeNotifier {
   }
   
   int getEventAttendeeCount(String eventId) {
+    final interactions = _eventInteractions[eventId] ?? [];
+    return interactions.length; // Simplified for now
+  }
+  
+  void _onAuthStateChanged() {
+    // Handle auth state changes if needed
+    if (_authProvider != null && !_authProvider!.isAuthenticated && _isDemoModeActive) {
+      // Could auto-disable demo mode if user logs out
+    }
+  }
+  
+  @override
+  void dispose() {
+    _stopRealTimeSimulation();
+    _authProvider?.removeListener(_onAuthStateChanged);
+    super.dispose();
+  }
+}

@@ -228,7 +228,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: _getCategoryColor(event.category).withOpacity(0.1),
+                  color: _getCategoryColor(event.category).withValues(alpha: 0.1),
                 ),
                 child: Center(
                   child: Icon(

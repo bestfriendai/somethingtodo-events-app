@@ -75,11 +75,11 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
     _orbs = List.generate(5, (index) => FloatingOrb(
       size: 20 + (index * 15).toDouble(),
       color: [
-        Colors.white.withOpacity(0.1),
-        Colors.white.withOpacity(0.15),
-        Colors.white.withOpacity(0.08),
-        Colors.white.withOpacity(0.12),
-        Colors.white.withOpacity(0.05),
+        Colors.white.withValues(alpha: 0.1),
+        Colors.white.withValues(alpha: 0.15),
+        Colors.white.withValues(alpha: 0.08),
+        Colors.white.withValues(alpha: 0.12),
+        Colors.white.withValues(alpha: 0.05),
       ][index],
       controller: _orbControllers[index],
     ));
@@ -165,7 +165,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
           color: orb.color,
           boxShadow: [
             BoxShadow(
-              color: orb.color.withOpacity(0.3),
+              color: orb.color.withValues(alpha: 0.3),
               blurRadius: 20,
               spreadRadius: 2,
             ),
@@ -190,16 +190,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.1),
-              Colors.white.withOpacity(0.05),
+              Colors.white.withValues(alpha: 0.1),
+              Colors.white.withValues(alpha: 0.05),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.2),
-              Colors.white.withOpacity(0.1),
+              Colors.white.withValues(alpha: 0.2),
+              Colors.white.withValues(alpha: 0.1),
             ],
           ),
           child: Padding(
@@ -210,7 +210,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                 Icon(
                   Icons.person_outline,
                   size: 80,
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -225,7 +225,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                 Text(
                   'Save your favorite events, get personalized recommendations, and sync across devices.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -241,16 +241,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.white.withOpacity(0.2),
-                      Colors.white.withOpacity(0.1),
+                      Colors.white.withValues(alpha: 0.2),
+                      Colors.white.withValues(alpha: 0.1),
                     ],
                   ),
                   borderGradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.white.withOpacity(0.3),
-                      Colors.white.withOpacity(0.1),
+                      Colors.white.withValues(alpha: 0.3),
+                      Colors.white.withValues(alpha: 0.1),
                     ],
                   ),
                   child: InkWell(
@@ -308,16 +308,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.1),
-              Colors.white.withOpacity(0.05),
+              Colors.white.withValues(alpha: 0.1),
+              Colors.white.withValues(alpha: 0.05),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.2),
-              Colors.white.withOpacity(0.1),
+              Colors.white.withValues(alpha: 0.2),
+              Colors.white.withValues(alpha: 0.1),
             ],
           ),
           child: IconButton(
@@ -371,16 +371,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.1),
-                Colors.white.withOpacity(0.05),
+                Colors.white.withValues(alpha: 0.1),
+                Colors.white.withValues(alpha: 0.05),
               ],
             ),
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.2),
-                Colors.white.withOpacity(0.1),
+                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
               ],
             ),
             child: Padding(
@@ -406,16 +406,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Colors.white.withOpacity(0.2),
-                                  Colors.white.withOpacity(0.1),
+                                  Colors.white.withValues(alpha: 0.2),
+                                  Colors.white.withValues(alpha: 0.1),
                                 ],
                               ),
                               borderGradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Colors.white.withOpacity(0.3),
-                                  Colors.white.withOpacity(0.1),
+                                  Colors.white.withValues(alpha: 0.3),
+                                  Colors.white.withValues(alpha: 0.1),
                                 ],
                               ),
                               child: ClipOval(
@@ -458,16 +458,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      AppTheme.warningColor.withOpacity(0.8),
-                                      AppTheme.warningColor.withOpacity(0.6),
+                                      AppTheme.warningColor.withValues(alpha: 0.8),
+                                      AppTheme.warningColor.withValues(alpha: 0.6),
                                     ],
                                   ),
                                   borderGradient: LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      Colors.white.withOpacity(0.3),
-                                      Colors.white.withOpacity(0.1),
+                                      Colors.white.withValues(alpha: 0.3),
+                                      Colors.white.withValues(alpha: 0.1),
                                     ],
                                   ),
                                   child: const Icon(
@@ -500,7 +500,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                   Text(
                     user.email,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withValues(alpha: 0.7),
                         ),
                     textAlign: TextAlign.center,
                   ),
@@ -518,16 +518,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          AppTheme.warningColor.withOpacity(0.2),
-                          AppTheme.warningColor.withOpacity(0.1),
+                          AppTheme.warningColor.withValues(alpha: 0.2),
+                          AppTheme.warningColor.withValues(alpha: 0.1),
                         ],
                       ),
                       borderGradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          AppTheme.warningColor.withOpacity(0.3),
-                          AppTheme.warningColor.withOpacity(0.1),
+                          AppTheme.warningColor.withValues(alpha: 0.3),
+                          AppTheme.warningColor.withValues(alpha: 0.1),
                         ],
                       ),
                       child: Padding(
@@ -569,16 +569,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Colors.white.withOpacity(0.1),
-                        Colors.white.withOpacity(0.05),
+                        Colors.white.withValues(alpha: 0.1),
+                        Colors.white.withValues(alpha: 0.05),
                       ],
                     ),
                     borderGradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Colors.white.withOpacity(0.2),
-                        Colors.white.withOpacity(0.1),
+                        Colors.white.withValues(alpha: 0.2),
+                        Colors.white.withValues(alpha: 0.1),
                       ],
                     ),
                     child: InkWell(
@@ -628,16 +628,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppTheme.warningColor.withOpacity(0.2),
-              AppTheme.warningColor.withOpacity(0.1),
+              AppTheme.warningColor.withValues(alpha: 0.2),
+              AppTheme.warningColor.withValues(alpha: 0.1),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppTheme.warningColor.withOpacity(0.3),
-              AppTheme.warningColor.withOpacity(0.1),
+              AppTheme.warningColor.withValues(alpha: 0.3),
+              AppTheme.warningColor.withValues(alpha: 0.1),
             ],
           ),
           child: InkWell(
@@ -753,16 +753,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white.withOpacity(0.1),
-            Colors.white.withOpacity(0.05),
+            Colors.white.withValues(alpha: 0.1),
+            Colors.white.withValues(alpha: 0.05),
           ],
         ),
         borderGradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white.withOpacity(0.2),
-            Colors.white.withOpacity(0.1),
+            Colors.white.withValues(alpha: 0.2),
+            Colors.white.withValues(alpha: 0.1),
           ],
         ),
         child: Padding(
@@ -782,7 +782,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
               Text(
                 label,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -808,16 +808,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.1),
-              Colors.white.withOpacity(0.05),
+              Colors.white.withValues(alpha: 0.1),
+              Colors.white.withValues(alpha: 0.05),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.2),
-              Colors.white.withOpacity(0.1),
+              Colors.white.withValues(alpha: 0.2),
+              Colors.white.withValues(alpha: 0.1),
             ],
           ),
           child: Column(
@@ -893,7 +893,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
           end: Alignment.centerRight,
           colors: [
             Colors.transparent,
-            Colors.white.withOpacity(0.2),
+            Colors.white.withValues(alpha: 0.2),
             Colors.transparent,
           ],
         ),
@@ -920,13 +920,13 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
       subtitle: Text(
         subtitle,
         style: TextStyle(
-          color: Colors.white.withOpacity(0.6),
+          color: Colors.white.withValues(alpha: 0.6),
         ),
       ),
       trailing: Icon(
         Icons.arrow_forward_ios,
         size: 16,
-        color: Colors.white.withOpacity(0.5),
+        color: Colors.white.withValues(alpha: 0.5),
       ),
       onTap: onTap,
     );
@@ -961,16 +961,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Colors.white.withOpacity(0.1),
-                        Colors.white.withOpacity(0.05),
+                        Colors.white.withValues(alpha: 0.1),
+                        Colors.white.withValues(alpha: 0.05),
                       ],
                     ),
                     borderGradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Colors.white.withOpacity(0.2),
-                        Colors.white.withOpacity(0.1),
+                        Colors.white.withValues(alpha: 0.2),
+                        Colors.white.withValues(alpha: 0.1),
                       ],
                     ),
                     child: Padding(
@@ -981,20 +981,20 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                           Icon(
                             Icons.event_busy,
                             size: 48,
-                            color: Colors.white.withOpacity(0.4),
+                            color: Colors.white.withValues(alpha: 0.4),
                           ),
                           const SizedBox(height: 16),
                           Text(
                             'No recent activity',
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.white.withOpacity(0.7),
+                                  color: Colors.white.withValues(alpha: 0.7),
                                 ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Start exploring events to see your activity here',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white.withValues(alpha: 0.6),
                                 ),
                             textAlign: TextAlign.center,
                           ),
@@ -1020,16 +1020,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Colors.white.withOpacity(0.1),
-                                  Colors.white.withOpacity(0.05),
+                                  Colors.white.withValues(alpha: 0.1),
+                                  Colors.white.withValues(alpha: 0.05),
                                 ],
                               ),
                               borderGradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Colors.white.withOpacity(0.2),
-                                  Colors.white.withOpacity(0.1),
+                                  Colors.white.withValues(alpha: 0.2),
+                                  Colors.white.withValues(alpha: 0.1),
                                 ],
                               ),
                               child: EventCard(
@@ -1078,10 +1078,10 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Display Name',
-                labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-                prefixIcon: Icon(Icons.person, color: Colors.white.withOpacity(0.7)),
+                labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                prefixIcon: Icon(Icons.person, color: Colors.white.withValues(alpha: 0.7)),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                  borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -1096,10 +1096,10 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Phone Number',
-                labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-                prefixIcon: Icon(Icons.phone, color: Colors.white.withOpacity(0.7)),
+                labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                prefixIcon: Icon(Icons.phone, color: Colors.white.withValues(alpha: 0.7)),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                  borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 focusedBorder: OutlineInputBorder(

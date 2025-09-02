@@ -138,8 +138,8 @@ class GlassTheme {
       linearGradient: appBarGradient(),
       borderGradient: LinearGradient(
         colors: [
-          Colors.white.withOpacity(0),
-          Colors.white.withOpacity(0),
+          Colors.white.withValues(alpha: 0),
+          Colors.white.withValues(alpha: 0),
         ],
       ),
       padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
@@ -195,13 +195,13 @@ class GlassTheme {
           border: InputBorder.none,
           hintText: hintText,
           hintStyle: TextStyle(
-            color: Colors.white.withOpacity(0.5),
+            color: Colors.white.withValues(alpha: 0.5),
             fontSize: 16,
           ),
           prefixIcon: prefixIcon != null
               ? Icon(
                   prefixIcon,
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                 )
               : null,
         ),
@@ -215,8 +215,8 @@ class GlassTheme {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Colors.white.withOpacity(0.1),
-        Colors.white.withOpacity(0.05),
+        Colors.white.withValues(alpha: 0.1),
+        Colors.white.withValues(alpha: 0.05),
       ],
     );
   }
@@ -226,8 +226,8 @@ class GlassTheme {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        primaryGradient[0].withOpacity(0.3),
-        primaryGradient[1].withOpacity(0.2),
+        primaryGradient[0].withValues(alpha: 0.3),
+        primaryGradient[1].withValues(alpha: 0.2),
       ],
     );
   }
@@ -237,8 +237,8 @@ class GlassTheme {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Colors.white.withOpacity(0.15),
-        Colors.white.withOpacity(0.08),
+        Colors.white.withValues(alpha: 0.15),
+        Colors.white.withValues(alpha: 0.08),
       ],
     );
   }
@@ -248,8 +248,8 @@ class GlassTheme {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        primaryGradient[0].withOpacity(0.4),
-        primaryGradient[1].withOpacity(0.2),
+        primaryGradient[0].withValues(alpha: 0.4),
+        primaryGradient[1].withValues(alpha: 0.2),
       ],
     );
   }
@@ -259,8 +259,8 @@ class GlassTheme {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Colors.white.withOpacity(0.08),
-        Colors.white.withOpacity(0.04),
+        Colors.white.withValues(alpha: 0.08),
+        Colors.white.withValues(alpha: 0.04),
       ],
     );
   }
@@ -270,8 +270,8 @@ class GlassTheme {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Colors.white.withOpacity(0.5),
-        Colors.white.withOpacity(0.2),
+        Colors.white.withValues(alpha: 0.5),
+        Colors.white.withValues(alpha: 0.2),
       ],
     );
   }
@@ -281,8 +281,8 @@ class GlassTheme {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        primaryGradient[0].withOpacity(0.8),
-        primaryGradient[1].withOpacity(0.4),
+        primaryGradient[0].withValues(alpha: 0.8),
+        primaryGradient[1].withValues(alpha: 0.4),
       ],
     );
   }
@@ -292,8 +292,8 @@ class GlassTheme {
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        Colors.white.withOpacity(0.4),
-        Colors.white.withOpacity(0.2),
+        Colors.white.withValues(alpha: 0.4),
+        Colors.white.withValues(alpha: 0.2),
       ],
     );
   }

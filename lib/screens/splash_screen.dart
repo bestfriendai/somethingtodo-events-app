@@ -185,7 +185,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                                 borderRadius: BorderRadius.circular(30),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppTheme.primaryColor.withOpacity(0.4),
+                                    color: AppTheme.primaryColor.withValues(alpha: 0.4),
                                     blurRadius: 25,
                                     offset: const Offset(0, 15),
                                     spreadRadius: 5,
@@ -240,7 +240,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 )
                 .fadeIn(duration: const Duration(milliseconds: 600))
                 .then(delay: 1.seconds)
-                .shimmer(duration: 2.seconds, color: Colors.white.withOpacity(0.5)),
+                .shimmer(duration: 2.seconds, color: Colors.white.withValues(alpha: 0.5)),
                 
                 const SizedBox(height: 24),
                 
@@ -266,7 +266,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: isDarkMode 
                             ? Colors.white70 
-                            : AppTheme.lightOnBackground.withOpacity(0.7),
+                            : AppTheme.lightOnBackground.withValues(alpha: 0.7),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -275,14 +275,14 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.amber.withOpacity(0.8),
-                            Colors.orange.withOpacity(0.8),
+                            Colors.amber.withValues(alpha: 0.8),
+                            Colors.orange.withValues(alpha: 0.8),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.amber.withOpacity(0.3),
+                            color: Colors.amber.withValues(alpha: 0.3),
                             blurRadius: 10,
                             offset: const Offset(0, 5),
                           ),
@@ -339,7 +339,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: isDarkMode 
                           ? Colors.white60 
-                          : AppTheme.lightOnBackground.withOpacity(0.6),
+                          : AppTheme.lightOnBackground.withValues(alpha: 0.6),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -409,7 +409,7 @@ class PremiumAuroraPainter extends CustomPainter {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          colors[i % colors.length].withOpacity(0.1 * (1 - waveProgress)),
+          colors[i % colors.length].withValues(alpha: 0.1 * (1 - waveProgress)),
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
@@ -494,7 +494,7 @@ class SparklePainter extends CustomPainter {
       
       // Draw enhanced sparkle with glow
       final glowPaint = Paint()
-        ..color = paint.color.withOpacity(0.3)
+        ..color = paint.color.withValues(alpha: 0.3)
         ..style = PaintingStyle.fill
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
       

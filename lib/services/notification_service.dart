@@ -148,7 +148,7 @@ class NotificationService {
 
   String? _extractEventId(String payload) {
     // Extract event ID from payload
-    final regex = RegExp(r'event_id[\"\':][\s]*[\"\'](.*?)[\"\']');
+    final regex = RegExp(r'event_id["\':]\s*["\'](.*?)["\'"]');
     final match = regex.firstMatch(payload);
     return match?.group(1);
   }

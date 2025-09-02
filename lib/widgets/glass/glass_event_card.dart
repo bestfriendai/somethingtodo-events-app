@@ -74,16 +74,16 @@ class _GlassEventCardState extends State<GlassEventCard>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.15),
-              Colors.white.withOpacity(0.05),
+              Colors.white.withValues(alpha: 0.15),
+              Colors.white.withValues(alpha: 0.05),
             ],
           ),
           borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.5),
-              Colors.white.withOpacity(0.2),
+              Colors.white.withValues(alpha: 0.5),
+              Colors.white.withValues(alpha: 0.2),
             ],
           ),
           child: ClipRRect(
@@ -111,8 +111,8 @@ class _GlassEventCardState extends State<GlassEventCard>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  Colors.grey.withOpacity(0.3),
-                                  Colors.grey.withOpacity(0.1),
+                                  Colors.grey.withValues(alpha: 0.3),
+                                  Colors.grey.withValues(alpha: 0.1),
                                 ],
                               ),
                             ),
@@ -121,14 +121,14 @@ class _GlassEventCardState extends State<GlassEventCard>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  _getCategoryColor().withOpacity(0.5),
-                                  _getCategoryColor().withOpacity(0.2),
+                                  _getCategoryColor().withValues(alpha: 0.5),
+                                  _getCategoryColor().withValues(alpha: 0.2),
                                 ],
                               ),
                             ),
                             child: Icon(
                               _getCategoryIcon(),
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                               size: 40,
                             ),
                           ),
@@ -140,7 +140,7 @@ class _GlassEventCardState extends State<GlassEventCard>
                               end: Alignment.centerRight,
                               colors: [
                                 Colors.transparent,
-                                Colors.black.withOpacity(0.3),
+                                Colors.black.withValues(alpha: 0.3),
                               ],
                             ),
                           ),
@@ -154,14 +154,14 @@ class _GlassEventCardState extends State<GlassEventCard>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          _getCategoryColor().withOpacity(0.5),
-                          _getCategoryColor().withOpacity(0.2),
+                          _getCategoryColor().withValues(alpha: 0.5),
+                          _getCategoryColor().withValues(alpha: 0.2),
                         ],
                       ),
                     ),
                     child: Icon(
                       _getCategoryIcon(),
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       size: 40,
                     ),
                   ),
@@ -186,7 +186,7 @@ class _GlassEventCardState extends State<GlassEventCard>
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: _getCategoryColor().withOpacity(0.3),
+                                    color: _getCategoryColor().withValues(alpha: 0.3),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -203,7 +203,7 @@ class _GlassEventCardState extends State<GlassEventCard>
                                   IconButton(
                                     icon: Icon(
                                       Icons.favorite_border,
-                                      color: Colors.white.withOpacity(0.7),
+                                      color: Colors.white.withValues(alpha: 0.7),
                                       size: 20,
                                     ),
                                     padding: EdgeInsets.zero,
@@ -232,13 +232,13 @@ class _GlassEventCardState extends State<GlassEventCard>
                             Icon(
                               Icons.calendar_today,
                               size: 14,
-                              color: Colors.white.withOpacity(0.6),
+                              color: Colors.white.withValues(alpha: 0.6),
                             ),
                             const SizedBox(width: 4),
                             Text(
                               DateFormat('MMM d').format(widget.event.startDateTime),
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 12,
                               ),
                             ),
@@ -246,13 +246,13 @@ class _GlassEventCardState extends State<GlassEventCard>
                             Icon(
                               Icons.access_time,
                               size: 14,
-                              color: Colors.white.withOpacity(0.6),
+                              color: Colors.white.withValues(alpha: 0.6),
                             ),
                             const SizedBox(width: 4),
                             Text(
                               DateFormat('h:mm a').format(widget.event.startDateTime),
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 12,
                               ),
                             ),
@@ -288,14 +288,14 @@ class _GlassEventCardState extends State<GlassEventCard>
                             Icon(
                               Icons.location_on,
                               size: 14,
-                              color: Colors.white.withOpacity(0.6),
+                              color: Colors.white.withValues(alpha: 0.6),
                             ),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 widget.event.venue.name,
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
+                                  color: Colors.white.withValues(alpha: 0.8),
                                   fontSize: 12,
                                 ),
                                 maxLines: 1,

@@ -238,7 +238,7 @@ class _SwipeableEventCardState extends State<SwipeableEventCard>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          widget.leftActionColor.withOpacity(0.8),
+                          widget.leftActionColor.withValues(alpha: 0.8),
                           widget.leftActionColor,
                         ],
                       ),
@@ -273,7 +273,7 @@ class _SwipeableEventCardState extends State<SwipeableEventCard>
                       gradient: LinearGradient(
                         colors: [
                           widget.rightActionColor,
-                          widget.rightActionColor.withOpacity(0.8),
+                          widget.rightActionColor.withValues(alpha: 0.8),
                         ],
                       ),
                     ),

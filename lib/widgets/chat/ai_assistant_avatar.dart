@@ -146,8 +146,8 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        _getGlowColor().withOpacity(0.3 * _glowAnimation.value),
-                        _getGlowColor().withOpacity(0.1 * _glowAnimation.value),
+                        _getGlowColor().withValues(alpha: 0.3 * _glowAnimation.value),
+                        _getGlowColor().withValues(alpha: 0.1 * _glowAnimation.value),
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.5, 1.0],
@@ -167,7 +167,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
                     child: CustomPaint(
                       size: Size(widget.size * 1.3, widget.size * 1.3),
                       painter: _OrbitPainter(
-                        color: UnifiedDesignSystem.primaryBrand.withOpacity(0.3),
+                        color: UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.3),
                       ),
                     ),
                   );
@@ -181,7 +181,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
                     child: CustomPaint(
                       size: Size(widget.size * 1.2, widget.size * 1.2),
                       painter: _OrbitPainter(
-                        color: UnifiedDesignSystem.secondaryBrand.withOpacity(0.3),
+                        color: UnifiedDesignSystem.secondaryBrand.withValues(alpha: 0.3),
                         strokeWidth: 1.5,
                       ),
                     ),
@@ -208,7 +208,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: _getGlowColor().withOpacity(0.5),
+                          color: _getGlowColor().withValues(alpha: 0.5),
                           blurRadius: widget.size * 0.3,
                           spreadRadius: widget.size * 0.1,
                         ),
@@ -223,7 +223,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
                             size: Size(widget.size, widget.size),
                             painter: _InnerPatternPainter(
                               state: widget.state,
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                             ),
                           ),
                         ),
@@ -279,7 +279,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
           size: Size(faceSize, faceSize),
           painter: _ExpressionPainter(
             expression: Expression.happy,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
           ),
         );
       case AvatarState.curious:
@@ -287,7 +287,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
           size: Size(faceSize, faceSize),
           painter: _ExpressionPainter(
             expression: Expression.curious,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
           ),
         );
       case AvatarState.excited:
@@ -295,7 +295,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
           size: Size(faceSize, faceSize),
           painter: _ExpressionPainter(
             expression: Expression.excited,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
           ),
         );
       case AvatarState.thinking:
@@ -305,7 +305,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
           size: Size(faceSize, faceSize),
           painter: _ExpressionPainter(
             expression: Expression.neutral,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
           ),
         );
     }
@@ -320,7 +320,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
           width: widget.size * 0.08,
           height: widget.size * 0.08,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             shape: BoxShape.circle,
           ),
         ).animate(
@@ -340,12 +340,12 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
       case AvatarState.success:
         return [
           UnifiedDesignSystem.successColor,
-          UnifiedDesignSystem.successColor.withOpacity(0.7),
+          UnifiedDesignSystem.successColor.withValues(alpha: 0.7),
         ];
       case AvatarState.error:
         return [
           UnifiedDesignSystem.errorColor,
-          UnifiedDesignSystem.errorColor.withOpacity(0.7),
+          UnifiedDesignSystem.errorColor.withValues(alpha: 0.7),
         ];
       case AvatarState.happy:
       case AvatarState.excited:
@@ -356,7 +356,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
       default:
         return [
           UnifiedDesignSystem.primaryBrand,
-          UnifiedDesignSystem.primaryBrand.withOpacity(0.7),
+          UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.7),
         ];
     }
   }
@@ -451,7 +451,7 @@ class _InnerPatternPainter extends CustomPainter {
         canvas.drawCircle(
           center,
           size.width * (i * 0.15),
-          paint..color = color.withOpacity(0.3 / i),
+          paint..color = color.withValues(alpha: 0.3 / i),
         );
       }
     } else {
@@ -461,12 +461,12 @@ class _InnerPatternPainter extends CustomPainter {
         canvas.drawLine(
           Offset(step * i, 0),
           Offset(step * i, size.height),
-          paint..color = color.withOpacity(0.1),
+          paint..color = color.withValues(alpha: 0.1),
         );
         canvas.drawLine(
           Offset(0, step * i),
           Offset(size.width, step * i),
-          paint..color = color.withOpacity(0.1),
+          paint..color = color.withValues(alpha: 0.1),
         );
       }
     }

@@ -214,7 +214,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
                     end: Alignment.bottomCenter,
                     colors: [
                       const Color(0xFF0A0A0B),
-                      const Color(0xFF111111).withOpacity(0.8),
+                      const Color(0xFF111111).withValues(alpha: 0.8),
                       const Color(0xFF0A0A0B),
                     ],
                   ),
@@ -251,7 +251,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
           gradient: const LinearGradient(colors: ModernTheme.warningGradient),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -294,7 +294,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Text(
@@ -352,7 +352,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
         '• View event details and maps\n\n'
         '🚀 Create an account to save your data and access real events!',
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Colors.white.withOpacity(0.8),
+          color: Colors.white.withValues(alpha: 0.8),
           height: 1.5,
         ),
       ),
@@ -361,7 +361,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             'Got it',
-            style: TextStyle(color: Colors.white.withOpacity(0.7)),
+            style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
           ),
         ),
         ElevatedButton(

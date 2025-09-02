@@ -68,19 +68,20 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     
-    return Container(
-      margin: const EdgeInsets.all(20),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: Container(
-            height: 75,
-            decoration: ModernTheme.floatingNavDecoration(isDark: isDark),
-            child: SafeArea(
-              top: false,
+    return SafeArea(
+      top: false,
+      bottom: true,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+            child: Container(
+              height: 65,
+              decoration: ModernTheme.floatingNavDecoration(isDark: isDark),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: List.generate(5, (index) => _buildNavItem(index)),
@@ -117,7 +118,7 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
           return Transform.scale(
             scale: _animations[index].value,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -139,18 +140,18 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
                                 )
                               : null,
                           color: !isSelected 
-                              ? Colors.white.withOpacity(0.05)
+                              ? Colors.white.withValues(alpha: 0.05)
                               : null,
                           border: Border.all(
                             color: isSelected 
-                                ? Colors.white.withOpacity(0.2)
+                                ? Colors.white.withValues(alpha: 0.2)
                                 : Colors.transparent,
                             width: 1,
                           ),
                           boxShadow: isSelected ? [
                             BoxShadow(
                               color: (item.gradient?[0] ?? ModernTheme.primaryColor)
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                               blurRadius: 12,
                               offset: const Offset(0, 4),
                             ),
@@ -169,7 +170,7 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
                             key: ValueKey(isSelected),
                             color: isSelected 
                                 ? Colors.white 
-                                : Colors.white.withOpacity(0.6),
+                                : Colors.white.withValues(alpha: 0.6),
                             size: 22,
                           ),
                         ),
@@ -220,7 +221,7 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFFFF3B30).withOpacity(0.4),
+                                  color: const Color(0xFFFF3B30).withValues(alpha: 0.4),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -257,7 +258,7 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
                         ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 2),
                   // Modern label with better typography
                   AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 300),
@@ -266,7 +267,7 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                       color: isSelected
                           ? Colors.white
-                          : Colors.white.withOpacity(0.6),
+                          : Colors.white.withValues(alpha: 0.6),
                       fontFamily: ModernTheme.primaryFont,
                       letterSpacing: 0.5,
                     ),
@@ -342,7 +343,7 @@ class PulsePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final progress = animation.value;
     final paint = Paint()
-      ..color = color.withOpacity(0.3 * (1 - progress))
+      ..color = color.withValues(alpha: 0.3 * (1 - progress))
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     
@@ -366,7 +367,7 @@ class NavSparklePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color.withOpacity(0.4 * sin(progress * pi))
+      ..color = color.withValues(alpha: 0.4 * sin(progress * pi))
       ..style = PaintingStyle.fill;
     
     final center = Offset(size.width / 2, size.height / 2);

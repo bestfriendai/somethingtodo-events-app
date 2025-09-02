@@ -22,7 +22,7 @@ class LoadingOverlay extends StatelessWidget {
         child,
         if (isLoading)
           Container(
-            color: barrierColor ?? Colors.black.withOpacity(0.5),
+            color: barrierColor ?? Colors.black.withValues(alpha: 0.5),
             child: Center(
               child: _buildDelightfulLoadingWidget(context),
             ),
@@ -56,15 +56,15 @@ class LoadingOverlay extends StatelessWidget {
           padding: const EdgeInsets.all(32),
           margin: const EdgeInsets.symmetric(horizontal: 40),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface.withOpacity(0.95),
+            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: AppTheme.primaryColor.withOpacity(0.3),
+              color: AppTheme.primaryColor.withValues(alpha: 0.3),
               width: 2,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primaryColor.withOpacity(0.2),
+                color: AppTheme.primaryColor.withValues(alpha: 0.2),
                 blurRadius: 30,
                 offset: const Offset(0, 15),
                 spreadRadius: 5,
@@ -85,7 +85,7 @@ class LoadingOverlay extends StatelessWidget {
                     child: CircularProgressIndicator(
                       strokeWidth: 4,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        AppTheme.primaryColor.withOpacity(0.3),
+                        AppTheme.primaryColor.withValues(alpha: 0.3),
                       ),
                     ),
                   ),
@@ -163,7 +163,7 @@ class LoadingOverlay extends StatelessWidget {
           .fadeIn(duration: 400.ms)
           .scale(begin: const Offset(0.8, 0.8), curve: Curves.elasticOut)
           .then()
-          .shimmer(duration: 3.seconds, color: AppTheme.primaryColor.withOpacity(0.1)),
+          .shimmer(duration: 3.seconds, color: AppTheme.primaryColor.withValues(alpha: 0.1)),
       ],
     );
   }
@@ -317,7 +317,7 @@ class _DelightfulLoadingButtonState extends State<DelightfulLoadingButton>
                       ? Theme.of(context).colorScheme.surface
                       : null,
                   elevation: _isPressed ? 2 : 8,
-                  shadowColor: AppTheme.primaryColor.withOpacity(0.3),
+                  shadowColor: AppTheme.primaryColor.withValues(alpha: 0.3),
                 ),
                 child: widget.isLoading
                     ? Row(

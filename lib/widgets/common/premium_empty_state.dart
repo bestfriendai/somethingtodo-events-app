@@ -157,13 +157,13 @@ class _PremiumEmptyStateState extends State<PremiumEmptyState>
                         shape: BoxShape.circle,
                         gradient: LinearGradient(
                           colors: [
-                            colors[index % colors.length].withOpacity(0.8),
-                            colors[(index + 1) % colors.length].withOpacity(0.4),
+                            colors[index % colors.length].withValues(alpha: 0.8),
+                            colors[(index + 1) % colors.length].withValues(alpha: 0.4),
                           ],
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: colors[index % colors.length].withOpacity(0.5),
+                            color: colors[index % colors.length].withValues(alpha: 0.5),
                             blurRadius: 8,
                           ),
                         ],
@@ -193,7 +193,7 @@ class _PremiumEmptyStateState extends State<PremiumEmptyState>
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: colors.first.withOpacity(0.4 + (0.2 * _glowController.value)),
+                        color: colors.first.withValues(alpha: 0.4 + (0.2 * _glowController.value)),
                         blurRadius: 20 + (10 * _glowController.value),
                         spreadRadius: 2,
                       ),
@@ -217,7 +217,7 @@ class _PremiumEmptyStateState extends State<PremiumEmptyState>
                 size: const Size(200, 200),
                 painter: RippleEffectPainter(
                   progress: _glowController.value,
-                  color: colors.first.withOpacity(0.2),
+                  color: colors.first.withValues(alpha: 0.2),
                 ),
               );
             },
@@ -288,7 +288,7 @@ class RippleEffectPainter extends CustomPainter {
       final opacity = 1.0 - rippleProgress;
       
       final paint = Paint()
-        ..color = color.withOpacity(opacity * 0.3)
+        ..color = color.withValues(alpha: opacity * 0.3)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
       
@@ -366,7 +366,7 @@ class _FloatingElementsWidgetState extends State<FloatingElementsWidget>
                     color: widget.colors[index % widget.colors.length],
                     boxShadow: [
                       BoxShadow(
-                        color: widget.colors[index % widget.colors.length].withOpacity(0.5),
+                        color: widget.colors[index % widget.colors.length].withValues(alpha: 0.5),
                         blurRadius: 6,
                       ),
                     ],

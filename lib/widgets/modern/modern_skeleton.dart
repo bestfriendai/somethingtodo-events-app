@@ -47,7 +47,7 @@ class _ModernSkeletonState extends State<ModernSkeleton>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000), // Slower animation for better performance
       vsync: this,
     );
     _animation = Tween<double>(
@@ -55,7 +55,7 @@ class _ModernSkeletonState extends State<ModernSkeleton>
       end: 2.0,
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeInOut,
+      curve: Curves.linear, // Linear for smoother performance
     ));
     _animationController.repeat();
   }
@@ -71,48 +71,67 @@ class _ModernSkeletonState extends State<ModernSkeleton>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return Container(
-      width: widget.width ?? 200.0, // Fixed width instead of infinity
-      height: widget.height ?? 16.0,
-      margin: widget.margin,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        color: isDark
-            ? Colors.white.withOpacity(0.1)
-            : Colors.grey.withOpacity(0.2),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        child: AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) {
-            return Stack(
-              children: [
-                Positioned(
-                  left: _animation.value * (widget.width ?? 200),
-                  child: Container(
-                    width: (widget.width ?? 200) * 0.5,
-                    height: widget.height ?? 16.0,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [
-                          Colors.transparent,
-                          isDark
-                              ? Colors.white.withOpacity(0.15)
-                              : Colors.white.withOpacity(0.8),
-                          Colors.transparent,
-                        ],
+    // Use LayoutBuilder to handle infinite width constraints properly
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate actual width based on constraints
+        final double actualWidth;
+        if (widget.width != null) {
+          actualWidth = widget.width!;
+        } else if (constraints.maxWidth.isFinite) {
+          actualWidth = constraints.maxWidth;
+        } else {
+          actualWidth = 200.0; // Fallback width
+        }
+
+        return RepaintBoundary( // Add RepaintBoundary for performance
+          child: Container(
+            width: actualWidth,
+            height: widget.height ?? 16.0,
+            margin: widget.margin,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.grey.withValues(alpha: 0.2),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              child: AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Positioned(
+                        left: _animation.value * actualWidth,
+                        top: 0,
+                        bottom: 0,
+                        width: actualWidth * 0.5,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.transparent,
+                                isDark
+                                    ? Colors.white.withValues(alpha: 0.15)
+                                    : Colors.white.withValues(alpha: 0.8),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -143,7 +162,7 @@ class ModernEventCardSkeleton extends StatelessWidget {
             : const Color(0xFFF8FAFC),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
             blurRadius: 20,
             offset: Offset(0, isDark ? 10 : 4),
           ),
@@ -151,21 +170,30 @@ class ModernEventCardSkeleton extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: isHorizontal ? _buildHorizontalSkeleton() : _buildVerticalSkeleton(),
+        child: isHorizontal ? _buildHorizontalSkeleton(context) : _buildVerticalSkeleton(),
       ),
     );
   }
 
-  Widget _buildHorizontalSkeleton() {
+  Widget _buildHorizontalSkeleton(BuildContext context) {
     return SizedBox(
       height: 160,
       child: Row(
         children: [
-          // Image skeleton
-          const ModernSkeleton(
+          // Image skeleton - use Container with explicit size
+          Container(
             width: 140,
             height: double.infinity,
-            borderRadius: 0,
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.grey.withValues(alpha: 0.2),
+            ),
+            child: const ModernSkeleton(
+              width: 140,
+              height: 160, // Fixed height for horizontal layout
+              borderRadius: 0,
+            ),
           ),
           // Content skeleton
           Expanded(
@@ -185,9 +213,9 @@ class ModernEventCardSkeleton extends StatelessWidget {
                         borderRadius: 20,
                       ),
                       const SizedBox(height: 12),
-                      // Title skeleton
+                      // Title skeleton - removed double.infinity
                       const ModernSkeleton(
-                        width: double.infinity,
+                        width: null, // Let LayoutBuilder handle it
                         height: 20,
                         borderRadius: 8,
                       ),
@@ -251,9 +279,9 @@ class ModernEventCardSkeleton extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Image skeleton
+        // Image skeleton - removed double.infinity
         const ModernSkeleton(
-          width: double.infinity,
+          width: null, // Let LayoutBuilder handle it
           height: 200,
           borderRadius: 0,
         ),
@@ -264,7 +292,7 @@ class ModernEventCardSkeleton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const ModernSkeleton(
-                width: double.infinity,
+                width: null, // Let LayoutBuilder handle it
                 height: 24,
                 borderRadius: 8,
               ),
@@ -322,7 +350,7 @@ class ModernFeaturedEventSkeleton extends StatelessWidget {
             : const Color(0xFFF8FAFC),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
             blurRadius: 20,
             offset: Offset(0, isDark ? 10 : 4),
           ),
@@ -332,11 +360,13 @@ class ModernFeaturedEventSkeleton extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         child: Stack(
           children: [
-            // Background skeleton
-            const ModernSkeleton(
-              width: double.infinity,
-              height: double.infinity,
-              borderRadius: 0,
+            // Background skeleton - use Positioned.fill for Stack
+            Positioned.fill(
+              child: const ModernSkeleton(
+                width: null, // Let LayoutBuilder handle it
+                height: null, // Will use parent height
+                borderRadius: 0,
+              ),
             ),
             // Content at bottom
             Positioned(
@@ -353,7 +383,7 @@ class ModernFeaturedEventSkeleton extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   const ModernSkeleton(
-                    width: double.infinity,
+                    width: null, // Let LayoutBuilder handle it
                     height: 28,
                     borderRadius: 8,
                   ),
@@ -402,9 +432,7 @@ class PlayfulShimmerList extends StatelessWidget {
             loadingMessage: index == 0 ? '🔥 Hot event coming up!' : 
                            index == 1 ? '🎪 Something fun this way comes!' :
                            index == 2 ? '🚀 Preparing awesome stuff!' : null,
-          ).animate(delay: (index * 200).ms)
-            .fadeIn(duration: 600.ms)
-            .slideY(begin: 0.3),
+          ), // Removed animations for better performance
         ),
       ],
     );
@@ -423,10 +451,10 @@ class PlayfulLoadingMessage extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.8),
+        color: Colors.black.withValues(alpha: 0.8),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -440,9 +468,7 @@ class PlayfulLoadingMessage extends StatelessWidget {
               strokeWidth: 2,
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-          ).animate()
-            .rotate(duration: 2.seconds)
-            .animate(onComplete: (controller) => controller.repeat()),
+          ), // Removed animate() - CircularProgressIndicator already animates
           const SizedBox(width: 12),
           Flexible(
             child: Text(
@@ -452,15 +478,11 @@ class PlayfulLoadingMessage extends StatelessWidget {
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
-            ).animate(delay: 500.ms)
-              .fadeIn(duration: 600.ms)
-              .slideX(begin: 0.3),
+            ),
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(duration: 600.ms, curve: Curves.elasticOut)
-      .scale(begin: const Offset(0.8, 0.8));
+    );
   }
 }
 

@@ -155,7 +155,7 @@ class _DemoMapState extends State<DemoMap> with TickerProviderStateMixin {
                   width: isSelected ? 16 : 12,
                   height: isSelected ? 8 : 6,
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(50),
                   ),
                 ),
@@ -172,7 +172,7 @@ class _DemoMapState extends State<DemoMap> with TickerProviderStateMixin {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       blurRadius: isSelected ? 8 : 4,
                       offset: const Offset(0, 2),
                     ),
@@ -194,7 +194,7 @@ class _DemoMapState extends State<DemoMap> with TickerProviderStateMixin {
                   builder: (context, child) {
                     return Container(
                       decoration: BoxDecoration(
-                        color: color.withOpacity(0.3 * (1 - _pulseController.value)),
+                        color: color.withValues(alpha: 0.3 * (1 - _pulseController.value)),
                         borderRadius: BorderRadius.circular(
                           20 + (20 * _pulseController.value)
                         ),
@@ -236,7 +236,7 @@ class _DemoMapState extends State<DemoMap> with TickerProviderStateMixin {
               border: Border.all(color: Colors.white, width: 3),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryColor.withOpacity(0.3 * (1 - _pulseController.value)),
+                  color: AppTheme.primaryColor.withValues(alpha: 0.3 * (1 - _pulseController.value)),
                   blurRadius: 20 * _pulseController.value,
                   spreadRadius: 10 * _pulseController.value,
                 ),
@@ -395,7 +395,7 @@ class DemoMapPainter extends CustomPainter {
     
     // Draw streets (grid pattern)
     final streetPaint = Paint()
-      ..color = Colors.grey.withOpacity(0.3)
+      ..color = Colors.grey.withValues(alpha: 0.3)
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
     
@@ -419,7 +419,7 @@ class DemoMapPainter extends CustomPainter {
     
     // Draw major landmarks as small squares
     final landmarkPaint = Paint()
-      ..color = Colors.grey.withOpacity(0.6)
+      ..color = Colors.grey.withValues(alpha: 0.6)
       ..style = PaintingStyle.fill;
     
     // Financial District (skyscrapers)
@@ -467,11 +467,11 @@ class DemoMapPainter extends CustomPainter {
     const radius = 20.0;
     
     final compassPaint = Paint()
-      ..color = Colors.black.withOpacity(0.7)
+      ..color = Colors.black.withValues(alpha: 0.7)
       ..style = PaintingStyle.fill;
     
-    canvas.drawCircle(center, radius, Paint()..color = Colors.white.withOpacity(0.9));
-    canvas.drawCircle(center, radius, Paint()..color = Colors.black.withOpacity(0.1)..style = PaintingStyle.stroke);
+    canvas.drawCircle(center, radius, Paint()..color = Colors.white.withValues(alpha: 0.9));
+    canvas.drawCircle(center, radius, Paint()..color = Colors.black.withValues(alpha: 0.1)..style = PaintingStyle.stroke);
     
     // North arrow
     final northPath = Path();
@@ -503,7 +503,7 @@ class DemoMapPainter extends CustomPainter {
     final endPoint = Offset(20 + scaleLength, size.height - 40);
     
     final scalePaint = Paint()
-      ..color = Colors.black.withOpacity(0.7)
+      ..color = Colors.black.withValues(alpha: 0.7)
       ..strokeWidth = 2.0;
     
     // Background
@@ -512,7 +512,7 @@ class DemoMapPainter extends CustomPainter {
         Rect.fromLTWH(15, size.height - 50, scaleLength + 20, 20),
         const Radius.circular(4),
       ),
-      Paint()..color = Colors.white.withOpacity(0.9),
+      Paint()..color = Colors.white.withValues(alpha: 0.9),
     );
     
     // Scale line

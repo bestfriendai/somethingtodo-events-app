@@ -78,7 +78,7 @@ class ShakeDetector {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(messages[Random().nextInt(messages.length)]),
-          backgroundColor: Colors.blue.withOpacity(0.9),
+          backgroundColor: Colors.blue.withValues(alpha: 0.9),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           duration: const Duration(seconds: 2),

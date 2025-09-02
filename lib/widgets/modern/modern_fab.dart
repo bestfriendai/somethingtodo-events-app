@@ -145,13 +145,13 @@ class _ModernFloatingActionButtonState extends State<ModernFloatingActionButton>
               borderRadius: BorderRadius.circular(widget.isExpanded ? 28 : widget.size / 2),
               boxShadow: [
                 BoxShadow(
-                  color: gradient.first.withOpacity(0.4),
+                  color: gradient.first.withValues(alpha: 0.4),
                   blurRadius: 20 * _pulseAnimation.value,
                   spreadRadius: 2 * _pulseAnimation.value,
                   offset: const Offset(0, 8),
                 ),
                 BoxShadow(
-                  color: gradient.last.withOpacity(0.2),
+                  color: gradient.last.withValues(alpha: 0.2),
                   blurRadius: 30 * _pulseAnimation.value,
                   spreadRadius: 5 * _pulseAnimation.value,
                   offset: const Offset(0, 12),
@@ -176,7 +176,7 @@ class _ModernFloatingActionButtonState extends State<ModernFloatingActionButton>
                   ),
                   borderRadius: BorderRadius.circular(widget.isExpanded ? 28 : widget.size / 2),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -315,7 +315,7 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
               onTap: _toggle,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                color: Colors.black.withOpacity(_isOpen ? 0.3 : 0.0),
+                color: Colors.black.withValues(alpha: _isOpen ? 0.3 : 0.0),
               ),
             ),
           ),
@@ -352,7 +352,7 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
+                                  color: Colors.black.withValues(alpha: 0.1),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -382,7 +382,7 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
                               boxShadow: [
                                 BoxShadow(
                                   color: (action.gradient ?? ModernTheme.oceanGradient)
-                                      .first.withOpacity(0.4),
+                                      .first.withValues(alpha: 0.4),
                                   blurRadius: 15,
                                   offset: const Offset(0, 6),
                                 ),
@@ -583,7 +583,7 @@ class _DelightfulFABState extends State<DelightfulFAB>
                       borderRadius: BorderRadius.circular(28),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.purple.withOpacity(0.3),
+                          color: Colors.purple.withValues(alpha: 0.3),
                           blurRadius: _isPressed ? 30 : 20,
                           spreadRadius: _isPressed ? 8 : 5,
                           offset: const Offset(0, 10),

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
+import '../services/logging_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -26,12 +27,12 @@ class AuthProvider extends ChangeNotifier {
 
   // Demo Mode Methods
   Future<bool> signInAsGuest() async {
-    print('AuthProvider.signInAsGuest() called');
+    LoggingService.debug('signInAsGuest() called', tag: 'AuthProvider');
     _setLoading(true);
     _clearError();
 
     try {
-      print('Creating demo user...');
+      LoggingService.debug('Creating demo user...', tag: 'AuthProvider');
       // Create a demo user
       _currentUser = AppUser(
         id: 'demo_user_${DateTime.now().millisecondsSinceEpoch}',
@@ -62,17 +63,17 @@ class AuthProvider extends ChangeNotifier {
         ),
       );
       
-      print('Demo user created: ${_currentUser?.id}');
+      LoggingService.info('Demo user created: ${_currentUser?.id}', tag: 'AuthProvider');
       _isDemoMode = true; // Enable demo mode for guest authentication
       _firebaseUser = null; // No Firebase user in guest mode
       
-      print('Notifying listeners...');
+      LoggingService.debug('Notifying listeners...', tag: 'AuthProvider');
       notifyListeners();
       
-      print('SignInAsGuest successful, returning true');
+      LoggingService.info('SignInAsGuest successful', tag: 'AuthProvider');
       return true;
     } catch (e) {
-      print('Error in signInAsGuest: $e');
+      LoggingService.error('Error in signInAsGuest', tag: 'AuthProvider', error: e);
       _setError('Failed to sign in as guest: $e');
       return false;
     } finally {

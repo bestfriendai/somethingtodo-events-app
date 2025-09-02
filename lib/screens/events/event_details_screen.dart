@@ -382,7 +382,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+              colors: [Colors.transparent, Colors.black.withValues(alpha: 0.3)],
             ),
           ),
         ),
@@ -403,7 +403,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                   decoration: BoxDecoration(
                     color: _currentImageIndex == index
                         ? Colors.white
-                        : Colors.white.withOpacity(0.5),
+                        : Colors.white.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(3),
                   ),
                 );
@@ -425,7 +425,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withOpacity(0.1),
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -522,7 +522,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withOpacity(0.1),
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: AppTheme.primaryColor, size: 20),

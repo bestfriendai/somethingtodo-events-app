@@ -106,7 +106,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Container(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
             ),
           ),
 
@@ -137,7 +137,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF9333EA).withOpacity(0.5),
+                              color: const Color(0xFF9333EA).withValues(alpha: 0.5),
                               blurRadius: 30,
                               spreadRadius: 10,
                             ),
@@ -187,7 +187,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                 Text(
                   'Discover Amazing Events',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         letterSpacing: 0.5,
                       ),
                 )
@@ -209,7 +209,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                     height: 50,
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: const CircularProgressIndicator(
@@ -251,7 +251,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
               'Made with ❤️ in Flutter',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
             )
                 .animate()
@@ -283,10 +283,10 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
             height: size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withOpacity(opacity * 0.6),
+              color: Colors.white.withValues(alpha: opacity * 0.6),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white.withOpacity(opacity * 0.3),
+                  color: Colors.white.withValues(alpha: opacity * 0.3),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),
