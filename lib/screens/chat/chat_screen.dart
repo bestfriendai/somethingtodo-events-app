@@ -81,29 +81,35 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   Future<void> _initializeChat() async {
-    final chatProvider = context.read<ChatProvider>();
-    final authProvider = context.read<AuthProvider>();
-    
-    if (authProvider.currentUser == null) return;
-    
-    if (widget.sessionId != null) {
-      _currentSession = await chatProvider.getSession(widget.sessionId!);
-    } else {
-      // Create or get the current active session
-      _currentSession = await chatProvider.createNewSession(
-        userId: authProvider.currentUser!.id,
-        type: ChatType.eventDiscovery,
-        title: 'New Chat',
-      );
+    try {
+      final chatProvider = context.read<ChatProvider>();
+      final authProvider = context.read<AuthProvider>();
+      
+      if (authProvider.currentUser == null) return;
+      
+      if (widget.sessionId != null) {
+        _currentSession = await chatProvider.getSession(widget.sessionId!);
+      } else {
+        // Create or get the current active session
+        _currentSession = await chatProvider.createNewSession(
+          userId: authProvider.currentUser!.id,
+          type: ChatType.eventDiscovery,
+          title: 'New Chat',
+        );
+      }
+      
+      if (_currentSession != null && _currentSession!.messages.isEmpty) {
+        // Send welcome message
+        await _sendWelcomeMessage();
+      }
+      
+      setState(() {});
+      _scrollToBottom();
+    } catch (e) {
+      print('Error initializing chat: $e');
+      // Continue without chat session - app should still work
+      setState(() {});
     }
-    
-    if (_currentSession != null && _currentSession!.messages.isEmpty) {
-      // Send welcome message
-      await _sendWelcomeMessage();
-    }
-    
-    setState(() {});
-    _scrollToBottom();
   }
 
   Future<void> _sendWelcomeMessage() async {

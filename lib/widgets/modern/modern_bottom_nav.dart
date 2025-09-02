@@ -118,7 +118,7 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
           return Transform.scale(
             scale: _animations[index].value,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -129,7 +129,7 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeOutCubic,
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
                           gradient: isSelected
@@ -209,7 +209,7 @@ class _ModernBottomNavigationState extends State<ModernBottomNavigation>
                           top: -4,
                           right: -4,
                           child: Container(
-                            padding: const EdgeInsets.all(6),
+                            padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
                                 colors: [Color(0xFFFF3B30), Color(0xFFFF6B35)],

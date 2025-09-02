@@ -159,16 +159,18 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
         ),
         // Aurora effect overlay
         Positioned.fill(
-          child: AnimatedBuilder(
-            animation: _sparkleController,
-            builder: (context, child) {
-              return CustomPaint(
-                painter: AuroraRefreshPainter(
-                  progress: _sparkleController.value,
-                  colors: ModernTheme.auroraGradient,
-                ),
-              );
-            },
+          child: IgnorePointer(
+            child: AnimatedBuilder(
+              animation: _sparkleController,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: AuroraRefreshPainter(
+                    progress: _sparkleController.value,
+                    colors: ModernTheme.auroraGradient,
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],
