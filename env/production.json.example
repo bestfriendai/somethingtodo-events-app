@@ -1,0 +1,19 @@
+{
+  "comment": "Production environment configuration",
+  "comment2": "Copy to production.json and fill with actual values",
+  "comment3": "NEVER commit production.json to version control",
+  
+  "ENVIRONMENT": "production",
+  "RAPIDAPI_KEY": "your_production_rapidapi_key",
+  "GOOGLE_MAPS_API_KEY": "your_production_google_maps_key",
+  "STRIPE_PUBLISHABLE_KEY": "your_production_stripe_key",
+  "OPENAI_API_KEY": "your_production_openai_key",
+  
+  "API_TIMEOUT_SECONDS": "30",
+  "MAX_RETRY_ATTEMPTS": "3",
+  "RATE_LIMIT_PER_MINUTE": "30",
+  
+  "ENABLE_ANALYTICS": "true",
+  "ENABLE_CRASH_REPORTING": "true",
+  "ENABLE_PERFORMANCE_MONITORING": "true"
+}

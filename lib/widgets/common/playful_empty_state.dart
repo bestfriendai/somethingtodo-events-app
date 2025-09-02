@@ -14,7 +14,7 @@ class PlayfulEmptyState extends StatefulWidget {
   final String? actionText;
   final List<String>? funFacts;
   final EmptyStateType type;
-  
+
   const PlayfulEmptyState({
     super.key,
     required this.title,
@@ -26,7 +26,7 @@ class PlayfulEmptyState extends StatefulWidget {
     this.funFacts,
     this.type = EmptyStateType.general,
   });
-  
+
   @override
   State<PlayfulEmptyState> createState() => _PlayfulEmptyStateState();
 }
@@ -40,65 +40,57 @@ enum EmptyStateType {
   offline,
 }
 
-class _PlayfulEmptyStateState extends State<PlayfulEmptyState> 
+class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
     with TickerProviderStateMixin {
   late AnimationController _floatingController;
   late AnimationController _wiggleController;
   late Animation<double> _floatingAnimation;
   late Animation<double> _wiggleAnimation;
-  
+
   int _tapCount = 0;
   String _currentFunFact = '';
   final Random _random = Random();
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _floatingController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     );
-    
+
     _wiggleController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    
-    _floatingAnimation = Tween<double>(
-      begin: -10,
-      end: 10,
-    ).animate(CurvedAnimation(
-      parent: _floatingController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _wiggleAnimation = Tween<double>(
-      begin: -0.05,
-      end: 0.05,
-    ).animate(CurvedAnimation(
-      parent: _wiggleController,
-      curve: Curves.elasticInOut,
-    ));
-    
+
+    _floatingAnimation = Tween<double>(begin: -10, end: 10).animate(
+      CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut),
+    );
+
+    _wiggleAnimation = Tween<double>(begin: -0.05, end: 0.05).animate(
+      CurvedAnimation(parent: _wiggleController, curve: Curves.elasticInOut),
+    );
+
     _floatingController.repeat(reverse: true);
     _selectRandomFunFact();
   }
-  
+
   @override
   void dispose() {
     _floatingController.dispose();
     _wiggleController.dispose();
     super.dispose();
   }
-  
+
   void _selectRandomFunFact() {
     final facts = widget.funFacts ?? _getDefaultFunFacts();
     setState(() {
       _currentFunFact = facts[_random.nextInt(facts.length)];
     });
   }
-  
+
   List<String> _getDefaultFunFacts() {
     switch (widget.type) {
       case EmptyStateType.favorites:
@@ -151,16 +143,16 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
         ];
     }
   }
-  
+
   void _handleTap() {
     _tapCount++;
     PlatformInteractions.lightImpact();
-    
+
     // Wiggle animation
     _wiggleController.forward().then((_) {
       _wiggleController.reset();
     });
-    
+
     // Easter egg for persistent tappers
     if (_tapCount >= 7) {
       DelightService.instance.triggerEasterEgg(context, 'persistent_tapper');
@@ -169,10 +161,10 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
       // Change fun fact
       _selectRandomFunFact();
     }
-    
+
     widget.onTap?.call();
   }
-  
+
   IconData _getDefaultIcon() {
     switch (widget.type) {
       case EmptyStateType.favorites:
@@ -189,7 +181,7 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
         return Icons.lightbulb_outline_rounded;
     }
   }
-  
+
   Color _getAccentColor() {
     switch (widget.type) {
       case EmptyStateType.favorites:
@@ -206,12 +198,12 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
         return Colors.purple;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final accentColor = _getAccentColor();
-    
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -221,169 +213,183 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
           children: [
             // Floating icon or lottie animation
             GestureDetector(
-              onTap: _handleTap,
-              child: AnimatedBuilder(
-                animation: Listenable.merge([_floatingAnimation, _wiggleAnimation]),
-                builder: (context, child) {
-                  return Transform.translate(
-                    offset: Offset(0, _floatingAnimation.value),
-                    child: Transform.rotate(
-                      angle: _wiggleAnimation.value,
-                      child: Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: accentColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(60),
-                          border: Border.all(
-                            color: accentColor.withValues(alpha: 0.3),
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: accentColor.withValues(alpha: 0.2),
-                              blurRadius: 20,
-                              spreadRadius: 5,
-                            ),
-                          ],
-                        ),
-                        child: widget.lottieAsset != null
-                            ? Lottie.asset(
-                                widget.lottieAsset!,
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.contain,
-                              )
-                            : Icon(
-                                widget.icon ?? _getDefaultIcon(),
-                                size: 60,
-                                color: accentColor,
+                  onTap: _handleTap,
+                  child: AnimatedBuilder(
+                    animation: Listenable.merge([
+                      _floatingAnimation,
+                      _wiggleAnimation,
+                    ]),
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(0, _floatingAnimation.value),
+                        child: Transform.rotate(
+                          angle: _wiggleAnimation.value,
+                          child: Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: accentColor.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(60),
+                              border: Border.all(
+                                color: accentColor.withValues(alpha: 0.3),
+                                width: 2,
                               ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ).animate(delay: 500.ms)
-              .fadeIn(duration: 800.ms)
-              .scale(begin: const Offset(0.5, 0.5), curve: Curves.elasticOut),
-            
+                              boxShadow: [
+                                BoxShadow(
+                                  color: accentColor.withValues(alpha: 0.2),
+                                  blurRadius: 20,
+                                  spreadRadius: 5,
+                                ),
+                              ],
+                            ),
+                            child: widget.lottieAsset != null
+                                ? Lottie.asset(
+                                    widget.lottieAsset!,
+                                    width: 80,
+                                    height: 80,
+                                    fit: BoxFit.contain,
+                                  )
+                                : Icon(
+                                    widget.icon ?? _getDefaultIcon(),
+                                    size: 60,
+                                    color: accentColor,
+                                  ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )
+                .animate(delay: 500.ms)
+                .fadeIn(duration: 800.ms)
+                .scale(begin: const Offset(0.5, 0.5), curve: Curves.elasticOut),
+
             const SizedBox(height: 32),
-            
+
             // Title
             Text(
-              widget.title,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.onSurface,
-              ),
-              textAlign: TextAlign.center,
-            ).animate(delay: 700.ms)
-              .fadeIn(duration: 600.ms)
-              .slideY(begin: 0.3),
-            
-            if (widget.subtitle != null) ..[
-              const SizedBox(height: 16),
-              Text(
-                widget.subtitle!,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-                textAlign: TextAlign.center,
-              ).animate(delay: 900.ms)
+                  widget.title,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
+                )
+                .animate(delay: 700.ms)
                 .fadeIn(duration: 600.ms)
                 .slideY(begin: 0.3),
+
+            if (widget.subtitle != null) ...[
+              const SizedBox(height: 16),
+              Text(
+                    widget.subtitle!,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                    textAlign: TextAlign.center,
+                  )
+                  .animate(delay: 900.ms)
+                  .fadeIn(duration: 600.ms)
+                  .slideY(begin: 0.3),
             ],
-            
+
             const SizedBox(height: 24),
-            
+
             // Fun fact bubble
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              decoration: BoxDecoration(
-                color: accentColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: accentColor.withValues(alpha: 0.2),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.lightbulb_outline,
-                    color: accentColor,
-                    size: 20,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
                   ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: Text(
-                      _currentFunFact,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-                        fontStyle: FontStyle.italic,
-                      ),
-                      textAlign: TextAlign.center,
+                  decoration: BoxDecoration(
+                    color: accentColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: accentColor.withValues(alpha: 0.2),
+                      width: 1,
                     ),
                   ),
-                ],
-              ),
-            ).animate(delay: 1100.ms)
-              .fadeIn(duration: 600.ms)
-              .scale(begin: const Offset(0.8, 0.8)),
-            
-            if (widget.actionText != null && widget.onTap != null) ..[
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.lightbulb_outline,
+                        color: accentColor,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Flexible(
+                        child: Text(
+                          _currentFunFact,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurface.withValues(
+                              alpha: 0.8,
+                            ),
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                .animate(delay: 1100.ms)
+                .fadeIn(duration: 600.ms)
+                .scale(begin: const Offset(0.8, 0.8)),
+
+            if (widget.actionText != null && widget.onTap != null) ...[
               const SizedBox(height: 32),
               ElevatedButton(
-                onPressed: _handleTap,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: accentColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  elevation: 8,
-                  shadowColor: accentColor.withValues(alpha: 0.3),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.rocket_launch_rounded,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      widget.actionText!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                    onPressed: _handleTap,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: accentColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 16,
                       ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      elevation: 8,
+                      shadowColor: accentColor.withValues(alpha: 0.3),
                     ),
-                  ],
-                ),
-              ).animate(delay: 1300.ms)
-                .fadeIn(duration: 600.ms)
-                .slideY(begin: 0.3)
-                .shimmer(delay: 2.seconds, duration: 2.seconds),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.rocket_launch_rounded, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          widget.actionText!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                  .animate(delay: 1300.ms)
+                  .fadeIn(duration: 600.ms)
+                  .slideY(begin: 0.3)
+                  .shimmer(delay: 2.seconds, duration: 2.seconds),
             ],
-            
+
             // Secret instruction
             const SizedBox(height: 40),
             Text(
-              'Psst... tap the icon above for surprises! 😉',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-                fontSize: 12,
-              ),
-              textAlign: TextAlign.center,
-            ).animate(delay: 2.seconds)
-              .fadeIn(duration: 1.seconds)
-              .then(delay: 1.seconds)
-              .fadeOut(duration: 1.seconds)
-              .animate(onComplete: (controller) => controller.repeat()),
+                  'Psst... tap the icon above for surprises! 😉',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                )
+                .animate(delay: 2.seconds)
+                .fadeIn(duration: 1.seconds)
+                .then(delay: 1.seconds)
+                .fadeOut(duration: 1.seconds)
+                .animate(onComplete: (controller) => controller.repeat()),
           ],
         ),
       ),
@@ -394,15 +400,16 @@ class _PlayfulEmptyStateState extends State<PlayfulEmptyState>
 // Specialized empty states for different screens
 class FavoritesEmptyState extends StatelessWidget {
   final VoidCallback? onExplore;
-  
+
   const FavoritesEmptyState({super.key, this.onExplore});
-  
+
   @override
   Widget build(BuildContext context) {
     return PlayfulEmptyState(
       type: EmptyStateType.favorites,
       title: 'No Favorites Yet!',
-      subtitle: 'Your heart is an empty canvas waiting for the perfect events to fill it with joy',
+      subtitle:
+          'Your heart is an empty canvas waiting for the perfect events to fill it with joy',
       onTap: onExplore,
       actionText: 'Find Amazing Events',
       funFacts: [
@@ -418,15 +425,15 @@ class FavoritesEmptyState extends StatelessWidget {
 class EventsEmptyState extends StatelessWidget {
   final VoidCallback? onRefresh;
   final String? locationHint;
-  
+
   const EventsEmptyState({super.key, this.onRefresh, this.locationHint});
-  
+
   @override
   Widget build(BuildContext context) {
     return PlayfulEmptyState(
       type: EmptyStateType.events,
       title: 'No Events Found',
-      subtitle: locationHint != null 
+      subtitle: locationHint != null
           ? 'No events in $locationHint right now, but great things are coming!'
           : 'The event calendar is taking a quick break',
       onTap: onRefresh,
@@ -438,19 +445,20 @@ class EventsEmptyState extends StatelessWidget {
 class SearchEmptyState extends StatelessWidget {
   final String searchTerm;
   final VoidCallback? onTryDifferent;
-  
+
   const SearchEmptyState({
-    super.key, 
+    super.key,
     required this.searchTerm,
     this.onTryDifferent,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return PlayfulEmptyState(
       type: EmptyStateType.search,
       title: 'No Results Found',
-      subtitle: 'Could not find any events for "$searchTerm" but the search continues!',
+      subtitle:
+          'Could not find any events for "$searchTerm" but the search continues!',
       onTap: onTryDifferent,
       actionText: 'Try Different Search',
     );
@@ -459,15 +467,16 @@ class SearchEmptyState extends StatelessWidget {
 
 class OfflineEmptyState extends StatelessWidget {
   final VoidCallback? onRetry;
-  
+
   const OfflineEmptyState({super.key, this.onRetry});
-  
+
   @override
   Widget build(BuildContext context) {
     return PlayfulEmptyState(
       type: EmptyStateType.offline,
       title: 'You are Offline!',
-      subtitle: 'No internet? No problem! Perfect time to plan that outdoor adventure you have been thinking about',
+      subtitle:
+          'No internet? No problem! Perfect time to plan that outdoor adventure you have been thinking about',
       onTap: onRetry,
       actionText: 'Try Again',
     );

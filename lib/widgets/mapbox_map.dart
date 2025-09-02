@@ -25,7 +25,7 @@ class MapboxMapWidget extends StatefulWidget {
 class _MapboxMapWidgetState extends State<MapboxMapWidget> {
   MapboxMap? mapboxMap;
   Event? selectedEvent;
-  
+
   @override
   void initState() {
     super.initState();
@@ -35,26 +35,28 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Stack(
       children: [
         MapWidget(
           onMapCreated: _onMapCreated,
-          styleUri: isDarkMode ? MapboxConfig.darkStyle : MapboxConfig.lightStyle,
+          styleUri: isDarkMode
+              ? MapboxConfig.darkStyle
+              : MapboxConfig.lightStyle,
           cameraOptions: CameraOptions(
             center: Point(
               coordinates: Position(
                 widget.currentLongitude ?? MapboxConfig.defaultLongitude,
                 widget.currentLatitude ?? MapboxConfig.defaultLatitude,
               ),
-            ),
+            ).toJson(),
             zoom: MapboxConfig.defaultZoom,
           ),
           onTapListener: (coordinate) {
             _onMapTapped();
           },
         ),
-        
+
         // Selected event info card
         if (selectedEvent != null)
           Positioned(
@@ -63,22 +65,16 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
             right: 20,
             child: _buildEventCard(selectedEvent!),
           ),
-          
+
         // Map controls
         Positioned(
           right: 20,
           top: 20,
           child: Column(
             children: [
-              _buildMapControl(
-                icon: Icons.add,
-                onTap: () => _zoomIn(),
-              ),
+              _buildMapControl(icon: Icons.add, onTap: () => _zoomIn()),
               const SizedBox(height: 8),
-              _buildMapControl(
-                icon: Icons.remove,
-                onTap: () => _zoomOut(),
-              ),
+              _buildMapControl(icon: Icons.remove, onTap: () => _zoomOut()),
               const SizedBox(height: 8),
               _buildMapControl(
                 icon: Icons.my_location,
@@ -101,50 +97,51 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
 
   Future<void> _addEventMarkers() async {
     if (mapboxMap == null) return;
-    
+
     for (final event in widget.events) {
       final point = Point(
-        coordinates: Position(
-          event.venue.longitude,
-          event.venue.latitude,
-        ),
+        coordinates: Position(event.venue.longitude, event.venue.latitude),
       );
-      
+
       // Create annotation for each event
       final annotation = PointAnnotationOptions(
-        geometry: point,
+        geometry: point.toJson(),
         iconImage: 'event-marker',
         iconSize: 1.5,
         textField: event.title,
         textSize: 12.0,
         textOffset: [0, -2],
       );
-      
-      await mapboxMap!.annotations.createPointAnnotationManager().then((manager) async {
+
+      await mapboxMap!.annotations.createPointAnnotationManager().then((
+        manager,
+      ) async {
         await manager.create(annotation);
-        
+
         // Tap handling will be implemented separately
       });
     }
   }
 
   Future<void> _addCurrentLocationMarker() async {
-    if (mapboxMap == null || widget.currentLatitude == null || widget.currentLongitude == null) return;
-    
+    if (mapboxMap == null ||
+        widget.currentLatitude == null ||
+        widget.currentLongitude == null)
+      return;
+
     final point = Point(
-      coordinates: Position(
-        widget.currentLongitude!,
-        widget.currentLatitude!,
-      ),
+      coordinates: Position(widget.currentLongitude!, widget.currentLatitude!),
     );
-    
+
     final annotation = PointAnnotationOptions(
-      geometry: point,
+      geometry: point.toJson(),
       iconImage: 'current-location',
       iconSize: 1.0,
     );
-    
-    await mapboxMap!.annotations.createPointAnnotationManager().then((manager) async {
+
+    await mapboxMap!.annotations.createPointAnnotationManager().then((
+      manager,
+    ) async {
       await manager.create(annotation);
     });
   }
@@ -178,7 +175,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
               widget.currentLongitude!,
               widget.currentLatitude!,
             ),
-          ),
+          ).toJson(),
           zoom: 14.0,
         ),
         MapAnimationOptions(duration: 1000),
@@ -212,9 +209,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
   Widget _buildEventCard(Event event) {
     return Card(
       elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () => widget.onEventSelected?.call(event),
         borderRadius: BorderRadius.circular(16),
@@ -228,7 +223,9 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: _getCategoryColor(event.category).withValues(alpha: 0.1),
+                  color: _getCategoryColor(
+                    event.category,
+                  ).withValues(alpha: 0.1),
                 ),
                 child: Center(
                   child: Icon(
@@ -239,7 +236,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Event details
               Expanded(
                 child: Column(
@@ -258,26 +255,27 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
                     const SizedBox(height: 4),
                     Text(
                       event.venue.name,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      event.pricing.isFree ? 'FREE' : '\$${event.pricing.price.toStringAsFixed(0)}+',
+                      event.pricing.isFree
+                          ? 'FREE'
+                          : '\$${event.pricing.price.toStringAsFixed(0)}+',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: event.pricing.isFree ? Colors.green : AppTheme.primaryColor,
+                        color: event.pricing.isFree
+                            ? Colors.green
+                            : AppTheme.primaryColor,
                       ),
                     ),
                   ],
                 ),
               ),
-              
+
               // Navigate button
               IconButton(
                 icon: const Icon(Icons.directions),

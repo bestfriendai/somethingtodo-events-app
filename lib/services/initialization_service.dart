@@ -14,89 +14,91 @@ import 'analytics_service.dart';
 
 class InitializationService {
   static bool _isInitialized = false;
-  
+
   static Future<void> initializeCoreServices() async {
     if (_isInitialized) return;
-    
+
     try {
       // Initialize Firebase
       await _initializeFirebase();
-      
+
       // Initialize local storage
       await _initializeLocalStorage();
-      
+
       // Initialize services
       await _initializeServices();
-      
+
       // Load remote config
       await _loadRemoteConfig();
-      
+
       _isInitialized = true;
     } catch (e) {
       print('Initialization error: $e');
       throw InitializationException('Failed to initialize app: $e');
     }
   }
-  
+
   static Future<void> _initializeFirebase() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    
+
     // Initialize Crashlytics
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-    
+
     // Initialize Performance Monitoring
     FirebasePerformance performance = FirebasePerformance.instance;
     await performance.setPerformanceCollectionEnabled(true);
-    
+
     // Initialize Analytics
     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
     await analytics.setAnalyticsCollectionEnabled(true);
   }
-  
+
   static Future<void> _initializeLocalStorage() async {
     // Initialize Hive
     await Hive.initFlutter();
-    
+
     // Open boxes
     await Hive.openBox('settings');
     await Hive.openBox('cache');
     await Hive.openBox('user_data');
-    
+
     // Initialize SharedPreferences
     await SharedPreferences.getInstance();
   }
-  
+
   static Future<void> _initializeServices() async {
     // Initialize notification service
     await NotificationService.instance.initialize();
-    
+
     // Initialize location service
-    await LocationService.instance.initialize();
-    
+    // LocationService doesn't have an initialize method, it's ready to use
+
     // Initialize cache service
     await CacheService.instance.initialize();
-    
+
     // Initialize analytics service
     await AnalyticsService.instance.initialize();
   }
-  
+
   static Future<void> _loadRemoteConfig() async {
     final remoteConfig = FirebaseRemoteConfig.instance;
-    
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: const Duration(minutes: 1),
-      minimumFetchInterval: const Duration(hours: 1),
-    ));
-    
+
+    await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(minutes: 1),
+        minimumFetchInterval: const Duration(hours: 1),
+      ),
+    );
+
     await remoteConfig.setDefaults({
       'enable_new_features': false,
       'maintenance_mode': false,
       'min_app_version': '1.0.0',
       'api_base_url': 'https://api.somethingtodo.app',
     });
-    
+
     try {
       await remoteConfig.fetchAndActivate();
     } catch (e) {
@@ -108,7 +110,7 @@ class InitializationService {
 class InitializationException implements Exception {
   final String message;
   InitializationException(this.message);
-  
+
   @override
   String toString() => message;
 }

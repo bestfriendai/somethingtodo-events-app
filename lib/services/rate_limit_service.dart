@@ -139,6 +139,7 @@ class RateLimitService {
     String? requestId,
     int priority = 5,
     int maxRetries = 3,
+    Duration timeout = const Duration(seconds: 10),
   }) async {
     requestId ??= '${endpoint}_${DateTime.now().millisecondsSinceEpoch}';
     
