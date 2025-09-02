@@ -482,9 +482,9 @@ class _ChatScreenState extends State<ChatScreen>
                 ),
                 
                 // Event recommendations
-                if (message.recommendations?.isNotEmpty ?? false) ...[
+                if (message.recommendations.isNotEmpty ?? false) ...[
                   const SizedBox(height: 8),
-                  ...message.recommendations!.map((rec) => 
+                  ...message.recommendations.map((rec) => 
                     _buildRecommendationCard(rec)
                   ),
                 ],

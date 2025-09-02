@@ -1,6 +1,5 @@
 import 'dart:math';
 import '../models/event.dart';
-import '../models/user.dart';
 
 class DemoDataService {
   static final Random _random = Random();

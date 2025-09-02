@@ -4,7 +4,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:somethingtodo/services/cache_service.dart';
-import 'package:somethingtodo/models/event.dart';
 
 // Mock classes
 class MockBox extends Mock implements Box<dynamic> {}
