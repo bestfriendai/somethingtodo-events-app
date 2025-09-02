@@ -33,6 +33,7 @@ import 'screens/feed/vertical_feed_screen.dart';
 import 'screens/settings/theme_settings_screen.dart';
 import 'screens/search/enhanced_search_screen.dart';
 import 'services/navigation_service.dart';
+import 'utils/app_debugger.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,18 +102,20 @@ class SomethingToDoApp extends StatelessWidget {
             themeProvider.updateSystemTheme(brightness);
           });
 
-          return MaterialApp(
-            title: AppConfig.appName,
-            debugShowCheckedModeBanner: false,
-            theme: themeProvider.currentTheme,
-            themeMode: themeProvider.useSystemTheme
-                ? ThemeMode.system
-                : (themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light),
-            navigatorKey: NavigationService.navigatorKey,
-            navigatorObservers: [observer],
-            home: const AnimatedSplashScreen(),
-            routes: _buildRoutes(),
-            onGenerateRoute: _generateRoute,
+          return DebugOverlay(
+            child: MaterialApp(
+              title: AppConfig.appName,
+              debugShowCheckedModeBanner: false,
+              theme: themeProvider.currentTheme,
+              themeMode: themeProvider.useSystemTheme
+                  ? ThemeMode.system
+                  : (themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light),
+              navigatorKey: NavigationService.navigatorKey,
+              navigatorObservers: [observer],
+              home: const AnimatedSplashScreen(),
+              routes: _buildRoutes(),
+              onGenerateRoute: _generateRoute,
+            ),
           );
         },
       ),

@@ -116,6 +116,7 @@ dependencies:
   # Performance & Caching
   flutter_cache_manager: ^3.4.1
   connectivity_plus: ^6.0.5
+  visibility_detector: ^0.4.0+2
   
   # Confetti & Particle Effects
   confetti: ^0.8.0
