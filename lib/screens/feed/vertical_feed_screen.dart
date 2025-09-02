@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
 import '../../models/event.dart';
 import '../../providers/events_provider.dart';
 import '../../services/gesture_service.dart';
 import '../../services/platform_interactions.dart';
 import '../../services/cache_service.dart';
-import '../../config/modern_theme.dart';
 import '../../widgets/mobile/swipeable_feed_card.dart';
 import '../../widgets/mobile/mobile_bottom_sheet.dart';
-import '../events/event_details_screen.dart';
 
 class VerticalFeedScreen extends StatefulWidget {
   final List<Event>? initialEvents;

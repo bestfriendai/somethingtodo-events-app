@@ -4,7 +4,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import '../models/event.dart';
 import '../models/analytics.dart';
 import '../config/app_config.dart';
-import '../data/sample_events.dart';
 
 class FirestoreService {
   static final FirestoreService _instance = FirestoreService._internal();

@@ -4,10 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:uuid/uuid.dart';
 import '../models/chat.dart';
-import '../models/event.dart';
 import '../models/analytics.dart';
 import '../config/app_config.dart';
-import '../data/sample_events.dart';
 import '../data/sample_chat_responses.dart';
 
 class ChatService {
