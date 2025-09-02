@@ -166,6 +166,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (_currentSession == null) return;
     
     // Show typing indicator
+    chatProvider.setTyping(true);
     setState(() {});
     
     // Simulate AI thinking time
@@ -326,6 +327,9 @@ class _ChatScreenState extends State<ChatScreen>
     
     await chatProvider.addMessage(aiMessage);
     
+    // Hide typing indicator after response is generated
+    chatProvider.setTyping(false);
+    
     setState(() {});
     _scrollToBottom();
   }
@@ -482,9 +486,9 @@ class _ChatScreenState extends State<ChatScreen>
                 ),
                 
                 // Event recommendations
-                if (message.recommendations.isNotEmpty ?? false) ...[
+                if (message.recommendations?.isNotEmpty ?? false) ...[
                   const SizedBox(height: 8),
-                  ...message.recommendations.map((rec) => 
+                  ...(message.recommendations ?? const <EventRecommendation>[]).map((rec) => 
                     _buildRecommendationCard(rec)
                   ),
                 ],
@@ -528,6 +532,12 @@ class _ChatScreenState extends State<ChatScreen>
 
   Widget _buildRecommendationCard(EventRecommendation recommendation) {
     final eventsProvider = context.read<EventsProvider>();
+    
+    // Guard against empty events list
+    if (eventsProvider.events.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    
     final event = eventsProvider.events.firstWhere(
       (e) => e.id == recommendation.eventId,
       orElse: () => eventsProvider.events.first, // fallback
