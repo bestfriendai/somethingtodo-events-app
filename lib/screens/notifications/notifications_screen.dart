@@ -19,13 +19,14 @@ class _NotificationsScreenState extends State<NotificationsScreen>
   late AnimationController _listAnimationController;
   bool _isSelectionMode = false;
   Set<String> _selectedNotifications = {};
-  
+
   final List<AppNotification> _notifications = [
     AppNotification(
       id: '1',
       type: NotificationType.eventReminder,
       title: 'Jazz Night Tonight!',
-      message: 'Don\'t forget about the Jazz Night at Blue Note starting at 8 PM',
+      message:
+          'Don\'t forget about the Jazz Night at Blue Note starting at 8 PM',
       timestamp: DateTime.now().subtract(const Duration(minutes: 30)),
       isRead: false,
       eventId: 'event1',
@@ -35,7 +36,8 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       id: '2',
       type: NotificationType.newEvent,
       title: 'New Food Festival Added',
-      message: 'A new food festival "Taste of the City" has been added near you',
+      message:
+          'A new food festival "Taste of the City" has been added near you',
       timestamp: DateTime.now().subtract(const Duration(hours: 2)),
       isRead: false,
       eventId: 'event2',
@@ -75,7 +77,8 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       id: '6',
       type: NotificationType.system,
       title: 'Welcome to Premium!',
-      message: 'Your premium subscription is now active. Enjoy unlimited features!',
+      message:
+          'Your premium subscription is now active. Enjoy unlimited features!',
       timestamp: DateTime.now().subtract(const Duration(days: 3)),
       isRead: true,
       eventId: null,
@@ -86,12 +89,12 @@ class _NotificationsScreenState extends State<NotificationsScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _listAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _listAnimationController.forward();
     });
@@ -142,7 +145,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       _selectedNotifications.clear();
       _isSelectionMode = false;
     });
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Notifications marked as read'),
@@ -153,12 +156,13 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 
   void _deleteSelectedNotifications() {
     setState(() {
-      _notifications.removeWhere((notification) =>
-          _selectedNotifications.contains(notification.id));
+      _notifications.removeWhere(
+        (notification) => _selectedNotifications.contains(notification.id),
+      );
       _selectedNotifications.clear();
       _isSelectionMode = false;
     });
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Notifications deleted'),
@@ -173,7 +177,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
         notification.isRead = true;
       }
     });
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('All notifications marked as read'),
@@ -187,7 +191,9 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Clear All Notifications'),
-        content: const Text('Are you sure you want to delete all notifications? This action cannot be undone.'),
+        content: const Text(
+          'Are you sure you want to delete all notifications? This action cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -221,12 +227,12 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       _selectNotification(notification.id);
       return;
     }
-    
+
     // Mark as read
     setState(() {
       notification.isRead = true;
     });
-    
+
     // Handle different notification actions
     switch (notification.type) {
       case NotificationType.eventReminder:
@@ -236,7 +242,8 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => EventDetailsScreen(eventId: notification.eventId),
+              builder: (context) =>
+                  EventDetailsScreen(eventId: notification.eventId),
             ),
           );
         }
@@ -262,11 +269,11 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           if (authProvider.currentUser == null) {
             return _buildSignInPrompt();
           }
-          
+
           if (_notifications.isEmpty) {
             return _buildEmptyState();
           }
-          
+
           return _buildNotificationsList();
         },
       ),
@@ -276,7 +283,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: _isSelectionMode 
+      title: _isSelectionMode
           ? Text('${_selectedNotifications.length} selected')
           : const Text('Notifications'),
       leading: _isSelectionMode
@@ -366,25 +373,21 @@ class _NotificationsScreenState extends State<NotificationsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.notifications_off,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.notifications_off, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'Sign in for notifications',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[700],
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               'Get notified about events you care about and never miss out.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -406,25 +409,21 @@ class _NotificationsScreenState extends State<NotificationsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.notifications_none,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.notifications_none, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'No notifications',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[700],
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               'When you have notifications, they\'ll appear here.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -457,7 +456,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
 
   Widget _buildNotificationItem(AppNotification notification, int index) {
     final isSelected = _selectedNotifications.contains(notification.id);
-    
+
     return Dismissible(
       key: Key(notification.id),
       direction: DismissDirection.endToStart,
@@ -465,10 +464,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         color: AppTheme.errorColor,
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-        ),
+        child: const Icon(Icons.delete, color: Colors.white),
       ),
       onDismissed: (direction) {
         setState(() {
@@ -491,8 +487,8 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
-          color: notification.isRead 
-              ? null 
+          color: notification.isRead
+              ? null
               : AppTheme.primaryColor.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(12),
           border: _isSelectionMode && isSelected
@@ -505,7 +501,9 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: _getNotificationColor(notification.type).withValues(alpha: 0.1),
+                  color: _getNotificationColor(
+                    notification.type,
+                  ).withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -532,8 +530,8 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           title: Text(
             notification.title,
             style: TextStyle(
-              fontWeight: notification.isRead 
-                  ? FontWeight.normal 
+              fontWeight: notification.isRead
+                  ? FontWeight.normal
                   : FontWeight.bold,
             ),
           ),
@@ -549,9 +547,9 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               const SizedBox(height: 4),
               Text(
                 _formatTimestamp(notification.timestamp),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
@@ -581,8 +579,8 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           children: [
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: _selectedNotifications.isNotEmpty 
-                    ? _markSelectedAsRead 
+                onPressed: _selectedNotifications.isNotEmpty
+                    ? _markSelectedAsRead
                     : null,
                 icon: const Icon(Icons.mark_email_read),
                 label: const Text('Mark Read'),
@@ -594,8 +592,8 @@ class _NotificationsScreenState extends State<NotificationsScreen>
             const SizedBox(width: 16),
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: _selectedNotifications.isNotEmpty 
-                    ? _deleteSelectedNotifications 
+                onPressed: _selectedNotifications.isNotEmpty
+                    ? _deleteSelectedNotifications
                     : null,
                 icon: const Icon(Icons.delete),
                 label: const Text('Delete'),
@@ -647,7 +645,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
   String _formatTimestamp(DateTime timestamp) {
     final now = DateTime.now();
     final difference = now.difference(timestamp);
-    
+
     if (difference.inMinutes < 60) {
       return '${difference.inMinutes}m ago';
     } else if (difference.inHours < 24) {

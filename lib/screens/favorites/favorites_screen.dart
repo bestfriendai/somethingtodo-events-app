@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart' as share_plus;
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../models/event.dart';
@@ -29,12 +29,12 @@ class _FavoritesScreenState extends State<FavoritesScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _listAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadFavorites();
       _listAnimationController.forward();
@@ -50,7 +50,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
   Future<void> _loadFavorites() async {
     final authProvider = context.read<AuthProvider>();
     final eventsProvider = context.read<EventsProvider>();
-    
+
     if (authProvider.currentUser != null) {
       await eventsProvider.loadFavoriteEvents(authProvider.currentUser!.id);
     }
@@ -62,7 +62,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
         events.sort((a, b) => a.title.compareTo(b.title));
         break;
       case 'category':
-        events.sort((a, b) => a.category.displayName.compareTo(b.category.displayName));
+        events.sort(
+          (a, b) => a.category.displayName.compareTo(b.category.displayName),
+        );
         break;
       case 'date':
       default:
@@ -103,33 +105,36 @@ class _FavoritesScreenState extends State<FavoritesScreen>
       if (_selectedEvents.length == eventsProvider.favoriteEvents.length) {
         _selectedEvents.clear();
       } else {
-        _selectedEvents = eventsProvider.favoriteEvents.map((e) => e.id).toSet();
+        _selectedEvents = eventsProvider.favoriteEvents
+            .map((e) => e.id)
+            .toSet();
       }
     });
   }
 
   Future<void> _removeSelectedFromFavorites() async {
-    final eventsProvider = context.read<EventsProvider>();
     final authProvider = context.read<AuthProvider>();
-    
+
     if (authProvider.currentUser == null) return;
-    
+
     try {
-      for (final eventId in _selectedEvents) {
+      for (final _ in _selectedEvents) {
         // Remove from favorites
         // await firestoreService.removeFromFavorites(authProvider.currentUser!.id, eventId);
       }
-      
+
       setState(() {
         _isSelectionMode = false;
         _selectedEvents.clear();
       });
-      
+
       await _loadFavorites();
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Removed ${_selectedEvents.length} events from favorites'),
+          content: Text(
+            'Removed ${_selectedEvents.length} events from favorites',
+          ),
           backgroundColor: AppTheme.successColor,
         ),
       );
@@ -148,20 +153,20 @@ class _FavoritesScreenState extends State<FavoritesScreen>
     final selectedEventsList = eventsProvider.favoriteEvents
         .where((event) => _selectedEvents.contains(event.id))
         .toList();
-    
+
     if (selectedEventsList.isEmpty) return;
-    
+
     String shareText = 'Check out these amazing events I found:\n\n';
-    
+
     for (final event in selectedEventsList) {
       shareText += '${event.title}\n';
       shareText += '📅 ${event.startDateTime.toString().split(' ')[0]}\n';
       shareText += '📍 ${event.venue.name}\n\n';
     }
-    
+
     shareText += 'Discover more events on SomethingToDo!';
-    
-    await Share.share(shareText);
+
+    await share_plus.Share.share(shareText);
   }
 
   @override
@@ -173,37 +178,40 @@ class _FavoritesScreenState extends State<FavoritesScreen>
           if (authProvider.currentUser == null) {
             return _buildSignInPrompt();
           }
-          
+
           return RefreshIndicator(
             onRefresh: _loadFavorites,
             child: Consumer<EventsProvider>(
               builder: (context, eventsProvider, child) {
-                if (eventsProvider.isLoading && eventsProvider.favoriteEvents.isEmpty) {
+                if (eventsProvider.isLoading &&
+                    eventsProvider.favoriteEvents.isEmpty) {
                   return _buildLoadingState();
                 }
-                
+
                 if (eventsProvider.favoriteEvents.isEmpty) {
                   return _buildEmptyState();
                 }
-                
+
                 final sortedEvents = _getSortedEvents(
                   List.from(eventsProvider.favoriteEvents),
                 );
-                
+
                 return _buildEventsList(sortedEvents);
               },
             ),
           );
         },
       ),
-      floatingActionButton: _isSelectionMode ? null : _buildFloatingActionButton(),
+      floatingActionButton: _isSelectionMode
+          ? null
+          : _buildFloatingActionButton(),
       bottomNavigationBar: _isSelectionMode ? _buildSelectionBottomBar() : null,
     );
   }
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      title: _isSelectionMode 
+      title: _isSelectionMode
           ? Text('${_selectedEvents.length} selected')
           : const Text('My Favorites'),
       leading: _isSelectionMode
@@ -289,26 +297,22 @@ class _FavoritesScreenState extends State<FavoritesScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.favorite_outline,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.favorite_outline, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'Sign in to save favorites',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[700],
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
               'Save events you love and access them from any device.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -335,7 +339,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
       itemCount: 5,
       itemBuilder: (context, index) => Padding(
         padding: const EdgeInsets.only(bottom: 16),
-        child: _isGridView 
+        child: _isGridView
             ? const EventCardShimmer()
             : const LoadingShimmer(height: 100),
       ),
@@ -349,25 +353,21 @@ class _FavoritesScreenState extends State<FavoritesScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.favorite_border,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.favorite_border, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'No favorites yet',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[700],
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               'Start exploring events and tap the heart icon to save your favorites here.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -404,7 +404,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
         },
       );
     }
-    
+
     return AnimatedBuilder(
       animation: _listAnimationController,
       builder: (context, child) {
@@ -422,7 +422,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
 
   Widget _buildListEventItem(Event event, int index) {
     final isSelected = _selectedEvents.contains(event.id);
-    
+
     return Transform.translate(
       offset: Offset(0, 50 * (1 - _listAnimationController.value)),
       child: Opacity(
@@ -450,10 +450,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
             },
             child: Stack(
               children: [
-                EventCard(
-                  event: event,
-                  compact: true,
-                ),
+                EventCard(event: event, compact: true),
                 if (_isSelectionMode)
                   Positioned(
                     top: 8,
@@ -486,7 +483,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
 
   Widget _buildGridEventItem(Event event, int index) {
     final isSelected = _selectedEvents.contains(event.id);
-    
+
     return Transform.scale(
       scale: _listAnimationController.value,
       child: InkWell(
@@ -545,7 +542,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
         if (eventsProvider.favoriteEvents.isEmpty) {
           return const SizedBox.shrink();
         }
-        
+
         return FloatingActionButton.extended(
           heroTag: 'favorites_share_fab',
           onPressed: _shareAllFavorites,
@@ -565,7 +562,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
           children: [
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: _selectedEvents.isNotEmpty ? _shareSelectedEvents : null,
+                onPressed: _selectedEvents.isNotEmpty
+                    ? _shareSelectedEvents
+                    : null,
                 icon: const Icon(Icons.share),
                 label: const Text('Share'),
                 style: ElevatedButton.styleFrom(
@@ -576,7 +575,9 @@ class _FavoritesScreenState extends State<FavoritesScreen>
             const SizedBox(width: 16),
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: _selectedEvents.isNotEmpty ? _removeSelectedFromFavorites : null,
+                onPressed: _selectedEvents.isNotEmpty
+                    ? _removeSelectedFromFavorites
+                    : null,
                 icon: const Icon(Icons.favorite_border),
                 label: const Text('Remove'),
                 style: ElevatedButton.styleFrom(
@@ -593,23 +594,23 @@ class _FavoritesScreenState extends State<FavoritesScreen>
   void _shareAllFavorites() async {
     final eventsProvider = context.read<EventsProvider>();
     final events = eventsProvider.favoriteEvents;
-    
+
     if (events.isEmpty) return;
-    
+
     String shareText = 'Check out my favorite events:\n\n';
-    
+
     for (final event in events.take(5)) {
       shareText += '${event.title}\n';
       shareText += '📅 ${event.startDateTime.toString().split(' ')[0]}\n';
       shareText += '📍 ${event.venue.name}\n\n';
     }
-    
+
     if (events.length > 5) {
       shareText += 'And ${events.length - 5} more amazing events!\n\n';
     }
-    
+
     shareText += 'Discover more events on SomethingToDo!';
-    
-    await Share.share(shareText);
+
+    await share_plus.Share.share(shareText);
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:ui';
 import 'dart:math';
@@ -12,12 +11,10 @@ import '../../providers/events_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../models/event.dart';
 import '../../config/modern_theme.dart';
-import '../../widgets/modern/modern_event_card.dart';
 import '../../widgets/modern/modern_skeleton.dart';
 import '../../widgets/mobile/optimized_event_list.dart';
 import '../../widgets/common/delightful_refresh.dart';
 import '../../services/platform_interactions.dart';
-import '../../services/cache_service.dart';
 import '../../services/delight_service.dart';
 import '../events/event_details_screen.dart';
 import '../search/search_screen.dart';
@@ -39,10 +36,9 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
   final ScrollController _scrollController = ScrollController();
   late AnimationController _animationController;
   late AnimationController _headerAnimationController;
-  
+
   int _currentFeaturedIndex = 0;
   EventCategory? _selectedCategory;
-  double _scrollOffset = 0.0;
 
   @override
   bool get wantKeepAlive => true;
@@ -50,19 +46,19 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _animationController = AnimationController(
       duration: const Duration(seconds: 4),
       vsync: this,
     ); // Don't auto-repeat for better performance
-    
+
     _headerAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _scrollController.addListener(_onScroll);
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refreshData();
       _headerAnimationController.forward();
@@ -80,10 +76,8 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
   }
 
   void _onScroll() {
-    setState(() {
-      _scrollOffset = _scrollController.offset;
-    });
-    
+    setState(() {});
+
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       context.read<EventsProvider>().loadMoreEvents();
@@ -95,7 +89,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
     final eventsProvider = context.read<EventsProvider>();
     await eventsProvider.loadEvents(refresh: true);
     await eventsProvider.loadFeaturedEvents();
-    
+
     // Preload images for better performance
     eventsProvider.preloadEventImages();
   }
@@ -111,14 +105,14 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Animated gradient background
           _buildAnimatedBackground(),
-          
+
           // Main content with delightful pull to refresh
           DelightfulRefresh(
             onRefresh: _refreshData,
@@ -145,9 +139,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                 _buildCategoryFilters(),
                 _buildEventsSection(),
                 // Bottom padding for FAB
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 100),
-                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 100)),
               ],
             ),
           ),
@@ -190,9 +182,9 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                   ),
                 ),
               ),
-              
+
               // Removed colored accent orbs for clean black background
-              
+
               // Particle effects overlay
               Positioned.fill(
                 child: IgnorePointer(
@@ -204,7 +196,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                   ),
                 ),
               ),
-              
+
               // Mesh gradient overlay for depth
               Positioned.fill(
                 child: IgnorePointer(
@@ -248,10 +240,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    const Color(0xFF1A0A1A),
-                    const Color(0xFF0A0A0B),
-                  ],
+                  colors: [const Color(0xFF1A0A1A), const Color(0xFF0A0A0B)],
                 ),
               ),
               child: SafeArea(
@@ -266,19 +255,28 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                         animation: _headerAnimationController,
                         builder: (context, child) {
                           return Transform.translate(
-                            offset: Offset(0, 30 * (1 - _headerAnimationController.value)),
+                            offset: Offset(
+                              0,
+                              30 * (1 - _headerAnimationController.value),
+                            ),
                             child: Opacity(
                               opacity: _headerAnimationController.value,
                               child: GestureDetector(
                                 onLongPress: () {
-                                  DelightService.instance.triggerEasterEgg(context, 'greeting');
+                                  DelightService.instance.triggerEasterEgg(
+                                    context,
+                                    'greeting',
+                                  );
                                 },
                                 child: Text(
                                   'Good ${_getTimeOfDay()} 👋',
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.white.withValues(alpha: 0.7),
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyLarge
+                                      ?.copyWith(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                 ),
                               ),
                             ),
@@ -291,16 +289,21 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                         animation: _headerAnimationController,
                         builder: (context, child) {
                           return Transform.translate(
-                            offset: Offset(0, 40 * (1 - _headerAnimationController.value)),
+                            offset: Offset(
+                              0,
+                              40 * (1 - _headerAnimationController.value),
+                            ),
                             child: Opacity(
                               opacity: _headerAnimationController.value,
                               child: Text(
-                                authProvider.currentUser?.displayName ?? 'Explorer',
-                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1.1,
-                                ),
+                                authProvider.currentUser?.displayName ??
+                                    'Explorer',
+                                style: Theme.of(context).textTheme.displayMedium
+                                    ?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                      height: 1.1,
+                                    ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -321,7 +324,10 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
               animation: _headerAnimationController,
               builder: (context, child) {
                 return Transform.translate(
-                  offset: Offset(20 * (1 - _headerAnimationController.value), 0),
+                  offset: Offset(
+                    20 * (1 - _headerAnimationController.value),
+                    0,
+                  ),
                   child: Opacity(
                     opacity: _headerAnimationController.value,
                     child: Container(
@@ -370,7 +376,8 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
             PlatformInteractions.lightImpact();
             DelightService.instance.showConfetti(
               context,
-              customMessage: 'Search mode activated! Find your next adventure! 🔍',
+              customMessage:
+                  'Search mode activated! Find your next adventure! 🔍',
             );
             Navigator.push(
               context,
@@ -432,10 +439,11 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                             'Find your next favorite thing...',
                             'Discover something amazing...',
                           ][Random().nextInt(4)],
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.7),
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(
+                                color: Colors.white.withValues(alpha: 0.7),
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ),
                       Container(
@@ -493,24 +501,31 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                       ),
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.amber,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Text(
-                          'HOT',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ).animate()
-                        .fadeIn(delay: 1.seconds)
-                        .scale(begin: const Offset(0.5, 0.5), curve: Curves.elasticOut)
-                        .then()
-                        .shimmer(duration: 2.seconds),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              'HOT',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                          .animate()
+                          .fadeIn(delay: 1.seconds)
+                          .scale(
+                            begin: const Offset(0.5, 0.5),
+                            curve: Curves.elasticOut,
+                          )
+                          .then()
+                          .shimmer(duration: 2.seconds),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -581,10 +596,11 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                       builder: (context, provider, _) {
                         return Text(
                           '${provider.events.length}+',
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ),
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
                         );
                       },
                     ),
@@ -626,10 +642,11 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     const SizedBox(height: 12),
                     Text(
                       '24',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
                     ),
                     Text(
                       'Favorites',
@@ -657,7 +674,8 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: PageView.builder(
                 itemCount: 3,
-                itemBuilder: (context, index) => const ModernFeaturedEventSkeleton(),
+                itemBuilder: (context, index) =>
+                    const ModernFeaturedEventSkeleton(),
               ),
             ),
           );
@@ -674,7 +692,10 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
             children: [
               // Section header
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
                 child: Row(
                   children: [
                     Container(
@@ -694,15 +715,16 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     const SizedBox(width: 12),
                     Text(
                       'Featured Events',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
                     ),
                   ],
                 ),
               ),
-              
+
               // Featured events carousel
               SizedBox(
                 height: 320,
@@ -723,7 +745,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                   },
                 ),
               ),
-              
+
               // Page indicators
               const SizedBox(height: 16),
               Row(
@@ -753,16 +775,16 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
   }
 
   Widget _buildFeaturedEventCard(Event event) {
-    final categoryGradient = ModernTheme.getCategoryGradient(event.category.name);
-    
+    final categoryGradient = ModernTheme.getCategoryGradient(
+      event.category.name,
+    );
+
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (_) => EventDetailsScreen(event: event),
-          ),
+          MaterialPageRoute(builder: (_) => EventDetailsScreen(event: event)),
         );
       },
       child: Container(
@@ -810,21 +832,18 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     size: 64,
                   ),
                 ),
-              
+
               // Gradient overlay
               Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black87,
-                    ],
+                    colors: [Colors.transparent, Colors.black87],
                   ),
                 ),
               ),
-              
+
               // Content
               Positioned(
                 bottom: 24,
@@ -835,7 +854,10 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(colors: categoryGradient),
                         borderRadius: BorderRadius.circular(20),
@@ -852,11 +874,12 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     const SizedBox(height: 12),
                     Text(
                       event.title,
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        height: 1.2,
-                      ),
+                      style: Theme.of(context).textTheme.headlineLarge
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            height: 1.2,
+                          ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -872,10 +895,11 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                         Expanded(
                           child: Text(
                             event.venue.name,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.8),
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  fontWeight: FontWeight.w500,
+                                ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -937,7 +961,11 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                   return _buildCategoryChip(null, 'All', 0);
                 }
                 final category = EventCategory.values[index - 1];
-                return _buildCategoryChip(category, category.displayName, index);
+                return _buildCategoryChip(
+                  category,
+                  category.displayName,
+                  index,
+                );
               },
             ),
           ),
@@ -949,10 +977,10 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
 
   Widget _buildCategoryChip(EventCategory? category, String label, int index) {
     final isSelected = _selectedCategory == category;
-    final gradient = category != null 
+    final gradient = category != null
         ? ModernTheme.getCategoryGradient(category.name)
         : ModernTheme.purpleGradient;
-    
+
     return Container(
       margin: const EdgeInsets.only(right: 12),
       child: GestureDetector(
@@ -974,7 +1002,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
             color: isSelected ? null : Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
-              color: isSelected 
+              color: isSelected
                   ? Colors.transparent
                   : Colors.white.withValues(alpha: 0.2),
               width: 1.5,
@@ -1061,7 +1089,9 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
               enableSwipeActions: true,
               showFeedButton: false, // Already shown above
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              onRefresh: () { _refreshData(); },
+              onRefresh: () {
+                _refreshData();
+              },
             ),
           ),
         );
@@ -1074,32 +1104,34 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
 class AuroraBoreailisPainter extends CustomPainter {
   final Animation<double> animation;
   final List<Color> colors;
-  
+
   AuroraBoreailisPainter({required this.animation, required this.colors});
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final progress = animation.value;
     final paint = Paint()..style = PaintingStyle.fill;
-    
+
     // Create flowing aurora waves
     for (int i = 0; i < 3; i++) {
       final path = Path();
       final waveHeight = size.height * 0.3;
       final waveOffset = (progress + i * 0.3) * 2 * pi;
-      
+
       path.moveTo(0, size.height);
-      
+
       for (double x = 0; x <= size.width; x += 5) {
-        final y = size.height - waveHeight + 
+        final y =
+            size.height -
+            waveHeight +
             (sin(x / 100 + waveOffset) * 50) +
             (sin(x / 200 + waveOffset * 0.5) * 30);
         path.lineTo(x, y);
       }
-      
+
       path.lineTo(size.width, size.height);
       path.close();
-      
+
       paint.shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -1108,11 +1140,11 @@ class AuroraBoreailisPainter extends CustomPainter {
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-      
+
       canvas.drawPath(path, paint);
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
@@ -1121,81 +1153,78 @@ class AuroraBoreailisPainter extends CustomPainter {
 class ParticleEffectPainter extends CustomPainter {
   final Animation<double> animation;
   final int particleCount;
-  
-  ParticleEffectPainter({
-    required this.animation,
-    required this.particleCount,
-  });
-  
+
+  ParticleEffectPainter({required this.animation, required this.particleCount});
+
   @override
   void paint(Canvas canvas, Size size) {
     final progress = animation.value;
     final paint = Paint()..style = PaintingStyle.fill;
-    
+
     final random = Random(42); // Seeded for consistent particle positions
-    
+
     for (int i = 0; i < particleCount; i++) {
       final baseX = random.nextDouble() * size.width;
       final baseY = random.nextDouble() * size.height;
-      
+
       // Animate particles in a subtle floating motion
       final x = baseX + (sin(progress * 2 * pi + i * 0.1) * 20);
       final y = baseY + (cos(progress * 1.5 * pi + i * 0.15) * 15);
-      
+
       final particleSize = 1 + random.nextDouble() * 2;
       final opacity = 0.3 + (sin(progress * 4 * pi + i * 0.2) * 0.2);
-      
+
       paint.color = [
         const Color(0xFF7C3AED), // Electric Purple
         const Color(0xFFEC4899), // Neon Pink
         const Color(0xFF06B6D4), // Cyber Blue
         Colors.white,
       ][i % 4].withValues(alpha: opacity);
-      
+
       canvas.drawCircle(Offset(x, y), particleSize, paint);
-      
+
       // Add a subtle glow effect
       paint.color = paint.color.withValues(alpha: opacity * 0.3);
       canvas.drawCircle(Offset(x, y), particleSize * 2, paint);
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
 Widget _buildErrorBanner(String message, {Future<void> Function()? onRetry}) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: ModernTheme.errorColor.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: ModernTheme.errorColor.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.error_outline, color: ModernTheme.errorColor),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(
-                color: ModernTheme.errorColor,
-                fontWeight: FontWeight.w600,
-              ),
+  return Container(
+    width: double.infinity,
+    margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: ModernTheme.errorColor.withValues(alpha: 0.08),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: ModernTheme.errorColor.withValues(alpha: 0.3)),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.error_outline, color: ModernTheme.errorColor),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            message,
+            style: const TextStyle(
+              color: ModernTheme.errorColor,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          if (onRetry != null)
-            TextButton(
-              onPressed: () {
-                PlatformInteractions.lightImpact();
-                onRetry();
-              },
-              child: const Text('Retry'),
-            ),
-        ],
-      ),
-    );
-  }
+        ),
+        if (onRetry != null)
+          TextButton(
+            onPressed: () {
+              PlatformInteractions.lightImpact();
+              onRetry();
+            },
+            child: const Text('Retry'),
+          ),
+      ],
+    ),
+  );
+}

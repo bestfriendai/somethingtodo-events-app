@@ -55,7 +55,7 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
   void initState() {
     super.initState();
     _scrollController = widget.controller ?? ScrollController();
-    
+
     if (widget.enableLoadMore) {
       _scrollController.addListener(_onScroll);
     }
@@ -87,9 +87,9 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
           setState(() {
             _isLoadingMore = true;
           });
-          
+
           widget.onLoadMore!();
-          
+
           Future.delayed(const Duration(seconds: 2), () {
             if (mounted) {
               setState(() {
@@ -108,8 +108,8 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
       return widget.emptyWidget!;
     }
 
-    final itemCount = widget.items.length + 
-        (widget.enableLoadMore && _isLoadingMore ? 1 : 0);
+    final itemCount =
+        widget.items.length + (widget.enableLoadMore && _isLoadingMore ? 1 : 0);
 
     return ListView.builder(
       controller: _scrollController,
@@ -122,7 +122,7 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
       addRepaintBoundaries: widget.addRepaintBoundaries,
       itemBuilder: (context, index) {
         if (index >= widget.items.length) {
-          return widget.loadingWidget ?? 
+          return widget.loadingWidget ??
               const Center(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
@@ -139,13 +139,9 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
           itemWidget = RepaintBoundary(child: itemWidget);
         }
 
-        if (widget.separatorBuilder != null && index < widget.items.length - 1) {
-          return Column(
-            children: [
-              itemWidget,
-              widget.separatorBuilder!,
-            ],
-          );
+        if (widget.separatorBuilder != null &&
+            index < widget.items.length - 1) {
+          return Column(children: [itemWidget, widget.separatorBuilder!]);
         }
 
         return itemWidget;
@@ -186,12 +182,7 @@ class OptimizedSliverList<T> extends StatelessWidget {
           }
 
           if (separatorBuilder != null && index < items.length - 1) {
-            return Column(
-              children: [
-                itemWidget,
-                separatorBuilder!,
-              ],
-            );
+            return Column(children: [itemWidget, separatorBuilder!]);
           }
 
           return itemWidget;
@@ -249,7 +240,7 @@ class _OptimizedGridViewState<T> extends State<OptimizedGridView<T>> {
   void initState() {
     super.initState();
     _scrollController = widget.controller ?? ScrollController();
-    
+
     if (widget.enableLoadMore) {
       _scrollController.addListener(_onScroll);
     }
@@ -277,9 +268,9 @@ class _OptimizedGridViewState<T> extends State<OptimizedGridView<T>> {
       setState(() {
         _isLoadingMore = true;
       });
-      
+
       widget.onLoadMore!();
-      
+
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
           setState(() {
@@ -292,8 +283,8 @@ class _OptimizedGridViewState<T> extends State<OptimizedGridView<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final itemCount = widget.items.length + 
-        (widget.enableLoadMore && _isLoadingMore ? 1 : 0);
+    final itemCount =
+        widget.items.length + (widget.enableLoadMore && _isLoadingMore ? 1 : 0);
 
     return GridView.builder(
       controller: _scrollController,
@@ -310,15 +301,11 @@ class _OptimizedGridViewState<T> extends State<OptimizedGridView<T>> {
       cacheExtent: 500,
       itemBuilder: (context, index) {
         if (index >= widget.items.length) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         final item = widget.items[index];
-        return RepaintBoundary(
-          child: widget.itemBuilder(context, item, index),
-        );
+        return RepaintBoundary(child: widget.itemBuilder(context, item, index));
       },
     );
   }
@@ -344,7 +331,8 @@ class OptimizedAnimatedList<T> extends StatefulWidget {
   });
 
   @override
-  State<OptimizedAnimatedList<T>> createState() => _OptimizedAnimatedListState<T>();
+  State<OptimizedAnimatedList<T>> createState() =>
+      _OptimizedAnimatedListState<T>();
 }
 
 class _OptimizedAnimatedListState<T> extends State<OptimizedAnimatedList<T>> {
@@ -360,30 +348,23 @@ class _OptimizedAnimatedListState<T> extends State<OptimizedAnimatedList<T>> {
   @override
   void didUpdateWidget(OptimizedAnimatedList<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     // Handle item additions
     for (int i = 0; i < widget.items.length; i++) {
       if (i >= _items.length || widget.items[i] != _items[i]) {
         _items.insert(i, widget.items[i]);
-        _listKey.currentState?.insertItem(
-          i,
-          duration: widget.insertDuration,
-        );
+        _listKey.currentState?.insertItem(i, duration: widget.insertDuration);
       }
     }
-    
+
     // Handle item removals
     for (int i = _items.length - 1; i >= widget.items.length; i--) {
       final removedItem = _items[i];
       _items.removeAt(i);
       _listKey.currentState?.removeItem(
         i,
-        (context, animation) => widget.itemBuilder(
-          context,
-          removedItem,
-          i,
-          animation,
-        ),
+        (context, animation) =>
+            widget.itemBuilder(context, removedItem, i, animation),
         duration: widget.removeDuration,
       );
     }
@@ -396,14 +377,9 @@ class _OptimizedAnimatedListState<T> extends State<OptimizedAnimatedList<T>> {
       initialItemCount: _items.length,
       itemBuilder: (context, index, animation) {
         if (index >= _items.length) return const SizedBox.shrink();
-        
+
         return RepaintBoundary(
-          child: widget.itemBuilder(
-            context,
-            _items[index],
-            index,
-            animation,
-          ),
+          child: widget.itemBuilder(context, _items[index], index, animation),
         );
       },
     );

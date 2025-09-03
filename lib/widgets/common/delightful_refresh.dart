@@ -10,7 +10,7 @@ class DelightfulRefresh extends StatefulWidget {
   final Future<void> Function() onRefresh;
   final String? refreshMessage;
   final bool showFunMessages;
-  
+
   const DelightfulRefresh({
     super.key,
     required this.child,
@@ -18,7 +18,7 @@ class DelightfulRefresh extends StatefulWidget {
     this.refreshMessage,
     this.showFunMessages = true,
   });
-  
+
   @override
   State<DelightfulRefresh> createState() => _DelightfulRefreshState();
 }
@@ -27,7 +27,7 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
     with TickerProviderStateMixin {
   late AnimationController _sparkleController;
   final Random _random = Random();
-  
+
   static const List<String> _refreshMessages = [
     'Summoning fresh events from the universe...',
     'Shaking the event tree for new adventures...',
@@ -40,7 +40,7 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
     'Brewing up some fresh weekend plans...',
     'Updating your adventure algorithms...',
   ];
-  
+
   static const List<String> _completedMessages = [
     'Boom! Fresh events have landed!',
     'Mission accomplished! New fun incoming!',
@@ -51,7 +51,7 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
     'Epic win! New events unlocked!',
     'Nailed it! Your options just multiplied!',
   ];
-  
+
   @override
   void initState() {
     super.initState();
@@ -60,22 +60,23 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
       vsync: this,
     );
   }
-  
+
   @override
   void dispose() {
     _sparkleController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _handleRefresh() async {
     // Start sparkle animation
     _sparkleController.repeat();
-    
+
     if (widget.showFunMessages) {
       // Show refreshing message with premium styling
-      final message = widget.refreshMessage ?? 
-                     _refreshMessages[_random.nextInt(_refreshMessages.length)];
-      
+      final message =
+          widget.refreshMessage ??
+          _refreshMessages[_random.nextInt(_refreshMessages.length)];
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -85,7 +86,9 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
                 height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(ModernTheme.primaryColor),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    ModernTheme.primaryColor,
+                  ),
                   backgroundColor: Colors.white.withValues(alpha: 0.3),
                 ),
               ),
@@ -111,23 +114,24 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
         ),
       );
     }
-    
+
     // Enhanced haptic feedback
     PlatformInteractions.mediumImpact();
-    
+
     try {
       await widget.onRefresh();
-      
+
       // Stop sparkle animation
       _sparkleController.stop();
-      
+
       // Success haptic
       PlatformInteractions.lightImpact();
-      
+
       // Success celebration with premium effects
       if (widget.showFunMessages) {
-        final completedMessage = _completedMessages[_random.nextInt(_completedMessages.length)];
-        
+        final completedMessage =
+            _completedMessages[_random.nextInt(_completedMessages.length)];
+
         Future.delayed(const Duration(milliseconds: 300), () {
           if (mounted) {
             DelightService.instance.showConfetti(
@@ -142,7 +146,7 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
       rethrow;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -182,34 +186,32 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
 class AuroraRefreshPainter extends CustomPainter {
   final double progress;
   final List<Color> colors;
-  
-  AuroraRefreshPainter({
-    required this.progress,
-    required this.colors,
-  });
-  
+
+  AuroraRefreshPainter({required this.progress, required this.colors});
+
   @override
   void paint(Canvas canvas, Size size) {
     if (progress == 0) return;
-    
+
     final paint = Paint()..style = PaintingStyle.fill;
-    
+
     // Create aurora waves during refresh
     for (int i = 0; i < 3; i++) {
       final waveProgress = (progress + (i * 0.3)) % 1.0;
       final waveHeight = size.height * 0.15 * waveProgress;
-      
+
       final path = Path();
       path.moveTo(0, 0);
-      
+
       for (double x = 0; x <= size.width; x += 5) {
-        final y = waveHeight * sin((x / size.width * 2 * pi) + (progress * 4 * pi));
+        final y =
+            waveHeight * sin((x / size.width * 2 * pi) + (progress * 4 * pi));
         path.lineTo(x, y);
       }
-      
+
       path.lineTo(size.width, 0);
       path.close();
-      
+
       paint.shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
@@ -218,11 +220,11 @@ class AuroraRefreshPainter extends CustomPainter {
           Colors.transparent,
         ],
       ).createShader(Rect.fromLTWH(0, 0, size.width, waveHeight));
-      
+
       canvas.drawPath(path, paint);
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
@@ -232,16 +234,17 @@ class PremiumRefreshIndicator extends StatefulWidget {
   final Widget child;
   final Future<void> Function() onRefresh;
   final RefreshStyle style;
-  
+
   const PremiumRefreshIndicator({
     super.key,
     required this.child,
     required this.onRefresh,
     this.style = RefreshStyle.aurora,
   });
-  
+
   @override
-  State<PremiumRefreshIndicator> createState() => _PremiumRefreshIndicatorState();
+  State<PremiumRefreshIndicator> createState() =>
+      _PremiumRefreshIndicatorState();
 }
 
 class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
@@ -250,54 +253,46 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
   late AnimationController _glowController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotationAnimation;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _refreshController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _glowController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
-    
-    _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _refreshController,
-      curve: Curves.elasticOut,
-    ));
-    
-    _rotationAnimation = Tween<double>(
-      begin: 0,
-      end: 2 * pi,
-    ).animate(CurvedAnimation(
-      parent: _refreshController,
-      curve: Curves.linear,
-    ));
+
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
+      CurvedAnimation(parent: _refreshController, curve: Curves.elasticOut),
+    );
+
+    _rotationAnimation = Tween<double>(begin: 0, end: 2 * pi).animate(
+      CurvedAnimation(parent: _refreshController, curve: Curves.linear),
+    );
   }
-  
+
   @override
   void dispose() {
     _refreshController.dispose();
     _glowController.dispose();
     super.dispose();
   }
-  
+
   Future<void> _handleRefresh() async {
     _refreshController.forward();
     _glowController.repeat();
-    
+
     PlatformInteractions.mediumImpact();
-    
+
     try {
       await widget.onRefresh();
-      
+
       // Success feedback
       PlatformInteractions.lightImpact();
       DelightService.instance.showConfetti(
@@ -309,7 +304,7 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
       _glowController.stop();
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     switch (widget.style) {
@@ -321,7 +316,7 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
         return _buildLiquidRefresh();
     }
   }
-  
+
   Widget _buildAuroraRefresh() {
     return DelightfulRefresh(
       onRefresh: _handleRefresh,
@@ -329,7 +324,7 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
       showFunMessages: true,
     );
   }
-  
+
   Widget _buildCosmicRefresh() {
     return RefreshIndicator(
       onRefresh: _handleRefresh,
@@ -340,7 +335,7 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
       child: widget.child,
     );
   }
-  
+
   Widget _buildLiquidRefresh() {
     return LiquidPullToRefresh(
       onRefresh: _handleRefresh,
@@ -354,8 +349,4 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
   }
 }
 
-enum RefreshStyle {
-  aurora,
-  cosmic,
-  liquid,
-}
+enum RefreshStyle { aurora, cosmic, liquid }

@@ -2,7 +2,9 @@ class SampleChatResponses {
   static String getResponse(String userMessage) {
     final message = userMessage.toLowerCase();
 
-    if (message.contains('hello') || message.contains('hi') || message.contains('hey')) {
+    if (message.contains('hello') ||
+        message.contains('hi') ||
+        message.contains('hey')) {
       return "Hello! I'm your AI assistant for discovering events. How can I help you find something amazing to do today?";
     }
 
@@ -14,7 +16,9 @@ class SampleChatResponses {
       return "Music events are always a great choice! I can help you find concerts, festivals, and live performances in your area. What genre are you interested in?";
     }
 
-    if (message.contains('food') || message.contains('restaurant') || message.contains('eat')) {
+    if (message.contains('food') ||
+        message.contains('restaurant') ||
+        message.contains('eat')) {
       return "Food events can be so much fun! From food festivals to cooking classes, there's always something delicious happening. What type of cuisine interests you?";
     }
 

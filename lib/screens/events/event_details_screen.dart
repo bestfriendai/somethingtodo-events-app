@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart' as share_plus;
 // Google Maps import removed - using Mapbox instead
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -223,14 +223,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
       );
     }
 
-    await Share.share(
+    await share_plus.Share.share(
       '${_event!.title}\n\n'
       '📅 ${DateFormat('EEEE, MMMM d, yyyy \'at\' h:mm a').format(_event!.startDateTime)}\n'
       '📍 ${_event!.venue.name}\n'
       '💰 ${_event!.pricing.isFree ? 'Free' : '\$${_event!.pricing.price.toStringAsFixed(2)}'}\n\n'
       '${_event!.description}\n\n'
       'Organized by ${_event!.organizerName}',
-      subject: _event!.title,
     );
   }
 

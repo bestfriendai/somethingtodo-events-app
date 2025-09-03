@@ -191,7 +191,9 @@ class _EnhancedEventCardState extends State<EnhancedEventCard>
                                   left: 12,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.black.withValues(alpha: 0.2),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.2,
+                                      ),
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     padding: EdgeInsets.symmetric(

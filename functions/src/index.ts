@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import cors from 'cors';
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { OpenAI } from 'openai';
 import axios from 'axios';
 
@@ -18,12 +18,18 @@ const getConfig = () => {
     return {
       OPENAI_API_KEY: config.openai?.api_key || process.env.OPENAI_API_KEY,
       RAPIDAPI_KEY: config.rapidapi?.key || process.env.RAPIDAPI_KEY,
+      ALLOWED_ORIGINS: config.app?.allowed_origins || process.env.ALLOWED_ORIGINS || 'http://localhost:3000',
+      RATE_LIMIT_MAX: config.security?.rate_limit_max || process.env.RATE_LIMIT_MAX || '100',
+      RATE_LIMIT_WINDOW: config.security?.rate_limit_window || process.env.RATE_LIMIT_WINDOW || '60000',
     };
   }
   // In development, use environment variables from .env file
   return {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     RAPIDAPI_KEY: process.env.RAPIDAPI_KEY,
+    ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5173,http://localhost:5000',
+    RATE_LIMIT_MAX: process.env.RATE_LIMIT_MAX || '100',
+    RATE_LIMIT_WINDOW: process.env.RATE_LIMIT_WINDOW || '60000',
   };
 };
 
@@ -51,14 +57,154 @@ admin.initializeApp();
 
 // Initialize Express
 const app = express();
-// Enable CORS for all origins in development
-app.use(cors({ 
-  origin: true,
+
+// Parse allowed origins from config
+const getAllowedOrigins = (): string[] => {
+  const originsStr = config.ALLOWED_ORIGINS || '';
+  const origins = originsStr.split(',').map(origin => origin.trim()).filter(Boolean);
+  
+  // Default origins for development if none specified
+  if (origins.length === 0) {
+    return ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5000'];
+  }
+  
+  return origins;
+};
+
+// Configure CORS with specific allowed origins
+const corsOptions: cors.CorsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    const allowedOrigins = getAllowedOrigins();
+    
+    // Allow requests with no origin (e.g., mobile apps, Postman)
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+    
+    // Check if origin is allowed
+    if (allowedOrigins.includes(origin) || 
+        allowedOrigins.some(allowed => allowed === '*' || origin.startsWith(allowed.replace('*', '')))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-app.use(express.json());
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400 // Cache preflight for 24 hours
+};
+
+app.use(cors(corsOptions));
+app.use(express.json({ limit: '10mb' })); // Limit request size
+
+// Rate limiting implementation
+interface RateLimitEntry {
+  count: number;
+  resetTime: number;
+}
+
+const rateLimitMap = new Map<string, RateLimitEntry>();
+
+const rateLimitMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const identifier = req.ip || 'unknown';
+  const now = Date.now();
+  const windowMs = parseInt(config.RATE_LIMIT_WINDOW || '60000');
+  const maxRequests = parseInt(config.RATE_LIMIT_MAX || '100');
+  
+  const entry = rateLimitMap.get(identifier);
+  
+  if (!entry || now > entry.resetTime) {
+    // Create new entry or reset existing
+    rateLimitMap.set(identifier, {
+      count: 1,
+      resetTime: now + windowMs
+    });
+    next();
+  } else if (entry.count < maxRequests) {
+    // Increment count
+    entry.count++;
+    next();
+  } else {
+    // Rate limit exceeded
+    res.status(429).json({
+      error: 'Too many requests',
+      retryAfter: Math.ceil((entry.resetTime - now) / 1000)
+    });
+  }
+};
+
+// Apply rate limiting to all routes
+app.use(rateLimitMiddleware);
+
+// Input validation middleware
+const validateInput = (schema: any) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Basic input sanitization
+      const sanitizeString = (str: any): string => {
+        if (typeof str !== 'string') return '';
+        // Remove potential script tags and SQL injection attempts
+        return str
+          .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+          .replace(/[';]|(--)|(\*|\/\*|\*\/)|(\bOR\b|\bAND\b)/gi, '')
+          .trim()
+          .slice(0, 1000); // Limit string length
+      };
+      
+      const sanitizeObject = (obj: any): any => {
+        if (typeof obj !== 'object' || obj === null) return obj;
+        
+        const sanitized: any = Array.isArray(obj) ? [] : {};
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            const value = obj[key];
+            if (typeof value === 'string') {
+              sanitized[key] = sanitizeString(value);
+            } else if (typeof value === 'object') {
+              sanitized[key] = sanitizeObject(value);
+            } else {
+              sanitized[key] = value;
+            }
+          }
+        }
+        return sanitized;
+      };
+      
+      // Sanitize request body
+      if (req.body) {
+        req.body = sanitizeObject(req.body);
+      }
+      
+      // Sanitize query parameters
+      if (req.query) {
+        req.query = sanitizeObject(req.query);
+      }
+      
+      next();
+    } catch (error) {
+      res.status(400).json({ error: 'Invalid input' });
+    }
+  };
+};
+
+// Authentication middleware
+const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    const token = authHeader.substring(7);
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    (req as any).user = decodedToken;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Invalid authentication token' });
+  }
+};
 
 // Initialize OpenAI with secure API key from config
 const openai = new OpenAI({
@@ -79,15 +225,39 @@ interface EventSyncRequest {
   action: 'create' | 'update' | 'delete';
 }
 
+// Sanitized error response helper
+const sendErrorResponse = (res: Response, statusCode: number, message: string, details?: string) => {
+  // Never expose sensitive information in error messages
+  const sanitizedDetails = details ? 
+    details.replace(/[A-Za-z0-9_-]{20,}/g, '[REDACTED]') // Remove potential API keys
+    .replace(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g, '[IP]') // Remove IP addresses
+    : undefined;
+  
+  res.status(statusCode).json({
+    error: message,
+    ...(process.env.NODE_ENV !== 'production' && sanitizedDetails ? { details: sanitizedDetails } : {})
+  });
+};
+
 // API Routes
-app.post('/chat', async (req: Request, res: Response) => {
+
+// Chat endpoint with authentication and validation
+app.post('/chat', authenticateUser, validateInput({}), async (req: Request, res: Response) => {
   try {
     const { sessionId, message, userId, chatType, context }: ChatRequest = req.body;
 
     if (!sessionId || !message || !userId || !chatType) {
-      return res.status(400).json({
-        error: 'Missing required fields: sessionId, message, userId, chatType'
-      });
+      return sendErrorResponse(res, 400, 'Missing required fields');
+    }
+    
+    // Validate message length
+    if (message.length > 1000) {
+      return sendErrorResponse(res, 400, 'Message too long');
+    }
+    
+    // Validate chat type
+    if (!['eventDiscovery', 'eventPlanning', 'generalSupport'].includes(chatType)) {
+      return sendErrorResponse(res, 400, 'Invalid chat type');
     }
 
     const messagesRef = admin.firestore()
@@ -133,22 +303,22 @@ app.post('/chat', async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error('Chat API error:', error);
-    return res.status(500).json({
-      error: 'Failed to process chat message',
-      details: error instanceof Error ? error.message : 'Unknown error',
-    });
+    return sendErrorResponse(res, 500, 'Failed to process chat message');
   }
 });
 
-// Event sync endpoint
-app.post('/events/sync', async (req: Request, res: Response) => {
+// Event sync endpoint with authentication
+app.post('/events/sync', authenticateUser, validateInput({}), async (req: Request, res: Response) => {
   try {
     const { eventId, action }: EventSyncRequest = req.body;
 
     if (!eventId || !action) {
-      return res.status(400).json({
-        error: 'Missing required fields: eventId, action'
-      });
+      return sendErrorResponse(res, 400, 'Missing required fields');
+    }
+    
+    // Validate action
+    if (!['create', 'update', 'delete'].includes(action)) {
+      return sendErrorResponse(res, 400, 'Invalid action');
     }
 
     switch (action) {
@@ -161,27 +331,27 @@ app.post('/events/sync', async (req: Request, res: Response) => {
       case 'delete':
         await handleEventDeleted(eventId);
         break;
-      default:
-        return res.status(400).json({ error: 'Invalid action' });
     }
 
     return res.json({ success: true });
   } catch (error) {
     console.error('Event sync error:', error);
-    return res.status(500).json({
-      error: 'Failed to sync event',
-      details: error instanceof Error ? error.message : 'Unknown error',
-    });
+    return sendErrorResponse(res, 500, 'Failed to sync event');
   }
 });
 
-// Events search endpoint - proxies to RapidAPI
-app.get('/events/search', async (req: Request, res: Response) => {
+// Events search endpoint - with rate limiting and validation
+app.get('/events/search', validateInput({}), async (req: Request, res: Response) => {
   try {
-    const { lat, lng, radius = 10, category, limit = 20, page = 1 } = req.query;
+    const { lat, lng, radius = 10, category, limit = 20, page = 1, query, location, start, end } = req.query;
     
-    if (!lat || !lng) {
-      return res.status(400).json({ error: 'Missing required parameters: lat, lng' });
+    // Validate numeric parameters
+    if ((lat && isNaN(Number(lat))) || (lng && isNaN(Number(lng)))) {
+      return sendErrorResponse(res, 400, 'Invalid coordinates');
+    }
+    
+    if (limit && (isNaN(Number(limit)) || Number(limit) > 100)) {
+      return sendErrorResponse(res, 400, 'Invalid limit parameter');
     }
 
     // Check if RapidAPI key is configured
@@ -189,23 +359,28 @@ app.get('/events/search', async (req: Request, res: Response) => {
       console.error('RapidAPI key is not configured');
       // Return mock data in development if no API key
       return res.json({
-        data: getMockEvents(Number(lat), Number(lng), Number(limit))
+        data: getMockEvents(Number(lat) || 0, Number(lng) || 0, Number(limit))
       });
     }
 
     const response = await axios.get('https://real-time-events-search.p.rapidapi.com/search-events', {
       params: {
-        query: category || 'events near me',
-        location: `${lat},${lng}`,
-        radius: radius,
-        limit: limit,
-        page: page,
+        ...(query ? { query: String(query).slice(0, 100) } : {}),
+        ...(location ? { location: String(location).slice(0, 100) } : 
+            (lat && lng ? { location: `${lat},${lng}` } : {})),
+        ...(radius ? { radius: Math.min(Number(radius), 50) } : {}),
+        ...(start ? { start: String(start).slice(0, 20) } : {}),
+        ...(end ? { end: String(end).slice(0, 20) } : {}),
+        ...(category ? { category: String(category).slice(0, 50) } : {}),
+        limit: Math.min(Number(limit) || 20, 100),
+        page: Math.max(1, Number(page) || 1),
         sort: 'date'
       },
       headers: {
         'X-RapidAPI-Key': config.RAPIDAPI_KEY,
         'X-RapidAPI-Host': 'real-time-events-search.p.rapidapi.com'
-      }
+      },
+      timeout: 15000
     });
 
     return res.json(response.data);
@@ -214,9 +389,186 @@ app.get('/events/search', async (req: Request, res: Response) => {
     // Return mock data on error to keep app functional
     const { lat, lng, limit = 20 } = req.query;
     return res.json({
-      data: getMockEvents(Number(lat), Number(lng), Number(limit))
+      data: getMockEvents(Number(lat) || 0, Number(lng) || 0, Number(limit))
     });
   }
+});
+
+// Events trending endpoint
+app.get('/events/trending', validateInput({}), async (req: Request, res: Response) => {
+  try {
+    const { location, limit } = req.query as any;
+    
+    if (limit && (isNaN(Number(limit)) || Number(limit) > 100)) {
+      return sendErrorResponse(res, 400, 'Invalid limit parameter');
+    }
+
+    if (!config.RAPIDAPI_KEY) {
+      return res.json({
+        data: getMockEvents(0, 0, Number(limit) || 20)
+      });
+    }
+
+    const response = await axios.get('https://real-time-events-search.p.rapidapi.com/search-events', {
+      params: {
+        query: 'events trending music concert sports',
+        ...(location ? { location: String(location).slice(0, 100) } : {}),
+        limit: Math.min(Number(limit) || 20, 100)
+      },
+      headers: {
+        'X-RapidAPI-Key': config.RAPIDAPI_KEY,
+        'X-RapidAPI-Host': 'real-time-events-search.p.rapidapi.com'
+      },
+      timeout: 15000
+    });
+
+    return res.json(response.data);
+  } catch (error) {
+    console.error('Trending events error');
+    return sendErrorResponse(res, 500, 'Failed to get trending events');
+  }
+});
+
+// Events nearby endpoint
+app.get('/events/nearby', validateInput({}), async (req: Request, res: Response) => {
+  try {
+    const { lat, lng, radius, limit } = req.query as any;
+    
+    if (!lat || !lng || isNaN(Number(lat)) || isNaN(Number(lng))) {
+      return sendErrorResponse(res, 400, 'Invalid coordinates');
+    }
+    
+    if (radius && (isNaN(Number(radius)) || Number(radius) > 50)) {
+      return sendErrorResponse(res, 400, 'Invalid radius parameter');
+    }
+    
+    if (limit && (isNaN(Number(limit)) || Number(limit) > 100)) {
+      return sendErrorResponse(res, 400, 'Invalid limit parameter');
+    }
+
+    if (!config.RAPIDAPI_KEY) {
+      return res.json({
+        data: getMockEvents(Number(lat), Number(lng), Number(limit) || 20)
+      });
+    }
+
+    const response = await axios.get('https://real-time-events-search.p.rapidapi.com/search-events', {
+      params: {
+        query: 'events',
+        location: `${lat},${lng}`,
+        radius: Math.min(Number(radius) || 10, 50),
+        limit: Math.min(Number(limit) || 20, 100)
+      },
+      headers: {
+        'X-RapidAPI-Key': config.RAPIDAPI_KEY,
+        'X-RapidAPI-Host': 'real-time-events-search.p.rapidapi.com'
+      },
+      timeout: 15000
+    });
+
+    return res.json(response.data);
+  } catch (error) {
+    console.error('Nearby events error');
+    return sendErrorResponse(res, 500, 'Failed to get nearby events');
+  }
+});
+
+// Event details endpoint
+app.get('/events/details', validateInput({}), async (req: Request, res: Response) => {
+  try {
+    const { event_id } = req.query as any;
+    
+    if (!event_id) {
+      return sendErrorResponse(res, 400, 'Missing event ID');
+    }
+
+    if (!config.RAPIDAPI_KEY) {
+      return sendErrorResponse(res, 503, 'Service temporarily unavailable');
+    }
+
+    const response = await axios.get('https://real-time-events-search.p.rapidapi.com/event-details', {
+      params: { event_id: String(event_id).slice(0, 100) },
+      headers: {
+        'X-RapidAPI-Key': config.RAPIDAPI_KEY,
+        'X-RapidAPI-Host': 'real-time-events-search.p.rapidapi.com'
+      },
+      timeout: 10000
+    });
+
+    return res.json(response.data);
+  } catch (error) {
+    console.error('Event details error');
+    return sendErrorResponse(res, 500, 'Failed to get event details');
+  }
+});
+
+// Events by category endpoint
+app.get('/events/category', validateInput({}), async (req: Request, res: Response) => {
+  try {
+    const { category, location, limit } = req.query as any;
+    
+    if (!category) {
+      return sendErrorResponse(res, 400, 'Missing category parameter');
+    }
+    
+    if (limit && (isNaN(Number(limit)) || Number(limit) > 100)) {
+      return sendErrorResponse(res, 400, 'Invalid limit parameter');
+    }
+
+    if (!config.RAPIDAPI_KEY) {
+      return res.json({
+        data: getMockEvents(0, 0, Number(limit) || 20)
+      });
+    }
+
+    const response = await axios.get('https://real-time-events-search.p.rapidapi.com/events-by-category', {
+      params: {
+        category: String(category).slice(0, 50),
+        ...(location ? { location: String(location).slice(0, 100) } : {}),
+        limit: Math.min(Number(limit) || 20, 100)
+      },
+      headers: {
+        'X-RapidAPI-Key': config.RAPIDAPI_KEY,
+        'X-RapidAPI-Host': 'real-time-events-search.p.rapidapi.com'
+      },
+      timeout: 10000
+    });
+
+    return res.json(response.data);
+  } catch (error) {
+    console.error('Category events error');
+    return sendErrorResponse(res, 500, 'Failed to get events by category');
+  }
+});
+
+// Generate recommendations endpoint with authentication
+app.post('/recommendations/generate', authenticateUser, validateInput({}), async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return sendErrorResponse(res, 400, 'Missing userId');
+    }
+
+    const recommendations = await generatePersonalizedRecommendations(userId);
+
+    return res.json({
+      success: true,
+      recommendations,
+    });
+  } catch (error) {
+    console.error('Recommendations error:', error);
+    return sendErrorResponse(res, 500, 'Failed to generate recommendations');
+  }
+});
+
+// Health check endpoint
+app.get('/health', (req: Request, res: Response) => {
+  res.json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  });
 });
 
 // Helper function to generate mock events for development/demo
@@ -225,7 +577,7 @@ function getMockEvents(lat: number, lng: number, limit: number) {
   const categories = ['Concert', 'Festival', 'Sports', 'Theater', 'Comedy', 'Art'];
   const venues = ['Madison Square Garden', 'Central Park', 'Brooklyn Bowl', 'Blue Note', 'Apollo Theater'];
   
-  for (let i = 0; i < limit; i++) {
+  for (let i = 0; i < Math.min(limit, 20); i++) {
     const randomDate = new Date();
     randomDate.setDate(randomDate.getDate() + Math.floor(Math.random() * 30));
     
@@ -267,30 +619,6 @@ function getMockEvents(lat: number, lng: number, limit: number) {
   
   return events;
 }
-
-// Generate recommendations endpoint
-app.post('/recommendations/generate', async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({ error: 'Missing userId' });
-    }
-
-    const recommendations = await generatePersonalizedRecommendations(userId);
-
-    return res.json({
-      success: true,
-      recommendations,
-    });
-  } catch (error) {
-    console.error('Recommendations error:', error);
-    return res.status(500).json({
-      error: 'Failed to generate recommendations',
-      details: error instanceof Error ? error.message : 'Unknown error',
-    });
-  }
-});
 
 // Export the Express app as a Cloud Function
 export const api = functions.https.onRequest(app);
@@ -351,36 +679,38 @@ async function generateAIResponse(
 
     const systemPrompt = getSystemPrompt(chatType, context);
     const messages = [
-      { role: 'system', content: systemPrompt },
-      ...chatHistory.map(msg => ({
-        role: msg.role,
+      { role: 'system' as const, content: systemPrompt },
+      ...chatHistory.slice(-10).map(msg => ({ // Limit history to last 10 messages
+        role: msg.role as 'user' | 'assistant',
         content: msg.content,
       })),
-      { role: 'user', content: message },
+      { role: 'user' as const, content: message },
     ];
 
+    // Use the new tools API instead of deprecated functions API
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
-      messages: messages as any,
+      model: 'gpt-4o-mini', // Updated to latest model
+      messages: messages,
       max_tokens: 1000,
       temperature: 0.7,
-      functions: getChatFunctions(chatType),
-      function_call: 'auto',
+      tools: getChatTools(chatType),
+      tool_choice: 'auto',
     });
 
     const choice = completion.choices[0];
     const responseMessage = choice.message;
 
-    if (responseMessage.function_call) {
-      return await processFunctionCall(responseMessage.function_call);
+    if (responseMessage.tool_calls && responseMessage.tool_calls.length > 0) {
+      return await processToolCall(responseMessage.tool_calls[0]);
     } else {
       return {
         content: responseMessage.content || 'I apologize, but I encountered an error processing your request.',
         type: 'text',
       };
     }
-  } catch (error) {
-    console.error('OpenAI API error:', error);
+  } catch (error: any) {
+    console.error('OpenAI API error');
+    // Don't expose error details
     return {
       content: 'I\'m having trouble connecting right now. Please try again in a moment.',
       type: 'text',
@@ -405,48 +735,57 @@ function getSystemPrompt(chatType: string, context?: Record<string, any>): strin
   }
 }
 
-function getChatFunctions(chatType: string): any[] {
-  const baseFunctions: any[] = [
+// Updated to use tools API instead of deprecated functions API
+function getChatTools(chatType: string): any[] {
+  const baseTools: any[] = [
     {
-      name: 'search_events',
-      description: 'Search for events based on criteria',
-      parameters: {
-        type: 'object',
-        properties: {
-          query: { type: 'string', description: 'Search query' },
-          category: { type: 'string', description: 'Event category' },
-          location: { type: 'string', description: 'Location filter' },
-          dateRange: { type: 'string', description: 'Date range filter' },
-          priceRange: { type: 'string', description: 'Price preference' },
-        },
-      },
-    },
+      type: 'function',
+      function: {
+        name: 'search_events',
+        description: 'Search for events based on criteria',
+        parameters: {
+          type: 'object',
+          properties: {
+            query: { type: 'string', description: 'Search query' },
+            category: { type: 'string', description: 'Event category' },
+            location: { type: 'string', description: 'Location filter' },
+            dateRange: { type: 'string', description: 'Date range filter' },
+            priceRange: { type: 'string', description: 'Price preference' },
+          },
+          required: []
+        }
+      }
+    }
   ];
 
   if (chatType === 'eventDiscovery') {
-    baseFunctions.push({
-      name: 'get_recommendations',
-      description: 'Get personalized event recommendations',
-      parameters: {
-        type: 'object',
-        properties: {
-          interests: {
-            type: 'array',
-            items: { type: 'string' },
-            description: 'User interests',
+    baseTools.push({
+      type: 'function',
+      function: {
+        name: 'get_recommendations',
+        description: 'Get personalized event recommendations',
+        parameters: {
+          type: 'object',
+          properties: {
+            interests: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'User interests',
+            },
+            location: { type: 'string', description: 'User location' },
           },
-          location: { type: 'string', description: 'User location' },
-        },
-      },
+          required: []
+        }
+      }
     });
   }
 
-  return baseFunctions;
+  return baseTools;
 }
 
-async function processFunctionCall(functionCall: any): Promise<any> {
-  const functionName = functionCall.name;
-  const args = JSON.parse(functionCall.arguments);
+async function processToolCall(toolCall: any): Promise<any> {
+  const functionName = toolCall.function.name;
+  const args = JSON.parse(toolCall.function.arguments);
 
   switch (functionName) {
     case 'search_events':
@@ -463,7 +802,6 @@ async function processFunctionCall(functionCall: any): Promise<any> {
 
 async function searchEvents(args: any): Promise<any> {
   // Implementation would query Firestore for events matching the criteria
-  // For now, return a mock response
   return {
     content: 'I found several events matching your criteria. Here are some great options for you!',
     type: 'event',
@@ -490,17 +828,12 @@ async function getRecommendations(args: any): Promise<any> {
 async function handleEventCreated(eventId: string): Promise<void> {
   console.log(`Event created: ${eventId}`);
   
-  // Index the event for search
-  // Send notifications to interested users
-  // Update analytics
-  
   const eventDoc = await admin.firestore()
     .collection('events')
     .doc(eventId)
     .get();
     
   if (eventDoc.exists) {
-    // const eventData = eventDoc.data();
     // Process new event...
   }
 }
@@ -543,9 +876,6 @@ async function initializeNewUser(user: admin.auth.UserRecord): Promise<void> {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
     });
-
-  // Send welcome notification
-  // Subscribe to general topic for push notifications
 }
 
 async function sendDailyRecommendations(): Promise<void> {
@@ -573,160 +903,9 @@ async function generatePersonalizedRecommendations(userId: string): Promise<any[
     return [];
   }
   
-  // const userData = userDoc.data();
-  
   // Query events based on user preferences
   // Generate recommendations using AI
   // Store recommendations in Firestore
   
   return [];
 }
-
-// Secure RapidAPI config from configuration
-const RAPIDAPI_KEY = config.RAPIDAPI_KEY;
-const RAPIDAPI_BASE = 'https://real-time-events-search.p.rapidapi.com';
-const RAPIDAPI_HOST = 'real-time-events-search.p.rapidapi.com';
-
-function rapidApiHeaders() {
-  if (!RAPIDAPI_KEY) {
-    throw new Error('RapidAPI key is not configured. Please set RAPIDAPI_KEY environment variable.');
-  }
-  return {
-    'x-rapidapi-key': RAPIDAPI_KEY,
-    'x-rapidapi-host': RAPIDAPI_HOST,
-  };
-}
-
-app.get('/events/search', async (req: Request, res: Response) => {
-  try {
-    const { query, location, start, end, limit } = req.query as any;
-    console.log('Search events request:', { query, location, start, end, limit });
-
-    const response = await axios.get(`${RAPIDAPI_BASE}/search-events`, {
-      params: {
-        ...(query ? { query } : {}),
-        ...(location ? { location } : {}),
-        ...(start ? { start } : {}),
-        ...(end ? { end } : {}),
-        ...(limit ? { limit } : {}),
-      },
-      headers: rapidApiHeaders(),
-      timeout: 15000, // Increased timeout
-    });
-
-    console.log('Search events response status:', response.status);
-    console.log('Search events data received:', response.data ? 'Yes' : 'No');
-    
-    // Pass through the RapidAPI response structure
-    res.status(200).json(response.data);
-  } catch (error: any) {
-    console.error('RapidAPI /events/search error:', error?.response?.data || error.message);
-    res.status(error?.response?.status || 500).json({
-      error: 'Failed to search events',
-      details: error?.response?.data || error.message,
-    });
-  }
-});
-
-app.get('/events/trending', async (req: Request, res: Response) => {
-  try {
-    const { location, limit } = req.query as any;
-    console.log('Trending events request:', { location, limit });
-
-    const response = await axios.get(`${RAPIDAPI_BASE}/search-events`, {
-      params: {
-        query: 'events trending music concert sports',
-        ...(location ? { location } : {}),
-        ...(limit ? { limit } : { limit: '20' }),
-      },
-      headers: rapidApiHeaders(),
-      timeout: 15000, // Increased timeout
-    });
-
-    console.log('Trending events response status:', response.status);
-    console.log('Trending events data received:', response.data ? 'Yes' : 'No');
-    
-    // Pass through the RapidAPI response structure
-    res.status(200).json(response.data);
-  } catch (error: any) {
-    console.error('RapidAPI /events/trending error:', error?.response?.data || error.message);
-    res.status(error?.response?.status || 500).json({
-      error: 'Failed to get trending events',
-      details: error?.response?.data || error.message,
-    });
-  }
-});
-
-app.get('/events/nearby', async (req: Request, res: Response) => {
-  try {
-    const { lat, lng, radius, limit } = req.query as any;
-    console.log('Nearby events request:', { lat, lng, radius, limit });
-
-    // Use search-events with location-based query
-    const response = await axios.get(`${RAPIDAPI_BASE}/search-events`, {
-      params: {
-        query: 'events',
-        location: `${lat},${lng}`,
-        ...(radius ? { radius: Math.min(radius, 50) } : {}), // Limit radius to 50km
-        ...(limit ? { limit } : { limit: '20' }),
-      },
-      headers: rapidApiHeaders(),
-      timeout: 15000, // Increased timeout
-    });
-
-    console.log('Nearby events response:', response.data);
-    res.status(200).json(response.data);
-  } catch (error: any) {
-    console.error('RapidAPI /events/nearby error:', error?.response?.data || error.message);
-    res.status(error?.response?.status || 500).json({
-      error: 'Failed to get nearby events',
-      details: error?.response?.data || error.message,
-    });
-  }
-});
-
-app.get('/events/details', async (req: Request, res: Response) => {
-  try {
-    const { event_id } = req.query as any;
-
-    const response = await axios.get(`${RAPIDAPI_BASE}/event-details`, {
-      params: {
-        ...(event_id ? { event_id } : {}),
-      },
-      headers: rapidApiHeaders(),
-      timeout: 10000,
-    });
-
-    res.status(200).json(response.data);
-  } catch (error: any) {
-    console.error('RapidAPI /events/details error:', error?.response?.data || error.message);
-    res.status(error?.response?.status || 500).json({
-      error: 'Failed to get event details',
-      details: error?.response?.data || error.message,
-    });
-  }
-});
-
-app.get('/events/category', async (req: Request, res: Response) => {
-  try {
-    const { category, location, limit } = req.query as any;
-
-    const response = await axios.get(`${RAPIDAPI_BASE}/events-by-category`, {
-      params: {
-        ...(category ? { category } : {}),
-        ...(location ? { location } : {}),
-        ...(limit ? { limit } : {}),
-      },
-      headers: rapidApiHeaders(),
-      timeout: 10000,
-    });
-
-    res.status(200).json(response.data);
-  } catch (error: any) {
-    console.error('RapidAPI /events/category error:', error?.response?.data || error.message);
-    res.status(error?.response?.status || 500).json({
-      error: 'Failed to get events by category',
-      details: error?.response?.data || error.message,
-    });
-  }
-});

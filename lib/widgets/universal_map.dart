@@ -23,11 +23,12 @@ class UniversalMapWidget extends StatefulWidget {
   State<UniversalMapWidget> createState() => _UniversalMapWidgetState();
 }
 
-class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProviderStateMixin {
+class _UniversalMapWidgetState extends State<UniversalMapWidget>
+    with TickerProviderStateMixin {
   late final MapController _mapController;
   Event? selectedEvent;
   late AnimationController _pulseController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -75,25 +76,21 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
           children: [
             // Mapbox Tile Layer
             TileLayer(
-              urlTemplate: 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${MapboxConfig.accessToken}',
+              urlTemplate:
+                  'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${MapboxConfig.accessToken}',
               userAgentPackageName: 'com.somethingtodo.app',
             ),
-            
+
             // Event Markers
-            MarkerLayer(
-              markers: _buildEventMarkers(),
-            ),
-            
+            MarkerLayer(markers: _buildEventMarkers()),
+
             // Current Location Marker
-            if (widget.currentLatitude != null && widget.currentLongitude != null)
-              MarkerLayer(
-                markers: [
-                  _buildCurrentLocationMarker(),
-                ],
-              ),
+            if (widget.currentLatitude != null &&
+                widget.currentLongitude != null)
+              MarkerLayer(markers: [_buildCurrentLocationMarker()]),
           ],
         ),
-        
+
         // Map Controls
         Positioned(
           right: 16,
@@ -104,7 +101,10 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
                 icon: Icons.add,
                 onTap: () {
                   final currentZoom = _mapController.camera.zoom;
-                  _mapController.move(_mapController.camera.center, currentZoom + 1);
+                  _mapController.move(
+                    _mapController.camera.center,
+                    currentZoom + 1,
+                  );
                 },
               ),
               const SizedBox(height: 8),
@@ -112,14 +112,18 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
                 icon: Icons.remove,
                 onTap: () {
                   final currentZoom = _mapController.camera.zoom;
-                  _mapController.move(_mapController.camera.center, currentZoom - 1);
+                  _mapController.move(
+                    _mapController.camera.center,
+                    currentZoom - 1,
+                  );
                 },
               ),
               const SizedBox(height: 8),
               _buildMapControl(
                 icon: Icons.my_location,
                 onTap: () {
-                  if (widget.currentLatitude != null && widget.currentLongitude != null) {
+                  if (widget.currentLatitude != null &&
+                      widget.currentLongitude != null) {
                     _mapController.move(
                       LatLng(widget.currentLatitude!, widget.currentLongitude!),
                       14.0,
@@ -130,7 +134,7 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
             ],
           ),
         ),
-        
+
         // Selected Event Card
         if (selectedEvent != null)
           Positioned(
@@ -204,7 +208,9 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
               border: Border.all(color: Colors.white, width: 3),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.3 * (1 - _pulseController.value)),
+                  color: AppTheme.primaryColor.withValues(
+                    alpha: 0.3 * (1 - _pulseController.value),
+                  ),
                   blurRadius: 20 * _pulseController.value,
                   spreadRadius: 10 * _pulseController.value,
                 ),
@@ -242,9 +248,7 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
   Widget _buildEventCard(Event event) {
     return Card(
       elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () => widget.onEventSelected?.call(event),
         borderRadius: BorderRadius.circular(16),
@@ -258,7 +262,9 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: _getCategoryColor(event.category).withValues(alpha: 0.1),
+                  color: _getCategoryColor(
+                    event.category,
+                  ).withValues(alpha: 0.1),
                 ),
                 child: Center(
                   child: Icon(
@@ -269,7 +275,7 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Event details
               Expanded(
                 child: Column(
@@ -288,10 +294,7 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
                     const SizedBox(height: 4),
                     Text(
                       event.venue.name,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -320,18 +323,22 @@ class _UniversalMapWidgetState extends State<UniversalMapWidget> with TickerProv
                   ],
                 ),
               ),
-              
+
               // Price and navigation
               Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    event.pricing.isFree ? 'FREE' : '\$${event.pricing.price.toStringAsFixed(0)}+',
+                    event.pricing.isFree
+                        ? 'FREE'
+                        : '\$${event.pricing.price.toStringAsFixed(0)}+',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: event.pricing.isFree ? Colors.green : AppTheme.primaryColor,
+                      color: event.pricing.isFree
+                          ? Colors.green
+                          : AppTheme.primaryColor,
                     ),
                   ),
                   const SizedBox(height: 8),

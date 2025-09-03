@@ -43,14 +43,15 @@ class _EventCardState extends State<EventCard> {
   void _checkIfFavorited() {
     final authProvider = context.read<AuthProvider>();
     if (authProvider.currentUser != null) {
-      _isFavorited = authProvider.currentUser!.favoriteEventIds
-          .contains(widget.event.id);
+      _isFavorited = authProvider.currentUser!.favoriteEventIds.contains(
+        widget.event.id,
+      );
     }
   }
 
   Future<void> _toggleFavorite() async {
     if (_isToggling) return;
-    
+
     final authProvider = context.read<AuthProvider>();
     if (authProvider.currentUser == null) return;
 
@@ -85,7 +86,9 @@ class _EventCardState extends State<EventCard> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to ${_isFavorited ? 'remove from' : 'add to'} favorites'),
+            content: Text(
+              'Failed to ${_isFavorited ? 'remove from' : 'add to'} favorites',
+            ),
             backgroundColor: AppTheme.errorColor,
           ),
         );
@@ -108,9 +111,7 @@ class _EventCardState extends State<EventCard> {
   Widget _buildFullCard() {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: widget.onTap,
         borderRadius: BorderRadius.circular(12),
@@ -125,13 +126,14 @@ class _EventCardState extends State<EventCard> {
               child: Stack(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: widget.event.imageUrls.isNotEmpty 
-                        ? widget.event.imageUrls.first 
+                    imageUrl: widget.event.imageUrls.isNotEmpty
+                        ? widget.event.imageUrls.first
                         : 'https://via.placeholder.com/400x200',
                     height: 160,
                     width: double.infinity,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => const LoadingShimmer(height: 160),
+                    placeholder: (context, url) =>
+                        const LoadingShimmer(height: 160),
                     errorWidget: (context, url, error) => Container(
                       height: 160,
                       color: Colors.grey[300],
@@ -185,11 +187,11 @@ class _EventCardState extends State<EventCard> {
                                   ),
                                 )
                               : Icon(
-                                  _isFavorited 
-                                      ? Icons.favorite 
+                                  _isFavorited
+                                      ? Icons.favorite
                                       : Icons.favorite_outline,
-                                  color: _isFavorited 
-                                      ? AppTheme.errorColor 
+                                  color: _isFavorited
+                                      ? AppTheme.errorColor
                                       : Colors.grey[600],
                                   size: 16,
                                 ),
@@ -215,13 +217,13 @@ class _EventCardState extends State<EventCard> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        DateFormat('MMM dd, yyyy • h:mm a').format(
-                          widget.event.startDateTime,
-                        ),
+                        DateFormat(
+                          'MMM dd, yyyy • h:mm a',
+                        ).format(widget.event.startDateTime),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppTheme.primaryColor,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          color: AppTheme.primaryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -230,8 +232,8 @@ class _EventCardState extends State<EventCard> {
                   Text(
                     widget.event.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -239,9 +241,9 @@ class _EventCardState extends State<EventCard> {
                   // Organizer
                   Text(
                     'by ${widget.event.organizerName}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 8),
                   // Location and Price
@@ -259,9 +261,8 @@ class _EventCardState extends State<EventCard> {
                             Expanded(
                               child: Text(
                                 widget.event.venue.name,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.grey[600],
-                                    ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: Colors.grey[600]),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -275,18 +276,18 @@ class _EventCardState extends State<EventCard> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: widget.event.pricing.isFree 
+                          color: widget.event.pricing.isFree
                               ? AppTheme.successColor.withValues(alpha: 0.1)
                               : AppTheme.warningColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          widget.event.pricing.isFree 
-                              ? 'Free' 
+                          widget.event.pricing.isFree
+                              ? 'Free'
                               : '\$${widget.event.pricing.price.toStringAsFixed(0)}',
                           style: TextStyle(
-                            color: widget.event.pricing.isFree 
-                                ? AppTheme.successColor 
+                            color: widget.event.pricing.isFree
+                                ? AppTheme.successColor
                                 : AppTheme.warningColor,
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -308,9 +309,8 @@ class _EventCardState extends State<EventCard> {
                         const SizedBox(width: 4),
                         Text(
                           '${widget.event.attendeeCount} attending',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -326,9 +326,7 @@ class _EventCardState extends State<EventCard> {
   Widget _buildCompactCard() {
     return Card(
       elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: widget.onTap,
         borderRadius: BorderRadius.circular(12),
@@ -340,16 +338,14 @@ class _EventCardState extends State<EventCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
-                  imageUrl: widget.event.imageUrls.isNotEmpty 
-                      ? widget.event.imageUrls.first 
+                  imageUrl: widget.event.imageUrls.isNotEmpty
+                      ? widget.event.imageUrls.first
                       : 'https://via.placeholder.com/80x80',
                   width: 60,
                   height: 60,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => const LoadingShimmer(
-                    width: 60,
-                    height: 60,
-                  ),
+                  placeholder: (context, url) =>
+                      const LoadingShimmer(width: 60, height: 60),
                   errorWidget: (context, url, error) => Container(
                     width: 60,
                     height: 60,
@@ -368,20 +364,20 @@ class _EventCardState extends State<EventCard> {
                     Text(
                       widget.event.title,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     // Date
                     Text(
-                      DateFormat('MMM dd • h:mm a').format(
-                        widget.event.startDateTime,
-                      ),
+                      DateFormat(
+                        'MMM dd • h:mm a',
+                      ).format(widget.event.startDateTime),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.primaryColor,
-                          ),
+                        color: AppTheme.primaryColor,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     // Location
@@ -396,9 +392,8 @@ class _EventCardState extends State<EventCard> {
                         Expanded(
                           child: Text(
                             widget.event.venue.name,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: Colors.grey[600]),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -421,26 +416,26 @@ class _EventCardState extends State<EventCard> {
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : Icon(
-                              _isFavorited 
-                                  ? Icons.favorite 
+                              _isFavorited
+                                  ? Icons.favorite
                                   : Icons.favorite_outline,
-                              color: _isFavorited 
-                                  ? AppTheme.errorColor 
+                              color: _isFavorited
+                                  ? AppTheme.errorColor
                                   : Colors.grey[400],
                               size: 20,
                             ),
                     ),
                   const SizedBox(height: 8),
                   Text(
-                    widget.event.pricing.isFree 
-                        ? 'Free' 
+                    widget.event.pricing.isFree
+                        ? 'Free'
                         : '\$${widget.event.pricing.price.toStringAsFixed(0)}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: widget.event.pricing.isFree 
-                              ? AppTheme.successColor 
-                              : AppTheme.warningColor,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      color: widget.event.pricing.isFree
+                          ? AppTheme.successColor
+                          : AppTheme.warningColor,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),

@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
@@ -23,7 +22,8 @@ class AppUser with _$AppUser {
     DateTime? updatedAt,
   }) = _AppUser;
 
-  factory AppUser.fromJson(Map<String, dynamic> json) => _$AppUserFromJson(json);
+  factory AppUser.fromJson(Map<String, dynamic> json) =>
+      _$AppUserFromJson(json);
 }
 
 @freezed
@@ -38,7 +38,7 @@ class UserPreferences with _$UserPreferences {
     @Default('any') String pricePreference, // 'free', 'paid', 'any'
   }) = _UserPreferences;
 
-  factory UserPreferences.fromJson(Map<String, dynamic> json) => 
+  factory UserPreferences.fromJson(Map<String, dynamic> json) =>
       _$UserPreferencesFromJson(json);
 }
 
@@ -54,19 +54,6 @@ class UserLocation with _$UserLocation {
     DateTime? lastUpdated,
   }) = _UserLocation;
 
-  factory UserLocation.fromJson(Map<String, dynamic> json) => 
+  factory UserLocation.fromJson(Map<String, dynamic> json) =>
       _$UserLocationFromJson(json);
-}
-
-// Helper functions for Firestore Timestamp conversion
-DateTime? _fromJsonTimestamp(dynamic timestamp) {
-  if (timestamp == null) return null;
-  if (timestamp is Timestamp) return timestamp.toDate();
-  if (timestamp is String) return DateTime.parse(timestamp);
-  return null;
-}
-
-dynamic _toJsonTimestamp(DateTime? dateTime) {
-  if (dateTime == null) return null;
-  return Timestamp.fromDate(dateTime);
 }

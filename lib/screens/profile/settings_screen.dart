@@ -31,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final authProvider = context.read<AuthProvider>();
     final user = authProvider.currentUser;
     final preferences = user?.preferences;
-    
+
     if (preferences != null) {
       setState(() {
         _notificationsEnabled = preferences.notificationsEnabled;
@@ -48,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final authProvider = context.read<AuthProvider>();
     // In a real app, you would save these settings to the backend
     // await authProvider.updatePreferences(...)
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Settings saved successfully'),
@@ -63,159 +63,132 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: const Text('Settings'),
         actions: [
-          TextButton(
-            onPressed: _saveSettings,
-            child: const Text('Save'),
-          ),
+          TextButton(onPressed: _saveSettings, child: const Text('Save')),
         ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildSection(
-            'Notifications',
-            Icons.notifications,
-            [
-              _buildSwitchTile(
-                'Push Notifications',
-                'Receive notifications about events',
-                _notificationsEnabled,
-                (value) => setState(() => _notificationsEnabled = value),
-              ),
-              _buildSwitchTile(
-                'Marketing Emails',
-                'Receive promotional emails about events',
-                _marketingEmails,
-                (value) => setState(() => _marketingEmails = value),
-              ),
-            ],
-          ),
-          
+          _buildSection('Notifications', Icons.notifications, [
+            _buildSwitchTile(
+              'Push Notifications',
+              'Receive notifications about events',
+              _notificationsEnabled,
+              (value) => setState(() => _notificationsEnabled = value),
+            ),
+            _buildSwitchTile(
+              'Marketing Emails',
+              'Receive promotional emails about events',
+              _marketingEmails,
+              (value) => setState(() => _marketingEmails = value),
+            ),
+          ]),
+
           const SizedBox(height: 24),
-          
-          _buildSection(
-            'Location & Privacy',
-            Icons.location_on,
-            [
-              _buildSwitchTile(
-                'Location Services',
-                'Find events near your location',
-                _locationEnabled,
-                (value) => setState(() => _locationEnabled = value),
-              ),
-              _buildSliderTile(
-                'Search Radius',
-                'Maximum distance to search for events',
-                _maxDistance,
-                1.0,
-                100.0,
-                '${_maxDistance.round()} km',
-                (value) => setState(() => _maxDistance = value),
-              ),
-            ],
-          ),
-          
+
+          _buildSection('Location & Privacy', Icons.location_on, [
+            _buildSwitchTile(
+              'Location Services',
+              'Find events near your location',
+              _locationEnabled,
+              (value) => setState(() => _locationEnabled = value),
+            ),
+            _buildSliderTile(
+              'Search Radius',
+              'Maximum distance to search for events',
+              _maxDistance,
+              1.0,
+              100.0,
+              '${_maxDistance.round()} km',
+              (value) => setState(() => _maxDistance = value),
+            ),
+          ]),
+
           const SizedBox(height: 24),
-          
-          _buildSection(
-            'Appearance',
-            Icons.palette,
-            [
-              _buildDropdownTile(
-                'Theme',
-                'Choose your preferred theme',
-                _selectedTheme,
-                [
-                  const DropdownMenuItem(value: 'light', child: Text('Light')),
-                  const DropdownMenuItem(value: 'dark', child: Text('Dark')),
-                  const DropdownMenuItem(value: 'system', child: Text('System')),
-                ],
-                (value) => setState(() => _selectedTheme = value!),
-              ),
-            ],
-          ),
-          
+
+          _buildSection('Appearance', Icons.palette, [
+            _buildDropdownTile(
+              'Theme',
+              'Choose your preferred theme',
+              _selectedTheme,
+              [
+                const DropdownMenuItem(value: 'light', child: Text('Light')),
+                const DropdownMenuItem(value: 'dark', child: Text('Dark')),
+                const DropdownMenuItem(value: 'system', child: Text('System')),
+              ],
+              (value) => setState(() => _selectedTheme = value!),
+            ),
+          ]),
+
           const SizedBox(height: 24),
-          
-          _buildSection(
-            'Event Preferences',
-            Icons.tune,
-            [
-              _buildDropdownTile(
-                'Price Preference',
-                'Default price filter for events',
-                _pricePreference,
-                [
-                  const DropdownMenuItem(value: 'any', child: Text('Any Price')),
-                  const DropdownMenuItem(value: 'free', child: Text('Free Only')),
-                  const DropdownMenuItem(value: 'paid', child: Text('Paid Only')),
-                ],
-                (value) => setState(() => _pricePreference = value!),
-              ),
-              _buildListTile(
-                'Preferred Categories',
-                'Choose your favorite event categories',
-                Icons.category,
-                () => _showCategoriesDialog(),
-              ),
-            ],
-          ),
-          
+
+          _buildSection('Event Preferences', Icons.tune, [
+            _buildDropdownTile(
+              'Price Preference',
+              'Default price filter for events',
+              _pricePreference,
+              [
+                const DropdownMenuItem(value: 'any', child: Text('Any Price')),
+                const DropdownMenuItem(value: 'free', child: Text('Free Only')),
+                const DropdownMenuItem(value: 'paid', child: Text('Paid Only')),
+              ],
+              (value) => setState(() => _pricePreference = value!),
+            ),
+            _buildListTile(
+              'Preferred Categories',
+              'Choose your favorite event categories',
+              Icons.category,
+              () => _showCategoriesDialog(),
+            ),
+          ]),
+
           const SizedBox(height: 24),
-          
-          _buildSection(
-            'Account',
-            Icons.account_circle,
-            [
-              _buildListTile(
-                'Change Password',
-                'Update your account password',
-                Icons.lock,
-                () => _showChangePasswordDialog(),
-              ),
-              _buildListTile(
-                'Delete Account',
-                'Permanently delete your account',
-                Icons.delete_forever,
-                () => _showDeleteAccountDialog(),
-                textColor: AppTheme.errorColor,
-              ),
-            ],
-          ),
-          
+
+          _buildSection('Account', Icons.account_circle, [
+            _buildListTile(
+              'Change Password',
+              'Update your account password',
+              Icons.lock,
+              () => _showChangePasswordDialog(),
+            ),
+            _buildListTile(
+              'Delete Account',
+              'Permanently delete your account',
+              Icons.delete_forever,
+              () => _showDeleteAccountDialog(),
+              textColor: AppTheme.errorColor,
+            ),
+          ]),
+
           const SizedBox(height: 24),
-          
-          _buildSection(
-            'About',
-            Icons.info,
-            [
-              _buildListTile(
-                'Terms of Service',
-                'Read our terms and conditions',
-                Icons.description,
-                () => _showTermsDialog(),
-              ),
-              _buildListTile(
-                'Privacy Policy',
-                'How we handle your data',
-                Icons.privacy_tip,
-                () => _showPrivacyDialog(),
-              ),
-              _buildListTile(
-                'Contact Support',
-                'Get help or report issues',
-                Icons.support,
-                () => _contactSupport(),
-              ),
-              _buildListTile(
-                'App Version',
-                'v1.0.0 (Build 1)',
-                Icons.info_outline,
-                null,
-              ),
-            ],
-          ),
-          
+
+          _buildSection('About', Icons.info, [
+            _buildListTile(
+              'Terms of Service',
+              'Read our terms and conditions',
+              Icons.description,
+              () => _showTermsDialog(),
+            ),
+            _buildListTile(
+              'Privacy Policy',
+              'How we handle your data',
+              Icons.privacy_tip,
+              () => _showPrivacyDialog(),
+            ),
+            _buildListTile(
+              'Contact Support',
+              'Get help or report issues',
+              Icons.support,
+              () => _contactSupport(),
+            ),
+            _buildListTile(
+              'App Version',
+              'v1.0.0 (Build 1)',
+              Icons.info_outline,
+              null,
+            ),
+          ]),
+
           const SizedBox(height: 32),
         ],
       ),
@@ -225,9 +198,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSection(String title, IconData icon, List<Widget> children) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -240,16 +211,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
           ),
-          ...children.map((child) => 
-            child == children.last ? child : Column(
-              children: [child, const Divider(height: 1, indent: 16, endIndent: 16)],
-            ),
+          ...children.map(
+            (child) => child == children.last
+                ? child
+                : Column(
+                    children: [
+                      child,
+                      const Divider(height: 1, indent: 16, endIndent: 16),
+                    ],
+                  ),
           ),
         ],
       ),
@@ -299,9 +275,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text(
             valueLabel,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: AppTheme.primaryColor,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
@@ -330,7 +306,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
             ),
           ),
         ],
@@ -349,13 +328,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       leading: Icon(icon, color: textColor ?? Colors.grey[600]),
       title: Text(
         title,
-        style: TextStyle(
-          color: textColor,
-          fontWeight: FontWeight.w500,
-        ),
+        style: TextStyle(color: textColor, fontWeight: FontWeight.w500),
       ),
       subtitle: Text(subtitle),
-      trailing: onTap != null 
+      trailing: onTap != null
           ? const Icon(Icons.arrow_forward_ios, size: 16)
           : null,
       onTap: onTap,
@@ -393,9 +369,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Categories updated'),
-                ),
+                const SnackBar(content: Text('Categories updated')),
               );
             },
             child: const Text('Save'),
@@ -409,7 +383,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final oldPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -454,9 +428,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Password updated successfully'),
-                ),
+                const SnackBar(content: Text('Password updated successfully')),
               );
             },
             child: const Text('Update'),
@@ -505,7 +477,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showDeleteConfirmationDialog() {
     final passwordController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -513,7 +485,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Please enter your password to confirm account deletion:'),
+            const Text(
+              'Please enter your password to confirm account deletion:',
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: passwordController,

@@ -15,28 +15,31 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
     with TickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  
+
   late AnimationController _backgroundController;
   late AnimationController _orb1Controller;
   late AnimationController _orb2Controller;
   late AnimationController _orb3Controller;
-  
+
   final List<OnboardingPage> _pages = [
     OnboardingPage(
       title: 'Discover Amazing Events',
-      description: 'Find the best events happening around you with our smart AI-powered recommendations.',
+      description:
+          'Find the best events happening around you with our smart AI-powered recommendations.',
       icon: Icons.explore,
       gradientColors: [Colors.purple, Colors.blue],
     ),
     OnboardingPage(
       title: 'Never Miss Out',
-      description: 'Get personalized notifications about events you\'ll love and never miss great experiences.',
+      description:
+          'Get personalized notifications about events you\'ll love and never miss great experiences.',
       icon: Icons.notifications_active,
       gradientColors: [Colors.blue, Colors.cyan],
     ),
     OnboardingPage(
       title: 'Connect & Share',
-      description: 'Share your favorite events with friends and discover what\'s happening in your community.',
+      description:
+          'Share your favorite events with friends and discover what\'s happening in your community.',
       icon: Icons.group,
       gradientColors: [Colors.cyan, Colors.teal],
     ),
@@ -49,17 +52,17 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
       duration: const Duration(seconds: 20),
       vsync: this,
     )..repeat();
-    
+
     _orb1Controller = AnimationController(
       duration: const Duration(seconds: 15),
       vsync: this,
     )..repeat();
-    
+
     _orb2Controller = AnimationController(
       duration: const Duration(seconds: 25),
       vsync: this,
     )..repeat();
-    
+
     _orb3Controller = AnimationController(
       duration: const Duration(seconds: 30),
       vsync: this,
@@ -119,14 +122,11 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Colors.black,
-                      Colors.grey.shade900,
-                      Colors.black,
-                    ],
+                    colors: [Colors.black, Colors.grey.shade900, Colors.black],
                     stops: [
                       0.0,
-                      math.sin(_backgroundController.value * math.pi) * 0.5 + 0.5,
+                      math.sin(_backgroundController.value * math.pi) * 0.5 +
+                          0.5,
                       1.0,
                     ],
                   ),
@@ -134,10 +134,10 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
               );
             },
           ),
-          
+
           // Floating orbs
           ..._buildFloatingOrbs(),
-          
+
           // Main content
           SafeArea(
             child: Column(
@@ -185,7 +185,7 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                     ],
                   ),
                 ),
-                
+
                 // Pages
                 Expanded(
                   child: PageView.builder(
@@ -202,7 +202,7 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                     },
                   ),
                 ),
-                
+
                 // Page indicator and navigation
                 Padding(
                   padding: const EdgeInsets.all(24),
@@ -227,8 +227,10 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                                 end: Alignment.bottomRight,
                                 colors: _currentPage == index
                                     ? [
-                                        _pages[_currentPage].gradientColors[0].withValues(alpha: 0.6),
-                                        _pages[_currentPage].gradientColors[1].withValues(alpha: 0.3),
+                                        _pages[_currentPage].gradientColors[0]
+                                            .withValues(alpha: 0.6),
+                                        _pages[_currentPage].gradientColors[1]
+                                            .withValues(alpha: 0.3),
                                       ]
                                     : [
                                         Colors.white.withValues(alpha: 0.2),
@@ -247,9 +249,9 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                           );
                         }),
                       ),
-                      
+
                       const SizedBox(height: 32),
-                      
+
                       // Navigation buttons
                       Row(
                         children: [
@@ -292,9 +294,9 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                             )
                           else
                             const Expanded(child: SizedBox()),
-                          
+
                           const SizedBox(width: 16),
-                          
+
                           Expanded(
                             child: GestureDetector(
                               onTap: _nextPage,
@@ -309,21 +311,25 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    _pages[_currentPage].gradientColors[0].withValues(alpha: 0.3),
-                                    _pages[_currentPage].gradientColors[1].withValues(alpha: 0.2),
+                                    _pages[_currentPage].gradientColors[0]
+                                        .withValues(alpha: 0.3),
+                                    _pages[_currentPage].gradientColors[1]
+                                        .withValues(alpha: 0.2),
                                   ],
                                 ),
                                 borderGradient: LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    _pages[_currentPage].gradientColors[0].withValues(alpha: 0.8),
-                                    _pages[_currentPage].gradientColors[1].withValues(alpha: 0.4),
+                                    _pages[_currentPage].gradientColors[0]
+                                        .withValues(alpha: 0.8),
+                                    _pages[_currentPage].gradientColors[1]
+                                        .withValues(alpha: 0.4),
                                   ],
                                 ),
                                 child: Text(
-                                  _currentPage == _pages.length - 1 
-                                      ? 'Get Started' 
+                                  _currentPage == _pages.length - 1
+                                      ? 'Get Started'
                                       : 'Next',
                                   style: const TextStyle(
                                     color: Colors.white,
@@ -397,7 +403,8 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
         animation: _orb3Controller,
         builder: (context, child) {
           return Positioned(
-            top: MediaQuery.of(context).size.height / 2 +
+            top:
+                MediaQuery.of(context).size.height / 2 +
                 60 * math.sin(_orb3Controller.value * 2 * math.pi),
             right: 100 + 40 * math.cos(_orb3Controller.value * 2 * math.pi),
             child: Container(
@@ -427,90 +434,93 @@ class _GlassOnboardingScreenState extends State<GlassOnboardingScreen>
         children: [
           // Glass icon container
           GlassmorphicContainer(
-            width: 180,
-            height: 180,
-            borderRadius: 90,
-            blur: 30,
-            alignment: Alignment.center,
-            border: 2,
-            linearGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                page.gradientColors[0].withValues(alpha: 0.2),
-                page.gradientColors[1].withValues(alpha: 0.1),
-              ],
-            ),
-            borderGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                page.gradientColors[0].withValues(alpha: 0.5),
-                page.gradientColors[1].withValues(alpha: 0.2),
-              ],
-            ),
-            child: Icon(
-              page.icon,
-              size: 80,
-              color: Colors.white.withValues(alpha: 0.9),
-            ),
-          ).animate()
+                width: 180,
+                height: 180,
+                borderRadius: 90,
+                blur: 30,
+                alignment: Alignment.center,
+                border: 2,
+                linearGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    page.gradientColors[0].withValues(alpha: 0.2),
+                    page.gradientColors[1].withValues(alpha: 0.1),
+                  ],
+                ),
+                borderGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    page.gradientColors[0].withValues(alpha: 0.5),
+                    page.gradientColors[1].withValues(alpha: 0.2),
+                  ],
+                ),
+                child: Icon(
+                  page.icon,
+                  size: 80,
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+              )
+              .animate()
               .scale(duration: 600.ms, curve: Curves.easeOutBack)
               .shimmer(duration: 2000.ms, delay: 600.ms),
-          
+
           const SizedBox(height: 48),
-          
+
           // Title
           Text(
-            page.title,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              letterSpacing: -0.5,
-            ),
-            textAlign: TextAlign.center,
-          ).animate()
+                page.title,
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: -0.5,
+                ),
+                textAlign: TextAlign.center,
+              )
+              .animate()
               .fadeIn(duration: 800.ms)
               .slideY(begin: 0.3, curve: Curves.easeOutCubic),
-          
+
           const SizedBox(height: 20),
-          
+
           // Description in glass container
           GlassmorphicContainer(
-            width: double.infinity,
-            height: 100,
-            borderRadius: 20,
-            blur: 20,
-            alignment: Alignment.center,
-            border: 1,
-            linearGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withValues(alpha: 0.08),
-                Colors.white.withValues(alpha: 0.03),
-              ],
-            ),
-            borderGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withValues(alpha: 0.2),
-                Colors.white.withValues(alpha: 0.1),
-              ],
-            ),
-            padding: const EdgeInsets.all(20),
-            child: Text(
-              page.description,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white.withValues(alpha: 0.9),
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ).animate()
+                width: double.infinity,
+                height: 100,
+                borderRadius: 20,
+                blur: 20,
+                alignment: Alignment.center,
+                border: 1,
+                linearGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.08),
+                    Colors.white.withValues(alpha: 0.03),
+                  ],
+                ),
+                borderGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.2),
+                    Colors.white.withValues(alpha: 0.1),
+                  ],
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  page.description,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white.withValues(alpha: 0.9),
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              )
+              .animate()
               .fadeIn(duration: 1000.ms, delay: 200.ms)
               .slideY(begin: 0.3, curve: Curves.easeOutCubic),
         ],

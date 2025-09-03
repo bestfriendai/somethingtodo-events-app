@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 
 enum SwipeDirection { up, down, left, right }
 
-typedef SwipeCallback = void Function(SwipeDirection direction, double velocity);
+typedef SwipeCallback =
+    void Function(SwipeDirection direction, double velocity);
 
 class GestureService {
   static const double _minSwipeVelocity = 300.0;
@@ -127,7 +128,7 @@ class _SwipeableEventCardState extends State<SwipeableEventCard>
   late AnimationController _scaleController;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
-  
+
   double _dragDistance = 0.0;
   bool _isDragging = false;
 
@@ -142,22 +143,15 @@ class _SwipeableEventCardState extends State<SwipeableEventCard>
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    
-    _slideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
-    
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.easeOutCubic,
-    ));
+
+    _slideAnimation = Tween<Offset>(begin: Offset.zero, end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeOutCubic),
+    );
   }
 
   @override
@@ -179,20 +173,20 @@ class _SwipeableEventCardState extends State<SwipeableEventCard>
     setState(() {
       _dragDistance += details.delta.dx;
     });
-    
+
     // Update slide animation based on drag
     _slideAnimation = Tween<Offset>(
       begin: Offset.zero,
       end: Offset(_dragDistance / 300, 0),
     ).animate(_slideController);
-    
+
     _slideController.value = (_dragDistance.abs() / 100).clamp(0.0, 1.0);
   }
 
   void _handleDragEnd(DragEndDetails details) {
     final velocity = details.velocity.pixelsPerSecond;
     final threshold = 100.0;
-    
+
     setState(() {
       _isDragging = false;
     });
@@ -210,7 +204,7 @@ class _SwipeableEventCardState extends State<SwipeableEventCard>
         widget.onSwipeLeft?.call();
       }
     }
-    
+
     // Reset position
     _slideController.reverse().then((_) {
       setState(() {

@@ -175,7 +175,10 @@ class _HomeScreenState extends State<HomeScreen>
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.withValues(alpha: 0.3), width: 1),
+              border: Border.all(
+                color: Colors.grey.withValues(alpha: 0.3),
+                width: 1,
+              ),
             ),
             child: Row(
               children: [

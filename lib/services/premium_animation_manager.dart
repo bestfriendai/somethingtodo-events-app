@@ -4,7 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../config/modern_theme.dart';
 
 class PremiumAnimationManager {
-  static final PremiumAnimationManager _instance = PremiumAnimationManager._internal();
+  static final PremiumAnimationManager _instance =
+      PremiumAnimationManager._internal();
   factory PremiumAnimationManager() => _instance;
   PremiumAnimationManager._internal();
 
@@ -98,11 +99,15 @@ class PremiumAnimationManager {
     Color? color,
   }) {
     if (!instance.animationsEnabled) return child;
-    
-    return child.animate(onPlay: (controller) => controller.repeat()).shimmer(
-      duration: instance.scaledDuration(duration ?? const Duration(seconds: 2)),
-      color: color ?? Colors.white.withValues(alpha: 0.3),
-    );
+
+    return child
+        .animate(onPlay: (controller) => controller.repeat())
+        .shimmer(
+          duration: instance.scaledDuration(
+            duration ?? const Duration(seconds: 2),
+          ),
+          color: color ?? Colors.white.withValues(alpha: 0.3),
+        );
   }
 
   static Widget pulseEffect(
@@ -111,13 +116,15 @@ class PremiumAnimationManager {
     double scale = 1.05,
   }) {
     if (!instance.animationsEnabled) return child;
-    
+
     return child
         .animate(onPlay: (controller) => controller.repeat(reverse: true))
         .scale(
           begin: const Offset(1, 1),
           end: Offset(scale, scale),
-          duration: instance.scaledDuration(duration ?? const Duration(seconds: 1)),
+          duration: instance.scaledDuration(
+            duration ?? const Duration(seconds: 1),
+          ),
           curve: Curves.easeInOut,
         );
   }
@@ -128,13 +135,15 @@ class PremiumAnimationManager {
     List<Color>? colors,
   }) {
     if (!instance.animationsEnabled) return child;
-    
+
     final glowColors = colors ?? ModernTheme.neonGradient;
-    
+
     return child
         .animate(onPlay: (controller) => controller.repeat(reverse: true))
         .effect(
-          duration: instance.scaledDuration(duration ?? const Duration(seconds: 2)),
+          duration: instance.scaledDuration(
+            duration ?? const Duration(seconds: 2),
+          ),
         )
         .custom(
           builder: (context, value, child) {
@@ -184,41 +193,36 @@ class PremiumAnimationManager {
       case TransitionType.slideUp:
         return SlideTransition(
           position: animation.drive(
-            Tween(begin: const Offset(0, 1), end: Offset.zero).chain(
-              CurveTween(curve: premiumCurve),
-            ),
+            Tween(
+              begin: const Offset(0, 1),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: premiumCurve)),
           ),
           child: child,
         );
       case TransitionType.slideRight:
         return SlideTransition(
           position: animation.drive(
-            Tween(begin: const Offset(1, 0), end: Offset.zero).chain(
-              CurveTween(curve: premiumCurve),
-            ),
+            Tween(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: premiumCurve)),
           ),
           child: child,
         );
       case TransitionType.scale:
         return ScaleTransition(
           scale: animation.drive(
-            Tween(begin: 0.8, end: 1.0).chain(
-              CurveTween(curve: bouncyCurve),
-            ),
+            Tween(begin: 0.8, end: 1.0).chain(CurveTween(curve: bouncyCurve)),
           ),
           child: child,
         );
       case TransitionType.fade:
-        return FadeTransition(
-          opacity: animation,
-          child: child,
-        );
+        return FadeTransition(opacity: animation, child: child);
       case TransitionType.rotation:
         return RotationTransition(
           turns: animation.drive(
-            Tween(begin: 0.0, end: 1.0).chain(
-              CurveTween(curve: premiumCurve),
-            ),
+            Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: premiumCurve)),
           ),
           child: child,
         );
@@ -234,7 +238,7 @@ class PremiumAnimationManager {
     return children.asMap().entries.map((entry) {
       final index = entry.key;
       final child = entry.value;
-      
+
       return fadeInUp(
         child,
         delay: Duration(milliseconds: staggerDelay.inMilliseconds * index),
@@ -246,7 +250,7 @@ class PremiumAnimationManager {
   // Haptic feedback integration
   static void triggerHaptic(HapticType type) {
     if (!instance.animationsEnabled) return;
-    
+
     switch (type) {
       case HapticType.light:
         HapticFeedback.lightImpact();
@@ -270,93 +274,82 @@ class PremiumAnimationManager {
     double size = 50,
   }) {
     final loadingColors = colors ?? ModernTheme.neonGradient;
-    
+
     switch (type) {
       case LoadingAnimationType.pulse:
         return Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(colors: loadingColors),
-          ),
-        )
-        .animate(onPlay: (controller) => controller.repeat(reverse: true))
-        .scale(
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOut,
-        );
-        
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(colors: loadingColors),
+              ),
+            )
+            .animate(onPlay: (controller) => controller.repeat(reverse: true))
+            .scale(
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeInOut,
+            );
+
       case LoadingAnimationType.rotation:
         return Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(size / 4),
-            gradient: LinearGradient(colors: loadingColors),
-          ),
-        )
-        .animate(onPlay: (controller) => controller.repeat())
-        .rotate(
-          duration: const Duration(milliseconds: 1000),
-        );
-        
+              width: size,
+              height: size,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size / 4),
+                gradient: LinearGradient(colors: loadingColors),
+              ),
+            )
+            .animate(onPlay: (controller) => controller.repeat())
+            .rotate(duration: const Duration(milliseconds: 1000));
+
       case LoadingAnimationType.bounce:
         return Container(
-          width: size / 3,
-          height: size / 3,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: loadingColors.first,
-          ),
-        )
-        .animate(onPlay: (controller) => controller.repeat(reverse: true))
-        .moveY(
-          begin: 0,
-          end: -size / 2,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.bounceOut,
-        );
+              width: size / 3,
+              height: size / 3,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: loadingColors.first,
+              ),
+            )
+            .animate(onPlay: (controller) => controller.repeat(reverse: true))
+            .moveY(
+              begin: 0,
+              end: -size / 2,
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.bounceOut,
+            );
     }
   }
 
   // Success animations
-  static Widget successCheckmark({
-    double size = 60,
-    Color? color,
-  }) {
+  static Widget successCheckmark({double size = 60, Color? color}) {
     return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color ?? Colors.green,
-      ),
-      child: Icon(
-        Icons.check,
-        color: Colors.white,
-        size: size * 0.6,
-      ),
-    )
-    .animate()
-    .scale(
-      begin: const Offset(0, 0),
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.elasticOut,
-    )
-    .then(delay: 100.ms)
-    .fadeIn(duration: 200.ms);
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color ?? Colors.green,
+          ),
+          child: Icon(Icons.check, color: Colors.white, size: size * 0.6),
+        )
+        .animate()
+        .scale(
+          begin: const Offset(0, 0),
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.elasticOut,
+        )
+        .then(delay: 100.ms)
+        .fadeIn(duration: 200.ms);
   }
 
-  // Error animations  
+  // Error animations
   static Widget errorShake(Widget child) {
-    return child
-        .animate()
-        .shake(
-          duration: const Duration(milliseconds: 600),
-          hz: 4,
-          offset: const Offset(5, 0),
-        );
+    return child.animate().shake(
+      duration: const Duration(milliseconds: 600),
+      hz: 4,
+      offset: const Offset(5, 0),
+    );
   }
 
   // Attention-grabbing animations
@@ -373,23 +366,8 @@ class PremiumAnimationManager {
   }
 }
 
-enum TransitionType {
-  slideUp,
-  slideRight,
-  scale,
-  fade,
-  rotation,
-}
+enum TransitionType { slideUp, slideRight, scale, fade, rotation }
 
-enum HapticType {
-  light,
-  medium,
-  heavy,
-  selection,
-}
+enum HapticType { light, medium, heavy, selection }
 
-enum LoadingAnimationType {
-  pulse,
-  rotation,
-  bounce,
-}
+enum LoadingAnimationType { pulse, rotation, bounce }

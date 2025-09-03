@@ -13,23 +13,26 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  
+
   final List<OnboardingPage> _pages = [
     OnboardingPage(
       title: 'Discover Amazing Events',
-      description: 'Find the best events happening around you with our smart recommendations powered by AI.',
+      description:
+          'Find the best events happening around you with our smart recommendations powered by AI.',
       image: '🎉',
       backgroundColor: AppTheme.primaryColor,
     ),
     OnboardingPage(
       title: 'Never Miss Out',
-      description: 'Get personalized notifications about events you\'ll love and never miss out on great experiences.',
+      description:
+          'Get personalized notifications about events you\'ll love and never miss out on great experiences.',
       image: '📱',
       backgroundColor: AppTheme.secondaryColor,
     ),
     OnboardingPage(
       title: 'Connect & Share',
-      description: 'Share your favorite events with friends and discover what\'s happening in your community.',
+      description:
+          'Share your favorite events with friends and discover what\'s happening in your community.',
       image: '🤝',
       backgroundColor: AppTheme.warningColor,
     ),
@@ -94,7 +97,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ],
               ),
             ),
-            
+
             // Pages
             Expanded(
               child: PageView.builder(
@@ -111,7 +114,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
               ),
             ),
-            
+
             // Page indicator and navigation
             Padding(
               padding: const EdgeInsets.all(24),
@@ -135,9 +138,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       );
                     }),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // Navigation buttons
                   Row(
                     children: [
@@ -150,19 +153,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         )
                       else
                         const Expanded(child: SizedBox()),
-                      
+
                       const SizedBox(width: 16),
-                      
+
                       Expanded(
                         child: ElevatedButton(
                           onPressed: _nextPage,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: _pages[_currentPage].backgroundColor,
+                            backgroundColor:
+                                _pages[_currentPage].backgroundColor,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                           child: Text(
-                            _currentPage == _pages.length - 1 
-                                ? 'Get Started' 
+                            _currentPage == _pages.length - 1
+                                ? 'Get Started'
                                 : 'Next',
                             style: const TextStyle(
                               color: Colors.white,
@@ -197,36 +201,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               shape: BoxShape.circle,
             ),
             child: Center(
-              child: Text(
-                page.image,
-                style: const TextStyle(fontSize: 64),
-              ),
+              child: Text(page.image, style: const TextStyle(fontSize: 64)),
             ),
           ).animate().scale(duration: 600.ms),
-          
+
           const SizedBox(height: 48),
-          
+
           // Title
           Text(
             page.title,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: page.backgroundColor,
-                ),
+              fontWeight: FontWeight.bold,
+              color: page.backgroundColor,
+            ),
             textAlign: TextAlign.center,
           ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.3),
-          
+
           const SizedBox(height: 16),
-          
+
           // Description
           Text(
-            page.description,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                page.description,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Colors.grey[600],
                   height: 1.5,
                 ),
-            textAlign: TextAlign.center,
-          ).animate().fadeIn(duration: 1000.ms, delay: 200.ms).slideY(begin: 0.3),
+                textAlign: TextAlign.center,
+              )
+              .animate()
+              .fadeIn(duration: 1000.ms, delay: 200.ms)
+              .slideY(begin: 0.3),
         ],
       ),
     );

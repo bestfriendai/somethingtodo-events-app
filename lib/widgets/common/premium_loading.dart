@@ -9,7 +9,7 @@ class PremiumLoadingIndicator extends StatefulWidget {
   final String? message;
   final Duration duration;
   final LoadingStyle style;
-  
+
   const PremiumLoadingIndicator({
     super.key,
     this.size = 50,
@@ -18,9 +18,10 @@ class PremiumLoadingIndicator extends StatefulWidget {
     this.duration = const Duration(milliseconds: 1500),
     this.style = LoadingStyle.aurora,
   });
-  
+
   @override
-  State<PremiumLoadingIndicator> createState() => _PremiumLoadingIndicatorState();
+  State<PremiumLoadingIndicator> createState() =>
+      _PremiumLoadingIndicatorState();
 }
 
 class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
@@ -28,31 +29,28 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
   late AnimationController _controller;
   late AnimationController _colorController;
   late AnimationController _scaleController;
-  
+
   @override
   void initState() {
     super.initState();
-    
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
-    
+
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+
     _colorController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     );
-    
+
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _controller.repeat();
     _colorController.repeat();
     _scaleController.repeat(reverse: true);
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
@@ -60,11 +58,11 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
     _scaleController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final colors = widget.colors ?? ModernTheme.neonGradient;
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -76,22 +74,22 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
         if (widget.message != null) ...[
           const SizedBox(height: 16),
           Text(
-            widget.message!,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.white70,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          )
-          .animate(onPlay: (controller) => controller.repeat(reverse: true))
-          .fadeIn(duration: 800.ms)
-          .then()
-          .fadeOut(duration: 800.ms),
+                widget.message!,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.white70,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              )
+              .animate(onPlay: (controller) => controller.repeat(reverse: true))
+              .fadeIn(duration: 800.ms)
+              .then()
+              .fadeOut(duration: 800.ms),
         ],
       ],
     );
   }
-  
+
   Widget _buildLoadingIndicator(List<Color> colors) {
     switch (widget.style) {
       case LoadingStyle.aurora:
@@ -104,10 +102,14 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
         return _buildWaveLoader(colors);
     }
   }
-  
+
   Widget _buildAuroraLoader(List<Color> colors) {
     return AnimatedBuilder(
-      animation: Listenable.merge([_controller, _colorController, _scaleController]),
+      animation: Listenable.merge([
+        _controller,
+        _colorController,
+        _scaleController,
+      ]),
       builder: (context, child) {
         return Transform.scale(
           scale: 1.0 + (_scaleController.value * 0.1),
@@ -122,7 +124,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
       },
     );
   }
-  
+
   Widget _buildPulseLoader(List<Color> colors) {
     return AnimatedBuilder(
       animation: _scaleController,
@@ -133,7 +135,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
             final delay = index * 0.3;
             final scale = 1.0 + ((_scaleController.value + delay) % 1.0) * 0.5;
             final opacity = 1.0 - ((_scaleController.value + delay) % 1.0);
-            
+
             return Transform.scale(
               scale: scale,
               child: Container(
@@ -141,9 +143,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
                 height: widget.size / 2,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: colors,
-                  ),
+                  gradient: LinearGradient(colors: colors),
                 ),
                 child: Container(
                   decoration: BoxDecoration(
@@ -158,7 +158,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
       },
     );
   }
-  
+
   Widget _buildOrbitLoader(List<Color> colors) {
     return AnimatedBuilder(
       animation: _controller,
@@ -172,9 +172,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
               height: widget.size / 3,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [colors.first, colors.last],
-                ),
+                gradient: RadialGradient(colors: [colors.first, colors.last]),
                 boxShadow: [
                   BoxShadow(
                     color: colors.first.withValues(alpha: 0.5),
@@ -185,9 +183,10 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
             ),
             // Orbiting particles
             ...List.generate(4, (index) {
-              final angle = (_controller.value * 2 * math.pi) + (index * math.pi / 2);
+              final angle =
+                  (_controller.value * 2 * math.pi) + (index * math.pi / 2);
               final radius = widget.size / 3;
-              
+
               return Transform.translate(
                 offset: Offset(
                   radius * math.cos(angle),
@@ -201,7 +200,9 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
                     color: colors[index % colors.length],
                     boxShadow: [
                       BoxShadow(
-                        color: colors[index % colors.length].withValues(alpha: 0.5),
+                        color: colors[index % colors.length].withValues(
+                          alpha: 0.5,
+                        ),
                         blurRadius: 5,
                       ),
                     ],
@@ -214,7 +215,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
       },
     );
   }
-  
+
   Widget _buildWaveLoader(List<Color> colors) {
     return AnimatedBuilder(
       animation: _controller,
@@ -222,9 +223,13 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(5, (index) {
-            final height = (math.sin((_controller.value * 2 * math.pi) - 
-                (index * 0.5)) + 1) / 2 * widget.size * 0.8;
-            
+            final height =
+                (math.sin((_controller.value * 2 * math.pi) - (index * 0.5)) +
+                    1) /
+                2 *
+                widget.size *
+                0.8;
+
             return Container(
               width: 4,
               height: height + 10,
@@ -233,10 +238,7 @@ class _PremiumLoadingIndicatorState extends State<PremiumLoadingIndicator>
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [
-                    colors.first,
-                    colors.last,
-                  ],
+                  colors: [colors.first, colors.last],
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -258,24 +260,24 @@ class AuroraLoadingPainter extends CustomPainter {
   final double progress;
   final double colorProgress;
   final List<Color> colors;
-  
+
   AuroraLoadingPainter({
     required this.progress,
     required this.colorProgress,
     required this.colors,
   });
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
-    
+
     // Draw aurora rings
     for (int i = 0; i < 3; i++) {
       final ringProgress = (progress + (i * 0.3)) % 1.0;
       final ringRadius = radius * (0.3 + (ringProgress * 0.7));
       final opacity = 1.0 - ringProgress;
-      
+
       final paint = Paint()
         ..shader = LinearGradient(
           colors: [
@@ -285,10 +287,10 @@ class AuroraLoadingPainter extends CustomPainter {
         ).createShader(Rect.fromCircle(center: center, radius: ringRadius))
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3.0;
-      
+
       canvas.drawCircle(center, ringRadius, paint);
     }
-    
+
     // Draw flowing particles
     for (int i = 0; i < 12; i++) {
       final particleAngle = (colorProgress * 2 * math.pi) + (i * math.pi / 6);
@@ -297,15 +299,19 @@ class AuroraLoadingPainter extends CustomPainter {
         center.dx + particleRadius * math.cos(particleAngle),
         center.dy + particleRadius * math.sin(particleAngle),
       );
-      
+
       final particlePaint = Paint()
         ..color = colors[i % colors.length].withValues(alpha: 0.8)
         ..style = PaintingStyle.fill;
-      
-      canvas.drawCircle(particlePos, 2.0 + math.sin(progress * 4 * math.pi + i), particlePaint);
+
+      canvas.drawCircle(
+        particlePos,
+        2.0 + math.sin(progress * 4 * math.pi + i),
+        particlePaint,
+      );
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
@@ -315,7 +321,7 @@ class PremiumSkeleton extends StatefulWidget {
   final bool isLoading;
   final List<Color>? shimmerColors;
   final Duration duration;
-  
+
   const PremiumSkeleton({
     super.key,
     required this.child,
@@ -323,7 +329,7 @@ class PremiumSkeleton extends StatefulWidget {
     this.shimmerColors,
     this.duration = const Duration(milliseconds: 1200),
   });
-  
+
   @override
   State<PremiumSkeleton> createState() => _PremiumSkeletonState();
 }
@@ -331,20 +337,17 @@ class PremiumSkeleton extends StatefulWidget {
 class _PremiumSkeletonState extends State<PremiumSkeleton>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  
+
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
-    
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+
     if (widget.isLoading) {
       _controller.repeat();
     }
   }
-  
+
   @override
   void didUpdateWidget(PremiumSkeleton oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -354,13 +357,13 @@ class _PremiumSkeletonState extends State<PremiumSkeleton>
       _controller.stop();
     }
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (!widget.isLoading) {
@@ -369,13 +372,15 @@ class _PremiumSkeletonState extends State<PremiumSkeleton>
           .fadeIn(duration: 400.ms, curve: Curves.easeOut)
           .slideY(begin: 0.1, duration: 500.ms, curve: Curves.elasticOut);
     }
-    
-    final shimmerColors = widget.shimmerColors ?? [
-      ModernTheme.darkCardSurface,
-      ModernTheme.darkCardSurface.withValues(alpha: 0.5),
-      ModernTheme.darkCardSurface,
-    ];
-    
+
+    final shimmerColors =
+        widget.shimmerColors ??
+        [
+          ModernTheme.darkCardSurface,
+          ModernTheme.darkCardSurface.withValues(alpha: 0.5),
+          ModernTheme.darkCardSurface,
+        ];
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -394,9 +399,4 @@ class _PremiumSkeletonState extends State<PremiumSkeleton>
   }
 }
 
-enum LoadingStyle {
-  aurora,
-  pulse,
-  orbit,
-  wave,
-}
+enum LoadingStyle { aurora, pulse, orbit, wave }

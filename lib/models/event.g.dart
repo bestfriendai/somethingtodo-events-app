@@ -7,41 +7,43 @@ part of 'event.dart';
 // **************************************************************************
 
 _$EventImpl _$$EventImplFromJson(Map<String, dynamic> json) => _$EventImpl(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      organizerName: json['organizerName'] as String,
-      organizerImageUrl: json['organizerImageUrl'] as String?,
-      venue: EventVenue.fromJson(json['venue'] as Map<String, dynamic>),
-      imageUrls:
-          (json['imageUrls'] as List<dynamic>).map((e) => e as String).toList(),
-      category: $enumDecode(_$EventCategoryEnumMap, json['category']),
-      pricing: EventPricing.fromJson(json['pricing'] as Map<String, dynamic>),
-      startDateTime: DateTime.parse(json['startDateTime'] as String),
-      endDateTime: DateTime.parse(json['endDateTime'] as String),
-      tags:
-          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              const [],
-      attendeeCount: (json['attendeeCount'] as num?)?.toInt() ?? 0,
-      maxAttendees: (json['maxAttendees'] as num?)?.toInt() ?? 0,
-      favoriteCount: (json['favoriteCount'] as num?)?.toInt() ?? 0,
-      status: $enumDecodeNullable(_$EventStatusEnumMap, json['status']) ??
-          EventStatus.active,
-      websiteUrl: json['websiteUrl'] as String?,
-      ticketUrl: json['ticketUrl'] as String?,
-      contactEmail: json['contactEmail'] as String?,
-      contactPhone: json['contactPhone'] as String?,
-      isFeatured: json['isFeatured'] as bool? ?? false,
-      isPremium: json['isPremium'] as bool? ?? false,
-      isOnline: json['isOnline'] as bool? ?? false,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      createdBy: json['createdBy'] as String?,
-    );
+  id: json['id'] as String,
+  title: json['title'] as String,
+  description: json['description'] as String,
+  organizerName: json['organizerName'] as String,
+  organizerImageUrl: json['organizerImageUrl'] as String?,
+  venue: EventVenue.fromJson(json['venue'] as Map<String, dynamic>),
+  imageUrls: (json['imageUrls'] as List<dynamic>)
+      .map((e) => e as String)
+      .toList(),
+  category: $enumDecode(_$EventCategoryEnumMap, json['category']),
+  pricing: EventPricing.fromJson(json['pricing'] as Map<String, dynamic>),
+  startDateTime: DateTime.parse(json['startDateTime'] as String),
+  endDateTime: DateTime.parse(json['endDateTime'] as String),
+  tags:
+      (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  attendeeCount: (json['attendeeCount'] as num?)?.toInt() ?? 0,
+  maxAttendees: (json['maxAttendees'] as num?)?.toInt() ?? 0,
+  favoriteCount: (json['favoriteCount'] as num?)?.toInt() ?? 0,
+  status:
+      $enumDecodeNullable(_$EventStatusEnumMap, json['status']) ??
+      EventStatus.active,
+  websiteUrl: json['websiteUrl'] as String?,
+  ticketUrl: json['ticketUrl'] as String?,
+  contactEmail: json['contactEmail'] as String?,
+  contactPhone: json['contactPhone'] as String?,
+  isFeatured: json['isFeatured'] as bool? ?? false,
+  isPremium: json['isPremium'] as bool? ?? false,
+  isOnline: json['isOnline'] as bool? ?? false,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  createdBy: json['createdBy'] as String?,
+);
 
 Map<String, dynamic> _$$EventImplToJson(_$EventImpl instance) =>
     <String, dynamic>{
@@ -132,7 +134,8 @@ _$EventPricingImpl _$$EventPricingImplFromJson(Map<String, dynamic> json) =>
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       currency: json['currency'] as String? ?? 'USD',
       priceDescription: json['priceDescription'] as String?,
-      tiers: (json['tiers'] as List<dynamic>?)
+      tiers:
+          (json['tiers'] as List<dynamic>?)
               ?.map((e) => TicketTier.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],

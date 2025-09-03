@@ -36,19 +36,21 @@ class RapidAPIEventsService {
     _dio = Dio();
     _rateLimitService.initialize();
     _cacheService.initialize();
-    
+
     // Configure API
     _dio.options.baseUrl = ApiConfig.rapidApiBaseUrl;
     _dio.options.connectTimeout = const Duration(seconds: 20);
     _dio.options.receiveTimeout = const Duration(seconds: 20);
-    
+
     // Get API key from configuration
     final apiKey = ApiConfig.apiKey;
-    
+
     if (!ApiConfig.isApiConfigured || ApiConfig.useDemoMode) {
-      LoggingService.warning('RapidAPI not configured or demo mode enabled. Using demo data.');
+      LoggingService.warning(
+        'RapidAPI not configured or demo mode enabled. Using demo data.',
+      );
     }
-    
+
     _dio.options.headers = {
       if (apiKey.isNotEmpty) 'X-RapidAPI-Key': apiKey,
       'X-RapidAPI-Host': ApiConfig.rapidApiHost,
@@ -243,86 +245,95 @@ class RapidAPIEventsService {
         limit: limit,
       );
     }
-    
+
     // Check cache first
-    final cacheKey = 'search_${query}_${location}_${startDate}_${endDate}_$limit';
+    final cacheKey =
+        'search_${query}_${location}_${startDate}_${endDate}_$limit';
     final cached = await _cacheService.getCachedEvents(cacheKey);
     if (cached != null) {
       LoggingService.info('Cache hit for search: $query', tag: 'Cache');
       return cached;
     }
-    
-    return await _rateLimitService.executeRequest<List<Event>>(
-      endpoint: '/search-events',
-      priority: 1,
-      timeout: const Duration(seconds: 15),
-      request: () async {
-        return await _makeRequest<List<Event>>(() async {
-      final response = await _dio.get(
-        '/search-events',
-        queryParameters: {
-          'query': query,
-          if (location != null) 'location': location,
-          if (startDate != null) 'start_date': startDate.toIso8601String().split('T')[0],
-          if (endDate != null) 'end_date': endDate.toIso8601String().split('T')[0],
-          'limit': limit.toString(),
-        },
-      );
 
-      if (response.statusCode == 200) {
-        final responseData = response.data;
-        
-        // Handle both direct array and wrapped response
-        List<dynamic> eventsList = [];
-        
-        if (responseData is List) {
-          // Direct array response
-          eventsList = responseData;
-        } else if (responseData is Map) {
-          // Check for wrapped response formats
-          if (responseData['data'] is List) {
-            eventsList = responseData['data'] as List;
-          } else if (responseData['events'] is List) {
-            eventsList = responseData['events'] as List;
-          } else if (responseData['results'] is List) {
-            eventsList = responseData['results'] as List;
-          }
-        }
-        
-        if (eventsList.isNotEmpty) {
-          try {
-            final events = eventsList
-                .map((e) => _parseEventFromAPI(Map<String, dynamic>.from(e as Map)))
-                .where((event) => event != null)
-                .toList();
-            
-            print('Parsed ${events.length} events from API response');
-            return events;
-          } catch (e) {
-            print('Error parsing events: $e');
-            throw RapidAPIException(
-              'Failed to parse events data',
-              type: RapidAPIErrorType.parsingError,
-              originalError: e,
+    return await _rateLimitService
+        .executeRequest<List<Event>>(
+          endpoint: '/search-events',
+          priority: 1,
+          timeout: const Duration(seconds: 15),
+          request: () async {
+            return await _makeRequest<List<Event>>(() async {
+              final response = await _dio.get(
+                '/search-events',
+                queryParameters: {
+                  'query': query,
+                  if (location != null) 'location': location,
+                  if (startDate != null)
+                    'start_date': startDate.toIso8601String().split('T')[0],
+                  if (endDate != null)
+                    'end_date': endDate.toIso8601String().split('T')[0],
+                  'limit': limit.toString(),
+                },
+              );
+
+              if (response.statusCode == 200) {
+                final responseData = response.data;
+
+                // Handle both direct array and wrapped response
+                List<dynamic> eventsList = [];
+
+                if (responseData is List) {
+                  // Direct array response
+                  eventsList = responseData;
+                } else if (responseData is Map) {
+                  // Check for wrapped response formats
+                  if (responseData['data'] is List) {
+                    eventsList = responseData['data'] as List;
+                  } else if (responseData['events'] is List) {
+                    eventsList = responseData['events'] as List;
+                  } else if (responseData['results'] is List) {
+                    eventsList = responseData['results'] as List;
+                  }
+                }
+
+                if (eventsList.isNotEmpty) {
+                  try {
+                    final events = eventsList
+                        .map(
+                          (e) => _parseEventFromAPI(
+                            Map<String, dynamic>.from(e as Map),
+                          ),
+                        )
+                        .where((event) => event != null)
+                        .toList();
+
+                    print('Parsed ${events.length} events from API response');
+                    return events;
+                  } catch (e) {
+                    print('Error parsing events: $e');
+                    throw RapidAPIException(
+                      'Failed to parse events data',
+                      type: RapidAPIErrorType.parsingError,
+                      originalError: e,
+                    );
+                  }
+                }
+              }
+              print('No events found in response');
+              return <Event>[];
+            }, operation: 'search events');
+          },
+        )
+        .then((events) async {
+          // Cache the results
+          if (events.isNotEmpty) {
+            await _cacheService.cacheEvents(
+              cacheKey,
+              events,
+              queryType: 'search',
             );
           }
-        }
-      }
-      print('No events found in response');
-      return <Event>[];
-    }, operation: 'search events');
-      },
-    ).then((events) async {
-      // Cache the results
-      if (events.isNotEmpty) {
-        await _cacheService.cacheEvents(
-          cacheKey,
-          events,
-          queryType: 'search',
-        );
-      }
-      return events;
-    });
+          return events;
+        });
   }
 
   Future<List<Event>> getEventsNearLocation({
@@ -339,7 +350,7 @@ class RapidAPIEventsService {
         limit: limit,
       );
     }
-    
+
     // Check cache first
     final cacheKey = 'location_${latitude}_${longitude}_${radiusKm}_$limit';
     final cached = await _cacheService.getCachedEvents(cacheKey);
@@ -347,56 +358,59 @@ class RapidAPIEventsService {
       LoggingService.info('Cache hit for location search', tag: 'Cache');
       return cached;
     }
-    
-    return await _rateLimitService.executeRequest<List<Event>>(
-      endpoint: '/search-events',
-      priority: 2,
-      timeout: const Duration(seconds: 15),
-      request: () async {
-        return await _makeRequest<List<Event>>(() async {
-      final response = await _dio.get(
-        '/search-events',
-        queryParameters: {
-          'query': 'events near me',
-          'location': '$latitude,$longitude',
-          'radius': radiusKm.toInt(),
-          'limit': limit,
-        },
-      );
 
-      if (response.statusCode == 200) {
-        final data = response.data;
-        if (data is Map && data['data'] is List) {
-          try {
-            return (data['data'] as List)
-                .map(
-                  (e) =>
-                      _parseEventFromAPI(Map<String, dynamic>.from(e as Map)),
-                )
-                .toList();
-          } catch (e) {
-            throw RapidAPIException(
-              'Failed to parse location-based events data',
-              type: RapidAPIErrorType.parsingError,
-              originalError: e,
+    return await _rateLimitService
+        .executeRequest<List<Event>>(
+          endpoint: '/search-events',
+          priority: 2,
+          timeout: const Duration(seconds: 15),
+          request: () async {
+            return await _makeRequest<List<Event>>(() async {
+              final response = await _dio.get(
+                '/search-events',
+                queryParameters: {
+                  'query': 'events near me',
+                  'location': '$latitude,$longitude',
+                  'radius': radiusKm.toInt(),
+                  'limit': limit,
+                },
+              );
+
+              if (response.statusCode == 200) {
+                final data = response.data;
+                if (data is Map && data['data'] is List) {
+                  try {
+                    return (data['data'] as List)
+                        .map(
+                          (e) => _parseEventFromAPI(
+                            Map<String, dynamic>.from(e as Map),
+                          ),
+                        )
+                        .toList();
+                  } catch (e) {
+                    throw RapidAPIException(
+                      'Failed to parse location-based events data',
+                      type: RapidAPIErrorType.parsingError,
+                      originalError: e,
+                    );
+                  }
+                }
+              }
+              return <Event>[];
+            }, operation: 'get events near location');
+          },
+        )
+        .then((events) async {
+          // Cache the results
+          if (events.isNotEmpty) {
+            await _cacheService.cacheEvents(
+              cacheKey,
+              events,
+              queryType: 'location',
             );
           }
-        }
-      }
-      return <Event>[];
-    }, operation: 'get events near location');
-      },
-    ).then((events) async {
-      // Cache the results
-      if (events.isNotEmpty) {
-        await _cacheService.cacheEvents(
-          cacheKey,
-          events,
-          queryType: 'location',
-        );
-      }
-      return events;
-    });
+          return events;
+        });
   }
 
   Future<List<Event>> getTrendingEvents({
@@ -408,7 +422,7 @@ class RapidAPIEventsService {
       LoggingService.info('Using demo data for trending events', tag: 'API');
       return await DemoEventMethods.getTrendingEvents(limit: limit);
     }
-    
+
     // Check cache first (shorter TTL for trending)
     final cacheKey = 'trending_${location}_$limit';
     final cached = await _cacheService.getCachedEvents(cacheKey);
@@ -416,55 +430,58 @@ class RapidAPIEventsService {
       LoggingService.info('Cache hit for trending events', tag: 'Cache');
       return cached;
     }
-    
-    return await _rateLimitService.executeRequest<List<Event>>(
-      endpoint: '/search-events',
-      priority: 3,
-      timeout: const Duration(seconds: 10),
-      request: () async {
-        return await _makeRequest<List<Event>>(() async {
-      final response = await _dio.get(
-        '/search-events',
-        queryParameters: {
-          'query': 'popular events',
-          if (location != null) 'location': location,
-          'limit': limit,
-        },
-      );
 
-      if (response.statusCode == 200) {
-        final data = response.data;
-        if (data is Map && data['data'] is List) {
-          try {
-            return (data['data'] as List)
-                .map(
-                  (e) =>
-                      _parseEventFromAPI(Map<String, dynamic>.from(e as Map)),
-                )
-                .toList();
-          } catch (e) {
-            throw RapidAPIException(
-              'Failed to parse trending events data',
-              type: RapidAPIErrorType.parsingError,
-              originalError: e,
+    return await _rateLimitService
+        .executeRequest<List<Event>>(
+          endpoint: '/search-events',
+          priority: 3,
+          timeout: const Duration(seconds: 10),
+          request: () async {
+            return await _makeRequest<List<Event>>(() async {
+              final response = await _dio.get(
+                '/search-events',
+                queryParameters: {
+                  'query': 'popular events',
+                  if (location != null) 'location': location,
+                  'limit': limit,
+                },
+              );
+
+              if (response.statusCode == 200) {
+                final data = response.data;
+                if (data is Map && data['data'] is List) {
+                  try {
+                    return (data['data'] as List)
+                        .map(
+                          (e) => _parseEventFromAPI(
+                            Map<String, dynamic>.from(e as Map),
+                          ),
+                        )
+                        .toList();
+                  } catch (e) {
+                    throw RapidAPIException(
+                      'Failed to parse trending events data',
+                      type: RapidAPIErrorType.parsingError,
+                      originalError: e,
+                    );
+                  }
+                }
+              }
+              return <Event>[];
+            }, operation: 'get trending events');
+          },
+        )
+        .then((events) async {
+          // Cache the results with shorter TTL for trending
+          if (events.isNotEmpty) {
+            await _cacheService.cacheEvents(
+              cacheKey,
+              events,
+              queryType: 'trending',
             );
           }
-        }
-      }
-      return <Event>[];
-    }, operation: 'get trending events');
-      },
-    ).then((events) async {
-      // Cache the results with shorter TTL for trending
-      if (events.isNotEmpty) {
-        await _cacheService.cacheEvents(
-          cacheKey,
-          events,
-          queryType: 'trending',
-        );
-      }
-      return events;
-    });
+          return events;
+        });
   }
 
   Future<Event?> getEventDetails(String eventId) async {
@@ -509,28 +526,39 @@ class RapidAPIEventsService {
   }) async {
     // Use demo data if API is not configured or demo mode is enabled
     if (!ApiConfig.isApiConfigured || ApiConfig.useDemoMode) {
-      LoggingService.info('Using demo data for category: $category', tag: 'API');
+      LoggingService.info(
+        'Using demo data for category: $category',
+        tag: 'API',
+      );
       // Map category to EventCategory enum
       EventCategory? eventCategory;
       final categoryLower = category.toLowerCase();
-      if (categoryLower.contains('music')) eventCategory = EventCategory.music;
-      else if (categoryLower.contains('sport')) eventCategory = EventCategory.sports;
-      else if (categoryLower.contains('art')) eventCategory = EventCategory.arts;
-      else if (categoryLower.contains('food')) eventCategory = EventCategory.food;
-      else if (categoryLower.contains('tech')) eventCategory = EventCategory.technology;
-      
+      if (categoryLower.contains('music'))
+        eventCategory = EventCategory.music;
+      else if (categoryLower.contains('sport'))
+        eventCategory = EventCategory.sports;
+      else if (categoryLower.contains('art'))
+        eventCategory = EventCategory.arts;
+      else if (categoryLower.contains('food'))
+        eventCategory = EventCategory.food;
+      else if (categoryLower.contains('tech'))
+        eventCategory = EventCategory.technology;
+
       final events = await DemoEventMethods.getDemoEvents(
         location: location ?? 'San Francisco',
         limit: limit * 2, // Get more to filter
       );
-      
+
       // Filter by category if specified
       if (eventCategory != null) {
-        return events.where((e) => e.category == eventCategory).take(limit).toList();
+        return events
+            .where((e) => e.category == eventCategory)
+            .take(limit)
+            .toList();
       }
       return events.take(limit).toList();
     }
-    
+
     // Check cache first
     final cacheKey = 'category_${category}_${location}_$limit';
     final cached = await _cacheService.getCachedEvents(cacheKey);
@@ -538,55 +566,58 @@ class RapidAPIEventsService {
       LoggingService.info('Cache hit for category: $category', tag: 'Cache');
       return cached;
     }
-    
-    return await _rateLimitService.executeRequest<List<Event>>(
-      endpoint: '/search-events',
-      priority: 2,
-      timeout: const Duration(seconds: 12),
-      request: () async {
-        return await _makeRequest<List<Event>>(() async {
-      final response = await _dio.get(
-        '/search-events',
-        queryParameters: {
-          'query': category,
-          if (location != null) 'location': location,
-          'limit': limit.toString(),
-        },
-      );
 
-      if (response.statusCode == 200) {
-        final data = response.data;
-        if (data is Map && data['data'] is List) {
-          try {
-            return (data['data'] as List)
-                .map(
-                  (e) =>
-                      _parseEventFromAPI(Map<String, dynamic>.from(e as Map)),
-                )
-                .toList();
-          } catch (e) {
-            throw RapidAPIException(
-              'Failed to parse category events data',
-              type: RapidAPIErrorType.parsingError,
-              originalError: e,
+    return await _rateLimitService
+        .executeRequest<List<Event>>(
+          endpoint: '/search-events',
+          priority: 2,
+          timeout: const Duration(seconds: 12),
+          request: () async {
+            return await _makeRequest<List<Event>>(() async {
+              final response = await _dio.get(
+                '/search-events',
+                queryParameters: {
+                  'query': category,
+                  if (location != null) 'location': location,
+                  'limit': limit.toString(),
+                },
+              );
+
+              if (response.statusCode == 200) {
+                final data = response.data;
+                if (data is Map && data['data'] is List) {
+                  try {
+                    return (data['data'] as List)
+                        .map(
+                          (e) => _parseEventFromAPI(
+                            Map<String, dynamic>.from(e as Map),
+                          ),
+                        )
+                        .toList();
+                  } catch (e) {
+                    throw RapidAPIException(
+                      'Failed to parse category events data',
+                      type: RapidAPIErrorType.parsingError,
+                      originalError: e,
+                    );
+                  }
+                }
+              }
+              return <Event>[];
+            }, operation: 'get events by category');
+          },
+        )
+        .then((events) async {
+          // Cache the results
+          if (events.isNotEmpty) {
+            await _cacheService.cacheEvents(
+              cacheKey,
+              events,
+              queryType: 'category',
             );
           }
-        }
-      }
-      return <Event>[];
-    }, operation: 'get events by category');
-      },
-    ).then((events) async {
-      // Cache the results
-      if (events.isNotEmpty) {
-        await _cacheService.cacheEvents(
-          cacheKey,
-          events,
-          queryType: 'category',
-        );
-      }
-      return events;
-    });
+          return events;
+        });
   }
 
   Event _parseEventFromAPI(Map<String, dynamic> json) {

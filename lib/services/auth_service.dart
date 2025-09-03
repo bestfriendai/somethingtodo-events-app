@@ -22,9 +22,11 @@ class AuthService {
     if (_googleSignIn == null) {
       if (kIsWeb || AppConfig.demoMode) {
         // On web or in demo mode, don't initialize Google Sign-In
-        throw UnsupportedError('Google Sign-In not available in demo mode or on web');
+        throw UnsupportedError(
+          'Google Sign-In not available in demo mode or on web',
+        );
       }
-      _googleSignIn = GoogleSignIn();
+      _googleSignIn = GoogleSignIn.instance;
     }
     return _googleSignIn!;
   }
@@ -46,16 +48,11 @@ class AuthService {
 
       if (credential.user != null) {
         await credential.user!.updateDisplayName(displayName);
-        await _createUserProfile(credential.user!, {
-          'signup_method': 'email',
-        });
-        
+        await _createUserProfile(credential.user!, {'signup_method': 'email'});
+
         await _analytics.logEvent(
           name: AnalyticsEvents.userSignUp,
-          parameters: {
-            'method': 'email',
-            'user_id': credential.user!.uid,
-          },
+          parameters: {'method': 'email', 'user_id': credential.user!.uid},
         );
       }
 
@@ -77,10 +74,7 @@ class AuthService {
 
       await _analytics.logEvent(
         name: AnalyticsEvents.userLogin,
-        parameters: {
-          'method': 'email',
-          'user_id': credential.user?.uid ?? '',
-        },
+        parameters: {'method': 'email', 'user_id': credential.user?.uid ?? ''},
       );
 
       return credential;
@@ -96,49 +90,44 @@ class AuthService {
       if (kIsWeb) {
         throw UnsupportedError('Google Sign-In not available on web platform');
       }
-      
+
       if (AppConfig.demoMode) {
         throw UnsupportedError('Google Sign-In not available in demo mode');
       }
 
       print('Starting Google Sign-In process...');
-      
+
       // Initialize Google Sign-In if needed
-      final GoogleSignIn googleSignInInstance = GoogleSignIn(
-        scopes: [
-          'email',
-          'profile',
-        ],
-      );
+      final GoogleSignIn googleSignInInstance = GoogleSignIn.instance;
 
       // Sign out first to ensure account selection dialog appears
       await googleSignInInstance.signOut();
-      
+
       print('Presenting Google Sign-In dialog...');
-      final GoogleSignInAccount? googleUser = await googleSignInInstance.signIn();
-      
+      final GoogleSignInAccount? googleUser = await googleSignInInstance
+          .authenticate();
+
       if (googleUser == null) {
         print('User cancelled Google Sign-In');
         return null;
       }
 
       print('Google Sign-In successful, getting authentication tokens...');
-      final GoogleSignInAuthentication googleAuth = 
+      final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      if (googleAuth.accessToken == null || googleAuth.idToken == null) {
-        throw Exception('Failed to get authentication tokens from Google');
+      if (googleAuth.idToken == null) {
+        throw Exception('Failed to get ID token from Google');
       }
 
       print('Creating Firebase credential...');
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
       print('Signing in to Firebase with Google credential...');
       final userCredential = await _auth.signInWithCredential(credential);
-      
+
       if (userCredential.user != null) {
         print('Firebase sign-in successful, creating user profile...');
         await _createUserProfile(userCredential.user!, {
@@ -146,30 +135,33 @@ class AuthService {
           'google_email': googleUser.email,
           'google_display_name': googleUser.displayName,
         });
-        
+
         await _analytics.logEvent(
           name: AnalyticsEvents.userLogin,
-          parameters: {
-            'method': 'google',
-            'user_id': userCredential.user!.uid,
-          },
+          parameters: {'method': 'google', 'user_id': userCredential.user!.uid},
         );
-        
+
         print('Google Sign-In completed successfully');
       }
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
-      print('FirebaseAuthException during Google Sign-In: ${e.code} - ${e.message}');
+      print(
+        'FirebaseAuthException during Google Sign-In: ${e.code} - ${e.message}',
+      );
       throw _handleAuthException(e);
     } catch (e, stackTrace) {
       print('Error during Google Sign-In: $e');
       print('Stack trace: $stackTrace');
-      
+
       if (e.toString().contains('PlatformException')) {
-        throw Exception('Google Sign-In configuration error. Please check your iOS/Android setup.');
+        throw Exception(
+          'Google Sign-In configuration error. Please check your iOS/Android setup.',
+        );
       } else if (e.toString().contains('network')) {
-        throw Exception('Network error. Please check your internet connection.');
+        throw Exception(
+          'Network error. Please check your internet connection.',
+        );
       } else {
         throw Exception('Google sign-in failed: ${e.toString()}');
       }
@@ -198,18 +190,15 @@ class AuthService {
   ) async {
     try {
       final userCredential = await _auth.signInWithCredential(credential);
-      
+
       if (userCredential.user != null) {
         await _createUserProfile(userCredential.user!, {
           'signup_method': 'phone',
         });
-        
+
         await _analytics.logEvent(
           name: AnalyticsEvents.userLogin,
-          parameters: {
-            'method': 'phone',
-            'user_id': userCredential.user!.uid,
-          },
+          parameters: {'method': 'phone', 'user_id': userCredential.user!.uid},
         );
       }
 
@@ -246,19 +235,23 @@ class AuthService {
     if (user != null) {
       // Delete user profile from Firestore
       await _firestore.collection('users').doc(user.uid).delete();
-      
+
       // Delete the Firebase Auth account
       await user.delete();
     }
   }
 
   // Profile Management
-  Future<void> _createUserProfile(User user, Map<String, dynamic> metadata) async {
+  Future<void> _createUserProfile(
+    User user,
+    Map<String, dynamic> metadata,
+  ) async {
     try {
       final appUser = AppUser(
         id: user.uid,
         email: user.email ?? metadata['google_email'] ?? '',
-        displayName: user.displayName ?? metadata['google_display_name'] ?? 'User',
+        displayName:
+            user.displayName ?? metadata['google_display_name'] ?? 'User',
         photoUrl: user.photoURL,
         phoneNumber: user.phoneNumber,
         preferences: const UserPreferences(),
@@ -266,11 +259,8 @@ class AuthService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .set(appUser.toJson());
-      
+      await _firestore.collection('users').doc(user.uid).set(appUser.toJson());
+
       print('User profile created successfully for ${user.uid}');
     } catch (e) {
       print('Warning: Failed to create user profile in Firestore: $e');
@@ -311,16 +301,15 @@ class AuthService {
     try {
       await _firestore.collection('users').doc(userId).update({
         'isPremium': isPremium,
-        'premiumExpiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt) : null,
+        'premiumExpiresAt': expiresAt != null
+            ? Timestamp.fromDate(expiresAt)
+            : null,
         'updatedAt': Timestamp.now(),
       });
 
       await _analytics.logEvent(
         name: AnalyticsEvents.premiumUpgrade,
-        parameters: {
-          'user_id': userId,
-          'is_premium': isPremium,
-        },
+        parameters: {'user_id': userId, 'is_premium': isPremium},
       );
     } catch (e) {
       throw Exception('Failed to update premium status: $e');
@@ -337,11 +326,7 @@ class AuthService {
 
       await _analytics.logEvent(
         name: AnalyticsEvents.eventFavorite,
-        parameters: {
-          'user_id': userId,
-          'event_id': eventId,
-          'action': 'add',
-        },
+        parameters: {'user_id': userId, 'event_id': eventId, 'action': 'add'},
       );
     } catch (e) {
       throw Exception('Failed to add favorite event: $e');

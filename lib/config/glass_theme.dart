@@ -5,34 +5,34 @@ class GlassTheme {
   // Glass morphism colors
   static const Color glassWhite = Color(0xFFFFFFFF);
   static const Color glassBlack = Color(0xFF000000);
-  
+
   // Gradient colors for liquid glass effect
   static const List<Color> primaryGradient = [
     Color(0xFF667EEA),
     Color(0xFF764BA2),
   ];
-  
+
   static const List<Color> secondaryGradient = [
     Color(0xFFF093FB),
     Color(0xFFF5576C),
   ];
-  
+
   static const List<Color> successGradient = [
     Color(0xFF00F260),
     Color(0xFF0575E6),
   ];
-  
+
   static const List<Color> warningGradient = [
     Color(0xFFF4C430),
     Color(0xFFFC6767),
   ];
-  
+
   // Glass container properties
   static const double glassBorderRadius = 20.0;
   static const double glassBlur = 20.0;
   static const double glassBorder = 1.5;
   static const double glassOpacity = 0.2;
-  
+
   // Common glass widget builder
   static Widget glassContainer({
     required Widget child,
@@ -60,7 +60,7 @@ class GlassTheme {
       child: child,
     );
   }
-  
+
   static Widget glassCard({
     required Widget child,
     double? width,
@@ -83,16 +83,13 @@ class GlassTheme {
       padding: padding ?? const EdgeInsets.all(16),
       child: child,
     );
-    
+
     if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: container,
-      );
+      return GestureDetector(onTap: onTap, child: container);
     }
     return container;
   }
-  
+
   static Widget glassButton({
     required Widget child,
     required VoidCallback onPressed,
@@ -110,18 +107,19 @@ class GlassTheme {
         blur: 15,
         alignment: Alignment.center,
         border: 2,
-        linearGradient: isPrimary 
-            ? primaryButtonGradient() 
+        linearGradient: isPrimary
+            ? primaryButtonGradient()
             : secondaryButtonGradient(),
         borderGradient: isPrimary
             ? primaryBorderGradient()
             : secondaryBorderGradient(),
-        padding: padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        padding:
+            padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         child: child,
       ),
     );
   }
-  
+
   static Widget glassAppBar({
     required String title,
     List<Widget>? actions,
@@ -163,7 +161,7 @@ class GlassTheme {
       ),
     );
   }
-  
+
   static Widget glassTextField({
     required TextEditingController controller,
     String? hintText,
@@ -187,10 +185,7 @@ class GlassTheme {
         controller: controller,
         obscureText: obscureText,
         onChanged: onChanged,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-        ),
+        style: const TextStyle(color: Colors.white, fontSize: 16),
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hintText,
@@ -199,16 +194,13 @@ class GlassTheme {
             fontSize: 16,
           ),
           prefixIcon: prefixIcon != null
-              ? Icon(
-                  prefixIcon,
-                  color: Colors.white.withValues(alpha: 0.7),
-                )
+              ? Icon(prefixIcon, color: Colors.white.withValues(alpha: 0.7))
               : null,
         ),
       ),
     );
   }
-  
+
   // Gradient definitions
   static LinearGradient defaultLinearGradient() {
     return LinearGradient(
@@ -220,7 +212,7 @@ class GlassTheme {
       ],
     );
   }
-  
+
   static LinearGradient primaryButtonGradient() {
     return LinearGradient(
       begin: Alignment.topLeft,
@@ -231,7 +223,7 @@ class GlassTheme {
       ],
     );
   }
-  
+
   static LinearGradient secondaryButtonGradient() {
     return LinearGradient(
       begin: Alignment.topLeft,
@@ -242,7 +234,7 @@ class GlassTheme {
       ],
     );
   }
-  
+
   static LinearGradient appBarGradient() {
     return LinearGradient(
       begin: Alignment.topCenter,
@@ -253,7 +245,7 @@ class GlassTheme {
       ],
     );
   }
-  
+
   static LinearGradient textFieldGradient() {
     return LinearGradient(
       begin: Alignment.topLeft,
@@ -264,7 +256,7 @@ class GlassTheme {
       ],
     );
   }
-  
+
   static LinearGradient defaultBorderGradient() {
     return LinearGradient(
       begin: Alignment.topLeft,
@@ -275,7 +267,7 @@ class GlassTheme {
       ],
     );
   }
-  
+
   static LinearGradient primaryBorderGradient() {
     return LinearGradient(
       begin: Alignment.topLeft,
@@ -286,7 +278,7 @@ class GlassTheme {
       ],
     );
   }
-  
+
   static LinearGradient secondaryBorderGradient() {
     return LinearGradient(
       begin: Alignment.topLeft,
@@ -297,14 +289,12 @@ class GlassTheme {
       ],
     );
   }
-  
+
   // Background decoration for screens
   static BoxDecoration screenBackground() {
-    return const BoxDecoration(
-      color: Colors.black,
-    );
+    return const BoxDecoration(color: Colors.black);
   }
-  
+
   static BoxDecoration darkScreenBackground() {
     return BoxDecoration(
       gradient: LinearGradient(

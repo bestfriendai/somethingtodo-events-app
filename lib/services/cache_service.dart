@@ -34,15 +34,15 @@ class CacheService {
   Future<bool> get isConnected async {
     final connectivityResult = await Connectivity().checkConnectivity();
     return connectivityResult.contains(ConnectivityResult.mobile) ||
-           connectivityResult.contains(ConnectivityResult.wifi) ||
-           connectivityResult.contains(ConnectivityResult.ethernet);
+        connectivityResult.contains(ConnectivityResult.wifi) ||
+        connectivityResult.contains(ConnectivityResult.ethernet);
   }
 
   Stream<bool> get connectivityStream {
     return Connectivity().onConnectivityChanged.map((results) {
       return results.contains(ConnectivityResult.mobile) ||
-             results.contains(ConnectivityResult.wifi) ||
-             results.contains(ConnectivityResult.ethernet);
+          results.contains(ConnectivityResult.wifi) ||
+          results.contains(ConnectivityResult.ethernet);
     });
   }
 
@@ -68,7 +68,9 @@ class CacheService {
       final cacheData = _eventsBox!.get('all_events');
       if (cacheData == null) return null;
 
-      final timestamp = DateTime.fromMillisecondsSinceEpoch(cacheData['timestamp']);
+      final timestamp = DateTime.fromMillisecondsSinceEpoch(
+        cacheData['timestamp'],
+      );
       if (DateTime.now().difference(timestamp) > _cacheTimeout) {
         await _eventsBox!.delete('all_events');
         return null;
@@ -103,7 +105,9 @@ class CacheService {
       final cacheData = _eventsBox!.get('featured_events');
       if (cacheData == null) return null;
 
-      final timestamp = DateTime.fromMillisecondsSinceEpoch(cacheData['timestamp']);
+      final timestamp = DateTime.fromMillisecondsSinceEpoch(
+        cacheData['timestamp'],
+      );
       if (DateTime.now().difference(timestamp) > _cacheTimeout) {
         await _eventsBox!.delete('featured_events');
         return null;
@@ -139,7 +143,9 @@ class CacheService {
       final cacheData = _eventsBox!.get('event_$eventId');
       if (cacheData == null) return null;
 
-      final timestamp = DateTime.fromMillisecondsSinceEpoch(cacheData['timestamp']);
+      final timestamp = DateTime.fromMillisecondsSinceEpoch(
+        cacheData['timestamp'],
+      );
       if (DateTime.now().difference(timestamp) > _cacheTimeout) {
         await _eventsBox!.delete('event_$eventId');
         return null;
@@ -287,7 +293,9 @@ class CacheService {
         for (final key in keys) {
           final data = _eventsBox!.get(key);
           if (data is Map && data.containsKey('timestamp')) {
-            final timestamp = DateTime.fromMillisecondsSinceEpoch(data['timestamp']);
+            final timestamp = DateTime.fromMillisecondsSinceEpoch(
+              data['timestamp'],
+            );
             if (DateTime.now().difference(timestamp) > _cacheTimeout) {
               await _eventsBox!.delete(key);
             }
@@ -316,7 +324,7 @@ class CacheService {
   Future<int> getCacheSize() async {
     try {
       int size = 0;
-      
+
       // Calculate Hive boxes size (approximate)
       if (_eventsBox != null) {
         size += _eventsBox!.length * 1000; // Rough estimate

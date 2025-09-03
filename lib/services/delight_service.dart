@@ -13,13 +13,13 @@ class DelightService {
 
   static const String _easterEggCountKey = 'easter_egg_count';
   static const String _firstLaunchKey = 'first_launch_timestamp';
-  
+
   final Random _random = Random();
   int _easterEggCount = 0;
   int _confettiCount = 0;
   int _heartCount = 0;
   DateTime? _firstLaunchTime;
-  
+
   // Playful messages for different occasions
   static const List<String> _loadingMessages = [
     'Finding the most epic events...',
@@ -33,7 +33,7 @@ class DelightService {
     'Mixing the perfect event cocktail...',
     'Assembling your dream weekend...',
   ];
-  
+
   static const List<String> _confettiMessages = [
     'You are absolutely crushing it!',
     'Another one bites the dust!',
@@ -44,7 +44,7 @@ class DelightService {
     'Your social calendar is blessed!',
     'Living your best life!',
   ];
-  
+
   static const List<String> _easterEggMessages = [
     'You found a secret! Keep exploring...',
     'Curiosity rewarded! You are awesome!',
@@ -54,7 +54,7 @@ class DelightService {
     'You have discovered our little secret!',
     'Bonus points for being thorough!',
   ];
-  
+
   static const List<String> _shareMessages = [
     'Spreading the good vibes!',
     'Your friends are so lucky!',
@@ -62,7 +62,7 @@ class DelightService {
     'Making the world more fun, one share at a time!',
     'You are the friend everyone needs!',
   ];
-  
+
   static const List<String> _emptyStateMessages = [
     'No events yet? Time to make your own fun!',
     'Your calendar is as clean as your conscience',
@@ -71,103 +71,116 @@ class DelightService {
     'Clean slate = endless opportunities',
     'Your future self will thank you for planning ahead',
   ];
-  
+
   Future<void> initialize() async {
     final prefs = await SharedPreferences.getInstance();
     _easterEggCount = prefs.getInt(_easterEggCountKey) ?? 0;
-    
+
     final firstLaunchTimestamp = prefs.getInt(_firstLaunchKey);
     if (firstLaunchTimestamp != null) {
-      _firstLaunchTime = DateTime.fromMillisecondsSinceEpoch(firstLaunchTimestamp);
+      _firstLaunchTime = DateTime.fromMillisecondsSinceEpoch(
+        firstLaunchTimestamp,
+      );
     } else {
       _firstLaunchTime = DateTime.now();
-      await prefs.setInt(_firstLaunchKey, _firstLaunchTime!.millisecondsSinceEpoch);
+      await prefs.setInt(
+        _firstLaunchKey,
+        _firstLaunchTime!.millisecondsSinceEpoch,
+      );
     }
   }
-  
+
   // Celebration Confetti
   void showConfetti(BuildContext context, {String? customMessage}) {
     _confettiCount++;
     PlatformInteractions.mediumImpact();
-    
+
     final message = customMessage ?? _getRandomMessage(_confettiMessages);
-    
+
     // Show confetti overlay
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
-    
+
     overlayEntry = OverlayEntry(
       builder: (context) => ConfettiOverlay(
         onComplete: () => overlayEntry.remove(),
         message: message,
       ),
     );
-    
+
     overlay.insert(overlayEntry);
-    
+
     // Achievement check
     if (_confettiCount % 10 == 0) {
-      _showAchievement(context, 'Celebration Master!', 'You have triggered ${ _confettiCount} celebrations!');
+      _showAchievement(
+        context,
+        'Celebration Master!',
+        'You have triggered ${_confettiCount} celebrations!',
+      );
     }
   }
-  
+
   // Heart explosion for likes
   void showHeartExplosion(BuildContext context, Offset position) {
     _heartCount++;
     PlatformInteractions.lightImpact();
-    
+
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
-    
+
     overlayEntry = OverlayEntry(
       builder: (context) => HeartExplosion(
         position: position,
         onComplete: () => overlayEntry.remove(),
       ),
     );
-    
+
     overlay.insert(overlayEntry);
   }
-  
+
   // Easter egg discovery
   void triggerEasterEgg(BuildContext context, String eggType) async {
     _easterEggCount++;
-    
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_easterEggCountKey, _easterEggCount);
-    
+
     PlatformInteractions.heavyImpact();
-    
+
     final message = _getRandomMessage(_easterEggMessages);
     _showToastWithAnimation(context, message, Icons.egg, Colors.orange);
-    
+
     // Special rewards for dedicated explorers
     if (_easterEggCount == 5) {
       _showAchievement(context, 'Explorer!', 'You have found 5 easter eggs!');
     } else if (_easterEggCount == 15) {
-      _showAchievement(context, 'Master Detective!', 'You have discovered 15 hidden secrets!');
+      _showAchievement(
+        context,
+        'Master Detective!',
+        'You have discovered 15 hidden secrets!',
+      );
     }
   }
-  
+
   // Loading with personality
   String getRandomLoadingMessage() {
     return _getRandomMessage(_loadingMessages);
   }
-  
+
   String getRandomEmptyStateMessage() {
     return _getRandomMessage(_emptyStateMessages);
   }
-  
+
   String getRandomShareMessage() {
     return _getRandomMessage(_shareMessages);
   }
-  
+
   // Fun facts based on usage
   String? getDayStreakMessage() {
     if (_firstLaunchTime == null) return null;
-    
+
     final daysSinceLaunch = DateTime.now().difference(_firstLaunchTime!).inDays;
-    
+
     if (daysSinceLaunch == 7) {
       return 'One week of epic event hunting! You are on a roll!';
     } else if (daysSinceLaunch == 30) {
@@ -175,38 +188,47 @@ class DelightService {
     } else if (daysSinceLaunch == 100) {
       return '100 days of making memories! You are officially legendary!';
     }
-    
+
     return null;
   }
-  
+
   // Time-based easter eggs
   String? getTimeBasedMessage() {
     final hour = DateTime.now().hour;
     final minute = DateTime.now().minute;
-    
+
     // 11:11 wish time
     if ((hour == 11 || hour == 23) && minute == 11) {
       return 'It is 11:11! Make a wish for your next amazing event!';
     }
-    
+
     // Weekend motivation
     final weekday = DateTime.now().weekday;
     if (weekday == DateTime.friday && hour >= 17) {
       return 'FRIDAY EVENING! Time to find something epic for the weekend!';
     }
-    
+
     // Late night browsing
     if (hour >= 23 || hour <= 5) {
       return 'Night owl mode activated! Planning tomorrow\'s adventures?';
     }
-    
+
     return null;
   }
-  
+
   // Secret konami code counter
   int _konamiSequence = 0;
-  static const List<String> _konamiCode = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right'];
-  
+  static const List<String> _konamiCode = [
+    'up',
+    'up',
+    'down',
+    'down',
+    'left',
+    'right',
+    'left',
+    'right',
+  ];
+
   void inputKonamiDirection(String direction, BuildContext context) {
     if (_konamiCode[_konamiSequence] == direction) {
       _konamiSequence++;
@@ -218,21 +240,32 @@ class DelightService {
       _konamiSequence = 0;
     }
   }
-  
+
   void _triggerKonamiEasterEgg(BuildContext context) {
-    showConfetti(context, customMessage: 'KONAMI CODE UNLOCKED! You are a true gamer!');
-    _showAchievement(context, '🎮 Gaming Legend!', 'You entered the legendary Konami Code!');
+    showConfetti(
+      context,
+      customMessage: 'KONAMI CODE UNLOCKED! You are a true gamer!',
+    );
+    _showAchievement(
+      context,
+      '🎮 Gaming Legend!',
+      'You entered the legendary Konami Code!',
+    );
   }
-  
+
   // Helper methods
   String _getRandomMessage(List<String> messages) {
     return messages[_random.nextInt(messages.length)];
   }
-  
-  void _showAchievement(BuildContext context, String title, String description) {
+
+  void _showAchievement(
+    BuildContext context,
+    String title,
+    String description,
+  ) {
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
-    
+
     overlayEntry = OverlayEntry(
       builder: (context) => AchievementToast(
         title: title,
@@ -240,14 +273,19 @@ class DelightService {
         onComplete: () => overlayEntry.remove(),
       ),
     );
-    
+
     overlay.insert(overlayEntry);
   }
-  
-  void _showToastWithAnimation(BuildContext context, String message, IconData icon, Color color) {
+
+  void _showToastWithAnimation(
+    BuildContext context,
+    String message,
+    IconData icon,
+    Color color,
+  ) {
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
-    
+
     overlayEntry = OverlayEntry(
       builder: (context) => DelightToast(
         message: message,
@@ -256,10 +294,10 @@ class DelightService {
         onComplete: () => overlayEntry.remove(),
       ),
     );
-    
+
     overlay.insert(overlayEntry);
   }
-  
+
   // Shake detection easter egg
   void onShakeDetected(BuildContext context) {
     final messages = [
@@ -268,11 +306,16 @@ class DelightService {
       'Shake to refresh? We love the enthusiasm!',
       'Whoa there! Refreshing your adventure list!',
     ];
-    
-    _showToastWithAnimation(context, _getRandomMessage(messages), Icons.refresh, Colors.blue);
+
+    _showToastWithAnimation(
+      context,
+      _getRandomMessage(messages),
+      Icons.refresh,
+      Colors.blue,
+    );
     PlatformInteractions.mediumImpact();
   }
-  
+
   // Long press easter eggs
   void onLongPress(BuildContext context, String element) {
     final messages = {
@@ -281,30 +324,35 @@ class DelightService {
       'favorite': 'You REALLY love that heart button! We get it!',
       'profile': 'Getting to know yourself better? We approve!',
     };
-    
+
     if (messages.containsKey(element)) {
       triggerEasterEgg(context, element);
     }
   }
-  
+
   // Mini celebration for small interactions
   void showMiniCelebration(BuildContext context, String emoji) {
     PlatformInteractions.lightImpact();
-    _showToastWithAnimation(context, '$emoji Nice!', Icons.celebration, Colors.amber);
+    _showToastWithAnimation(
+      context,
+      '$emoji Nice!',
+      Icons.celebration,
+      Colors.amber,
+    );
   }
-  
+
   // Sparkle effect for special interactions
   void showSparkleEffect(BuildContext context, Offset position) {
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
-    
+
     overlayEntry = OverlayEntry(
       builder: (context) => SparkleEffect(
         position: position,
         onComplete: () => overlayEntry.remove(),
       ),
     );
-    
+
     overlay.insert(overlayEntry);
   }
 }
@@ -313,13 +361,13 @@ class DelightService {
 class ConfettiOverlay extends StatefulWidget {
   final VoidCallback onComplete;
   final String message;
-  
+
   const ConfettiOverlay({
     super.key,
     required this.onComplete,
     required this.message,
   });
-  
+
   @override
   State<ConfettiOverlay> createState() => _ConfettiOverlayState();
 }
@@ -328,7 +376,7 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   final List<ConfettiParticle> _particles = [];
-  
+
   @override
   void initState() {
     super.initState();
@@ -336,34 +384,43 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
       duration: const Duration(seconds: 3),
       vsync: this,
     );
-    
+
     _generateParticles();
     _controller.forward().then((_) => widget.onComplete());
   }
-  
+
   void _generateParticles() {
     final random = Random();
-    final colors = [Colors.red, Colors.blue, Colors.green, Colors.yellow, Colors.purple, Colors.orange];
-    
+    final colors = [
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.yellow,
+      Colors.purple,
+      Colors.orange,
+    ];
+
     for (int i = 0; i < 50; i++) {
-      _particles.add(ConfettiParticle(
-        startX: random.nextDouble(),
-        startY: -0.1,
-        endX: random.nextDouble(),
-        endY: 1.2,
-        color: colors[random.nextInt(colors.length)],
-        size: random.nextDouble() * 10 + 5,
-        rotation: random.nextDouble() * 6.28,
-      ));
+      _particles.add(
+        ConfettiParticle(
+          startX: random.nextDouble(),
+          startY: -0.1,
+          endX: random.nextDouble(),
+          endY: 1.2,
+          color: colors[random.nextInt(colors.length)],
+          size: random.nextDouble() * 10 + 5,
+          rotation: random.nextDouble() * 6.28,
+        ),
+      );
     }
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -385,32 +442,34 @@ class _ConfettiOverlayState extends State<ConfettiOverlay>
             top: MediaQuery.of(context).size.height * 0.3,
             left: 20,
             right: 20,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.8),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: Text(
-                widget.message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ).animate(delay: 500.ms)
-              .fadeIn(duration: 600.ms)
-              .scale(begin: const Offset(0.8, 0.8))
-              .slideY(begin: 0.3),
+            child:
+                Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        widget.message,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                    .animate(delay: 500.ms)
+                    .fadeIn(duration: 600.ms)
+                    .scale(begin: const Offset(0.8, 0.8))
+                    .slideY(begin: 0.3),
           ),
         ],
       ),
@@ -426,7 +485,7 @@ class ConfettiParticle {
   final Color color;
   final double size;
   final double rotation;
-  
+
   const ConfettiParticle({
     required this.startX,
     required this.startY,
@@ -441,21 +500,25 @@ class ConfettiParticle {
 class ConfettiPainter extends CustomPainter {
   final List<ConfettiParticle> particles;
   final double progress;
-  
+
   ConfettiPainter(this.particles, this.progress);
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     for (final particle in particles) {
       final paint = Paint()..color = particle.color;
-      
-      final x = (particle.startX + (particle.endX - particle.startX) * progress) * size.width;
-      final y = (particle.startY + (particle.endY - particle.startY) * progress) * size.height;
-      
+
+      final x =
+          (particle.startX + (particle.endX - particle.startX) * progress) *
+          size.width;
+      final y =
+          (particle.startY + (particle.endY - particle.startY) * progress) *
+          size.height;
+
       canvas.save();
       canvas.translate(x, y);
       canvas.rotate(particle.rotation * progress * 4);
-      
+
       // Draw different shapes for variety
       if (particle.size > 8) {
         // Star shape
@@ -476,11 +539,11 @@ class ConfettiPainter extends CustomPainter {
         // Circle
         canvas.drawCircle(Offset.zero, particle.size / 2, paint);
       }
-      
+
       canvas.restore();
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
@@ -489,13 +552,13 @@ class ConfettiPainter extends CustomPainter {
 class HeartExplosion extends StatefulWidget {
   final Offset position;
   final VoidCallback onComplete;
-  
+
   const HeartExplosion({
     super.key,
     required this.position,
     required this.onComplete,
   });
-  
+
   @override
   State<HeartExplosion> createState() => _HeartExplosionState();
 }
@@ -504,7 +567,7 @@ class _HeartExplosionState extends State<HeartExplosion>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final List<HeartParticle> _hearts = [];
-  
+
   @override
   void initState() {
     super.initState();
@@ -512,32 +575,34 @@ class _HeartExplosionState extends State<HeartExplosion>
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    
+
     _generateHearts();
     _controller.forward().then((_) => widget.onComplete());
   }
-  
+
   void _generateHearts() {
     final random = Random();
-    
+
     for (int i = 0; i < 8; i++) {
       final angle = (i * 2 * pi / 8) + random.nextDouble() * 0.5;
-      _hearts.add(HeartParticle(
-        startX: widget.position.dx,
-        startY: widget.position.dy,
-        endX: widget.position.dx + cos(angle) * 100,
-        endY: widget.position.dy + sin(angle) * 100,
-        size: random.nextDouble() * 15 + 10,
-      ));
+      _hearts.add(
+        HeartParticle(
+          startX: widget.position.dx,
+          startY: widget.position.dy,
+          endX: widget.position.dx + cos(angle) * 100,
+          endY: widget.position.dy + sin(angle) * 100,
+          size: random.nextDouble() * 15 + 10,
+        ),
+      );
     }
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -561,7 +626,7 @@ class HeartParticle {
   final double endX;
   final double endY;
   final double size;
-  
+
   const HeartParticle({
     required this.startX,
     required this.startY,
@@ -574,23 +639,23 @@ class HeartParticle {
 class HeartExplosionPainter extends CustomPainter {
   final List<HeartParticle> hearts;
   final double progress;
-  
+
   HeartExplosionPainter(this.hearts, this.progress);
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.pink.withValues(alpha: 1 - progress)
       ..style = PaintingStyle.fill;
-    
+
     for (final heart in hearts) {
       final x = heart.startX + (heart.endX - heart.startX) * progress;
       final y = heart.startY + (heart.endY - heart.startY) * progress;
-      
+
       canvas.save();
       canvas.translate(x, y);
       canvas.scale(heart.size / 20 * (1 - progress * 0.5));
-      
+
       // Draw heart shape
       final path = Path();
       path.moveTo(0, 5);
@@ -598,12 +663,12 @@ class HeartExplosionPainter extends CustomPainter {
       path.cubicTo(-5, -5, 0, 0, 0, 5);
       path.cubicTo(0, 0, 5, -5, 10, 0);
       path.cubicTo(20, -5, 10, -10, 0, 5);
-      
+
       canvas.drawPath(path, paint);
       canvas.restore();
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
@@ -612,13 +677,13 @@ class HeartExplosionPainter extends CustomPainter {
 class SparkleEffect extends StatefulWidget {
   final Offset position;
   final VoidCallback onComplete;
-  
+
   const SparkleEffect({
     super.key,
     required this.position,
     required this.onComplete,
   });
-  
+
   @override
   State<SparkleEffect> createState() => _SparkleEffectState();
 }
@@ -627,7 +692,7 @@ class _SparkleEffectState extends State<SparkleEffect>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final List<SparkleParticle> _sparkles = [];
-  
+
   @override
   void initState() {
     super.initState();
@@ -635,32 +700,34 @@ class _SparkleEffectState extends State<SparkleEffect>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _generateSparkles();
     _controller.forward().then((_) => widget.onComplete());
   }
-  
+
   void _generateSparkles() {
     final random = Random();
-    
+
     for (int i = 0; i < 6; i++) {
       final angle = (i * pi / 3) + random.nextDouble() * 0.3;
-      _sparkles.add(SparkleParticle(
-        startX: widget.position.dx,
-        startY: widget.position.dy,
-        endX: widget.position.dx + cos(angle) * 30,
-        endY: widget.position.dy + sin(angle) * 30,
-        size: random.nextDouble() * 4 + 2,
-      ));
+      _sparkles.add(
+        SparkleParticle(
+          startX: widget.position.dx,
+          startY: widget.position.dy,
+          endX: widget.position.dx + cos(angle) * 30,
+          endY: widget.position.dy + sin(angle) * 30,
+          size: random.nextDouble() * 4 + 2,
+        ),
+      );
     }
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -684,7 +751,7 @@ class SparkleParticle {
   final double endX;
   final double endY;
   final double size;
-  
+
   const SparkleParticle({
     required this.startX,
     required this.startY,
@@ -697,23 +764,23 @@ class SparkleParticle {
 class SparkleEffectPainter extends CustomPainter {
   final List<SparkleParticle> sparkles;
   final double progress;
-  
+
   SparkleEffectPainter(this.sparkles, this.progress);
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.amber.withValues(alpha: 1 - progress)
       ..style = PaintingStyle.fill;
-    
+
     for (final sparkle in sparkles) {
       final x = sparkle.startX + (sparkle.endX - sparkle.startX) * progress;
       final y = sparkle.startY + (sparkle.endY - sparkle.startY) * progress;
-      
+
       canvas.save();
       canvas.translate(x, y);
       canvas.rotate(progress * pi * 2);
-      
+
       // Draw star shape
       final path = Path();
       for (int i = 0; i < 4; i++) {
@@ -728,11 +795,11 @@ class SparkleEffectPainter extends CustomPainter {
       }
       path.close();
       canvas.drawPath(path, paint);
-      
+
       canvas.restore();
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
@@ -742,14 +809,14 @@ class AchievementToast extends StatefulWidget {
   final String title;
   final String description;
   final VoidCallback onComplete;
-  
+
   const AchievementToast({
     super.key,
     required this.title,
     required this.description,
     required this.onComplete,
   });
-  
+
   @override
   State<AchievementToast> createState() => _AchievementToastState();
 }
@@ -760,7 +827,7 @@ class _AchievementToastState extends State<AchievementToast> {
     super.initState();
     Timer(const Duration(seconds: 4), widget.onComplete);
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -769,60 +836,62 @@ class _AchievementToastState extends State<AchievementToast> {
       right: 20,
       child: Material(
         color: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Colors.amber, Colors.orange],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.amber.withValues(alpha: 0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.emoji_events_rounded,
-                color: Colors.white,
-                size: 32,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      widget.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+        child:
+            Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Colors.amber, Colors.orange],
                     ),
-                    Text(
-                      widget.description,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.amber.withValues(alpha: 0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ).animate()
-          .slideX(begin: 1, duration: 600.ms, curve: Curves.elasticOut)
-          .fadeIn()
-          .then(delay: 3.seconds)
-          .slideX(end: 1, duration: 400.ms)
-          .fadeOut(),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.emoji_events_rounded,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              widget.title,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              widget.description,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                .animate()
+                .slideX(begin: 1, duration: 600.ms, curve: Curves.elasticOut)
+                .fadeIn()
+                .then(delay: 3.seconds)
+                .slideX(end: 1, duration: 400.ms)
+                .fadeOut(),
       ),
     );
   }
@@ -834,7 +903,7 @@ class DelightToast extends StatefulWidget {
   final IconData icon;
   final Color color;
   final VoidCallback onComplete;
-  
+
   const DelightToast({
     super.key,
     required this.message,
@@ -842,7 +911,7 @@ class DelightToast extends StatefulWidget {
     required this.color,
     required this.onComplete,
   });
-  
+
   @override
   State<DelightToast> createState() => _DelightToastState();
 }
@@ -853,7 +922,7 @@ class _DelightToastState extends State<DelightToast> {
     super.initState();
     Timer(const Duration(seconds: 3), widget.onComplete);
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
@@ -862,46 +931,48 @@ class _DelightToastState extends State<DelightToast> {
       right: 20,
       child: Material(
         color: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: widget.color.withValues(alpha: 0.9),
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: [
-              BoxShadow(
-                color: widget.color.withValues(alpha: 0.3),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                widget.icon,
-                color: Colors.white,
-                size: 24,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  widget.message,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+        child:
+            Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: widget.color.withValues(alpha: 0.9),
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: widget.color.withValues(alpha: 0.3),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-            ],
-          ),
-        ).animate()
-          .scale(begin: const Offset(0.8, 0.8), duration: 300.ms, curve: Curves.elasticOut)
-          .fadeIn()
-          .then(delay: 2.5.seconds)
-          .scale(end: const Offset(0.8, 0.8), duration: 200.ms)
-          .fadeOut(),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(widget.icon, color: Colors.white, size: 24),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          widget.message,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                .animate()
+                .scale(
+                  begin: const Offset(0.8, 0.8),
+                  duration: 300.ms,
+                  curve: Curves.elasticOut,
+                )
+                .fadeIn()
+                .then(delay: 2.5.seconds)
+                .scale(end: const Offset(0.8, 0.8), duration: 200.ms)
+                .fadeOut(),
       ),
     );
   }

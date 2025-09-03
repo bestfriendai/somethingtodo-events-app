@@ -17,11 +17,11 @@ class LoadingShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Shimmer.fromColors(
       baseColor: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBase,
-      highlightColor: isDark 
-          ? AppColors.shimmerHighlightDark 
+      highlightColor: isDark
+          ? AppColors.shimmerHighlightDark
           : AppColors.shimmerHighlight,
       child: Container(
         width: width,
@@ -41,16 +41,14 @@ class EventCardShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Shimmer.fromColors(
         baseColor: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBase,
-        highlightColor: isDark 
-            ? AppColors.shimmerHighlightDark 
+        highlightColor: isDark
+            ? AppColors.shimmerHighlightDark
             : AppColors.shimmerHighlight,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,9 +59,7 @@ class EventCardShimmer extends StatelessWidget {
               width: double.infinity,
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(12),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
               ),
             ),
             // Content placeholder
@@ -141,11 +137,11 @@ class ProfileShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Shimmer.fromColors(
       baseColor: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBase,
-      highlightColor: isDark 
-          ? AppColors.shimmerHighlightDark 
+      highlightColor: isDark
+          ? AppColors.shimmerHighlightDark
           : AppColors.shimmerHighlight,
       child: Column(
         children: [
@@ -186,20 +182,17 @@ class ProfileShimmer extends StatelessWidget {
 
 class ListItemShimmer extends StatelessWidget {
   final double? height;
-  
-  const ListItemShimmer({
-    super.key,
-    this.height = 60,
-  });
+
+  const ListItemShimmer({super.key, this.height = 60});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Shimmer.fromColors(
       baseColor: isDark ? AppColors.shimmerBaseDark : AppColors.shimmerBase,
-      highlightColor: isDark 
-          ? AppColors.shimmerHighlightDark 
+      highlightColor: isDark
+          ? AppColors.shimmerHighlightDark
           : AppColors.shimmerHighlight,
       child: Container(
         height: height,

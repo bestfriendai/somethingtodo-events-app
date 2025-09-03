@@ -5,8 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class PlatformInteractions {
-  static bool get isIOS => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
-  static bool get isAndroid => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+  static bool get isIOS =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+  static bool get isAndroid =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
   // Platform-specific haptic feedback
   static void lightImpact() {
@@ -135,9 +137,9 @@ class PlatformInteractions {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
                   title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
               if (message != null) ...[
@@ -146,9 +148,9 @@ class PlatformInteractions {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Text(
                     message,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -210,9 +212,10 @@ class PlatformInteractions {
           const end = Offset.zero;
           const curve = Curves.easeOutCubic;
 
-          var tween = Tween(begin: begin, end: end).chain(
-            CurveTween(curve: curve),
-          );
+          var tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),
@@ -228,18 +231,18 @@ class PlatformInteractions {
         transitionDuration: const Duration(milliseconds: 250),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
-            opacity: CurvedAnimation(
-              parent: animation,
-              curve: Curves.easeOut,
-            ),
+            opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
             child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.0, 0.1),
-                end: Offset.zero,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.easeOutCubic,
-              )),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(0.0, 0.1),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  ),
               child: child,
             ),
           );
@@ -354,10 +357,7 @@ class PlatformInteractions {
         ),
       );
     } else {
-      return GestureDetector(
-        onTap: onTap,
-        child: child,
-      );
+      return GestureDetector(onTap: onTap, child: child);
     }
   }
 }
@@ -381,18 +381,12 @@ class PlatformLoadingIndicator extends StatelessWidget {
   final Color? color;
   final double? strokeWidth;
 
-  const PlatformLoadingIndicator({
-    super.key,
-    this.color,
-    this.strokeWidth,
-  });
+  const PlatformLoadingIndicator({super.key, this.color, this.strokeWidth});
 
   @override
   Widget build(BuildContext context) {
     if (PlatformInteractions.isIOS) {
-      return CupertinoActivityIndicator(
-        color: color ?? Colors.white,
-      );
+      return CupertinoActivityIndicator(color: color ?? Colors.white);
     } else {
       return CircularProgressIndicator(
         color: color,

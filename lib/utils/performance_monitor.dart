@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 /// Performance monitoring utilities for the SomethingToDo app.
-/// 
+///
 /// This class provides comprehensive performance monitoring including
 /// frame rate tracking, memory usage monitoring, and performance
 /// profiling for theme operations and widget rendering.
@@ -17,7 +17,7 @@ class PerformanceMonitor {
   static final _instance = _PerformanceTracker();
 
   /// Starts performance monitoring for the application.
-  /// 
+  ///
   /// This method initializes frame rate monitoring and memory tracking
   /// to help identify performance bottlenecks.
   static void startMonitoring() {
@@ -28,7 +28,7 @@ class PerformanceMonitor {
   }
 
   /// Stops performance monitoring.
-  /// 
+  ///
   /// This method cleans up monitoring resources and stops all
   /// performance tracking activities.
   static void stopMonitoring() {
@@ -36,7 +36,7 @@ class PerformanceMonitor {
   }
 
   /// Measures the performance of a theme operation.
-  /// 
+  ///
   /// This method tracks the execution time of theme-related operations
   /// and logs performance metrics for optimization.
   static T measureThemeOperation<T>(
@@ -49,12 +49,15 @@ class PerformanceMonitor {
     final result = operation();
     stopwatch.stop();
 
-    _instance._recordThemeOperation(operationName, stopwatch.elapsedMicroseconds);
+    _instance._recordThemeOperation(
+      operationName,
+      stopwatch.elapsedMicroseconds,
+    );
     return result;
   }
 
   /// Measures the performance of a widget build operation.
-  /// 
+  ///
   /// This method tracks widget build times and identifies
   /// performance bottlenecks in the UI rendering pipeline.
   static Widget measureWidgetBuild(
@@ -63,14 +66,11 @@ class PerformanceMonitor {
   ) {
     if (!kDebugMode) return builder();
 
-    return _PerformanceMeasuredWidget(
-      widgetName: widgetName,
-      builder: builder,
-    );
+    return _PerformanceMeasuredWidget(widgetName: widgetName, builder: builder);
   }
 
   /// Measures async operation performance.
-  /// 
+  ///
   /// This method tracks the performance of asynchronous operations
   /// and provides insights into async bottlenecks.
   static Future<T> measureAsyncOperation<T>(
@@ -83,12 +83,15 @@ class PerformanceMonitor {
     final result = await operation();
     stopwatch.stop();
 
-    _instance._recordAsyncOperation(operationName, stopwatch.elapsedMicroseconds);
+    _instance._recordAsyncOperation(
+      operationName,
+      stopwatch.elapsedMicroseconds,
+    );
     return result;
   }
 
   /// Gets current performance metrics.
-  /// 
+  ///
   /// This method returns a snapshot of current performance data
   /// including frame rates, memory usage, and operation timings.
   static PerformanceMetrics getCurrentMetrics() {
@@ -96,7 +99,7 @@ class PerformanceMonitor {
   }
 
   /// Logs performance summary to console.
-  /// 
+  ///
   /// This method outputs a comprehensive performance report
   /// for debugging and optimization purposes.
   static void logPerformanceSummary() {
@@ -106,7 +109,7 @@ class PerformanceMonitor {
   }
 
   /// Creates a performance-optimized RepaintBoundary.
-  /// 
+  ///
   /// This method wraps widgets with RepaintBoundary for better
   /// rendering performance and reduced unnecessary repaints.
   static Widget createOptimizedBoundary({
@@ -168,24 +171,31 @@ class _PerformanceTracker {
 
   void _recordThemeOperation(String operation, int microseconds) {
     _themeOperations.putIfAbsent(operation, () => []).add(microseconds);
-    
-    if (microseconds > 16000) { // > 16ms (60fps threshold)
-      debugPrint('⚠️ Slow theme operation: $operation took ${microseconds / 1000}ms');
+
+    if (microseconds > 16000) {
+      // > 16ms (60fps threshold)
+      debugPrint(
+        '⚠️ Slow theme operation: $operation took ${microseconds / 1000}ms',
+      );
     }
   }
 
   void _recordAsyncOperation(String operation, int microseconds) {
     _asyncOperations.putIfAbsent(operation, () => []).add(microseconds);
-    
-    if (microseconds > 100000) { // > 100ms
-      debugPrint('⚠️ Slow async operation: $operation took ${microseconds / 1000}ms');
+
+    if (microseconds > 100000) {
+      // > 100ms
+      debugPrint(
+        '⚠️ Slow async operation: $operation took ${microseconds / 1000}ms',
+      );
     }
   }
 
   void _recordWidgetBuild(String widget, int microseconds) {
     _widgetBuilds.putIfAbsent(widget, () => []).add(microseconds);
-    
-    if (microseconds > 16000) { // > 16ms
+
+    if (microseconds > 16000) {
+      // > 16ms
       debugPrint('⚠️ Slow widget build: $widget took ${microseconds / 1000}ms');
     }
   }
@@ -204,7 +214,7 @@ class _PerformanceTracker {
     debugPrint('📊 Performance Summary:');
     debugPrint('   Frame Rate: ${_currentFrameRate.toStringAsFixed(1)} fps');
     debugPrint('   Memory Usage: ${_currentMemoryUsage} MB');
-    
+
     if (_themeOperations.isNotEmpty) {
       debugPrint('   Theme Operations:');
       _themeOperations.forEach((operation, times) {
@@ -212,7 +222,7 @@ class _PerformanceTracker {
         debugPrint('     $operation: ${avgTime.toStringAsFixed(2)}ms avg');
       });
     }
-    
+
     if (_widgetBuilds.isNotEmpty) {
       debugPrint('   Widget Builds:');
       _widgetBuilds.forEach((widget, times) {
@@ -253,10 +263,7 @@ class _DebugLabeledWidget extends StatelessWidget {
   final String label;
   final Widget child;
 
-  const _DebugLabeledWidget({
-    required this.label,
-    required this.child,
-  });
+  const _DebugLabeledWidget({required this.label, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -272,10 +279,7 @@ class _DebugLabeledWidget extends StatelessWidget {
               color: Colors.red.withValues(alpha: 0.7),
               child: Text(
                 label,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 8,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 8),
               ),
             ),
           ),
@@ -288,16 +292,16 @@ class _DebugLabeledWidget extends StatelessWidget {
 class PerformanceMetrics {
   /// Current frame rate in fps
   final double frameRate;
-  
+
   /// Current memory usage in MB
   final int memoryUsage;
-  
+
   /// Theme operation timings
   final Map<String, List<int>> themeOperations;
-  
+
   /// Async operation timings
   final Map<String, List<int>> asyncOperations;
-  
+
   /// Widget build timings
   final Map<String, List<int>> widgetBuilds;
 

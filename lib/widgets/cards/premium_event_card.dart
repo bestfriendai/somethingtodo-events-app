@@ -58,7 +58,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
   late AnimationController _likeController;
   late AnimationController _saveController;
   late ConfettiController _confettiController;
-  
+
   double _tiltX = 0.0;
   double _tiltY = 0.0;
   bool _isPressed = false;
@@ -192,7 +192,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                     );
                   },
                 ),
-              
+
               // Main card with glassmorphism
               ClipRRect(
                 borderRadius: BorderRadius.circular(24),
@@ -239,17 +239,17 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                     ),
                                     errorWidget: (context, url, error) =>
                                         Container(
-                                      color: Colors.grey[300],
-                                      child: const Icon(
-                                        Icons.image_not_supported,
-                                        size: 50,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                                          color: Colors.grey[300],
+                                          child: const Icon(
+                                            Icons.image_not_supported,
+                                            size: 50,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
                                   ),
                                 ),
                               ),
-                              
+
                               // Gradient overlay
                               Container(
                                 decoration: BoxDecoration(
@@ -263,99 +263,110 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                   ),
                                 ),
                               ),
-                              
+
                               // Category badge with gradient
                               Positioned(
                                 top: 16,
                                 left: 16,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        _getCategoryColor(widget.category),
-                                        _getCategoryColor(widget.category)
-                                            .withValues(alpha: 0.7),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.2),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                child:
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 6,
                                       ),
-                                    ],
-                                  ),
-                                  child: Text(
-                                    widget.category.toUpperCase(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 0.5,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            _getCategoryColor(widget.category),
+                                            _getCategoryColor(
+                                              widget.category,
+                                            ).withValues(alpha: 0.7),
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.2,
+                                            ),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        widget.category.toUpperCase(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ).animate().fadeIn().slideX(
+                                      begin: -0.5,
+                                      duration: 600.ms,
+                                      curve: Curves.easeOut,
                                     ),
-                                  ),
-                                ).animate().fadeIn().slideX(
-                                  begin: -0.5,
-                                  duration: 600.ms,
-                                  curve: Curves.easeOut,
-                                ),
                               ),
-                              
+
                               // Distance indicator with pulse
                               Positioned(
                                 top: 16,
                                 right: 16,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.6),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.location_on,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ).animate(
-                                        onPlay: (controller) =>
-                                            controller.repeat(),
-                                      ).scale(
-                                        begin: const Offset(1, 1),
-                                        end: const Offset(1.2, 1.2),
-                                        duration: 1.seconds,
-                                      ).then().scale(
-                                        begin: const Offset(1.2, 1.2),
-                                        end: const Offset(1, 1),
-                                        duration: 1.seconds,
+                                child:
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
                                       ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        widget.distance,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.6,
                                         ),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                    ],
-                                  ),
-                                ).animate().fadeIn().slideX(
-                                  begin: 0.5,
-                                  duration: 600.ms,
-                                  curve: Curves.easeOut,
-                                ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                                Icons.location_on,
+                                                color: Colors.white,
+                                                size: 14,
+                                              )
+                                              .animate(
+                                                onPlay: (controller) =>
+                                                    controller.repeat(),
+                                              )
+                                              .scale(
+                                                begin: const Offset(1, 1),
+                                                end: const Offset(1.2, 1.2),
+                                                duration: 1.seconds,
+                                              )
+                                              .then()
+                                              .scale(
+                                                begin: const Offset(1.2, 1.2),
+                                                end: const Offset(1, 1),
+                                                duration: 1.seconds,
+                                              ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            widget.distance,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ).animate().fadeIn().slideX(
+                                      begin: 0.5,
+                                      duration: 600.ms,
+                                      curve: Curves.easeOut,
+                                    ),
                               ),
-                              
+
                               // Price tag with shimmer
                               if (widget.price > 0)
                                 Positioned(
@@ -372,7 +383,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                             ],
                           ),
                         ),
-                        
+
                         // Content
                         Expanded(
                           child: Padding(
@@ -390,9 +401,9 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ).animate().fadeIn(delay: 200.ms),
-                                
+
                                 const SizedBox(height: 8),
-                                
+
                                 Text(
                                   widget.description,
                                   style: TextStyle(
@@ -403,18 +414,16 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ).animate().fadeIn(delay: 300.ms),
-                                
+
                                 const Spacer(),
-                                
+
                                 // Bottom row with actions and attendees
                                 Row(
                                   children: [
                                     // Attendee avatars
                                     if (widget.attendeeAvatars.isNotEmpty)
-                                      Expanded(
-                                        child: _buildAttendeeAvatars(),
-                                      ),
-                                    
+                                      Expanded(child: _buildAttendeeAvatars()),
+
                                     // Action buttons
                                     Row(
                                       children: [
@@ -428,14 +437,15 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                                 animation: _likeController,
                                                 builder: (context, child) {
                                                   return Transform.scale(
-                                                    scale: 1.0 +
+                                                    scale:
+                                                        1.0 +
                                                         _likeController.value *
                                                             0.3,
                                                     child: Icon(
                                                       widget.isLiked
                                                           ? Icons.favorite
                                                           : Icons
-                                                              .favorite_border,
+                                                                .favorite_border,
                                                       color: widget.isLiked
                                                           ? Colors.red
                                                           : Colors.white,
@@ -464,25 +474,30 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                             ),
                                           ],
                                         ),
-                                        
+
                                         // Share button with ripple
                                         Stack(
                                           alignment: Alignment.center,
                                           children: [
                                             if (_showRipple)
                                               Container(
-                                                width: 40,
-                                                height: 40,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.white
-                                                      .withValues(alpha: 0.3),
-                                                ),
-                                              ).animate().scale(
-                                                begin: const Offset(0, 0),
-                                                end: const Offset(2, 2),
-                                                duration: 600.ms,
-                                              ).fadeOut(),
+                                                    width: 40,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Colors.white
+                                                          .withValues(
+                                                            alpha: 0.3,
+                                                          ),
+                                                    ),
+                                                  )
+                                                  .animate()
+                                                  .scale(
+                                                    begin: const Offset(0, 0),
+                                                    end: const Offset(2, 2),
+                                                    duration: 600.ms,
+                                                  )
+                                                  .fadeOut(),
                                             IconButton(
                                               onPressed: _handleShare,
                                               icon: const Icon(
@@ -493,7 +508,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                             ),
                                           ],
                                         ),
-                                        
+
                                         // Save button with bookmark animation
                                         IconButton(
                                           onPressed: _handleSave,
@@ -501,8 +516,10 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                                             animation: _saveController,
                                             builder: (context, child) {
                                               return Transform.rotate(
-                                                angle: _saveController.value *
-                                                    math.pi * 2,
+                                                angle:
+                                                    _saveController.value *
+                                                    math.pi *
+                                                    2,
                                                 child: Icon(
                                                   widget.isSaved
                                                       ? Icons.bookmark
@@ -570,34 +587,33 @@ class _PremiumEventCardState extends State<PremiumEventCard>
       height: 32,
       child: Stack(
         children: [
-          ...widget.attendeeAvatars.take(3).toList().asMap().entries.map(
-            (entry) {
-              return Positioned(
-                left: entry.key * 20.0,
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(entry.value),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ).animate().fadeIn(
-                  delay: Duration(milliseconds: 100 * entry.key),
-                ).slideX(
-                  begin: -0.5,
-                  duration: 400.ms,
-                  curve: Curves.easeOut,
-                ),
-              );
-            },
-          ),
+          ...widget.attendeeAvatars.take(3).toList().asMap().entries.map((
+            entry,
+          ) {
+            return Positioned(
+              left: entry.key * 20.0,
+              child:
+                  Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                          image: DecorationImage(
+                            image: CachedNetworkImageProvider(entry.value),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                      .animate()
+                      .fadeIn(delay: Duration(milliseconds: 100 * entry.key))
+                      .slideX(
+                        begin: -0.5,
+                        duration: 400.ms,
+                        curve: Curves.easeOut,
+                      ),
+            );
+          }),
           if (widget.totalAttendees > 3)
             Positioned(
               left: 60,
@@ -607,10 +623,7 @@ class _PremiumEventCardState extends State<PremiumEventCard>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.black.withValues(alpha: 0.6),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2,
-                  ),
+                  border: Border.all(color: Colors.white, width: 2),
                 ),
                 child: Center(
                   child: Text(

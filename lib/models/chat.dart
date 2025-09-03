@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'chat.freezed.dart';
 part 'chat.g.dart';
@@ -18,7 +17,7 @@ class ChatSession with _$ChatSession {
     DateTime? updatedAt,
   }) = _ChatSession;
 
-  factory ChatSession.fromJson(Map<String, dynamic> json) => 
+  factory ChatSession.fromJson(Map<String, dynamic> json) =>
       _$ChatSessionFromJson(json);
 }
 
@@ -37,7 +36,7 @@ class ChatMessage with _$ChatMessage {
     DateTime? timestamp,
   }) = _ChatMessage;
 
-  factory ChatMessage.fromJson(Map<String, dynamic> json) => 
+  factory ChatMessage.fromJson(Map<String, dynamic> json) =>
       _$ChatMessageFromJson(json);
 }
 
@@ -51,7 +50,7 @@ class MessageAction with _$MessageAction {
     @Default(false) bool isCompleted,
   }) = _MessageAction;
 
-  factory MessageAction.fromJson(Map<String, dynamic> json) => 
+  factory MessageAction.fromJson(Map<String, dynamic> json) =>
       _$MessageActionFromJson(json);
 }
 
@@ -67,7 +66,7 @@ class ChatRecommendation with _$ChatRecommendation {
     DateTime? createdAt,
   }) = _ChatRecommendation;
 
-  factory ChatRecommendation.fromJson(Map<String, dynamic> json) => 
+  factory ChatRecommendation.fromJson(Map<String, dynamic> json) =>
       _$ChatRecommendationFromJson(json);
 }
 
@@ -139,7 +138,7 @@ class EventRecommendation with _$EventRecommendation {
     DateTime? createdAt,
   }) = _EventRecommendation;
 
-  factory EventRecommendation.fromJson(Map<String, dynamic> json) => 
+  factory EventRecommendation.fromJson(Map<String, dynamic> json) =>
       _$EventRecommendationFromJson(json);
 }
 
@@ -162,4 +161,3 @@ enum RecommendationStatus {
   @JsonValue('viewed')
   viewed,
 }
-

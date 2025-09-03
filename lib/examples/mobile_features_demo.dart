@@ -8,7 +8,6 @@ import '../models/event.dart';
 
 /// Demo class showing how to use the new mobile features
 class MobileFeaturesDemo {
-  
   /// Example: Show a platform-specific action sheet
   static void demonstrateActionSheet(BuildContext context) {
     PlatformInteractions.showPlatformActionSheet(
@@ -60,15 +59,12 @@ class MobileFeaturesDemo {
           children: [
             Text(
               event.title,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Text(event.description),
             const SizedBox(height: 24),
-            
+
             // Action buttons
             Row(
               children: [
@@ -117,13 +113,13 @@ class MobileFeaturesDemo {
   static Future<void> demonstrateCaching(List<Event> events) async {
     // Initialize cache
     await CacheService.instance.initialize();
-    
+
     // Cache events for offline use
     await CacheService.instance.cacheEvents(events);
-    
+
     // Cache user preferences
     await CacheService.instance.cacheUserPreference('theme', 'dark');
-    
+
     // Check connectivity
     final isConnected = await CacheService.instance.isConnected;
     debugPrint('Connected: $isConnected');
@@ -148,10 +144,10 @@ class MobileFeaturesDemo {
   static void demonstrateHaptics() {
     // Light feedback for selections
     PlatformInteractions.lightImpact();
-    
+
     // Medium feedback for actions
     PlatformInteractions.mediumImpact();
-    
+
     // Heavy feedback for important actions
     PlatformInteractions.heavyImpact();
   }
@@ -161,37 +157,31 @@ class MobileFeaturesDemo {
 class MobileFeaturesExampleScreen extends StatelessWidget {
   final List<Event> sampleEvents;
 
-  const MobileFeaturesExampleScreen({
-    super.key,
-    required this.sampleEvents,
-  });
+  const MobileFeaturesExampleScreen({super.key, required this.sampleEvents});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mobile Features Demo'),
-      ),
+      appBar: AppBar(title: const Text('Mobile Features Demo')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ElevatedButton(
-              onPressed: () => MobileFeaturesDemo.demonstrateFeedView(
-                context, 
-                sampleEvents,
-              ),
+              onPressed: () =>
+                  MobileFeaturesDemo.demonstrateFeedView(context, sampleEvents),
               child: const Text('Open TikTok-Style Feed'),
             ),
             const SizedBox(height: 16),
-            
+
             ElevatedButton(
-              onPressed: () => MobileFeaturesDemo.demonstrateActionSheet(context),
+              onPressed: () =>
+                  MobileFeaturesDemo.demonstrateActionSheet(context),
               child: const Text('Show Action Sheet'),
             ),
             const SizedBox(height: 16),
-            
+
             ElevatedButton(
               onPressed: () => MobileFeaturesDemo.demonstrateBottomSheet(
                 context,
@@ -200,29 +190,26 @@ class MobileFeaturesExampleScreen extends StatelessWidget {
               child: const Text('Show Bottom Sheet'),
             ),
             const SizedBox(height: 16),
-            
+
             ElevatedButton(
               onPressed: () => MobileFeaturesDemo.demonstrateToast(context),
               child: const Text('Show Toast'),
             ),
             const SizedBox(height: 16),
-            
+
             ElevatedButton(
               onPressed: MobileFeaturesDemo.demonstrateHaptics,
               child: const Text('Test Haptic Feedback'),
             ),
             const SizedBox(height: 32),
-            
+
             // Optimized event list demo
             const Text(
               'Swipeable Event Cards:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            
+
             Expanded(
               child: OptimizedEventList(
                 events: sampleEvents,
