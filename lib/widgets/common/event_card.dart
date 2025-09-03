@@ -126,206 +126,132 @@ class _EventCardState extends State<EventCard> {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
                 ),
-                child: Stack(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: widget.event.imageUrls.isNotEmpty
-                          ? widget.event.imageUrls.first
-                          : 'https://via.placeholder.com/400x200',
-                      height: 160,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          const LoadingShimmer(height: 160),
-                      errorWidget: (context, url, error) => Container(
-                        height: 160,
-                        color: Colors.black.withValues(alpha: 0.1),
-                        child: const Center(
-                          child:
-                              Icon(Icons.image, size: 40, color: Colors.white70),
-                        ),
-                      ),
+                child: CachedNetworkImage(
+                  imageUrl: widget.event.imageUrls.isNotEmpty
+                      ? widget.event.imageUrls.first
+                      : 'https://via.placeholder.com/400x200',
+                  height: 160,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      const LoadingShimmer(height: 160),
+                  errorWidget: (context, url, error) => Container(
+                    height: 160,
+                    color: Colors.black.withValues(alpha: 0.1),
+                    child: const Center(
+                      child: Icon(Icons.image, size: 40, color: Colors.white70),
                     ),
-                    // Category Badge
-                    Positioned(
-                      top: 12,
-                      left: 12,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppTheme.primaryColor.withValues(alpha: 0.9),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          widget.event.category.displayName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Favorite Button
-                    if (widget.showFavoriteButton)
-                      Positioned(
-                        top: 12,
-                        right: 12,
-                        child: GestureDetector(
-                          onTap: _toggleFavorite,
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.15),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.3),
-                                width: 1,
-                              ),
-                            ),
-                            child: _isToggling
-                                ? const SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Icon(
-                                    _isFavorited
-                                        ? Icons.favorite
-                                        : Icons.favorite_outline,
-                                    color: _isFavorited
-                                        ? AppTheme.errorColor
-                                        : Colors.white,
-                                    size: 16,
-                                  ),
-                          ),
-                        ),
-                      ),
-                ],
+                  ),
+                ),
               ),
-            ),
-            // Content
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Date and Time
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_today_outlined,
-                        size: 14,
-                        color: AppTheme.primaryColor,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        DateFormat(
-                          'MMM dd, yyyy • h:mm a',
-                        ).format(widget.event.startDateTime),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.primaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  // Title
-                  Text(
-                    widget.event.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 6),
-                  // Organizer
-                  Text(
-                    'by ${widget.event.organizerName}',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 8),
-                  // Location and Price
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.location_on_outlined,
-                              size: 14,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                widget.event.venue.name,
-                                style: Theme.of(context).textTheme.bodySmall
-                                    ?.copyWith(color: Colors.grey[600]),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: widget.event.pricing.isFree
-                              ? AppTheme.successColor.withValues(alpha: 0.1)
-                              : AppTheme.warningColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          widget.event.pricing.isFree
-                              ? 'Free'
-                              : '\$${widget.event.pricing.price.toStringAsFixed(0)}',
-                          style: TextStyle(
-                            color: widget.event.pricing.isFree
-                                ? AppTheme.successColor
-                                : AppTheme.warningColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  // Attendees
-                  if (widget.event.attendeeCount > 0)
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Date and Time
                     Row(
                       children: [
                         Icon(
-                          Icons.people_outline,
+                          Icons.calendar_today_outlined,
                           size: 14,
-                          color: Colors.grey[600],
+                          color: AppTheme.primaryColor,
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${widget.event.attendeeCount} attending',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: Colors.grey[600]),
+                          DateFormat('MMM dd, yyyy • h:mm a')
+                              .format(widget.event.startDateTime),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color: AppTheme.primaryColor,
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ],
                     ),
-                ],
+                    const SizedBox(height: 8),
+                    // Title
+                    Text(
+                      widget.event.title,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    // Organizer
+                    Text(
+                      'by ${widget.event.organizerName}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 8),
+                    // Location and Price
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                size: 14,
+                                color: Colors.grey[600],
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  widget.event.venue.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(color: Colors.grey[600]),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: widget.event.pricing.isFree
+                                ? AppTheme.successColor
+                                    .withValues(alpha: 0.1)
+                                : AppTheme.warningColor
+                                    .withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            widget.event.pricing.isFree
+                                ? 'Free'
+                                : '\$${widget.event.pricing.price.toStringAsFixed(0)}',
+                            style: TextStyle(
+                              color: widget.event.pricing.isFree
+                                  ? AppTheme.successColor
+                                  : AppTheme.warningColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
