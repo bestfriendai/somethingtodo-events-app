@@ -73,15 +73,11 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
-    _scaleAnimation = Tween<double>(
-      begin: 0.9,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
-    
+
+    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
+    );
+
     _animationController.forward();
   }
 
@@ -99,9 +95,7 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
     Widget content = Container(
       decoration: BoxDecoration(
         color: isDark ? ModernTheme.darkCardSurface : Colors.white,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
@@ -115,7 +109,7 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
         children: [
           // Handle and header
           if (widget.showHandle || widget.title != null) _buildHeader(),
-          
+
           // Content
           if (widget.expand)
             Expanded(child: widget.child)
@@ -151,7 +145,7 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
 
   Widget _buildHeader() {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
@@ -177,7 +171,7 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-          
+
           // Title
           if (widget.title != null) ...[
             if (widget.showHandle) const SizedBox(height: 16),
@@ -201,13 +195,11 @@ class _MobileBottomSheetState extends State<MobileBottomSheet>
 class EventDetailsBottomSheet extends StatefulWidget {
   final Event event;
 
-  const EventDetailsBottomSheet({
-    super.key,
-    required this.event,
-  });
+  const EventDetailsBottomSheet({super.key, required this.event});
 
   @override
-  State<EventDetailsBottomSheet> createState() => _EventDetailsBottomSheetState();
+  State<EventDetailsBottomSheet> createState() =>
+      _EventDetailsBottomSheetState();
 }
 
 class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
@@ -229,14 +221,12 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: BoxDecoration(
         color: theme.scaffoldBackgroundColor,
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -262,7 +252,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
               ],
             ),
           ),
-          
+
           // Tabs
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -287,7 +277,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
               ],
             ),
           ),
-          
+
           // Tab content
           Expanded(
             child: TabBarView(
@@ -299,7 +289,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
               ],
             ),
           ),
-          
+
           // Action buttons
           _buildActionButtons(),
         ],
@@ -316,33 +306,33 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
           // Description
           Text(
             'About this event',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           Text(
             widget.event.description,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              height: 1.5,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(height: 1.5),
           ),
           const SizedBox(height: 24),
-          
+
           // Organizer info
           _buildInfoCard(
             icon: Icons.person_rounded,
             title: 'Organizer',
             content: widget.event.organizerName,
           ),
-          
+
           // Category
           _buildInfoCard(
             icon: Icons.category_rounded,
             title: 'Category',
             content: widget.event.category.displayName,
           ),
-          
+
           // Attendees
           _buildInfoCard(
             icon: Icons.group_rounded,
@@ -362,12 +352,12 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
         children: [
           Text(
             'Event Location',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 16),
-          
+
           // Venue details
           Container(
             padding: const EdgeInsets.all(20),
@@ -393,7 +383,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Map placeholder
           Container(
             height: 200,
@@ -412,9 +402,9 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Directions button
           SizedBox(
             width: double.infinity,
@@ -446,12 +436,12 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
         children: [
           Text(
             'Ticket Information',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 16),
-          
+
           if (widget.event.pricing.isFree) ...[
             Container(
               padding: const EdgeInsets.all(20),
@@ -502,10 +492,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: ModernTheme.primaryColor,
-                  width: 2,
-                ),
+                border: Border.all(color: ModernTheme.primaryColor, width: 2),
               ),
               child: Row(
                 children: [
@@ -521,9 +508,8 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
                       children: [
                         Text(
                           'General Admission',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -567,16 +553,16 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 4),
               Text(
                 content,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -617,7 +603,7 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
             ),
           ),
           const SizedBox(width: 16),
-          
+
           // Get tickets / RSVP button
           Expanded(
             flex: 2,
@@ -627,13 +613,11 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
                 // Handle ticket/RSVP
               },
               icon: Icon(
-                widget.event.pricing.isFree 
-                    ? Icons.check_circle_rounded 
+                widget.event.pricing.isFree
+                    ? Icons.check_circle_rounded
                     : Icons.confirmation_num_rounded,
               ),
-              label: Text(
-                widget.event.pricing.isFree ? 'RSVP' : 'Get Tickets',
-              ),
+              label: Text(widget.event.pricing.isFree ? 'RSVP' : 'Get Tickets'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: ModernTheme.primaryColor,
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -648,4 +632,3 @@ class _EventDetailsBottomSheetState extends State<EventDetailsBottomSheet>
     );
   }
 }
-

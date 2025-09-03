@@ -18,8 +18,10 @@ class DemoDataService {
         id: 'demo_user_1',
         name: 'Sarah Chen',
         email: 'sarah.chen@email.com',
-        profileImageUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face',
-        bio: 'Tech enthusiast and music lover. Always looking for the next great concert or innovation conference.',
+        profileImageUrl:
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face',
+        bio:
+            'Tech enthusiast and music lover. Always looking for the next great concert or innovation conference.',
         location: 'San Francisco, CA',
         interests: ['technology', 'music', 'innovation', 'networking'],
         preferredCategories: [EventCategory.technology, EventCategory.music],
@@ -37,13 +39,15 @@ class DemoDataService {
           'budget_conscious': 0.3,
         },
       ),
-      
+
       DemoUser(
         id: 'demo_user_2',
         name: 'Marcus Rodriguez',
         email: 'marcus.r@email.com',
-        profileImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
-        bio: 'Foodie and sports fan. Love discovering new restaurants and cheering for my favorite teams.',
+        profileImageUrl:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+        bio:
+            'Foodie and sports fan. Love discovering new restaurants and cheering for my favorite teams.',
         location: 'Los Angeles, CA',
         interests: ['food', 'sports', 'restaurants', 'local events'],
         preferredCategories: [EventCategory.food, EventCategory.sports],
@@ -61,13 +65,15 @@ class DemoDataService {
           'budget_conscious': 0.6,
         },
       ),
-      
+
       DemoUser(
         id: 'demo_user_3',
         name: 'Emma Thompson',
         email: 'emma.thompson@email.com',
-        profileImageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
-        bio: 'Art curator and culture enthusiast. Passionate about supporting local artists and creative communities.',
+        profileImageUrl:
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+        bio:
+            'Art curator and culture enthusiast. Passionate about supporting local artists and creative communities.',
         location: 'Portland, OR',
         interests: ['arts', 'culture', 'exhibitions', 'community'],
         preferredCategories: [EventCategory.arts, EventCategory.community],
@@ -85,13 +91,15 @@ class DemoDataService {
           'budget_conscious': 0.4,
         },
       ),
-      
+
       DemoUser(
         id: 'demo_user_4',
         name: 'David Kim',
         email: 'david.kim@email.com',
-        profileImageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
-        bio: 'Fitness enthusiast and outdoor adventurer. Always up for a challenge and meeting new people.',
+        profileImageUrl:
+            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+        bio:
+            'Fitness enthusiast and outdoor adventurer. Always up for a challenge and meeting new people.',
         location: 'Seattle, WA',
         interests: ['fitness', 'outdoor', 'sports', 'health'],
         preferredCategories: [EventCategory.sports, EventCategory.health],
@@ -109,15 +117,22 @@ class DemoDataService {
           'budget_conscious': 0.7,
         },
       ),
-      
+
       DemoUser(
         id: 'demo_user_5',
         name: 'Lisa Wang',
         email: 'lisa.wang@email.com',
-        profileImageUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face',
-        bio: 'Business professional and networking expert. Love connecting people and discovering new opportunities.',
+        profileImageUrl:
+            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face',
+        bio:
+            'Business professional and networking expert. Love connecting people and discovering new opportunities.',
         location: 'San Jose, CA',
-        interests: ['business', 'networking', 'professional development', 'startups'],
+        interests: [
+          'business',
+          'networking',
+          'professional development',
+          'startups',
+        ],
         preferredCategories: [EventCategory.business, EventCategory.technology],
         joinedDate: DateTime.now().subtract(const Duration(days: 300)),
         eventsAttended: 89,
@@ -145,49 +160,56 @@ class DemoDataService {
     }
 
     _cachedInteractions = {
-      'demo_1': [ // Summer Jazz Festival
+      'demo_1': [
+        // Summer Jazz Festival
         'Can\'t wait for this! The lineup looks amazing 🎷',
         'Been to this venue before, the acoustics are incredible',
         'Anyone know if there will be food trucks?',
         'Perfect way to spend a summer evening!',
         'The VIP tickets are worth it for the better view',
       ],
-      'demo_2': [ // Rock the Night Concert
+      'demo_2': [
+        // Rock the Night Concert
         'These bands are going to be EPIC! 🤘',
         'Got my tickets! Who else is going?',
         'The Music Hall has such great energy for rock shows',
         'This is going to be loud and amazing!',
         'Perfect date night activity',
       ],
-      'demo_3': [ // Street Food Festival
+      'demo_3': [
+        // Street Food Festival
         'Free entry is the best! More money for food 😋',
         'The Korean BBQ truck is a must-try',
         'Great family event, kids will love it',
         'Waterfront location makes it even better',
         'I gained 5 pounds last year but it was worth it!',
       ],
-      'demo_4': [ // Wine Tasting Evening
+      'demo_4': [
+        // Wine Tasting Evening
         'Educational and delicious, perfect combination',
         'The sommelier really knows their stuff',
         'Intimate setting makes for great conversations',
         'Worth every penny for wine lovers',
         'Book early, this always sells out',
       ],
-      'demo_5': [ // Community Marathon
+      'demo_5': [
+        // Community Marathon
         'Training starts now! Who\'s joining me?',
         'The 5K is perfect for beginners',
         'Love that everyone gets a medal',
         'Great cause and great exercise',
         'The route through downtown is beautiful',
       ],
-      'demo_6': [ // Modern Art Exhibition
+      'demo_6': [
+        // Modern Art Exhibition
         'The interactive installations are mind-blowing',
         'Perfect for art lovers and curious minds',
         'Guided tours are definitely worth it',
         'Some pieces really make you think',
         'Great date activity that sparks conversation',
       ],
-      'demo_7': [ // Tech Innovation Summit
+      'demo_7': [
+        // Tech Innovation Summit
         'Networking opportunities are incredible here',
         'The startup showcase is always inspiring',
         'Worth the investment for career growth',
@@ -200,13 +222,16 @@ class DemoDataService {
   }
 
   /// Simulate realistic user behavior for event interactions
-  static EventInteractionData simulateEventInteraction(String eventId, DemoUser user) {
+  static EventInteractionData simulateEventInteraction(
+    String eventId,
+    DemoUser user,
+  ) {
     final interactions = getDemoInteractions();
     final eventComments = interactions[eventId] ?? [];
-    
+
     // Determine if user would be interested based on their preferences
     final interestScore = _calculateUserInterestScore(eventId, user);
-    
+
     return EventInteractionData(
       userId: user.id,
       eventId: eventId,
@@ -214,7 +239,7 @@ class DemoDataService {
       isFavorited: interestScore > 0.8,
       willAttend: interestScore > 0.7 && _random.nextDouble() > 0.3,
       hasCommented: interestScore > 0.5 && _random.nextDouble() > 0.6,
-      comment: eventComments.isNotEmpty && _random.nextBool() 
+      comment: eventComments.isNotEmpty && _random.nextBool()
           ? eventComments[_random.nextInt(eventComments.length)]
           : null,
       interactionTimestamp: DateTime.now().subtract(
@@ -228,7 +253,7 @@ class DemoDataService {
   static double _calculateUserInterestScore(String eventId, DemoUser user) {
     // Base interest from personality traits
     double score = 0.5;
-    
+
     // Adjust based on user's activity level
     switch (user.activityLevel) {
       case ActivityLevel.high:
@@ -241,14 +266,14 @@ class DemoDataService {
         score -= 0.1;
         break;
     }
-    
+
     // Adjust based on personality traits
     score += (user.personalityTraits['adventurous'] ?? 0.5) * 0.2;
     score += (user.personalityTraits['social'] ?? 0.5) * 0.15;
-    
+
     // Add some randomness for realistic behavior
     score += (_random.nextDouble() - 0.5) * 0.3;
-    
+
     return score.clamp(0.0, 1.0);
   }
 
@@ -268,19 +293,24 @@ class DemoDataService {
     // Generate various types of activities
     for (int i = 0; i < 20; i++) {
       final user = users[_random.nextInt(users.length)];
-      final activityType = ActivityType.values[_random.nextInt(ActivityType.values.length)];
-      final timestamp = now.subtract(Duration(minutes: _random.nextInt(2880))); // Last 2 days
+      final activityType =
+          ActivityType.values[_random.nextInt(ActivityType.values.length)];
+      final timestamp = now.subtract(
+        Duration(minutes: _random.nextInt(2880)),
+      ); // Last 2 days
 
-      activities.add(ActivityFeedItem(
-        id: 'activity_$i',
-        userId: user.id,
-        userName: user.name,
-        userImageUrl: user.profileImageUrl,
-        activityType: activityType,
-        timestamp: timestamp,
-        content: _generateActivityContent(activityType, user),
-        eventId: _random.nextBool() ? 'demo_${_random.nextInt(7) + 1}' : null,
-      ));
+      activities.add(
+        ActivityFeedItem(
+          id: 'activity_$i',
+          userId: user.id,
+          userName: user.name,
+          userImageUrl: user.profileImageUrl,
+          activityType: activityType,
+          timestamp: timestamp,
+          content: _generateActivityContent(activityType, user),
+          eventId: _random.nextBool() ? 'demo_${_random.nextInt(7) + 1}' : null,
+        ),
+      );
     }
 
     // Sort by timestamp (newest first)
@@ -324,14 +354,17 @@ class DemoDataService {
     ];
 
     for (int i = 0; i < 5; i++) {
-      notifications.add(DemoNotification(
-        id: 'notification_$i',
-        title: 'SomethingToDo',
-        message: notificationTypes[_random.nextInt(notificationTypes.length)],
-        timestamp: now.subtract(Duration(minutes: _random.nextInt(120))),
-        isRead: _random.nextBool(),
-        type: NotificationType.values[_random.nextInt(NotificationType.values.length)],
-      ));
+      notifications.add(
+        DemoNotification(
+          id: 'notification_$i',
+          title: 'SomethingToDo',
+          message: notificationTypes[_random.nextInt(notificationTypes.length)],
+          timestamp: now.subtract(Duration(minutes: _random.nextInt(120))),
+          isRead: _random.nextBool(),
+          type: NotificationType
+              .values[_random.nextInt(NotificationType.values.length)],
+        ),
+      );
     }
 
     notifications.sort((a, b) => b.timestamp.compareTo(a.timestamp));
@@ -449,7 +482,9 @@ class DemoNotification {
 }
 
 enum ActivityLevel { low, medium, high }
+
 enum EngagementLevel { low, medium, high }
+
 enum ActivityType {
   eventAttended,
   eventCreated,
@@ -458,6 +493,7 @@ enum ActivityType {
   commentPosted,
   photoShared,
 }
+
 enum NotificationType {
   eventRecommendation,
   socialActivity,
@@ -478,47 +514,52 @@ extension DemoEventMethods on DemoDataService {
     final events = <Event>[];
     final categories = EventCategory.values;
     final now = DateTime.now();
-    
+
     for (int i = 0; i < limit && i < 100; i++) {
       final category = categories[i % categories.length];
       final dayOffset = (i ~/ 5) + 1;
       final startTime = now.add(Duration(days: dayOffset, hours: (i % 24)));
-      
-      events.add(Event(
-        id: 'demo_event_$i',
-        title: _generateEventTitle(category, i),
-        description: _generateEventDescription(category),
-        organizerName: _getRandomOrganizer(),
-        venue: _generateVenue(location, i),
-        imageUrls: [_getEventImage(category, i)],
-        category: category,
-        pricing: _generatePricing(category, i),
-        startDateTime: startTime,
-        endDateTime: startTime.add(const Duration(hours: 3)),
-        tags: _generateTags(category),
-        attendeeCount: DemoDataService._random.nextInt(500) + 50,
-        maxAttendees: DemoDataService._random.nextInt(1000) + 100,
-        favoriteCount: DemoDataService._random.nextInt(200),
-        status: EventStatus.active,
-        isFeatured: i < 5,
-        isPremium: i % 10 == 0,
-        createdAt: now.subtract(Duration(days: 30 - i)),
-        updatedAt: now.subtract(Duration(days: 1)),
-        createdBy: 'demo_system',
-      ));
+
+      events.add(
+        Event(
+          id: 'demo_event_$i',
+          title: _generateEventTitle(category, i),
+          description: _generateEventDescription(category),
+          organizerName: _getRandomOrganizer(),
+          venue: _generateVenue(location, i),
+          imageUrls: [_getEventImage(category, i)],
+          category: category,
+          pricing: _generatePricing(category, i),
+          startDateTime: startTime,
+          endDateTime: startTime.add(const Duration(hours: 3)),
+          tags: _generateTags(category),
+          attendeeCount: DemoDataService._random.nextInt(500) + 50,
+          maxAttendees: DemoDataService._random.nextInt(1000) + 100,
+          favoriteCount: DemoDataService._random.nextInt(200),
+          status: EventStatus.active,
+          isFeatured: i < 5,
+          isPremium: i % 10 == 0,
+          createdAt: now.subtract(Duration(days: 30 - i)),
+          updatedAt: now.subtract(Duration(days: 1)),
+          createdBy: 'demo_system',
+        ),
+      );
     }
-    
+
     return events;
   }
-  
+
   /// Get trending demo events
   static Future<List<Event>> getTrendingEvents({int limit = 50}) async {
-    final events = await getDemoEvents(location: 'San Francisco', limit: limit * 2);
+    final events = await getDemoEvents(
+      location: 'San Francisco',
+      limit: limit * 2,
+    );
     // Sort by favorite count to simulate trending
     events.sort((a, b) => b.favoriteCount.compareTo(a.favoriteCount));
     return events.take(limit).toList();
   }
-  
+
   static String _generateEventTitle(EventCategory category, int index) {
     final titles = {
       EventCategory.music: [
@@ -592,27 +633,37 @@ extension DemoEventMethods on DemoDataService {
         'Mystery Event',
       ],
     };
-    
+
     final categoryTitles = titles[category] ?? titles[EventCategory.other]!;
     return '${categoryTitles[index % categoryTitles.length]} ${index > 20 ? "#${index}" : ""}';
   }
-  
+
   static String _generateEventDescription(EventCategory category) {
     final descriptions = {
-      EventCategory.music: 'Join us for an unforgettable musical experience featuring talented artists and amazing performances.',
-      EventCategory.sports: 'Get active and have fun with fellow sports enthusiasts in this exciting event.',
-      EventCategory.food: 'Discover delicious flavors and culinary delights at this food-focused gathering.',
-      EventCategory.technology: 'Explore the latest innovations and connect with tech professionals.',
-      EventCategory.arts: 'Immerse yourself in creativity and artistic expression at this cultural event.',
-      EventCategory.business: 'Network with professionals and learn valuable business insights.',
-      EventCategory.education: 'Expand your knowledge and learn something new at this educational event.',
-      EventCategory.health: 'Focus on your wellbeing and health at this wellness-focused gathering.',
-      EventCategory.community: 'Connect with your community and make a positive impact.',
-      EventCategory.other: 'Join us for this special event and create lasting memories.',
+      EventCategory.music:
+          'Join us for an unforgettable musical experience featuring talented artists and amazing performances.',
+      EventCategory.sports:
+          'Get active and have fun with fellow sports enthusiasts in this exciting event.',
+      EventCategory.food:
+          'Discover delicious flavors and culinary delights at this food-focused gathering.',
+      EventCategory.technology:
+          'Explore the latest innovations and connect with tech professionals.',
+      EventCategory.arts:
+          'Immerse yourself in creativity and artistic expression at this cultural event.',
+      EventCategory.business:
+          'Network with professionals and learn valuable business insights.',
+      EventCategory.education:
+          'Expand your knowledge and learn something new at this educational event.',
+      EventCategory.health:
+          'Focus on your wellbeing and health at this wellness-focused gathering.',
+      EventCategory.community:
+          'Connect with your community and make a positive impact.',
+      EventCategory.other:
+          'Join us for this special event and create lasting memories.',
     };
     return descriptions[category] ?? descriptions[EventCategory.other]!;
   }
-  
+
   static String _getRandomOrganizer() {
     final organizers = [
       'City Events Co.',
@@ -626,7 +677,7 @@ extension DemoEventMethods on DemoDataService {
     ];
     return organizers[DemoDataService._random.nextInt(organizers.length)];
   }
-  
+
   static EventVenue _generateVenue(String location, int index) {
     final venues = [
       EventVenue(
@@ -677,7 +728,7 @@ extension DemoEventMethods on DemoDataService {
     ];
     return venues[index % venues.length];
   }
-  
+
   static String _getEventImage(EventCategory category, int index) {
     final images = {
       EventCategory.music: [
@@ -706,19 +757,21 @@ extension DemoEventMethods on DemoDataService {
         'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800',
       ],
     };
-    
-    final categoryImages = images[category] ?? [
-      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800',
-      'https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800',
-    ];
+
+    final categoryImages =
+        images[category] ??
+        [
+          'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800',
+          'https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800',
+        ];
     return categoryImages[index % categoryImages.length];
   }
-  
+
   static EventPricing _generatePricing(EventCategory category, int index) {
     if (index % 3 == 0) {
       return const EventPricing(isFree: true, price: 0, currency: 'USD');
     }
-    
+
     final basePrice = {
       EventCategory.music: 45.0,
       EventCategory.sports: 25.0,
@@ -731,7 +784,7 @@ extension DemoEventMethods on DemoDataService {
       EventCategory.community: 0.0,
       EventCategory.other: 25.0,
     };
-    
+
     final price = (basePrice[category] ?? 25.0) + (index % 5) * 10;
     return EventPricing(
       isFree: false,
@@ -740,15 +793,25 @@ extension DemoEventMethods on DemoDataService {
       priceDescription: 'Early bird pricing available',
     );
   }
-  
+
   static List<String> _generateTags(EventCategory category) {
     final tags = {
-      EventCategory.music: ['live music', 'concert', 'performance', 'entertainment'],
+      EventCategory.music: [
+        'live music',
+        'concert',
+        'performance',
+        'entertainment',
+      ],
       EventCategory.sports: ['fitness', 'active', 'outdoor', 'competition'],
       EventCategory.food: ['dining', 'culinary', 'tasting', 'foodie'],
       EventCategory.technology: ['tech', 'innovation', 'startup', 'digital'],
       EventCategory.arts: ['creative', 'culture', 'exhibition', 'artistic'],
-      EventCategory.business: ['networking', 'professional', 'career', 'entrepreneur'],
+      EventCategory.business: [
+        'networking',
+        'professional',
+        'career',
+        'entrepreneur',
+      ],
       EventCategory.education: ['learning', 'workshop', 'seminar', 'training'],
       EventCategory.health: ['wellness', 'fitness', 'mindfulness', 'healthy'],
       EventCategory.community: ['local', 'volunteer', 'social', 'neighborhood'],

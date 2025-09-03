@@ -2,15 +2,13 @@ class ValidationService {
   static final RegExp _emailRegex = RegExp(
     r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
   );
-  
-  static final RegExp _phoneRegex = RegExp(
-    r'^\+?[1-9]\d{1,14}$',
-  );
-  
+
+  static final RegExp _phoneRegex = RegExp(r'^\+?[1-9]\d{1,14}$');
+
   static final RegExp _urlRegex = RegExp(
     r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
   );
-  
+
   // Email validation
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -21,7 +19,7 @@ class ValidationService {
     }
     return null;
   }
-  
+
   // Password validation
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
@@ -41,7 +39,7 @@ class ValidationService {
     }
     return null;
   }
-  
+
   // Name validation
   static String? validateName(String? value) {
     if (value == null || value.isEmpty) {
@@ -55,7 +53,7 @@ class ValidationService {
     }
     return null;
   }
-  
+
   // Phone validation
   static String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
@@ -66,7 +64,7 @@ class ValidationService {
     }
     return null;
   }
-  
+
   // URL validation
   static String? validateUrl(String? value) {
     if (value != null && value.isNotEmpty && !_urlRegex.hasMatch(value)) {
@@ -74,7 +72,7 @@ class ValidationService {
     }
     return null;
   }
-  
+
   // Price validation
   static String? validatePrice(String? value) {
     if (value == null || value.isEmpty) {
@@ -89,7 +87,7 @@ class ValidationService {
     }
     return null;
   }
-  
+
   // Date validation
   static String? validateDate(DateTime? value) {
     if (value == null) {
@@ -100,7 +98,7 @@ class ValidationService {
     }
     return null;
   }
-  
+
   // Required field validation
   static String? validateRequired(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
@@ -108,23 +106,31 @@ class ValidationService {
     }
     return null;
   }
-  
+
   // Min length validation
-  static String? validateMinLength(String? value, int minLength, String fieldName) {
+  static String? validateMinLength(
+    String? value,
+    int minLength,
+    String fieldName,
+  ) {
     if (value == null || value.length < minLength) {
       return '$fieldName must be at least $minLength characters';
     }
     return null;
   }
-  
+
   // Max length validation
-  static String? validateMaxLength(String? value, int maxLength, String fieldName) {
+  static String? validateMaxLength(
+    String? value,
+    int maxLength,
+    String fieldName,
+  ) {
     if (value != null && value.length > maxLength) {
       return '$fieldName must be less than $maxLength characters';
     }
     return null;
   }
-  
+
   // Number range validation
   static String? validateRange(num? value, num min, num max, String fieldName) {
     if (value == null) {

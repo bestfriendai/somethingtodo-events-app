@@ -3,13 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:lottie/lottie.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
-import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../config/unified_design_system.dart';
@@ -17,8 +14,6 @@ import '../../config/app_config.dart';
 import '../../models/chat.dart';
 import '../../providers/chat_provider.dart';
 import '../../widgets/chat/ai_assistant_avatar.dart';
-import '../../widgets/common/event_card.dart';
-import '../../models/event.dart';
 
 class PremiumChatScreen extends ConsumerStatefulWidget {
   final String? sessionId;
@@ -34,20 +29,20 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
-  
+
   late AnimationController _typingAnimationController;
   late AnimationController _sendButtonAnimationController;
   late AnimationController _emojiAnimationController;
-  
-  bool _isTyping = false;
+
   bool _showEmojiPanel = false;
   bool _isRecording = false;
-  String? _replyToMessageId;
   ChatMessage? _replyToMessage;
-  List<String> _selectedImages = [];
   bool _showScrollToBottom = false;
+  bool _isTyping = false;
+  String? _replyToMessageId;
+  List<String> _selectedImages = [];
   Map<String, List<String>> _messageReactions = {};
-  
+
   final List<String> _quickReplies = [
     "Show me events nearby",
     "What's happening this weekend?",
@@ -66,20 +61,20 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat();
-    
+
     _sendButtonAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _emojiAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _scrollController.addListener(_scrollListener);
     _messageController.addListener(_onTextChanged);
-    
+
     // Load initial messages if session exists
     if (widget.sessionId != null) {
       Future.microtask(() => _loadChatSession());
@@ -133,17 +128,16 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
     HapticFeedback.lightImpact();
 
     // Send message implementation
-    ref.read(chatProvider.notifier).sendMessage(
-      sessionId: widget.sessionId ?? '',
-      content: message,
-    );
+    ref
+        .read(chatProvider.notifier)
+        .sendMessage(sessionId: widget.sessionId ?? '', content: message);
 
     _scrollToBottom();
   }
 
   void _showReactionPicker(String messageId) {
     HapticFeedback.selectionClick();
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -163,17 +157,14 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                   _addReaction(messageId, emoji);
                   Navigator.pop(context);
                 },
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    emoji,
-                    style: const TextStyle(fontSize: 32),
-                  ),
-                ).animate()
-                  .scale(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.elasticOut,
-                  ),
+                child:
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(emoji, style: const TextStyle(fontSize: 32)),
+                    ).animate().scale(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.elasticOut,
+                    ),
               );
             }).toList(),
           ),
@@ -224,8 +215,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                 ),
               ),
               if (_replyToMessage != null) _buildReplyPreview(theme),
-              if (_quickReplies.isNotEmpty && 
-                  (chatState.messages?.isEmpty ?? true))
+              if (_quickReplies.isNotEmpty && chatState.messages.isEmpty)
                 _buildQuickReplies(theme),
               _buildInputArea(theme),
             ],
@@ -264,10 +254,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
               onPressed: () => Navigator.pop(context),
             ),
             const SizedBox(width: 8),
-            AIAssistantAvatar(
-              size: 40,
-              isThinking: _isTyping,
-            ),
+            AIAssistantAvatar(size: 40, isThinking: _isTyping),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -320,10 +307,12 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
         return AnimatedBuilder(
           animation: _typingAnimationController,
           builder: (context, child) {
-            final double offset = math.sin(
-              (_typingAnimationController.value * 2 * math.pi) + 
-              (index * math.pi / 3)
-            ) * 2;
+            final double offset =
+                math.sin(
+                  (_typingAnimationController.value * 2 * math.pi) +
+                      (index * math.pi / 3),
+                ) *
+                2;
             return Transform.translate(
               offset: Offset(0, offset),
               child: Container(
@@ -344,22 +333,20 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
 
   Widget _buildMessagesList(ThemeData theme, ChatState chatState) {
     final messages = chatState.messages ?? [];
-    
+
     if (messages.isEmpty && !chatState.isLoading) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AIAssistantAvatar(
-              size: 100,
-              isThinking: false,
-            ).animate()
-              .fadeIn(duration: const Duration(milliseconds: 600))
-              .scale(
-                begin: const Offset(0.8, 0.8),
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.elasticOut,
-              ),
+            AIAssistantAvatar(size: 100, isThinking: false)
+                .animate()
+                .fadeIn(duration: const Duration(milliseconds: 600))
+                .scale(
+                  begin: const Offset(0.8, 0.8),
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.elasticOut,
+                ),
             const SizedBox(height: 24),
             Text(
               'Hi! I\'m your event assistant',
@@ -367,16 +354,14 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
-            ).animate()
-              .fadeIn(delay: const Duration(milliseconds: 300)),
+            ).animate().fadeIn(delay: const Duration(milliseconds: 300)),
             const SizedBox(height: 8),
             Text(
               'Ask me about events, activities, or things to do!',
               style: UnifiedDesignSystem.bodyLarge.copyWith(
                 color: Colors.white70,
               ),
-            ).animate()
-              .fadeIn(delay: const Duration(milliseconds: 500)),
+            ).animate().fadeIn(delay: const Duration(milliseconds: 500)),
           ],
         ),
       );
@@ -389,10 +374,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
       itemCount: messages.length,
       itemBuilder: (context, index) {
         final message = messages[messages.length - 1 - index];
-        final showDate = _shouldShowDate(
-          messages,
-          messages.length - 1 - index,
-        );
+        final showDate = _shouldShowDate(messages, messages.length - 1 - index);
 
         return Column(
           children: [
@@ -407,74 +389,79 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
 
   bool _shouldShowDate(List<ChatMessage> messages, int index) {
     if (index == 0) return true;
-    
+
     final current = messages[index].timestamp ?? DateTime.now();
     final previous = messages[index - 1].timestamp ?? DateTime.now();
-    
+
     return current.day != previous.day ||
-           current.month != previous.month ||
-           current.year != previous.year;
+        current.month != previous.month ||
+        current.year != previous.year;
   }
 
   Widget _buildDateSeparator(DateTime date) {
-    final isToday = DateFormat.yMd().format(date) == 
-                    DateFormat.yMd().format(DateTime.now());
+    final isToday =
+        DateFormat.yMd().format(date) ==
+        DateFormat.yMd().format(DateTime.now());
     final dateText = isToday ? 'Today' : DateFormat.MMMEd().format(date);
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              height: 1,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.transparent,
-                    Colors.white.withValues(alpha: 0.1),
-                  ],
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        Colors.white.withValues(alpha: 0.1),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
-                width: 1,
-              ),
-            ),
-            child: Text(
-              dateText,
-              style: UnifiedDesignSystem.bodySmall.copyWith(
-                color: Colors.white60,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              height: 1,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withValues(alpha: 0.1),
-                    Colors.transparent,
-                  ],
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  dateText,
+                  style: UnifiedDesignSystem.bodySmall.copyWith(
+                    color: Colors.white60,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
+              Expanded(
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.white.withValues(alpha: 0.1),
+                        Colors.transparent,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ).animate()
-      .fadeIn(duration: const Duration(milliseconds: 400))
-      .slideY(begin: 0.2, end: 0);
+        )
+        .animate()
+        .fadeIn(duration: const Duration(milliseconds: 400))
+        .slideY(begin: 0.2, end: 0);
   }
 
   Widget _buildMessage(ChatMessage message, ThemeData theme) {
@@ -506,104 +493,110 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
             right: isUser ? 0 : 48,
           ),
           child: Column(
-            crossAxisAlignment: 
-                isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            crossAxisAlignment: isUser
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment:
-                    isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                mainAxisAlignment: isUser
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (!isUser) ...[
-                    AIAssistantAvatar(
-                      size: 32,
-                      isThinking: false,
-                    ),
+                    AIAssistantAvatar(size: 32, isThinking: false),
                     const SizedBox(width: 8),
                   ],
                   Flexible(
-                    child: GlassmorphicContainer(
-                      width: double.infinity,
-                      height: double.infinity,
-                      borderRadius: 20,
-                      blur: 20,
-                      alignment: Alignment.center,
-                      border: 1,
-                      linearGradient: LinearGradient(
-                        colors: isUser
-                            ? [
-                                UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.3),
-                                UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.1),
-                              ]
-                            : [
-                                Colors.white.withValues(alpha: 0.1),
-                                Colors.white.withValues(alpha: 0.05),
-                              ],
-                      ),
-                      borderGradient: LinearGradient(
-                        colors: [
-                          Colors.white.withValues(alpha: 0.2),
-                          Colors.white.withValues(alpha: 0.1),
-                        ],
-                      ),
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.75,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (message.type == MessageType.text)
-                              Text(
-                                message.content,
-                                style: UnifiedDesignSystem.bodyLarge.copyWith(
-                                  color: Colors.white,
-                                ),
-                              )
-                            else if (message.type == MessageType.image)
-                              _buildImageMessage(message)
-                            else if (message.type == MessageType.event)
-                              _buildEventCard(message)
-                            else if (message.type == MessageType.location)
-                              _buildLocationMessage(message),
-                            const SizedBox(height: 4),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  DateFormat.jm().format(
-                                    message.timestamp ?? DateTime.now(),
-                                  ),
-                                  style: UnifiedDesignSystem.bodySmall.copyWith(
-                                    color: Colors.white54,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                                if (isUser) ...[
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.done_all,
-                                    size: 14,
-                                    color: UnifiedDesignSystem.secondaryBrand,
-                                  ),
+                    child:
+                        GlassmorphicContainer(
+                              width: double.infinity,
+                              height: double.infinity,
+                              borderRadius: 20,
+                              blur: 20,
+                              alignment: Alignment.center,
+                              border: 1,
+                              linearGradient: LinearGradient(
+                                colors: isUser
+                                    ? [
+                                        UnifiedDesignSystem.primaryBrand
+                                            .withValues(alpha: 0.3),
+                                        UnifiedDesignSystem.primaryBrand
+                                            .withValues(alpha: 0.1),
+                                      ]
+                                    : [
+                                        Colors.white.withValues(alpha: 0.1),
+                                        Colors.white.withValues(alpha: 0.05),
+                                      ],
+                              ),
+                              borderGradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.2),
+                                  Colors.white.withValues(alpha: 0.1),
                                 ],
-                              ],
+                              ),
+                              child: Container(
+                                constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.75,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (message.type == MessageType.text)
+                                      Text(
+                                        message.content,
+                                        style: UnifiedDesignSystem.bodyLarge
+                                            .copyWith(color: Colors.white),
+                                      )
+                                    else if (message.type == MessageType.image)
+                                      _buildImageMessage(message)
+                                    else if (message.type == MessageType.event)
+                                      _buildEventCard(message)
+                                    else if (message.type ==
+                                        MessageType.location)
+                                      _buildLocationMessage(message),
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          DateFormat.jm().format(
+                                            message.timestamp ?? DateTime.now(),
+                                          ),
+                                          style: UnifiedDesignSystem.bodySmall
+                                              .copyWith(
+                                                color: Colors.white54,
+                                                fontSize: 11,
+                                              ),
+                                        ),
+                                        if (isUser) ...[
+                                          const SizedBox(width: 4),
+                                          Icon(
+                                            Icons.done_all,
+                                            size: 14,
+                                            color: UnifiedDesignSystem
+                                                .secondaryBrand,
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                            .animate()
+                            .fadeIn(duration: const Duration(milliseconds: 300))
+                            .slideX(
+                              begin: isUser ? 0.1 : -0.1,
+                              end: 0,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOutCubic,
                             ),
-                          ],
-                        ),
-                      ),
-                    ).animate()
-                      .fadeIn(duration: const Duration(milliseconds: 300))
-                      .slideX(
-                        begin: isUser ? 0.1 : -0.1,
-                        end: 0,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeOutCubic,
-                      ),
                   ),
                 ],
               ),
@@ -630,11 +623,10 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
                           emoji,
                           style: const TextStyle(fontSize: 16),
                         ),
-                      ).animate()
-                        .scale(
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.elasticOut,
-                        );
+                      ).animate().scale(
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.elasticOut,
+                      );
                     }).toList(),
                   ),
                 ),
@@ -660,11 +652,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
             placeholder: (context, url) => Shimmer.fromColors(
               baseColor: Colors.white10,
               highlightColor: Colors.white24,
-              child: Container(
-                width: 200,
-                height: 200,
-                color: Colors.white10,
-              ),
+              child: Container(width: 200, height: 200, color: Colors.white10),
             ),
           ),
         ),
@@ -680,9 +668,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -744,10 +730,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.transparent,
-              Colors.black.withValues(alpha: 0.7),
-            ],
+            colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
           ),
         ),
         padding: const EdgeInsets.all(12),
@@ -786,48 +769,51 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
         itemCount: _quickReplies.length,
         itemBuilder: (context, index) {
           return Container(
-            margin: const EdgeInsets.only(right: 8),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  _messageController.text = _quickReplies[index];
-                  _sendMessage();
-                },
-                borderRadius: BorderRadius.circular(20),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
+                margin: const EdgeInsets.only(right: 8),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      _messageController.text = _quickReplies[index];
+                      _sendMessage();
+                    },
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.5),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    _quickReplies[index],
-                    style: UnifiedDesignSystem.bodySmall.copyWith(
-                      color: UnifiedDesignSystem.primaryBrand,
-                      fontWeight: FontWeight.w500,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: UnifiedDesignSystem.primaryBrand.withValues(
+                            alpha: 0.5,
+                          ),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        _quickReplies[index],
+                        style: UnifiedDesignSystem.bodySmall.copyWith(
+                          color: UnifiedDesignSystem.primaryBrand,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ).animate()
-            .fadeIn(
-              delay: Duration(milliseconds: index * 50),
-              duration: const Duration(milliseconds: 300),
-            )
-            .slideX(
-              begin: 0.2,
-              end: 0,
-              delay: Duration(milliseconds: index * 50),
-              duration: const Duration(milliseconds: 300),
-            );
+              )
+              .animate()
+              .fadeIn(
+                delay: Duration(milliseconds: index * 50),
+                duration: const Duration(milliseconds: 300),
+              )
+              .slideX(
+                begin: 0.2,
+                end: 0,
+                delay: Duration(milliseconds: index * 50),
+                duration: const Duration(milliseconds: 300),
+              );
         },
       ),
     );
@@ -835,63 +821,64 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
 
   Widget _buildReplyPreview(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
-        border: Border(
-          top: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 3,
-            height: 40,
-            decoration: BoxDecoration(
-              color: UnifiedDesignSystem.primaryBrand,
-              borderRadius: BorderRadius.circular(2),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.05),
+            border: Border(
+              top: BorderSide(
+                color: Colors.white.withValues(alpha: 0.1),
+                width: 1,
+              ),
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Replying to',
-                  style: UnifiedDesignSystem.bodySmall.copyWith(
-                    color: UnifiedDesignSystem.primaryBrand,
-                    fontWeight: FontWeight.w500,
-                  ),
+          child: Row(
+            children: [
+              Container(
+                width: 3,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: UnifiedDesignSystem.primaryBrand,
+                  borderRadius: BorderRadius.circular(2),
                 ),
-                Text(
-                  _replyToMessage?.content ?? '',
-                  style: UnifiedDesignSystem.bodySmall.copyWith(
-                    color: Colors.white60,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Replying to',
+                      style: UnifiedDesignSystem.bodySmall.copyWith(
+                        color: UnifiedDesignSystem.primaryBrand,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      _replyToMessage!.content,
+                      style: UnifiedDesignSystem.bodySmall.copyWith(
+                        color: Colors.white60,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.white54, size: 20),
+                onPressed: () {
+                  setState(() {
+                    _replyToMessage = null;
+                    _replyToMessageId = null;
+                  });
+                },
+              ),
+            ],
           ),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.white54, size: 20),
-            onPressed: () {
-              setState(() {
-                _replyToMessage = null;
-                _replyToMessageId = null;
-              });
-            },
-          ),
-        ],
-      ),
-    ).animate()
-      .fadeIn(duration: const Duration(milliseconds: 200))
-      .slideY(begin: 0.2, end: 0);
+        )
+        .animate()
+        .fadeIn(duration: const Duration(milliseconds: 200))
+        .slideY(begin: 0.2, end: 0);
   }
 
   Widget _buildInputArea(ThemeData theme) {
@@ -989,48 +976,56 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
     return AnimatedBuilder(
       animation: _sendButtonAnimationController,
       builder: (context, child) {
-        final hasContent = _messageController.text.isNotEmpty || 
-                          _selectedImages.isNotEmpty;
-        
+        final hasContent =
+            _messageController.text.isNotEmpty || _selectedImages.isNotEmpty;
+
         return GestureDetector(
           onTap: hasContent ? _sendMessage : _startVoiceRecording,
           onLongPress: _startVoiceRecording,
           onLongPressEnd: (_) => _stopVoiceRecording(),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: hasContent
-                  ? LinearGradient(
-                      colors: [
-                        UnifiedDesignSystem.primaryBrand,
-                        UnifiedDesignSystem.primaryBrand.withValues(alpha: 0.7),
-                      ],
-                    )
-                  : null,
-              color: hasContent ? null : Colors.white.withValues(alpha: 0.1),
-            ),
-            child: Icon(
-              hasContent 
-                  ? Icons.send_rounded 
-                  : (_isRecording ? Icons.mic : Icons.mic_none),
-              color: hasContent || _isRecording
-                  ? Colors.white
-                  : Colors.white54,
-              size: 24,
-            ),
-          ).animate(target: _isRecording ? 1 : 0)
-            .scale(
-              begin: const Offset(1, 1),
-              end: const Offset(1.2, 1.2),
-              duration: const Duration(milliseconds: 300),
-            )
-            .shimmer(
-              duration: const Duration(seconds: 1),
-              color: UnifiedDesignSystem.accentBrand.withValues(alpha: 0.3),
-            ),
+          child:
+              AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: hasContent
+                          ? LinearGradient(
+                              colors: [
+                                UnifiedDesignSystem.primaryBrand,
+                                UnifiedDesignSystem.primaryBrand.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ],
+                            )
+                          : null,
+                      color: hasContent
+                          ? null
+                          : Colors.white.withValues(alpha: 0.1),
+                    ),
+                    child: Icon(
+                      hasContent
+                          ? Icons.send_rounded
+                          : (_isRecording ? Icons.mic : Icons.mic_none),
+                      color: hasContent || _isRecording
+                          ? Colors.white
+                          : Colors.white54,
+                      size: 24,
+                    ),
+                  )
+                  .animate(target: _isRecording ? 1 : 0)
+                  .scale(
+                    begin: const Offset(1, 1),
+                    end: const Offset(1.2, 1.2),
+                    duration: const Duration(milliseconds: 300),
+                  )
+                  .shimmer(
+                    duration: const Duration(seconds: 1),
+                    color: UnifiedDesignSystem.accentBrand.withValues(
+                      alpha: 0.3,
+                    ),
+                  ),
         );
       },
     );
@@ -1063,10 +1058,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
             ],
           ),
           child: IconButton(
-            icon: const Icon(
-              Icons.keyboard_arrow_down,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
             onPressed: _scrollToBottom,
           ),
         ),
@@ -1085,7 +1077,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
 
   void _showAttachmentOptions() {
     HapticFeedback.selectionClick();
-    
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1164,7 +1156,7 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
 
   void _showImageViewer(String? imageUrl) {
     if (imageUrl == null) return;
-    
+
     Navigator.push(
       context,
       MaterialPageRoute(

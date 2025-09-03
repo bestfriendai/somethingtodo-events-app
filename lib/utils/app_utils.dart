@@ -38,7 +38,7 @@ class AppUtils {
   static String formatEventTime(DateTime startTime, DateTime endTime) {
     final startStr = formatTime(startTime);
     final endStr = formatTime(endTime);
-    
+
     if (startTime.day == endTime.day) {
       return '${formatDate(startTime)} • $startStr - $endStr';
     } else {
@@ -56,7 +56,11 @@ class AppUtils {
     }
   }
 
-  static Future<void> launchEmail(String email, {String? subject, String? body}) async {
+  static Future<void> launchEmail(
+    String email, {
+    String? subject,
+    String? body,
+  }) async {
     final uri = Uri(
       scheme: 'mailto',
       path: email,
@@ -65,7 +69,7 @@ class AppUtils {
         if (body != null) 'body': body,
       }),
     );
-    
+
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
@@ -87,9 +91,11 @@ class AppUtils {
     required double longitude,
     String? label,
   }) async {
-    final query = label != null ? Uri.encodeComponent(label) : '$latitude,$longitude';
+    final query = label != null
+        ? Uri.encodeComponent(label)
+        : '$latitude,$longitude';
     final uri = Uri.parse('https://maps.google.com/maps?q=$query');
-    
+
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
@@ -106,7 +112,8 @@ class AppUtils {
     required String eventUrl,
     String? eventDescription,
   }) async {
-    final text = '''
+    final text =
+        '''
 Check out this event: $eventTitle
 
 ${eventDescription ?? ''}
@@ -114,8 +121,9 @@ ${eventDescription ?? ''}
 $eventUrl
 
 Shared via SomethingToDo
-    '''.trim();
-    
+    '''
+            .trim();
+
     await Share.share(text);
   }
 
@@ -152,27 +160,17 @@ Shared via SomethingToDo
         duration: duration,
         action: action,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }
 
   static void showErrorSnackBar(BuildContext context, String message) {
-    showSnackBar(
-      context,
-      message,
-      backgroundColor: AppTheme.errorColor,
-    );
+    showSnackBar(context, message, backgroundColor: AppTheme.errorColor);
   }
 
   static void showSuccessSnackBar(BuildContext context, String message) {
-    showSnackBar(
-      context,
-      message,
-      backgroundColor: AppTheme.successColor,
-    );
+    showSnackBar(context, message, backgroundColor: AppTheme.successColor);
   }
 
   static Future<bool?> showConfirmDialog(
@@ -214,8 +212,10 @@ Shared via SomethingToDo
 
   static String formatCurrency(double amount, {String currency = 'USD'}) {
     if (amount == 0) return 'Free';
-    return NumberFormat.currency(symbol: '\$', decimalDigits: amount % 1 == 0 ? 0 : 2)
-        .format(amount);
+    return NumberFormat.currency(
+      symbol: '\$',
+      decimalDigits: amount % 1 == 0 ? 0 : 2,
+    ).format(amount);
   }
 
   // Color utilities
@@ -236,9 +236,7 @@ Shared via SomethingToDo
   static Color darken(Color color, [double amount = 0.1]) {
     assert(amount >= 0 && amount <= 1);
     final hsl = HSLColor.fromColor(color);
-    final hslDark = hsl.withLightness(
-      (hsl.lightness - amount).clamp(0.0, 1.0),
-    );
+    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
     return hslDark.toColor();
   }
 
@@ -250,7 +248,12 @@ Shared via SomethingToDo
   static List<List<T>> chunk<T>(List<T> list, int chunkSize) {
     List<List<T>> chunks = [];
     for (var i = 0; i < list.length; i += chunkSize) {
-      chunks.add(list.sublist(i, i + chunkSize > list.length ? list.length : i + chunkSize));
+      chunks.add(
+        list.sublist(
+          i,
+          i + chunkSize > list.length ? list.length : i + chunkSize,
+        ),
+      );
     }
     return chunks;
   }
@@ -258,7 +261,10 @@ Shared via SomethingToDo
   // Helper method for encoding query parameters
   static String? _encodeQueryParameters(Map<String, String> params) {
     return params.entries
-        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .map(
+          (e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
         .join('&');
   }
 
@@ -270,14 +276,14 @@ Shared via SomethingToDo
   }
 
   // Animation utilities
-  static Widget fadeInWidget(Widget child, {Duration duration = const Duration(milliseconds: 300)}) {
+  static Widget fadeInWidget(
+    Widget child, {
+    Duration duration = const Duration(milliseconds: 300),
+  }) {
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: 0.0, end: 1.0),
       duration: duration,
-      builder: (context, value, child) => Opacity(
-        opacity: value,
-        child: child,
-      ),
+      builder: (context, value, child) => Opacity(opacity: value, child: child),
       child: child,
     );
   }
@@ -290,10 +296,8 @@ Shared via SomethingToDo
     return TweenAnimationBuilder<Offset>(
       tween: Tween<Offset>(begin: begin, end: Offset.zero),
       duration: duration,
-      builder: (context, value, child) => Transform.translate(
-        offset: value,
-        child: child,
-      ),
+      builder: (context, value, child) =>
+          Transform.translate(offset: value, child: child),
       child: child,
     );
   }
@@ -327,7 +331,7 @@ Shared via SomethingToDo
   static List<String> generateSearchKeywords(String text) {
     final words = text.toLowerCase().split(RegExp(r'\s+'));
     final keywords = <String>{};
-    
+
     for (final word in words) {
       if (word.length > 2) {
         keywords.add(word);
@@ -337,7 +341,7 @@ Shared via SomethingToDo
         }
       }
     }
-    
+
     return keywords.toList();
   }
 }

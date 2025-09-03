@@ -59,13 +59,10 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
                 'id': 'mapbox.mapbox-streets-v8',
               },
             ),
-            MarkerLayer(
-              markers: _buildEventMarkers(),
-            ),
-            if (widget.currentLatitude != null && widget.currentLongitude != null)
-              MarkerLayer(
-                markers: [_buildCurrentLocationMarker()],
-              ),
+            MarkerLayer(markers: _buildEventMarkers()),
+            if (widget.currentLatitude != null &&
+                widget.currentLongitude != null)
+              MarkerLayer(markers: [_buildCurrentLocationMarker()]),
           ],
         ),
 
@@ -113,11 +110,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2),
             ),
-            child: const Icon(
-              Icons.event,
-              color: Colors.white,
-              size: 20,
-            ),
+            child: const Icon(Icons.event, color: Colors.white, size: 20),
           ),
         ),
       );
@@ -135,11 +128,7 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
           shape: BoxShape.circle,
           border: Border.all(color: Colors.white, width: 2),
         ),
-        child: const Icon(
-          Icons.my_location,
-          color: Colors.white,
-          size: 20,
-        ),
+        child: const Icon(Icons.my_location, color: Colors.white, size: 20),
       ),
     );
   }
@@ -160,10 +149,8 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
   void _zoomIn() {
     final currentZoom = mapController?.camera.zoom ?? MapboxConfig.defaultZoom;
     mapController?.move(
-      mapController?.camera.center ?? LatLng(
-        MapboxConfig.defaultLatitude,
-        MapboxConfig.defaultLongitude,
-      ),
+      mapController?.camera.center ??
+          LatLng(MapboxConfig.defaultLatitude, MapboxConfig.defaultLongitude),
       currentZoom + 1,
     );
   }
@@ -171,10 +158,8 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
   void _zoomOut() {
     final currentZoom = mapController?.camera.zoom ?? MapboxConfig.defaultZoom;
     mapController?.move(
-      mapController?.camera.center ?? LatLng(
-        MapboxConfig.defaultLatitude,
-        MapboxConfig.defaultLongitude,
-      ),
+      mapController?.camera.center ??
+          LatLng(MapboxConfig.defaultLatitude, MapboxConfig.defaultLongitude),
       currentZoom - 1,
     );
   }
@@ -296,8 +281,6 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
       ),
     );
   }
-
-
 
   Color _getCategoryColor(EventCategory category) {
     switch (category) {

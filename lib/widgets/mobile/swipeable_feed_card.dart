@@ -39,7 +39,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
   late AnimationController _shareAnimationController;
   late Animation<double> _likeScale;
   late Animation<double> _shareScale;
-  
+
   bool _isLiked = false;
   bool _showLikeAnimation = false;
   bool _showShareAnimation = false;
@@ -47,33 +47,31 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
   @override
   void initState() {
     super.initState();
-    
+
     _likeAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _shareAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
-    _likeScale = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _likeAnimationController,
-      curve: Curves.elasticOut,
-    ));
-    
-    _shareScale = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _shareAnimationController,
-      curve: Curves.elasticOut,
-    ));
-    
+
+    _likeScale = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _likeAnimationController,
+        curve: Curves.elasticOut,
+      ),
+    );
+
+    _shareScale = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _shareAnimationController,
+        curve: Curves.elasticOut,
+      ),
+    );
+
     _loadFavoriteStatus();
   }
 
@@ -114,10 +112,10 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       _showLikeAnimation = true;
       _isLiked = true;
     });
-    
+
     // Enhanced haptic feedback
     PlatformInteractions.heavyImpact();
-    
+
     // Show confetti celebration
     DelightService.instance.showConfetti(
       context,
@@ -128,7 +126,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
         'Excellent pick! This is going to be epic! 🎉',
       ][Random().nextInt(4)],
     );
-    
+
     // Heart explosion from button position
     final renderBox = context.findRenderObject() as RenderBox?;
     if (renderBox != null) {
@@ -136,7 +134,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       final heartPosition = Offset(size.width - 40, size.height - 200);
       DelightService.instance.showHeartExplosion(context, heartPosition);
     }
-    
+
     _likeAnimationController.forward().then((_) {
       _likeAnimationController.reverse();
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -153,15 +151,15 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
     setState(() {
       _showShareAnimation = true;
     });
-    
+
     // Enhanced share celebration
     PlatformInteractions.mediumImpact();
-    
+
     DelightService.instance.showConfetti(
       context,
       customMessage: DelightService.instance.getRandomShareMessage(),
     );
-    
+
     _shareAnimationController.forward().then((_) {
       _shareAnimationController.reverse();
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -177,22 +175,26 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
   void _handleDoubleTap() {
     if (!_isLiked) {
       _triggerLikeAnimation();
-      
+
       // Special double-tap celebration
       DelightService.instance.showConfetti(
         context,
         customMessage: 'Double-tap master! You know what you want! 💫',
       );
-      
+
       widget.onDoubleTap?.call();
     } else {
       // Fun message for already liked events
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('You already love this! Great minds think alike! 🤩'),
+          content: const Text(
+            'You already love this! Great minds think alike! 🤩',
+          ),
           backgroundColor: Colors.pink.withValues(alpha: 0.9),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -207,9 +209,9 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       onPanEnd: (details) {
         final velocity = details.velocity.pixelsPerSecond;
         const minVelocity = 300.0;
-        
+
         if (velocity.distance < minVelocity) return;
-        
+
         if (velocity.dy.abs() > velocity.dx.abs()) {
           // Vertical swipe
           if (velocity.dy > 0) {
@@ -234,26 +236,26 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
           children: [
             // Background image
             _buildBackground(),
-            
+
             // Gradient overlay
             _buildGradientOverlay(),
-            
+
             // Content overlay
             _buildContentOverlay(),
-            
+
             // Time-based easter egg indicator
             _buildTimeBasedIndicator(),
-            
+
             // Enhanced action animations with more sparkle
             if (_showLikeAnimation) _buildEnhancedLikeAnimation(),
             if (_showShareAnimation) _buildEnhancedShareAnimation(),
-            
+
             // Random floating elements for visual interest
             ..._buildFloatingElements(),
-            
+
             // Side actions
             _buildSideActions(),
-            
+
             // Bottom info
             _buildBottomInfo(),
           ],
@@ -272,7 +274,9 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
           placeholder: (context, url) => Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: ModernTheme.getCategoryGradient(widget.event.category.name),
+                colors: ModernTheme.getCategoryGradient(
+                  widget.event.category.name,
+                ),
               ),
             ),
             child: const Center(
@@ -282,15 +286,13 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
           errorWidget: (context, url, error) => Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: ModernTheme.getCategoryGradient(widget.event.category.name),
+                colors: ModernTheme.getCategoryGradient(
+                  widget.event.category.name,
+                ),
               ),
             ),
             child: const Center(
-              child: Icon(
-                Icons.event_rounded,
-                color: Colors.white,
-                size: 64,
-              ),
+              child: Icon(Icons.event_rounded, color: Colors.white, size: 64),
             ),
           ),
         ),
@@ -334,49 +336,52 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
         onLongPress: () {
           DelightService.instance.triggerEasterEgg(context, 'long_press_event');
         },
-        child: Container(
-          color: Colors.transparent,
-        ),
+        child: Container(color: Colors.transparent),
       ),
     );
   }
-  
+
   Widget _buildTimeBasedIndicator() {
     final timeMessage = DelightService.instance.getTimeBasedMessage();
-    
+
     if (timeMessage == null) return const SizedBox.shrink();
-    
+
     return Positioned(
       top: 20,
       left: 20,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.amber.shade400, Colors.orange.shade400],
-          ),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.amber.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Text(
-          timeMessage,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 11,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ).animate()
-        .fadeIn(duration: 800.ms)
-        .scale(begin: const Offset(0.5, 0.5), curve: Curves.elasticOut)
-        .then(delay: 3.seconds)
-        .fadeOut(duration: 600.ms),
+      child:
+          Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.amber.shade400, Colors.orange.shade400],
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.amber.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  timeMessage,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+              .animate()
+              .fadeIn(duration: 800.ms)
+              .scale(begin: const Offset(0.5, 0.5), curve: Curves.elasticOut)
+              .then(delay: 3.seconds)
+              .fadeOut(duration: 600.ms),
     );
   }
 
@@ -424,7 +429,9 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                 ),
                 // Orbiting mini hearts
                 ...List.generate(6, (index) {
-                  final angle = (index * 60.0) * (pi / 180.0) + (_likeScale.value * 2 * pi);
+                  final angle =
+                      (index * 60.0) * (pi / 180.0) +
+                      (_likeScale.value * 2 * pi);
                   return Transform.translate(
                     offset: Offset(
                       60 * cos(angle) * _likeScale.value,
@@ -473,10 +480,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [
-                        Colors.blue.shade400,
-                        Colors.cyan.shade400,
-                      ],
+                      colors: [Colors.blue.shade400, Colors.cyan.shade400],
                     ),
                     shape: BoxShape.circle,
                     boxShadow: [
@@ -504,7 +508,12 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                     child: Transform.rotate(
                       angle: _shareScale.value * pi * 2,
                       child: Icon(
-                        [Icons.facebook, Icons.telegram, Icons.email, Icons.link][index],
+                        [
+                          Icons.facebook,
+                          Icons.telegram,
+                          Icons.email,
+                          Icons.link,
+                        ][index],
                         color: Colors.blue.withValues(alpha: 0.8),
                         size: 24,
                       ),
@@ -518,11 +527,11 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       ),
     );
   }
-  
+
   List<Widget> _buildFloatingElements() {
     final elements = <Widget>[];
     final random = Random();
-    
+
     // Add some floating sparkles occasionally
     if (random.nextDouble() < 0.3) {
       for (int i = 0; i < 3; i++) {
@@ -530,31 +539,33 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
           Positioned(
             top: random.nextDouble() * 400,
             left: random.nextDouble() * 200,
-            child: Container(
-              width: 6,
-              height: 6,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.8),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white.withValues(alpha: 0.3),
-                    blurRadius: 4,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
-            ).animate(delay: (i * 500).ms)
-              .fadeIn(duration: 1.seconds)
-              .scale(begin: const Offset(0.5, 0.5))
-              .moveY(begin: 20, end: -20, duration: 3.seconds)
-              .then()
-              .fadeOut(duration: 500.ms),
+            child:
+                Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.8),
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                    )
+                    .animate(delay: (i * 500).ms)
+                    .fadeIn(duration: 1.seconds)
+                    .scale(begin: const Offset(0.5, 0.5))
+                    .moveY(begin: 20, end: -20, duration: 3.seconds)
+                    .then()
+                    .fadeOut(duration: 500.ms),
           ),
         );
       }
     }
-    
+
     return elements;
   }
 
@@ -566,7 +577,9 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
         children: [
           // Enhanced Favorite button with extra delight
           _buildEnhancedActionButton(
-            icon: _isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+            icon: _isLiked
+                ? Icons.favorite_rounded
+                : Icons.favorite_border_rounded,
             color: _isLiked ? Colors.pink : Colors.white,
             label: '${widget.event.favoriteCount + (_isLiked ? 1 : 0)}',
             onTap: () {
@@ -579,7 +592,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
             isActive: _isLiked,
           ),
           const SizedBox(height: 20),
-          
+
           // Enhanced Share button
           _buildEnhancedActionButton(
             icon: Icons.share_rounded,
@@ -590,7 +603,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
             isActive: false,
           ),
           const SizedBox(height: 20),
-          
+
           // Enhanced Comments/Details button
           _buildEnhancedActionButton(
             icon: Icons.chat_bubble_outline_rounded,
@@ -601,7 +614,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
             isActive: false,
           ),
           const SizedBox(height: 20),
-          
+
           // Category indicator
           Container(
             width: 50,
@@ -651,36 +664,38 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
         child: Column(
           children: [
             AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: isActive 
-                    ? glowColor.withValues(alpha: 0.3)
-                    : Colors.black.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                  color: isActive 
-                      ? glowColor.withValues(alpha: 0.5)
-                      : Colors.white.withValues(alpha: 0.2),
-                  width: isActive ? 2 : 1,
-                ),
-                boxShadow: isActive ? [
-                  BoxShadow(
-                    color: glowColor.withValues(alpha: 0.4),
-                    blurRadius: 15,
-                    spreadRadius: 3,
+                  duration: const Duration(milliseconds: 300),
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? glowColor.withValues(alpha: 0.3)
+                        : Colors.black.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                      color: isActive
+                          ? glowColor.withValues(alpha: 0.5)
+                          : Colors.white.withValues(alpha: 0.2),
+                      width: isActive ? 2 : 1,
+                    ),
+                    boxShadow: isActive
+                        ? [
+                            BoxShadow(
+                              color: glowColor.withValues(alpha: 0.4),
+                              blurRadius: 15,
+                              spreadRadius: 3,
+                            ),
+                          ]
+                        : null,
                   ),
-                ] : null,
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24,
-              ),
-            ).animate()
-              .then(delay: Random().nextInt(3).seconds)
-              .shimmer(duration: 2.seconds, color: glowColor.withValues(alpha: 0.3)),
+                  child: Icon(icon, color: color, size: 24),
+                )
+                .animate()
+                .then(delay: Random().nextInt(3).seconds)
+                .shimmer(
+                  duration: 2.seconds,
+                  color: glowColor.withValues(alpha: 0.3),
+                ),
             const SizedBox(height: 4),
             Text(
               label,
@@ -697,7 +712,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       ),
     );
   }
-  
+
   // Keep the old method for backward compatibility
   Widget _buildActionButton({
     required IconData icon,
@@ -737,7 +752,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 8),
-          
+
           // Organizer with avatar
           Row(
             children: [
@@ -746,7 +761,9 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                 height: 24,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: ModernTheme.getCategoryGradient(widget.event.category.name),
+                    colors: ModernTheme.getCategoryGradient(
+                      widget.event.category.name,
+                    ),
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -772,7 +789,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
             ],
           ),
           const SizedBox(height: 12),
-          
+
           // Event metadata chips
           Wrap(
             spacing: 8,
@@ -787,16 +804,20 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
                 text: DateFormat('h:mm a').format(widget.event.startDateTime),
               ),
               _buildInfoChip(
-                icon: widget.event.pricing.isFree ? Icons.celebration_rounded : Icons.monetization_on_rounded,
-                text: widget.event.pricing.isFree 
+                icon: widget.event.pricing.isFree
+                    ? Icons.celebration_rounded
+                    : Icons.monetization_on_rounded,
+                text: widget.event.pricing.isFree
                     ? 'FREE'
                     : '\$${widget.event.pricing.price.toStringAsFixed(0)}',
-                color: widget.event.pricing.isFree ? Colors.green : Colors.orange,
+                color: widget.event.pricing.isFree
+                    ? Colors.green
+                    : Colors.orange,
               ),
             ],
           ),
           const SizedBox(height: 8),
-          
+
           // Location
           Row(
             children: [
@@ -843,11 +864,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            color: color ?? Colors.white,
-            size: 14,
-          ),
+          Icon(icon, color: color ?? Colors.white, size: 14),
           const SizedBox(width: 6),
           Text(
             text,

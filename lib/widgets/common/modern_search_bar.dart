@@ -6,7 +6,7 @@ class ModernSearchBar extends StatefulWidget {
   final ValueChanged<String>? onSubmitted;
   final String? hintText;
   final bool autofocus;
-  
+
   const ModernSearchBar({
     Key? key,
     this.onChanged,
@@ -14,7 +14,7 @@ class ModernSearchBar extends StatefulWidget {
     this.hintText,
     this.autofocus = false,
   }) : super(key: key);
-  
+
   @override
   State<ModernSearchBar> createState() => _ModernSearchBarState();
 }
@@ -23,35 +23,35 @@ class _ModernSearchBarState extends State<ModernSearchBar> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
   bool _hasText = false;
-  
+
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
     _focusNode = FocusNode();
-    
+
     _controller.addListener(() {
       setState(() => _hasText = _controller.text.isNotEmpty);
     });
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
-  
+
   void _clear() {
     HapticFeedback.lightImpact();
     _controller.clear();
     widget.onChanged?.call('');
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       height: 56,
       decoration: BoxDecoration(
@@ -82,9 +82,12 @@ class _ModernSearchBarState extends State<ModernSearchBar> {
               onSubmitted: widget.onSubmitted,
               style: theme.textTheme.bodyLarge,
               decoration: InputDecoration(
-                hintText: widget.hintText ?? 'Search events, venues, artists...',
+                hintText:
+                    widget.hintText ?? 'Search events, venues, artists...',
                 hintStyle: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.6,
+                  ),
                 ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(vertical: 16),
@@ -101,10 +104,7 @@ class _ModernSearchBarState extends State<ModernSearchBar> {
             ),
           if (!_hasText)
             IconButton(
-              icon: Icon(
-                Icons.tune,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              icon: Icon(Icons.tune, color: theme.colorScheme.onSurfaceVariant),
               onPressed: () {
                 HapticFeedback.lightImpact();
                 // Open filter sheet

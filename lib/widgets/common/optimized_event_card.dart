@@ -53,7 +53,7 @@ class _EventCardContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     final cardHeight = isCompact ? 120.0 : 280.0;
     final imageHeight = isCompact ? 120.0 : 180.0;
 
@@ -78,7 +78,7 @@ class _EventCardContent extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: isCompact 
+          child: isCompact
               ? _buildCompactLayout(imageHeight, theme, isDark)
               : _buildStandardLayout(imageHeight, theme, isDark),
         ),
@@ -119,7 +119,11 @@ class _EventCardContent extends StatelessWidget {
     );
   }
 
-  Widget _buildStandardLayout(double imageHeight, ThemeData theme, bool isDark) {
+  Widget _buildStandardLayout(
+    double imageHeight,
+    ThemeData theme,
+    bool isDark,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -155,7 +159,9 @@ class _EventCardContent extends StatelessWidget {
             Positioned(
               top: 12,
               left: 12,
-              child: _CategoryBadge(category: event.category.toString().split('.').last),
+              child: _CategoryBadge(
+                category: event.category.toString().split('.').last,
+              ),
             ),
             // Price badge
             if (event.price != null)
@@ -202,7 +208,7 @@ class _EventCardContent extends StatelessWidget {
 
   Widget _buildDateLocationRow(ThemeData theme, bool isDark) {
     final dateFormat = DateFormat('MMM d • h:mm a');
-    
+
     return Row(
       children: [
         Icon(
@@ -284,7 +290,7 @@ class _CategoryBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _getCategoryColor(category);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -314,17 +320,14 @@ class _PriceBadge extends StatelessWidget {
   final double price;
   final String currency;
 
-  const _PriceBadge({
-    required this.price,
-    required this.currency,
-  });
+  const _PriceBadge({required this.price, required this.currency});
 
   @override
   Widget build(BuildContext context) {
-    final priceText = price == 0 
-        ? 'FREE' 
+    final priceText = price == 0
+        ? 'FREE'
         : '$currency${price.toStringAsFixed(price % 1 == 0 ? 0 : 2)}';
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -348,16 +351,13 @@ class _FavoriteButton extends StatefulWidget {
   final String eventId;
   final bool isFavorite;
 
-  const _FavoriteButton({
-    required this.eventId,
-    required this.isFavorite,
-  });
+  const _FavoriteButton({required this.eventId, required this.isFavorite});
 
   @override
   State<_FavoriteButton> createState() => _FavoriteButtonState();
 }
 
-class _FavoriteButtonState extends State<_FavoriteButton> 
+class _FavoriteButtonState extends State<_FavoriteButton>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -368,19 +368,15 @@ class _FavoriteButtonState extends State<_FavoriteButton>
   void initState() {
     super.initState();
     _isFavorite = widget.isFavorite;
-    
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -401,19 +397,19 @@ class _FavoriteButtonState extends State<_FavoriteButton>
 
   Future<void> _toggleFavorite() async {
     if (_isProcessing) return;
-    
+
     setState(() {
       _isProcessing = true;
       _isFavorite = !_isFavorite;
     });
-    
+
     // Animate
     await _animationController.forward();
     await _animationController.reverse();
-    
+
     // Haptic feedback
     PlatformInteractions.lightImpact();
-    
+
     try {
       // Update in provider
       final authProvider = context.read<AuthProvider>();
@@ -448,7 +444,7 @@ class _FavoriteButtonState extends State<_FavoriteButton>
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: _isFavorite 
+            color: _isFavorite
                 ? Colors.red.withValues(alpha: 0.1)
                 : Colors.grey.withValues(alpha: 0.1),
             shape: BoxShape.circle,

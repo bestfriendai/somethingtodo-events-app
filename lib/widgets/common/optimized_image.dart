@@ -42,9 +42,11 @@ class OptimizedImage extends StatelessWidget {
 
     // Calculate optimal cache size based on device pixel ratio
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    final cacheWidth = memCacheWidth ?? 
+    final cacheWidth =
+        memCacheWidth ??
         (width != null ? (width! * devicePixelRatio).round() : null);
-    final cacheHeight = memCacheHeight ?? 
+    final cacheHeight =
+        memCacheHeight ??
         (height != null ? (height! * devicePixelRatio).round() : null);
 
     Widget imageWidget = CachedNetworkImage(
@@ -65,10 +67,7 @@ class OptimizedImage extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           borderRadius: borderRadius,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: fit,
-          ),
+          image: DecorationImage(image: imageProvider, fit: fit),
         ),
       ),
     );
@@ -261,15 +260,15 @@ class ImageCacheManager {
   ImageCacheManager._internal();
 
   /// Preload images for smoother scrolling
-  Future<void> preloadImages(BuildContext context, List<String?> imageUrls) async {
+  Future<void> preloadImages(
+    BuildContext context,
+    List<String?> imageUrls,
+  ) async {
     final validUrls = imageUrls.where((url) => url != null && url.isNotEmpty);
-    
+
     await Future.wait(
-      validUrls.map((url) => 
-        precacheImage(
-          CachedNetworkImageProvider(url!),
-          context,
-        ),
+      validUrls.map(
+        (url) => precacheImage(CachedNetworkImageProvider(url!), context),
       ),
       eagerError: false,
     );
@@ -282,16 +281,13 @@ class ImageCacheManager {
   }
 
   /// Set cache size limits
-  void configureCacheLimits({
-    int? maximumSize,
-    int? maximumSizeBytes,
-  }) {
+  void configureCacheLimits({int? maximumSize, int? maximumSizeBytes}) {
     final ImageCache cache = PaintingBinding.instance.imageCache;
-    
+
     if (maximumSize != null) {
       cache.maximumSize = maximumSize;
     }
-    
+
     if (maximumSizeBytes != null) {
       cache.maximumSizeBytes = maximumSizeBytes;
     }

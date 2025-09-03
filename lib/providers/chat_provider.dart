@@ -81,7 +81,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         metadata: metadata,
         timestamp: DateTime.now(),
       );
-      
+
       final updatedMessages = [...state.messages, userMessage];
       state = state.copyWith(messages: updatedMessages);
 
@@ -90,7 +90,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         state = state.copyWith(isTyping: true);
         await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
         state = state.copyWith(isTyping: false);
-        
+
         // Generate demo response
         final demoResponse = SampleChatResponses.getResponse(content);
         final assistantMessage = ChatMessage(
@@ -100,7 +100,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
           content: demoResponse,
           timestamp: DateTime.now(),
         );
-        
+
         final finalMessages = [...state.messages, assistantMessage];
         state = state.copyWith(messages: finalMessages);
       } else {
@@ -113,12 +113,16 @@ class ChatNotifier extends StateNotifier<ChatState> {
         );
 
         // Reload messages from server
-        final updatedMessages = await _chatService.getSessionMessages(sessionId);
+        final updatedMessages = await _chatService.getSessionMessages(
+          sessionId,
+        );
         state = state.copyWith(messages: updatedMessages);
       }
 
       // Update session in list
-      final sessionIndex = state.sessions.indexWhere((s) => s.id == state.currentSession!.id);
+      final sessionIndex = state.sessions.indexWhere(
+        (s) => s.id == state.currentSession!.id,
+      );
       if (sessionIndex != -1) {
         final updatedSessions = [...state.sessions];
         updatedSessions[sessionIndex] = updatedSessions[sessionIndex].copyWith(
@@ -130,7 +134,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
       state = state.copyWith(error: 'Failed to send message: $e');
       // Remove the optimistically added message on error
       if (state.messages.isNotEmpty) {
-        final revertedMessages = state.messages.sublist(0, state.messages.length - 1);
+        final revertedMessages = state.messages.sublist(
+          0,
+          state.messages.length - 1,
+        );
         state = state.copyWith(messages: revertedMessages);
       }
     } finally {
@@ -172,7 +179,7 @@ class ChatProvider extends ChangeNotifier {
   ChatSession? get currentSession => _currentSession;
   List<ChatMessage> get currentMessages => _currentMessages;
   List<ChatRecommendation> get recommendations => _recommendations;
-  
+
   bool get isLoading => _isLoading;
   bool get isSendingMessage => _isSendingMessage;
   bool get isTyping => _isTyping;
@@ -181,7 +188,7 @@ class ChatProvider extends ChangeNotifier {
   // Initialize
   Future<void> initialize(String userId, {bool demoMode = false}) async {
     _isDemoMode = demoMode;
-    
+
     if (_isDemoMode) {
       await _initializeDemoChat(userId);
     } else {
@@ -194,7 +201,7 @@ class ChatProvider extends ChangeNotifier {
   // Initialize demo chat with sample data
   Future<void> _initializeDemoChat(String userId) async {
     await Future.delayed(const Duration(milliseconds: 500)); // Simulate loading
-    
+
     // Create a sample chat session
     _currentSession = ChatSession(
       id: 'demo_session_1',
@@ -206,17 +213,18 @@ class ChatProvider extends ChangeNotifier {
           id: 'demo_msg_1',
           sessionId: 'demo_session_1',
           role: MessageRole.assistant,
-          content: 'Hello! I\'m your personal event assistant. I can help you find amazing events in your area. What are you looking for today?',
+          content:
+              'Hello! I\'m your personal event assistant. I can help you find amazing events in your area. What are you looking for today?',
           timestamp: DateTime.now().subtract(const Duration(minutes: 2)),
         ),
       ],
       createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
       updatedAt: DateTime.now().subtract(const Duration(minutes: 2)),
     );
-    
+
     _sessions = [_currentSession!];
     _currentMessages = List.from(_currentSession!.messages);
-    
+
     // Add some sample recommendations
     _recommendations = [
       ChatRecommendation(
@@ -238,7 +246,7 @@ class ChatProvider extends ChangeNotifier {
         createdAt: DateTime.now().subtract(const Duration(hours: 2)),
       ),
     ];
-    
+
     notifyListeners();
   }
 
@@ -266,10 +274,11 @@ class ChatProvider extends ChangeNotifier {
 
     try {
       ChatSession session;
-      
+
       if (_isDemoMode) {
         // Create demo session
-        final sessionId = 'demo_session_${DateTime.now().millisecondsSinceEpoch}';
+        final sessionId =
+            'demo_session_${DateTime.now().millisecondsSinceEpoch}';
         session = ChatSession(
           id: sessionId,
           userId: userId,
@@ -335,14 +344,14 @@ class ChatProvider extends ChangeNotifier {
 
     try {
       await _chatService.deleteChatSession(sessionId);
-      
+
       _sessions.removeWhere((session) => session.id == sessionId);
-      
+
       if (_currentSession?.id == sessionId) {
         _currentSession = null;
         _currentMessages = [];
       }
-      
+
       notifyListeners();
     } catch (e) {
       _setError('Failed to delete session: $e');
@@ -353,9 +362,11 @@ class ChatProvider extends ChangeNotifier {
     try {
       final sessionIndex = _sessions.indexWhere((s) => s.id == sessionId);
       if (sessionIndex != -1) {
-        final updatedSession = _sessions[sessionIndex].copyWith(title: newTitle);
+        final updatedSession = _sessions[sessionIndex].copyWith(
+          title: newTitle,
+        );
         await _chatService.updateChatSession(updatedSession);
-        
+
         _sessions[sessionIndex] = updatedSession;
         if (_currentSession?.id == sessionId) {
           _currentSession = updatedSession;
@@ -398,7 +409,7 @@ class ChatProvider extends ChangeNotifier {
         content: content,
         timestamp: DateTime.now(),
       );
-      
+
       _currentMessages.add(userMessage);
       notifyListeners();
 
@@ -407,7 +418,7 @@ class ChatProvider extends ChangeNotifier {
         setTyping(true);
         await Future.delayed(const Duration(seconds: 1, milliseconds: 500));
         setTyping(false);
-        
+
         // Generate demo response
         final demoResponse = SampleChatResponses.getResponse(content);
         final assistantMessage = ChatMessage(
@@ -417,7 +428,7 @@ class ChatProvider extends ChangeNotifier {
           content: demoResponse,
           timestamp: DateTime.now(),
         );
-        
+
         _currentMessages.add(assistantMessage);
       } else {
         // Send message to AI and get response
@@ -433,7 +444,9 @@ class ChatProvider extends ChangeNotifier {
       }
 
       // Update session in list
-      final sessionIndex = _sessions.indexWhere((s) => s.id == _currentSession!.id);
+      final sessionIndex = _sessions.indexWhere(
+        (s) => s.id == _currentSession!.id,
+      );
       if (sessionIndex != -1) {
         _sessions[sessionIndex] = _sessions[sessionIndex].copyWith(
           updatedAt: DateTime.now(),
@@ -453,7 +466,7 @@ class ChatProvider extends ChangeNotifier {
   // Add message directly (for system messages, etc.)
   Future<void> addMessage(ChatMessage message) async {
     if (_currentSession == null) return;
-    
+
     try {
       _currentMessages.add(message);
       notifyListeners();
@@ -476,17 +489,19 @@ class ChatProvider extends ChangeNotifier {
 
   // Message Streams for real-time updates
   void subscribeToMessages(String sessionId) {
-    _chatService.getSessionMessagesStream(sessionId).listen(
-      (messages) {
-        if (_currentSession?.id == sessionId) {
-          _currentMessages = messages;
-          notifyListeners();
-        }
-      },
-      onError: (error) {
-        _setError('Message stream error: $error');
-      },
-    );
+    _chatService
+        .getSessionMessagesStream(sessionId)
+        .listen(
+          (messages) {
+            if (_currentSession?.id == sessionId) {
+              _currentMessages = messages;
+              notifyListeners();
+            }
+          },
+          onError: (error) {
+            _setError('Message stream error: $error');
+          },
+        );
   }
 
   void unsubscribeFromMessages() {
@@ -510,7 +525,9 @@ class ChatProvider extends ChangeNotifier {
         RecommendationStatus.accepted,
       );
 
-      final index = _recommendations.indexWhere((r) => r.id == recommendationId);
+      final index = _recommendations.indexWhere(
+        (r) => r.id == recommendationId,
+      );
       if (index != -1) {
         _recommendations[index] = _recommendations[index].copyWith(
           status: RecommendationStatus.accepted,
@@ -529,7 +546,9 @@ class ChatProvider extends ChangeNotifier {
         RecommendationStatus.rejected,
       );
 
-      final index = _recommendations.indexWhere((r) => r.id == recommendationId);
+      final index = _recommendations.indexWhere(
+        (r) => r.id == recommendationId,
+      );
       if (index != -1) {
         _recommendations[index] = _recommendations[index].copyWith(
           status: RecommendationStatus.rejected,
@@ -548,7 +567,9 @@ class ChatProvider extends ChangeNotifier {
         RecommendationStatus.viewed,
       );
 
-      final index = _recommendations.indexWhere((r) => r.id == recommendationId);
+      final index = _recommendations.indexWhere(
+        (r) => r.id == recommendationId,
+      );
       if (index != -1) {
         _recommendations[index] = _recommendations[index].copyWith(
           status: RecommendationStatus.viewed,
@@ -595,8 +616,10 @@ class ChatProvider extends ChangeNotifier {
     if (_currentSession == null) return [];
 
     // Generate context-aware suggestions based on conversation history
-    final lastMessage = _currentMessages.isNotEmpty ? _currentMessages.last : null;
-    
+    final lastMessage = _currentMessages.isNotEmpty
+        ? _currentMessages.last
+        : null;
+
     if (lastMessage?.role == MessageRole.assistant) {
       return [
         'Tell me more',
@@ -636,7 +659,7 @@ class ChatProvider extends ChangeNotifier {
     if (session.messages.isEmpty) {
       return 'New ${session.type.name} conversation';
     }
-    
+
     final lastMessage = session.messages.last;
     return lastMessage.content.length > 50
         ? '${lastMessage.content.substring(0, 50)}...'

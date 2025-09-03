@@ -20,21 +20,21 @@ class SampleEvents {
 
     // Fetch real events from RapidAPI
     final realEvents = await _fetchRealEvents();
-    
+
     // Remove duplicates
     final uniqueEvents = _removeDuplicateEvents(realEvents);
-    
+
     // Cache the results
     _cachedEvents = uniqueEvents;
     _lastFetchTime = DateTime.now();
-    
+
     return uniqueEvents;
   }
 
   /// Fetch real events from multiple RapidAPI endpoints
   static Future<List<Event>> _fetchRealEvents() async {
     final List<Event> allEvents = [];
-    
+
     try {
       // Fetch trending events
       final trendingEvents = await _rapidApiService.getTrendingEvents(
@@ -54,7 +54,7 @@ class SampleEvents {
       // Fetch food events
       final foodEvents = await _rapidApiService.searchEvents(
         query: 'food festival restaurant',
-        location: 'San Diego, CA', 
+        location: 'San Diego, CA',
         limit: 8,
       );
       allEvents.addAll(foodEvents);
@@ -85,13 +85,17 @@ class SampleEvents {
 
       // Remove duplicates based on title similarity
       final uniqueEvents = _removeDuplicateEvents(allEvents);
-      
+
       // Enhance events with additional demo data
       final enhancedEvents = _enhanceEventsWithDemoData(uniqueEvents);
-      
+
       return enhancedEvents.take(50).toList();
     } catch (e) {
-      LoggingService.error('Error fetching real events', tag: 'SampleEvents', error: e);
+      LoggingService.error(
+        'Error fetching real events',
+        tag: 'SampleEvents',
+        error: e,
+      );
       return [];
     }
   }
@@ -99,14 +103,14 @@ class SampleEvents {
   /// Remove duplicate events based on title similarity
   static List<Event> _removeDuplicateEvents(List<Event> events) {
     final Map<String, Event> uniqueEvents = {};
-    
+
     for (final event in events) {
       final normalizedTitle = event.title.toLowerCase().trim();
       if (!uniqueEvents.containsKey(normalizedTitle)) {
         uniqueEvents[normalizedTitle] = event;
       }
     }
-    
+
     return uniqueEvents.values.toList();
   }
 
@@ -142,8 +146,8 @@ class SampleEvents {
     final today = DateTime.now();
     return events.where((event) {
       return event.startDateTime.year == today.year &&
-             event.startDateTime.month == today.month &&
-             event.startDateTime.day == today.day;
+          event.startDateTime.month == today.month &&
+          event.startDateTime.day == today.day;
     }).toList();
   }
 
@@ -166,9 +170,9 @@ class SampleEvents {
     final lowercaseQuery = query.toLowerCase();
     return events.where((event) {
       return event.title.toLowerCase().contains(lowercaseQuery) ||
-             event.description.toLowerCase().contains(lowercaseQuery) ||
-             event.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery)) ||
-              (event.venue.city?.toLowerCase() ?? '').contains(lowercaseQuery);
+          event.description.toLowerCase().contains(lowercaseQuery) ||
+          event.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery)) ||
+          (event.venue.city?.toLowerCase() ?? '').contains(lowercaseQuery);
     }).toList();
   }
 

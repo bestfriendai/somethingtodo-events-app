@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Performance optimizations for theme-related operations.
-/// 
+///
 /// This utility class provides cached theme values and optimized
 /// color operations to improve rendering performance across the app.
 class ThemePerformance {
@@ -18,19 +18,19 @@ class ThemePerformance {
   static const Color _cachedBlackColor = Color(0xFF000000);
 
   /// Returns the cached black gradient for optimal performance.
-  /// 
+  ///
   /// This avoids creating new gradient lists on every widget build,
   /// improving performance for event cards and category displays.
   static List<Color> getCachedBlackGradient() => _cachedBlackGradient;
 
   /// Returns the cached black color for optimal performance.
-  /// 
+  ///
   /// This avoids color object creation on every widget build,
   /// improving performance for category badges and text colors.
   static Color getCachedBlackColor() => _cachedBlackColor;
 
   /// Creates a RepaintBoundary wrapper for theme-heavy widgets.
-  /// 
+  ///
   /// This helps isolate repaints to improve performance when
   /// theme-related widgets need to update.
   static Widget wrapWithRepaintBoundary(Widget child) {
@@ -38,7 +38,7 @@ class ThemePerformance {
   }
 
   /// Creates an optimized LinearGradient for black theme.
-  /// 
+  ///
   /// This uses cached colors and optimized settings for better
   /// performance in gradient-heavy UI components.
   static LinearGradient createOptimizedBlackGradient({
@@ -54,7 +54,7 @@ class ThemePerformance {
   }
 
   /// Creates an optimized RadialGradient for black theme.
-  /// 
+  ///
   /// This uses cached colors and optimized settings for better
   /// performance in radial gradient components.
   static RadialGradient createOptimizedBlackRadialGradient({
@@ -70,7 +70,7 @@ class ThemePerformance {
   }
 
   /// Creates an optimized BoxDecoration with black gradient.
-  /// 
+  ///
   /// This provides a pre-configured decoration for consistent
   /// black theme styling with optimal performance.
   static BoxDecoration createOptimizedBlackDecoration({
@@ -85,7 +85,7 @@ class ThemePerformance {
   }
 
   /// Creates an optimized Container with black theme styling.
-  /// 
+  ///
   /// This provides a pre-configured container with black gradient
   /// background and performance optimizations.
   static Container createOptimizedBlackContainer({

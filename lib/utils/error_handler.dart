@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Centralized error handling utility for the SomethingToDo app.
-/// 
+///
 /// This class provides consistent error handling, logging, and user-friendly
 /// error messages across the entire application. It follows best practices
 /// for error management and provides debugging support.
@@ -11,7 +11,7 @@ class ErrorHandler {
   const ErrorHandler._();
 
   /// Handles theme-related errors with appropriate fallbacks.
-  /// 
+  ///
   /// This method provides safe fallbacks for theme operations and logs
   /// errors for debugging purposes.
   static T handleThemeError<T>(
@@ -28,7 +28,7 @@ class ErrorHandler {
   }
 
   /// Handles widget build errors with safe fallbacks.
-  /// 
+  ///
   /// This method ensures that widget build failures don't crash the app
   /// and provides appropriate error widgets for debugging.
   static Widget handleWidgetError(
@@ -45,7 +45,7 @@ class ErrorHandler {
   }
 
   /// Handles async operations with proper error management.
-  /// 
+  ///
   /// This method provides consistent error handling for async operations
   /// and ensures proper error propagation.
   static Future<T?> handleAsyncError<T>(
@@ -61,13 +61,10 @@ class ErrorHandler {
   }
 
   /// Handles color parsing errors with safe fallbacks.
-  /// 
+  ///
   /// This method ensures that invalid color values don't crash the app
   /// and provides appropriate fallback colors.
-  static Color handleColorError(
-    String colorValue,
-    Color fallback,
-  ) {
+  static Color handleColorError(String colorValue, Color fallback) {
     try {
       // Try to parse the color value
       if (colorValue.startsWith('#')) {
@@ -82,7 +79,7 @@ class ErrorHandler {
   }
 
   /// Handles gradient creation errors with safe fallbacks.
-  /// 
+  ///
   /// This method ensures that invalid gradient configurations don't crash
   /// the app and provides appropriate fallback gradients.
   static LinearGradient handleGradientError(
@@ -101,7 +98,7 @@ class ErrorHandler {
   }
 
   /// Logs errors with appropriate detail level based on build mode.
-  /// 
+  ///
   /// In debug mode, provides full error details. In release mode,
   /// logs minimal information for performance.
   static void _logError(String context, Object error, StackTrace stackTrace) {
@@ -115,7 +112,7 @@ class ErrorHandler {
   }
 
   /// Creates a user-friendly error widget for debugging.
-  /// 
+  ///
   /// This widget provides visual feedback when components fail to render
   /// and includes debugging information in debug mode.
   static Widget _createErrorWidget(String widgetName, Object error) {
@@ -129,11 +126,7 @@ class ErrorHandler {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.error_outline,
-            color: Colors.red,
-            size: 24.0,
-          ),
+          Icon(Icons.error_outline, color: Colors.red, size: 24.0),
           const SizedBox(height: 4.0),
           Text(
             'Error in $widgetName',
@@ -160,7 +153,7 @@ class ErrorHandler {
   }
 
   /// Validates theme configuration and returns validation results.
-  /// 
+  ///
   /// This method checks theme configuration for common issues and
   /// provides recommendations for fixes.
   static ThemeValidationResult validateTheme(Map<String, dynamic> config) {
@@ -199,10 +192,10 @@ class ErrorHandler {
 class ThemeValidationResult {
   /// Whether the theme configuration is valid
   final bool isValid;
-  
+
   /// List of validation errors
   final List<String> errors;
-  
+
   /// List of validation warnings
   final List<String> warnings;
 

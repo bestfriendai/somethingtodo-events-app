@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../config/unified_design_system.dart';
+import '../config/consolidated_design_system.dart';
 import '../services/logging_service.dart';
 
 /// Theme provider that manages unified design system variants and user preferences
@@ -10,7 +10,7 @@ class ThemeProvider extends ChangeNotifier {
   static const String _systemThemeKey = 'use_system_theme';
 
   // Current theme state
-  String _currentVariant = UnifiedDesignSystem.materialVariant;
+  String _currentVariant = ConsolidatedDesignSystem.materialVariant;
   bool _isDarkMode = false;
   bool _useSystemTheme = true;
   SharedPreferences? _prefs;
@@ -19,28 +19,28 @@ class ThemeProvider extends ChangeNotifier {
   String get currentVariant => _currentVariant;
   bool get isDarkMode => _isDarkMode;
   bool get useSystemTheme => _useSystemTheme;
-  
+
   /// Get current theme data based on variant and dark mode
   ThemeData get currentTheme {
     switch (_currentVariant) {
-      case UnifiedDesignSystem.glassVariant:
-        return UnifiedDesignSystem.glassTheme(isDark: _isDarkMode);
-      case UnifiedDesignSystem.modernVariant:
-        return UnifiedDesignSystem.modernTheme(isDark: _isDarkMode);
-      case UnifiedDesignSystem.materialVariant:
+      case ConsolidatedDesignSystem.glassVariant:
+        return ConsolidatedDesignSystem.glassTheme(isDark: _isDarkMode);
+      case ConsolidatedDesignSystem.modernVariant:
+        return ConsolidatedDesignSystem.modernTheme(isDark: _isDarkMode);
+      case ConsolidatedDesignSystem.materialVariant:
       default:
-        return UnifiedDesignSystem.materialTheme(isDark: _isDarkMode);
+        return ConsolidatedDesignSystem.materialTheme(isDark: _isDarkMode);
     }
   }
 
   /// Get current theme variant display name
   String get currentVariantDisplayName {
     switch (_currentVariant) {
-      case UnifiedDesignSystem.glassVariant:
+      case ConsolidatedDesignSystem.glassVariant:
         return 'Glass';
-      case UnifiedDesignSystem.modernVariant:
+      case ConsolidatedDesignSystem.modernVariant:
         return 'Modern';
-      case UnifiedDesignSystem.materialVariant:
+      case ConsolidatedDesignSystem.materialVariant:
       default:
         return 'Material';
     }
@@ -49,19 +49,19 @@ class ThemeProvider extends ChangeNotifier {
   /// Get all available theme variants
   List<ThemeVariantOption> get availableVariants => [
     ThemeVariantOption(
-      id: UnifiedDesignSystem.materialVariant,
+      id: ConsolidatedDesignSystem.materialVariant,
       name: 'Material',
       description: 'Clean and familiar Material Design',
       icon: Icons.design_services,
     ),
     ThemeVariantOption(
-      id: UnifiedDesignSystem.glassVariant,
+      id: ConsolidatedDesignSystem.glassVariant,
       name: 'Glass',
       description: 'Modern glassmorphism with blur effects',
       icon: Icons.blur_on,
     ),
     ThemeVariantOption(
-      id: UnifiedDesignSystem.modernVariant,
+      id: ConsolidatedDesignSystem.modernVariant,
       name: 'Modern',
       description: 'Vibrant and contemporary design',
       icon: Icons.auto_awesome,
@@ -75,7 +75,11 @@ class ThemeProvider extends ChangeNotifier {
       await _loadThemePreferences();
       LoggingService.info('Theme provider initialized', tag: 'ThemeProvider');
     } catch (e) {
-      LoggingService.error('Failed to initialize theme provider', error: e, tag: 'ThemeProvider');
+      LoggingService.error(
+        'Failed to initialize theme provider',
+        error: e,
+        tag: 'ThemeProvider',
+      );
     }
   }
 
@@ -83,7 +87,9 @@ class ThemeProvider extends ChangeNotifier {
   Future<void> _loadThemePreferences() async {
     if (_prefs == null) return;
 
-    _currentVariant = _prefs!.getString(_themeVariantKey) ?? UnifiedDesignSystem.materialVariant;
+    _currentVariant =
+        _prefs!.getString(_themeVariantKey) ??
+        ConsolidatedDesignSystem.materialVariant;
     _isDarkMode = _prefs!.getBool(_isDarkModeKey) ?? false;
     _useSystemTheme = _prefs!.getBool(_systemThemeKey) ?? true;
 
@@ -101,13 +107,17 @@ class ThemeProvider extends ChangeNotifier {
       await _prefs!.setString(_themeVariantKey, _currentVariant);
       await _prefs!.setBool(_isDarkModeKey, _isDarkMode);
       await _prefs!.setBool(_systemThemeKey, _useSystemTheme);
-      
+
       LoggingService.info(
         'Saved theme preferences: variant=$_currentVariant, dark=$_isDarkMode, system=$_useSystemTheme',
         tag: 'ThemeProvider',
       );
     } catch (e) {
-      LoggingService.error('Failed to save theme preferences', error: e, tag: 'ThemeProvider');
+      LoggingService.error(
+        'Failed to save theme preferences',
+        error: e,
+        tag: 'ThemeProvider',
+      );
     }
   }
 
@@ -119,7 +129,10 @@ class ThemeProvider extends ChangeNotifier {
     await _saveThemePreferences();
     notifyListeners();
 
-    LoggingService.info('Theme variant changed to: $variant', tag: 'ThemeProvider');
+    LoggingService.info(
+      'Theme variant changed to: $variant',
+      tag: 'ThemeProvider',
+    );
   }
 
   /// Toggle dark mode
@@ -128,7 +141,10 @@ class ThemeProvider extends ChangeNotifier {
     await _saveThemePreferences();
     notifyListeners();
 
-    LoggingService.info('Dark mode toggled: $_isDarkMode', tag: 'ThemeProvider');
+    LoggingService.info(
+      'Dark mode toggled: $_isDarkMode',
+      tag: 'ThemeProvider',
+    );
   }
 
   /// Set dark mode explicitly
@@ -148,7 +164,10 @@ class ThemeProvider extends ChangeNotifier {
     await _saveThemePreferences();
     notifyListeners();
 
-    LoggingService.info('System theme following toggled: $_useSystemTheme', tag: 'ThemeProvider');
+    LoggingService.info(
+      'System theme following toggled: $_useSystemTheme',
+      tag: 'ThemeProvider',
+    );
   }
 
   /// Set system theme following explicitly
@@ -159,7 +178,10 @@ class ThemeProvider extends ChangeNotifier {
     await _saveThemePreferences();
     notifyListeners();
 
-    LoggingService.info('System theme following set to: $useSystem', tag: 'ThemeProvider');
+    LoggingService.info(
+      'System theme following set to: $useSystem',
+      tag: 'ThemeProvider',
+    );
   }
 
   /// Update theme based on system brightness
@@ -170,7 +192,7 @@ class ThemeProvider extends ChangeNotifier {
     if (_isDarkMode != shouldBeDark) {
       _isDarkMode = shouldBeDark;
       notifyListeners();
-      
+
       LoggingService.info(
         'System theme updated: dark=$_isDarkMode',
         tag: 'ThemeProvider',
@@ -180,10 +202,10 @@ class ThemeProvider extends ChangeNotifier {
 
   /// Reset theme to defaults
   Future<void> resetToDefaults() async {
-    _currentVariant = UnifiedDesignSystem.materialVariant;
+    _currentVariant = ConsolidatedDesignSystem.materialVariant;
     _isDarkMode = false;
     _useSystemTheme = true;
-    
+
     await _saveThemePreferences();
     notifyListeners();
 
@@ -200,19 +222,21 @@ class ThemeProvider extends ChangeNotifier {
   }
 
   /// Check if current theme supports glass effects
-  bool get supportsGlassEffects => _currentVariant == UnifiedDesignSystem.glassVariant;
+  bool get supportsGlassEffects =>
+      _currentVariant == ConsolidatedDesignSystem.glassVariant;
 
   /// Check if current theme supports gradients
-  bool get supportsGradients => _currentVariant != UnifiedDesignSystem.materialVariant;
+  bool get supportsGradients =>
+      _currentVariant != ConsolidatedDesignSystem.materialVariant;
 
   /// Get theme-specific animation duration
   Duration get animationDuration {
     switch (_currentVariant) {
-      case UnifiedDesignSystem.glassVariant:
+      case ConsolidatedDesignSystem.glassVariant:
         return const Duration(milliseconds: 400);
-      case UnifiedDesignSystem.modernVariant:
+      case ConsolidatedDesignSystem.modernVariant:
         return const Duration(milliseconds: 300);
-      case UnifiedDesignSystem.materialVariant:
+      case ConsolidatedDesignSystem.materialVariant:
       default:
         return const Duration(milliseconds: 200);
     }
@@ -221,11 +245,11 @@ class ThemeProvider extends ChangeNotifier {
   /// Get theme-specific animation curve
   Curve get animationCurve {
     switch (_currentVariant) {
-      case UnifiedDesignSystem.glassVariant:
+      case ConsolidatedDesignSystem.glassVariant:
         return Curves.easeInOutCubic;
-      case UnifiedDesignSystem.modernVariant:
+      case ConsolidatedDesignSystem.modernVariant:
         return Curves.easeInOutQuart;
-      case UnifiedDesignSystem.materialVariant:
+      case ConsolidatedDesignSystem.materialVariant:
       default:
         return Curves.easeInOut;
     }

@@ -41,7 +41,8 @@ class ModernFloatingActionButton extends StatefulWidget {
        child = null;
 
   @override
-  State<ModernFloatingActionButton> createState() => _ModernFloatingActionButtonState();
+  State<ModernFloatingActionButton> createState() =>
+      _ModernFloatingActionButtonState();
 }
 
 class _ModernFloatingActionButtonState extends State<ModernFloatingActionButton>
@@ -49,56 +50,44 @@ class _ModernFloatingActionButtonState extends State<ModernFloatingActionButton>
   late AnimationController _scaleController;
   late AnimationController _rotationController;
   late AnimationController _pulseController;
-  
+
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotationAnimation;
   late Animation<double> _pulseAnimation;
-  
+
   bool _isPressed = false;
 
   @override
   void initState() {
     super.initState();
-    
+
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    
+
     _rotationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _pulseController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.9,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _rotationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 0.5,
-    ).animate(CurvedAnimation(
-      parent: _rotationController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.2,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
-    
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeInOut),
+    );
+
+    _rotationAnimation = Tween<double>(begin: 0.0, end: 0.5).animate(
+      CurvedAnimation(parent: _rotationController, curve: Curves.easeInOut),
+    );
+
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
     _pulseController.repeat(reverse: true);
   }
 
@@ -134,15 +123,21 @@ class _ModernFloatingActionButtonState extends State<ModernFloatingActionButton>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final gradient = widget.gradient ?? ModernTheme.purpleGradient;
-    
+
     return AnimatedBuilder(
-      animation: Listenable.merge([_scaleAnimation, _rotationAnimation, _pulseAnimation]),
+      animation: Listenable.merge([
+        _scaleAnimation,
+        _rotationAnimation,
+        _pulseAnimation,
+      ]),
       builder: (context, child) {
         return Transform.scale(
           scale: _scaleAnimation.value,
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(widget.isExpanded ? 28 : widget.size / 2),
+              borderRadius: BorderRadius.circular(
+                widget.isExpanded ? 28 : widget.size / 2,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: gradient.first.withValues(alpha: 0.4),
@@ -165,7 +160,7 @@ class _ModernFloatingActionButtonState extends State<ModernFloatingActionButton>
               child: Container(
                 width: widget.isExpanded ? null : widget.size,
                 height: widget.size,
-                padding: widget.isExpanded 
+                padding: widget.isExpanded
                     ? const EdgeInsets.symmetric(horizontal: 24, vertical: 16)
                     : null,
                 decoration: BoxDecoration(
@@ -174,13 +169,17 @@ class _ModernFloatingActionButtonState extends State<ModernFloatingActionButton>
                     end: Alignment.bottomRight,
                     colors: gradient,
                   ),
-                  borderRadius: BorderRadius.circular(widget.isExpanded ? 28 : widget.size / 2),
+                  borderRadius: BorderRadius.circular(
+                    widget.isExpanded ? 28 : widget.size / 2,
+                  ),
                   border: Border.all(
                     color: Colors.white.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
-                child: widget.isExpanded ? _buildExpandedContent() : _buildRegularContent(),
+                child: widget.isExpanded
+                    ? _buildExpandedContent()
+                    : _buildRegularContent(),
               ),
             ),
           ),
@@ -193,11 +192,13 @@ class _ModernFloatingActionButtonState extends State<ModernFloatingActionButton>
     return Center(
       child: Transform.rotate(
         angle: _rotationAnimation.value * 3.14159,
-        child: widget.child ?? Icon(
-          widget.icon ?? Icons.add_rounded,
-          color: Colors.white,
-          size: widget.size * 0.5,
-        ),
+        child:
+            widget.child ??
+            Icon(
+              widget.icon ?? Icons.add_rounded,
+              color: Colors.white,
+              size: widget.size * 0.5,
+            ),
       ),
     );
   }
@@ -256,7 +257,7 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
   late AnimationController _controller;
   late Animation<double> _rotationAnimation;
   late Animation<double> _scaleAnimation;
-  
+
   bool _isOpen = false;
 
   @override
@@ -266,22 +267,16 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _rotationAnimation = Tween<double>(
       begin: 0.0,
       end: 0.75,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
     _scaleAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
   }
 
   @override
@@ -295,7 +290,7 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
     setState(() {
       _isOpen = !_isOpen;
     });
-    
+
     if (_isOpen) {
       _controller.forward();
     } else {
@@ -323,7 +318,7 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
         ...widget.actions.asMap().entries.map((entry) {
           int index = entry.key;
           ModernSpeedDialAction action = entry.value;
-          
+
           return AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
@@ -331,7 +326,7 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
                 0,
                 -((index + 1) * 70.0 * _scaleAnimation.value),
               );
-              
+
               return Transform.translate(
                 offset: offset,
                 child: Transform.scale(
@@ -346,7 +341,10 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
                         if (action.label != null && _isOpen)
                           Container(
                             margin: const EdgeInsets.only(right: 16),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
                               color: Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(20),
@@ -360,9 +358,8 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
                             ),
                             child: Text(
                               action.label!,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w500),
                             ),
                           ),
                         // Action button
@@ -376,13 +373,18 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
                             height: 48,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: action.gradient ?? ModernTheme.oceanGradient,
+                                colors:
+                                    action.gradient ??
+                                    ModernTheme.oceanGradient,
                               ),
                               borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: (action.gradient ?? ModernTheme.oceanGradient)
-                                      .first.withValues(alpha: 0.4),
+                                  color:
+                                      (action.gradient ??
+                                              ModernTheme.oceanGradient)
+                                          .first
+                                          .withValues(alpha: 0.4),
                                   blurRadius: 15,
                                   offset: const Offset(0, 6),
                                 ),
@@ -448,7 +450,7 @@ class DelightfulFAB extends StatefulWidget {
   final IconData icon;
   final String tooltip;
   final bool showSparkles;
-  
+
   const DelightfulFAB({
     super.key,
     this.onPressed,
@@ -456,7 +458,7 @@ class DelightfulFAB extends StatefulWidget {
     this.tooltip = 'Add Something Awesome',
     this.showSparkles = true,
   });
-  
+
   @override
   State<DelightfulFAB> createState() => _DelightfulFABState();
 }
@@ -466,32 +468,32 @@ class _DelightfulFABState extends State<DelightfulFAB>
   late AnimationController _sparkleController;
   late AnimationController _bounceController;
   late AnimationController _rotateController;
-  
+
   int _tapCount = 0;
   bool _isPressed = false;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _sparkleController = AnimationController(
       duration: const Duration(seconds: 4),
       vsync: this,
     );
-    
+
     _bounceController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     _rotateController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _sparkleController.repeat();
   }
-  
+
   @override
   void dispose() {
     _sparkleController.dispose();
@@ -499,27 +501,27 @@ class _DelightfulFABState extends State<DelightfulFAB>
     _rotateController.dispose();
     super.dispose();
   }
-  
+
   void _handleTap() {
     _tapCount++;
-    
+
     setState(() => _isPressed = true);
-    
+
     _bounceController.forward().then((_) {
       _bounceController.reverse();
       setState(() => _isPressed = false);
     });
-    
+
     _rotateController.forward().then((_) {
       _rotateController.reset();
     });
-    
+
     // Easter egg for multiple taps
     if (_tapCount >= 10) {
       DelightService.instance.triggerEasterEgg(context, 'fab_masher');
       _tapCount = 0;
     }
-    
+
     // Show celebration
     DelightService.instance.showConfetti(
       context,
@@ -530,11 +532,11 @@ class _DelightfulFABState extends State<DelightfulFAB>
         'Another brilliant idea incoming! 💡',
       ][Random().nextInt(4)],
     );
-    
+
     PlatformInteractions.mediumImpact();
     widget.onPressed?.call();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -590,11 +592,7 @@ class _DelightfulFABState extends State<DelightfulFAB>
                         ),
                       ],
                     ),
-                    child: Icon(
-                      widget.icon,
-                      color: Colors.white,
-                      size: 28,
-                    ),
+                    child: Icon(widget.icon, color: Colors.white, size: 28),
                   ),
                 ),
               ),
@@ -610,33 +608,33 @@ class _DelightfulFABState extends State<DelightfulFAB>
 class FABSparklePainter extends CustomPainter {
   final double progress;
   final double radius;
-  
+
   FABSparklePainter({required this.progress, required this.radius});
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final paint = Paint()..style = PaintingStyle.fill;
-    
+
     for (int i = 0; i < 8; i++) {
       final angle = (i * pi / 4) + (progress * 2 * pi);
       final sparkleDistance = radius + (10 * sin(progress * 4 * pi + i));
       final sparkleSize = 3 + (2 * sin(progress * 6 * pi + i * 0.7));
-      
+
       final x = center.dx + (sparkleDistance * cos(angle));
       final y = center.dy + (sparkleDistance * sin(angle));
-      
+
       // Use modern theme colors for sparkles
       final colorIndex = i % ModernTheme.auroraGradient.length;
       paint.color = ModernTheme.auroraGradient[colorIndex].withOpacity(
         0.5 + (0.4 * sin(progress * 2 * pi + i)),
       );
-      
+
       // Draw sparkle
       canvas.drawCircle(Offset(x, y), sparkleSize, paint);
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

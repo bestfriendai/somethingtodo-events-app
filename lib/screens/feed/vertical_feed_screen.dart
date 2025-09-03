@@ -11,10 +11,7 @@ import '../../widgets/mobile/mobile_bottom_sheet.dart';
 class VerticalFeedScreen extends StatefulWidget {
   final List<Event>? initialEvents;
 
-  const VerticalFeedScreen({
-    super.key,
-    this.initialEvents,
-  });
+  const VerticalFeedScreen({super.key, this.initialEvents});
 
   @override
   State<VerticalFeedScreen> createState() => _VerticalFeedScreenState();
@@ -33,22 +30,18 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _overlayController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
-    _overlayOpacity = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _overlayController,
-      curve: Curves.easeOut,
-    ));
+
+    _overlayOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _overlayController, curve: Curves.easeOut),
+    );
 
     _loadEvents();
-    
+
     // Preload images for better performance
     _preloadImages();
   }
@@ -79,23 +72,6 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
         .take(10) // Only preload first 10 images
         .toList();
     CacheService.instance.preloadImages(imageUrls);
-  }
-
-  void _handleSwipe(SwipeDirection direction, double velocity) {
-    switch (direction) {
-      case SwipeDirection.up:
-        _nextEvent();
-        break;
-      case SwipeDirection.down:
-        _previousEvent();
-        break;
-      case SwipeDirection.left:
-        _handleLeftSwipe();
-        break;
-      case SwipeDirection.right:
-        _handleRightSwipe();
-        break;
-    }
   }
 
   void _nextEvent() {
@@ -133,7 +109,7 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
 
   void _shareEvent(Event event) {
     PlatformInteractions.mediumImpact();
-    
+
     PlatformInteractions.showPlatformActionSheet(
       context: context,
       title: 'Share Event',
@@ -171,10 +147,10 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
 
   void _toggleFavorite(Event event) async {
     PlatformInteractions.mediumImpact();
-    
+
     // Cache favorite locally first (for offline support)
     await CacheService.instance.cacheFavoriteEvent(event.id);
-    
+
     PlatformInteractions.showToast(
       context: context,
       message: 'Added to favorites',
@@ -185,7 +161,7 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
 
   void _showEventDetails(Event event) {
     PlatformInteractions.lightImpact();
-    
+
     MobileBottomSheet.show(
       context: context,
       isScrollable: true,
@@ -199,7 +175,7 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
     setState(() {
       _showOverlay = !_showOverlay;
     });
-    
+
     if (_showOverlay) {
       _overlayController.forward();
     } else {
@@ -251,7 +227,7 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
                   setState(() {
                     _currentIndex = index;
                   });
-                  
+
                   // Load more events when approaching the end
                   if (index >= _events.length - 3) {
                     eventsProvider.loadMoreEvents();
@@ -271,7 +247,7 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
                   );
                 },
               ),
-              
+
               // Overlay menu
               if (_showOverlay) _buildOverlay(),
             ],
@@ -280,10 +256,6 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
       ),
     );
   }
-
-
-
-
 
   Widget _buildOverlay() {
     return AnimatedBuilder(
@@ -312,7 +284,7 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
                       ),
                     ),
                     const SizedBox(height: 20),
-                    
+
                     _buildOverlayAction(
                       icon: Icons.swipe_up_rounded,
                       title: 'Swipe Up',
@@ -338,7 +310,7 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
                       title: 'Tap',
                       subtitle: 'View details',
                     ),
-                    
+
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _toggleOverlay,
@@ -377,10 +349,7 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
               ),
               Text(
                 subtitle,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
               ),
             ],
           ),
@@ -388,5 +357,4 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
       ),
     );
   }
-
 }

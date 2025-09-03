@@ -81,7 +81,7 @@ class _ModernEventCardState extends State<ModernEventCard>
 
   void _showShareOptions(BuildContext context) {
     PlatformInteractions.lightImpact();
-    
+
     PlatformInteractions.showPlatformActionSheet(
       context: context,
       title: 'Share Event',
@@ -120,48 +120,53 @@ class _ModernEventCardState extends State<ModernEventCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     Widget cardWidget = AnimatedScale(
       scale: _isPressed ? 0.95 : 1.0,
       duration: const Duration(milliseconds: 150),
       curve: Curves.easeOutCubic,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 20),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: GlassmorphicContainer(
-              width: double.infinity,
-              height: widget.isHorizontal ? 180 : 320,
-              borderRadius: 28,
-              blur: 15,
-              alignment: Alignment.bottomCenter,
-              border: 1.5,
-              linearGradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.white.withValues(alpha: 0.15),
-                  Colors.white.withValues(alpha: 0.05),
-                ],
-              ),
-              borderGradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  ModernTheme.getCategoryGradient(widget.event.category.name)[0].withValues(alpha: 0.3),
-                  Colors.white.withValues(alpha: 0.1),
-                ],
-              ),
-              child: widget.isHorizontal ? _buildHorizontalCard() : _buildVerticalCard(),
-            ),
-          ),
-        ),
-      )
-      .animate()
-      .fadeIn(duration: 600.ms, curve: Curves.easeOut)
-      .slideY(begin: 0.3, duration: 800.ms, curve: Curves.elasticOut),
+      child:
+          Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(28),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: GlassmorphicContainer(
+                      width: double.infinity,
+                      height: widget.isHorizontal ? 180 : 320,
+                      borderRadius: 28,
+                      blur: 15,
+                      alignment: Alignment.bottomCenter,
+                      border: 1.5,
+                      linearGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.white.withValues(alpha: 0.15),
+                          Colors.white.withValues(alpha: 0.05),
+                        ],
+                      ),
+                      borderGradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          ModernTheme.getCategoryGradient(
+                            widget.event.category.name,
+                          )[0].withValues(alpha: 0.3),
+                          Colors.white.withValues(alpha: 0.1),
+                        ],
+                      ),
+                      child: widget.isHorizontal
+                          ? _buildHorizontalCard()
+                          : _buildVerticalCard(),
+                    ),
+                  ),
+                ),
+              )
+              .animate()
+              .fadeIn(duration: 600.ms, curve: Curves.easeOut)
+              .slideY(begin: 0.3, duration: 800.ms, curve: Curves.elasticOut),
     );
 
     if (widget.enableSwipeActions) {
@@ -217,8 +222,10 @@ class _ModernEventCardState extends State<ModernEventCard>
 
   Widget _buildHorizontalCard() {
     final theme = Theme.of(context);
-    final categoryGradient = ModernTheme.getCategoryGradient(widget.event.category.name);
-    
+    final categoryGradient = ModernTheme.getCategoryGradient(
+      widget.event.category.name,
+    );
+
     return SizedBox(
       height: 180,
       child: Row(
@@ -243,7 +250,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                     ),
                   ),
                 ),
-                
+
                 // Image with rounded corners
                 if (widget.event.imageUrls.isNotEmpty)
                   ClipRRect(
@@ -257,13 +264,14 @@ class _ModernEventCardState extends State<ModernEventCard>
                         imageUrl: widget.event.imageUrls.first,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => _buildImagePlaceholder(),
-                        errorWidget: (context, url, error) => _buildImageError(),
+                        errorWidget: (context, url, error) =>
+                            _buildImageError(),
                       ),
                     ),
                   )
                 else
                   _buildImageError(),
-                
+
                 // Sophisticated gradient overlay
                 Container(
                   decoration: BoxDecoration(
@@ -282,7 +290,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                     ),
                   ),
                 ),
-                
+
                 // Modern floating category chip
                 Positioned(
                   top: 16,
@@ -326,7 +334,10 @@ class _ModernEventCardState extends State<ModernEventCard>
                     children: [
                       // Modern category pill
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
@@ -392,9 +403,13 @@ class _ModernEventCardState extends State<ModernEventCard>
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Text(
-                                    DateFormat('MMM d • h:mm a').format(widget.event.startDateTime),
+                                    DateFormat(
+                                      'MMM d • h:mm a',
+                                    ).format(widget.event.startDateTime),
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: Colors.white.withValues(alpha: 0.8),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 12,
                                     ),
@@ -423,7 +438,9 @@ class _ModernEventCardState extends State<ModernEventCard>
                                   child: Text(
                                     widget.event.venue.name,
                                     style: theme.textTheme.bodySmall?.copyWith(
-                                      color: Colors.white.withValues(alpha: 0.8),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 12,
                                     ),
@@ -442,17 +459,28 @@ class _ModernEventCardState extends State<ModernEventCard>
                         children: [
                           // Ultra-modern price chip with glow
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: widget.event.pricing.isFree
-                                    ? [const Color(0xFF000000), const Color(0xFF1A1A1A)]
-                                    : [const Color(0xFF000000), const Color(0xFF1A1A1A)],
+                                    ? [
+                                        const Color(0xFF000000),
+                                        const Color(0xFF1A1A1A),
+                                      ]
+                                    : [
+                                        const Color(0xFF000000),
+                                        const Color(0xFF1A1A1A),
+                                      ],
                               ),
                               borderRadius: BorderRadius.circular(25),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF000000).withValues(alpha: 0.4),
+                                  color: const Color(
+                                    0xFF000000,
+                                  ).withValues(alpha: 0.4),
                                   blurRadius: 12,
                                   offset: const Offset(0, 6),
                                 ),
@@ -470,7 +498,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                               ),
                             ),
                           ),
-                          
+
                           // Modern favorite button
                           if (widget.showFavoriteButton) ...[
                             const SizedBox(height: 12),
@@ -485,21 +513,30 @@ class _ModernEventCardState extends State<ModernEventCard>
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: BackdropFilter(
-                                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                  filter: ImageFilter.blur(
+                                    sigmaX: 10,
+                                    sigmaY: 10,
+                                  ),
                                   child: Container(
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.1),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.1,
+                                      ),
                                       borderRadius: BorderRadius.circular(16),
                                       border: Border.all(
-                                        color: Colors.white.withValues(alpha: 0.2),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.2,
+                                        ),
                                         width: 1,
                                       ),
                                     ),
                                     child: Icon(
                                       Icons.favorite_border_rounded,
                                       size: 18,
-                                      color: Colors.white.withValues(alpha: 0.8),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -521,8 +558,10 @@ class _ModernEventCardState extends State<ModernEventCard>
 
   Widget _buildVerticalCard() {
     final theme = Theme.of(context);
-    final categoryGradient = ModernTheme.getCategoryGradient(widget.event.category.name);
-    
+    final categoryGradient = ModernTheme.getCategoryGradient(
+      widget.event.category.name,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -573,7 +612,10 @@ class _ModernEventCardState extends State<ModernEventCard>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(16),
@@ -639,7 +681,9 @@ class _ModernEventCardState extends State<ModernEventCard>
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    DateFormat('MMM d • h:mm a').format(widget.event.startDateTime),
+                    DateFormat(
+                      'MMM d • h:mm a',
+                    ).format(widget.event.startDateTime),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
@@ -659,16 +703,21 @@ class _ModernEventCardState extends State<ModernEventCard>
                     child: Text(
                       widget.event.venue.name,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.7,
+                        ),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
-                      color: widget.event.pricing.isFree 
+                      color: widget.event.pricing.isFree
                           ? ModernTheme.accentColor
                           : ModernTheme.primaryColor,
                       borderRadius: BorderRadius.circular(16),
@@ -732,7 +781,9 @@ class _ModernEventCardState extends State<ModernEventCard>
   }
 
   Widget _buildImageError() {
-    final categoryGradient = ModernTheme.getCategoryGradient(widget.event.category.name);
+    final categoryGradient = ModernTheme.getCategoryGradient(
+      widget.event.category.name,
+    );
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -755,11 +806,7 @@ class _ModernEventCardState extends State<ModernEventCard>
                   width: 2,
                 ),
               ),
-              child: Icon(
-                _getCategoryIcon(),
-                color: Colors.white,
-                size: 32,
-              ),
+              child: Icon(_getCategoryIcon(), color: Colors.white, size: 32),
             ),
             const SizedBox(height: 12),
             Text(

@@ -5,7 +5,8 @@ import 'package:flutter/scheduler.dart';
 
 /// Performance optimization utilities for the app
 class PerformanceOptimizer {
-  static final PerformanceOptimizer _instance = PerformanceOptimizer._internal();
+  static final PerformanceOptimizer _instance =
+      PerformanceOptimizer._internal();
   factory PerformanceOptimizer() => _instance;
   PerformanceOptimizer._internal();
 
@@ -15,24 +16,16 @@ class PerformanceOptimizer {
   final Map<String, DateTime> _throttleLastRun = {};
 
   /// Debounce function calls to prevent excessive executions
-  void debounce(
-    String id,
-    Duration duration,
-    VoidCallback action,
-  ) {
+  void debounce(String id, Duration duration, VoidCallback action) {
     _debounceTimers[id]?.cancel();
     _debounceTimers[id] = Timer(duration, action);
   }
 
   /// Throttle function calls to limit execution frequency
-  void throttle(
-    String id,
-    Duration duration,
-    VoidCallback action,
-  ) {
+  void throttle(String id, Duration duration, VoidCallback action) {
     final lastRun = _throttleLastRun[id];
     final now = DateTime.now();
-    
+
     if (lastRun == null || now.difference(lastRun) >= duration) {
       action();
       _throttleLastRun[id] = now;
@@ -66,7 +59,10 @@ class PerformanceOptimizer {
   }
 
   /// Run expensive computation in isolate
-  static Future<T> runInIsolate<T>(ComputeCallback<dynamic, T> callback, dynamic message) {
+  static Future<T> runInIsolate<T>(
+    ComputeCallback<dynamic, T> callback,
+    dynamic message,
+  ) {
     return compute(callback, message);
   }
 
@@ -153,7 +149,7 @@ class _OptimizedBuilderState extends State<OptimizedBuilder> {
   @override
   Widget build(BuildContext context) {
     bool shouldRebuild = false;
-    
+
     if (_lastDependencies.length != widget.dependencies.length) {
       shouldRebuild = true;
     } else {
@@ -238,11 +234,13 @@ class _PerformanceMonitorState extends State<PerformanceMonitor> {
     if (widget.enabled && kDebugMode) {
       _buildStartTime = DateTime.now();
       _buildCount++;
-      
+
       SchedulerBinding.instance.addPostFrameCallback((_) {
         final buildTime = DateTime.now().difference(_buildStartTime);
         if (buildTime.inMilliseconds > 16) {
-          debugPrint('⚠️ [${widget.tag}] Slow build: ${buildTime.inMilliseconds}ms (Build #$_buildCount)');
+          debugPrint(
+            '⚠️ [${widget.tag}] Slow build: ${buildTime.inMilliseconds}ms (Build #$_buildCount)',
+          );
         }
       });
     }

@@ -109,7 +109,9 @@ class SomethingToDoApp extends StatelessWidget {
               theme: themeProvider.currentTheme,
               themeMode: themeProvider.useSystemTheme
                   ? ThemeMode.system
-                  : (themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light),
+                  : (themeProvider.isDarkMode
+                        ? ThemeMode.dark
+                        : ThemeMode.light),
               navigatorKey: NavigationService.navigatorKey,
               navigatorObservers: [observer],
               home: const AnimatedSplashScreen(),

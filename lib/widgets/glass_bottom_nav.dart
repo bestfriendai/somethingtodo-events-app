@@ -68,17 +68,17 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
         vsync: this,
       ),
     );
-    
+
     _indicatorController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    
+
     _rippleController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _itemControllers[widget.currentIndex].forward();
   }
 
@@ -143,7 +143,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
               ),
             ),
           ),
-          
+
           // Glass morphism overlay
           GlassmorphicContainer(
             width: double.infinity,
@@ -163,10 +163,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
             borderGradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                Colors.transparent,
-                Colors.transparent,
-              ],
+              colors: [Colors.transparent, Colors.transparent],
             ),
             child: Stack(
               children: [
@@ -175,8 +172,11 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                   animation: _indicatorController,
                   builder: (context, child) {
                     return Positioned(
-                      left: (MediaQuery.of(context).size.width / 5) * widget.currentIndex +
-                          (MediaQuery.of(context).size.width / 10) - 30,
+                      left:
+                          (MediaQuery.of(context).size.width / 5) *
+                              widget.currentIndex +
+                          (MediaQuery.of(context).size.width / 10) -
+                          30,
                       bottom: 8,
                       child: Container(
                         width: 60,
@@ -188,7 +188,8 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: _items[widget.currentIndex].gradient[0].withValues(alpha: 0.5),
+                              color: _items[widget.currentIndex].gradient[0]
+                                  .withValues(alpha: 0.5),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -198,13 +199,15 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                     );
                   },
                 ),
-                
+
                 // Ripple effect
                 AnimatedBuilder(
                   animation: _rippleController,
                   builder: (context, child) {
                     return Positioned(
-                      left: (MediaQuery.of(context).size.width / 5) * widget.currentIndex,
+                      left:
+                          (MediaQuery.of(context).size.width / 5) *
+                          widget.currentIndex,
                       top: 0,
                       child: Container(
                         width: MediaQuery.of(context).size.width / 5,
@@ -220,9 +223,17 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                                 gradient: RadialGradient(
                                   colors: [
                                     _items[widget.currentIndex].gradient[0]
-                                        .withValues(alpha: 0.3 * (1 - _rippleController.value)),
+                                        .withValues(
+                                          alpha:
+                                              0.3 *
+                                              (1 - _rippleController.value),
+                                        ),
                                     _items[widget.currentIndex].gradient[1]
-                                        .withValues(alpha: 0.1 * (1 - _rippleController.value)),
+                                        .withValues(
+                                          alpha:
+                                              0.1 *
+                                              (1 - _rippleController.value),
+                                        ),
                                     Colors.transparent,
                                   ],
                                 ),
@@ -234,7 +245,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                     );
                   },
                 ),
-                
+
                 // Navigation items
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -253,7 +264,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
   Widget _buildNavItem(int index) {
     final item = _items[index];
     final isSelected = widget.currentIndex == index;
-    
+
     return Expanded(
       child: GestureDetector(
         onTap: () => widget.onTap(index),
@@ -277,17 +288,25 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                             borderRadius: BorderRadius.circular(20),
                             gradient: LinearGradient(
                               colors: [
-                                item.gradient[0].withValues(alpha: 0.2 * _itemControllers[index].value),
-                                item.gradient[1].withValues(alpha: 0.1 * _itemControllers[index].value),
+                                item.gradient[0].withValues(
+                                  alpha: 0.2 * _itemControllers[index].value,
+                                ),
+                                item.gradient[1].withValues(
+                                  alpha: 0.1 * _itemControllers[index].value,
+                                ),
                               ],
                             ),
                             border: Border.all(
-                              color: item.gradient[0].withValues(alpha: 0.3 * _itemControllers[index].value),
+                              color: item.gradient[0].withValues(
+                                alpha: 0.3 * _itemControllers[index].value,
+                              ),
                               width: 1,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: item.gradient[0].withValues(alpha: 0.3 * _itemControllers[index].value),
+                                color: item.gradient[0].withValues(
+                                  alpha: 0.3 * _itemControllers[index].value,
+                                ),
                                 blurRadius: 12,
                                 spreadRadius: 2,
                               ),
@@ -298,7 +317,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                     },
                   ),
                 ),
-              
+
               // Icon and label
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -310,9 +329,13 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                         animation: _itemControllers[index],
                         builder: (context, child) {
                           return Transform.scale(
-                            scale: isSelected ? 1.0 + (_itemControllers[index].value * 0.2) : 1.0,
+                            scale: isSelected
+                                ? 1.0 + (_itemControllers[index].value * 0.2)
+                                : 1.0,
                             child: Transform.rotate(
-                              angle: isSelected ? _itemControllers[index].value * 0.1 : 0,
+                              angle: isSelected
+                                  ? _itemControllers[index].value * 0.1
+                                  : 0,
                               child: Icon(
                                 isSelected ? item.activeIcon : item.icon,
                                 size: 28,
@@ -324,7 +347,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                           );
                         },
                       ),
-                      
+
                       // Badge for chat
                       if (index == 2 && widget.unreadCount > 0)
                         Positioned(
@@ -337,17 +360,16 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                                 colors: [Colors.red, Colors.orange],
                               ),
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.black, width: 2),
                             ),
                             constraints: const BoxConstraints(
                               minWidth: 18,
                               minHeight: 18,
                             ),
                             child: Text(
-                              widget.unreadCount > 99 ? '99+' : widget.unreadCount.toString(),
+                              widget.unreadCount > 99
+                                  ? '99+'
+                                  : widget.unreadCount.toString(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
@@ -364,14 +386,14 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
                     duration: const Duration(milliseconds: 200),
                     style: TextStyle(
                       fontSize: isSelected ? 12 : 10,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                       color: isSelected
                           ? Colors.white
                           : Colors.white.withValues(alpha: 0.5),
                     ),
-                    child: Text(
-                      item.label,
-                    ),
+                    child: Text(item.label),
                   ),
                   const SizedBox(height: 8),
                 ],

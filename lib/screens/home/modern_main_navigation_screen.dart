@@ -69,7 +69,6 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
 
   Future<void> _initializeProviders() async {
     try {
-      print('Initializing providers...');
       // Initialize cache service first
       await CacheService.instance.initialize();
 
@@ -77,10 +76,8 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
       final eventsProvider = context.read<EventsProvider>();
       final chatProvider = context.read<ChatProvider>();
 
-      print('Auth status in home: ${authProvider.isAuthenticated}');
       if (authProvider.isAuthenticated) {
         final isDemoMode = authProvider.isDemoMode;
-        print('Demo mode: $isDemoMode');
 
         // Initialize events provider with demo mode
         await eventsProvider.initialize(demoMode: isDemoMode);
@@ -96,9 +93,7 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
           FirestoreService().setDemoMode(true);
         }
       }
-    } catch (e) {
-      print('Error initializing providers: $e');
-    }
+    } catch (e) {}
   }
 
   void _onNavTap(int index) {

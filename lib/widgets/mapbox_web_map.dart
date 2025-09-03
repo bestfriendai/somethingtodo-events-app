@@ -38,29 +38,27 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
   void _initializeMap() {
     // Create a unique view type
     final String viewType = 'mapbox-map-$_divId';
-    
+
     // Register the HTML element
     // ignore: undefined_prefixed_name
-    ui_web.platformViewRegistry.registerViewFactory(
-      viewType,
-      (int viewId) {
-        final mapElement = html.DivElement()
-          ..id = _divId
-          ..style.width = '100%'
-          ..style.height = '100%';
+    ui_web.platformViewRegistry.registerViewFactory(viewType, (int viewId) {
+      final mapElement = html.DivElement()
+        ..id = _divId
+        ..style.width = '100%'
+        ..style.height = '100%';
 
-        // Initialize map after element is added to DOM
-        Future.delayed(const Duration(milliseconds: 100), () {
-          _createMap();
-        });
+      // Initialize map after element is added to DOM
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _createMap();
+      });
 
-        return mapElement;
-      },
-    );
+      return mapElement;
+    });
   }
 
   void _createMap() {
-    final script = '''
+    final script =
+        '''
       if (typeof mapboxgl !== 'undefined') {
         mapboxgl.accessToken = '${MapboxConfig.accessToken}';
         
@@ -123,7 +121,7 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
     if (widget.currentLatitude == null || widget.currentLongitude == null) {
       return '';
     }
-    
+
     return '''
       {
         const el = document.createElement('div');
@@ -147,7 +145,7 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
     return Stack(
       children: [
         HtmlElementView(viewType: 'mapbox-map-$_divId'),
-        
+
         // Selected event info card
         if (selectedEvent != null)
           Positioned(
@@ -163,9 +161,7 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
   Widget _buildEventCard(Event event) {
     return Card(
       elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () => widget.onEventSelected?.call(event),
         borderRadius: BorderRadius.circular(16),
@@ -179,7 +175,9 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
                 height: 60,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: _getCategoryColor(event.category).withValues(alpha: 0.1),
+                  color: _getCategoryColor(
+                    event.category,
+                  ).withValues(alpha: 0.1),
                 ),
                 child: Center(
                   child: Icon(
@@ -190,7 +188,7 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Event details
               Expanded(
                 child: Column(
@@ -209,26 +207,27 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
                     const SizedBox(height: 4),
                     Text(
                       event.venue.name,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      event.pricing.isFree ? 'FREE' : '\$${event.pricing.price.toStringAsFixed(0)}+',
+                      event.pricing.isFree
+                          ? 'FREE'
+                          : '\$${event.pricing.price.toStringAsFixed(0)}+',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
-                        color: event.pricing.isFree ? Colors.green : AppTheme.primaryColor,
+                        color: event.pricing.isFree
+                            ? Colors.green
+                            : AppTheme.primaryColor,
                       ),
                     ),
                   ],
                 ),
               ),
-              
+
               // Navigate button
               IconButton(
                 icon: const Icon(Icons.directions),
@@ -320,7 +319,8 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
   @override
   void dispose() {
     // Cleanup map instance
-    final script = '''
+    final script =
+        '''
       if (window.mapboxMaps && window.mapboxMaps['$_divId']) {
         window.mapboxMaps['$_divId'].remove();
         delete window.mapboxMaps['$_divId'];

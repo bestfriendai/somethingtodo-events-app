@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'event.freezed.dart';
 part 'event.g.dart';
@@ -196,5 +195,3 @@ extension EventCompatibilityExtension on Event {
   // User-specific properties (these should ideally come from a separate user-event relationship)
   bool get isFavorite => false; // This should be determined by user context
 }
-
-

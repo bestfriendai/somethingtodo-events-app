@@ -10,45 +10,42 @@ class PremiumErrorBoundary extends StatefulWidget {
   final Widget child;
   final Widget Function(FlutterErrorDetails)? errorWidgetBuilder;
   final void Function(FlutterErrorDetails)? onError;
-  
+
   const PremiumErrorBoundary({
     super.key,
     required this.child,
     this.errorWidgetBuilder,
     this.onError,
   });
-  
+
   @override
   State<PremiumErrorBoundary> createState() => _PremiumErrorBoundaryState();
 }
 
 class _PremiumErrorBoundaryState extends State<PremiumErrorBoundary> {
   FlutterErrorDetails? _errorDetails;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Override Flutter's error widget builder for this subtree
     final originalBuilder = ErrorWidget.builder;
-    
+
     ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
       setState(() {
         _errorDetails = errorDetails;
       });
-      
+
       widget.onError?.call(errorDetails);
-      
+
       if (widget.errorWidgetBuilder != null) {
         return widget.errorWidgetBuilder!(errorDetails);
       }
-      
-      return PremiumErrorWidget(
-        error: errorDetails,
-        onRetry: _retry,
-      );
+
+      return PremiumErrorWidget(error: errorDetails, onRetry: _retry);
     };
-    
+
     // Restore original builder when widget is disposed
     addPostFrameCallback(() {
       return () {
@@ -56,7 +53,7 @@ class _PremiumErrorBoundaryState extends State<PremiumErrorBoundary> {
       };
     });
   }
-  
+
   void addPostFrameCallback(VoidCallback Function() callback) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cleanup = callback();
@@ -65,25 +62,22 @@ class _PremiumErrorBoundaryState extends State<PremiumErrorBoundary> {
       }
     });
   }
-  
+
   void _retry() {
     setState(() {
       _errorDetails = null;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (_errorDetails != null) {
       if (widget.errorWidgetBuilder != null) {
         return widget.errorWidgetBuilder!(_errorDetails!);
       }
-      return PremiumErrorWidget(
-        error: _errorDetails!,
-        onRetry: _retry,
-      );
+      return PremiumErrorWidget(error: _errorDetails!, onRetry: _retry);
     }
-    
+
     return widget.child;
   }
 }
@@ -92,14 +86,14 @@ class PremiumErrorWidget extends StatefulWidget {
   final FlutterErrorDetails error;
   final VoidCallback? onRetry;
   final ErrorStyle style;
-  
+
   const PremiumErrorWidget({
     super.key,
     required this.error,
     this.onRetry,
     this.style = ErrorStyle.delightful,
   });
-  
+
   @override
   State<PremiumErrorWidget> createState() => _PremiumErrorWidgetState();
 }
@@ -108,27 +102,27 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
     with TickerProviderStateMixin {
   late AnimationController _glitchController;
   late AnimationController _floatController;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _glitchController = AnimationController(
       duration: const Duration(milliseconds: 150),
       vsync: this,
     );
-    
+
     _floatController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     );
-    
+
     _floatController.repeat(reverse: true);
-    
+
     // Trigger glitch effect periodically
     _startGlitchEffect();
   }
-  
+
   void _startGlitchEffect() {
     Future.delayed(Duration(seconds: 2 + math.Random().nextInt(3)), () {
       if (mounted) {
@@ -139,14 +133,14 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
       }
     });
   }
-  
+
   @override
   void dispose() {
     _glitchController.dispose();
     _floatController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     switch (widget.style) {
@@ -160,7 +154,7 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
         return _buildCosmicError();
     }
   }
-  
+
   Widget _buildDelightfulError() {
     return Container(
       decoration: BoxDecoration(
@@ -194,10 +188,17 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                       children: [
                         // Floating particles
                         ...List.generate(8, (index) {
-                          final angle = (index * 45.0) * (math.pi / 180) + 
+                          final angle =
+                              (index * 45.0) * (math.pi / 180) +
                               (_floatController.value * 2 * math.pi);
-                          final radius = 50 + (10 * math.sin(_floatController.value * 2 * math.pi + index));
-                          
+                          final radius =
+                              50 +
+                              (10 *
+                                  math.sin(
+                                    _floatController.value * 2 * math.pi +
+                                        index,
+                                  ));
+
                           return Transform.translate(
                             offset: Offset(
                               radius * math.cos(angle),
@@ -208,10 +209,14 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                               height: 4,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: ModernTheme.errorColor.withValues(alpha: 0.6),
+                                color: ModernTheme.errorColor.withValues(
+                                  alpha: 0.6,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: ModernTheme.errorColor.withValues(alpha: 0.3),
+                                    color: ModernTheme.errorColor.withValues(
+                                      alpha: 0.3,
+                                    ),
                                     blurRadius: 4,
                                   ),
                                 ],
@@ -219,7 +224,7 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                             ),
                           );
                         }),
-                        
+
                         // Main error icon
                         Container(
                           width: 80,
@@ -234,7 +239,9 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: ModernTheme.errorColor.withValues(alpha: 0.4),
+                                color: ModernTheme.errorColor.withValues(
+                                  alpha: 0.4,
+                                ),
                                 blurRadius: 20,
                                 spreadRadius: 2,
                               ),
@@ -251,9 +258,9 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                   );
                 },
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Error title
               PremiumTextAnimator(
                 text: 'Oops! Something went sideways',
@@ -264,12 +271,13 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                 animationType: TextAnimationType.fadeIn,
                 delay: const Duration(milliseconds: 300),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Error description
               PremiumTextAnimator(
-                text: 'Don\'t worry, even the best apps have bad days. Let\'s try to fix this together!',
+                text:
+                    'Don\'t worry, even the best apps have bad days. Let\'s try to fix this together!',
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Colors.white70,
                   height: 1.5,
@@ -277,9 +285,9 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                 animationType: TextAnimationType.slideUp,
                 delay: const Duration(milliseconds: 500),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Action buttons
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -302,17 +310,14 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Error details (expandable)
               ExpansionTile(
                 title: const Text(
                   'Technical Details',
-                  style: TextStyle(
-                    color: Colors.white60,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.white60, fontSize: 14),
                 ),
                 iconColor: Colors.white60,
                 collapsedIconColor: Colors.white60,
@@ -342,12 +347,9 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
           ),
         ),
       ),
-    )
-    .animate()
-    .fadeIn(duration: 800.ms)
-    .slideY(begin: 0.2, curve: Curves.easeOut);
+    ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, curve: Curves.easeOut);
   }
-  
+
   Widget _buildMinimalError() {
     return PremiumEmptyState(
       title: 'Something went wrong',
@@ -359,7 +361,7 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
       showFloatingElements: false,
     );
   }
-  
+
   Widget _buildGlitchError() {
     return AnimatedBuilder(
       animation: _glitchController,
@@ -390,15 +392,21 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Colors.red.withValues(alpha: _glitchController.value * 0.3),
-                            Colors.blue.withValues(alpha: _glitchController.value * 0.2),
-                            Colors.green.withValues(alpha: _glitchController.value * 0.1),
+                            Colors.red.withValues(
+                              alpha: _glitchController.value * 0.3,
+                            ),
+                            Colors.blue.withValues(
+                              alpha: _glitchController.value * 0.2,
+                            ),
+                            Colors.green.withValues(
+                              alpha: _glitchController.value * 0.1,
+                            ),
                           ],
                         ),
                       ),
                     ),
                   ),
-                
+
                 // Content
                 _buildDelightfulError(),
               ],
@@ -408,36 +416,28 @@ class _PremiumErrorWidgetState extends State<PremiumErrorWidget>
       },
     );
   }
-  
+
   Widget _buildCosmicError() {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0A0A0A),
-            Color(0xFF1A0A1A),
-            Color(0xFF0A0A0A),
-          ],
+          colors: [Color(0xFF0A0A0A), Color(0xFF1A0A1A), Color(0xFF0A0A0A)],
         ),
       ),
       child: Stack(
         children: [
           // Stars background
-          Positioned.fill(
-            child: CustomPaint(
-              painter: StarFieldPainter(),
-            ),
-          ),
-          
+          Positioned.fill(child: CustomPaint(painter: StarFieldPainter())),
+
           // Main content
           _buildDelightfulError(),
         ],
       ),
     );
   }
-  
+
   void _reportIssue(BuildContext context) {
     showDialog(
       context: context,
@@ -468,16 +468,16 @@ class StarFieldPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = Colors.white.withValues(alpha: 0.6);
     final random = math.Random(42); // Fixed seed for consistent stars
-    
+
     for (int i = 0; i < 100; i++) {
       final x = random.nextDouble() * size.width;
       final y = random.nextDouble() * size.height;
       final radius = random.nextDouble() * 2;
-      
+
       canvas.drawCircle(Offset(x, y), radius, paint);
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
@@ -485,18 +485,15 @@ class StarFieldPainter extends CustomPainter {
 class NetworkErrorWidget extends StatelessWidget {
   final VoidCallback? onRetry;
   final String? customMessage;
-  
-  const NetworkErrorWidget({
-    super.key,
-    this.onRetry,
-    this.customMessage,
-  });
-  
+
+  const NetworkErrorWidget({super.key, this.onRetry, this.customMessage});
+
   @override
   Widget build(BuildContext context) {
     return PremiumEmptyState(
       title: 'No Internet Connection',
-      subtitle: customMessage ?? 
+      subtitle:
+          customMessage ??
           'It looks like you\'re offline. Check your connection and try again.',
       icon: Icons.wifi_off_rounded,
       actionText: 'Retry',
@@ -510,18 +507,14 @@ class NetworkErrorWidget extends StatelessWidget {
 class ServerErrorWidget extends StatelessWidget {
   final VoidCallback? onRetry;
   final int? statusCode;
-  
-  const ServerErrorWidget({
-    super.key,
-    this.onRetry,
-    this.statusCode,
-  });
-  
+
+  const ServerErrorWidget({super.key, this.onRetry, this.statusCode});
+
   @override
   Widget build(BuildContext context) {
     String title = 'Server Error';
     String subtitle = 'Our servers are having a moment. Please try again.';
-    
+
     if (statusCode != null) {
       switch (statusCode) {
         case 404:
@@ -538,7 +531,7 @@ class ServerErrorWidget extends StatelessWidget {
           break;
       }
     }
-    
+
     return PremiumEmptyState(
       title: title,
       subtitle: subtitle,
@@ -550,9 +543,4 @@ class ServerErrorWidget extends StatelessWidget {
   }
 }
 
-enum ErrorStyle {
-  delightful,
-  minimal,
-  glitch,
-  cosmic,
-}
+enum ErrorStyle { delightful, minimal, glitch, cosmic }

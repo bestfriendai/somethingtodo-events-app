@@ -123,9 +123,9 @@ class _MiniEventCardState extends State<MiniEventCard>
                 duration: const Duration(milliseconds: 200),
                 transform: _showPreview
                     ? (Matrix4.identity()
-                      ..setEntry(3, 2, 0.001)
-                      ..rotateX(-0.05)
-                      ..scale(1.05))
+                        ..setEntry(3, 2, 0.001)
+                        ..rotateX(-0.05)
+                        ..scale(1.05))
                     : Matrix4.identity(),
                 child: Slidable(
                   key: ValueKey(widget.id),
@@ -193,14 +193,16 @@ class _MiniEventCardState extends State<MiniEventCard>
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.purpleAccent.withValues(alpha: 0.3),
+                                  color: Colors.purpleAccent.withValues(
+                                    alpha: 0.3,
+                                  ),
                                   blurRadius: 15,
                                   spreadRadius: 2,
                                 ),
                               ],
                             ),
                           ),
-                        
+
                         // Main card content
                         ClipRRect(
                           borderRadius: BorderRadius.circular(16),
@@ -234,34 +236,43 @@ class _MiniEventCardState extends State<MiniEventCard>
                                         Hero(
                                           tag: 'event-image-${widget.id}',
                                           child: ClipRRect(
-                                            borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(15),
-                                              bottomLeft: Radius.circular(15),
-                                            ),
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                  topLeft: Radius.circular(15),
+                                                  bottomLeft: Radius.circular(
+                                                    15,
+                                                  ),
+                                                ),
                                             child: CachedNetworkImage(
                                               imageUrl: widget.imageUrl,
                                               fit: BoxFit.cover,
                                               placeholder: (context, url) =>
                                                   Shimmer.fromColors(
-                                                baseColor: Colors.grey[300]!,
-                                                highlightColor: Colors.grey[100]!,
-                                                child: Container(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              errorWidget: (context, url, error) =>
-                                                  Container(
-                                                color: Colors.grey[300],
-                                                child: const Icon(
-                                                  Icons.image_not_supported,
-                                                  size: 30,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
+                                                    baseColor:
+                                                        Colors.grey[300]!,
+                                                    highlightColor:
+                                                        Colors.grey[100]!,
+                                                    child: Container(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                              errorWidget:
+                                                  (
+                                                    context,
+                                                    url,
+                                                    error,
+                                                  ) => Container(
+                                                    color: Colors.grey[300],
+                                                    child: const Icon(
+                                                      Icons.image_not_supported,
+                                                      size: 30,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
                                             ),
                                           ),
                                         ),
-                                        
+
                                         // Category overlay
                                         Positioned(
                                           top: 8,
@@ -273,8 +284,8 @@ class _MiniEventCardState extends State<MiniEventCard>
                                             ),
                                             decoration: BoxDecoration(
                                               color: _getCategoryColor(
-                                                      widget.category)
-                                                  .withValues(alpha: 0.9),
+                                                widget.category,
+                                              ).withValues(alpha: 0.9),
                                               borderRadius:
                                                   BorderRadius.circular(12),
                                             ),
@@ -292,7 +303,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                                       ],
                                     ),
                                   ),
-                                  
+
                                   // Content
                                   Expanded(
                                     child: Padding(
@@ -314,45 +325,55 @@ class _MiniEventCardState extends State<MiniEventCard>
                                                     color: Colors.white,
                                                   ),
                                                   maxLines: 1,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                               if (widget.isPremium)
                                                 Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 8),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 6,
-                                                    vertical: 2,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    gradient:
-                                                        const LinearGradient(
-                                                      colors: [
-                                                        Colors.amber,
-                                                        Colors.orange,
-                                                      ],
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                            left: 8,
+                                                          ),
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 6,
+                                                            vertical: 2,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            const LinearGradient(
+                                                              colors: [
+                                                                Colors.amber,
+                                                                Colors.orange,
+                                                              ],
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
+                                                      ),
+                                                      child: const Text(
+                                                        'PRO',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    )
+                                                    .animate(
+                                                      onPlay: (controller) =>
+                                                          controller.repeat(),
+                                                    )
+                                                    .shimmer(
+                                                      duration: 2.seconds,
+                                                      color: Colors.white
+                                                          .withValues(
+                                                            alpha: 0.3,
+                                                          ),
                                                     ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(8),
-                                                  ),
-                                                  child: const Text(
-                                                    'PRO',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 10,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ).animate(
-                                                  onPlay: (controller) =>
-                                                      controller.repeat(),
-                                                ).shimmer(
-                                                  duration: 2.seconds,
-                                                  color: Colors.white
-                                                      .withValues(alpha: 0.3),
-                                                ),
                                             ],
                                           ),
                                           const SizedBox(height: 4),
@@ -360,8 +381,9 @@ class _MiniEventCardState extends State<MiniEventCard>
                                             widget.subtitle,
                                             style: TextStyle(
                                               fontSize: 13,
-                                              color:
-                                                  Colors.white.withValues(alpha: 0.7),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.7,
+                                              ),
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -372,8 +394,9 @@ class _MiniEventCardState extends State<MiniEventCard>
                                               Icon(
                                                 Icons.access_time,
                                                 size: 14,
-                                                color: Colors.white
-                                                    .withValues(alpha: 0.6),
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.6,
+                                                ),
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
@@ -387,19 +410,25 @@ class _MiniEventCardState extends State<MiniEventCard>
                                               if (widget.price != null) ...[
                                                 const SizedBox(width: 12),
                                                 Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 8,
-                                                    vertical: 2,
-                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 8,
+                                                        vertical: 2,
+                                                      ),
                                                   decoration: BoxDecoration(
                                                     color: widget.price == 0
                                                         ? Colors.green
-                                                            .withValues(alpha: 0.8)
+                                                              .withValues(
+                                                                alpha: 0.8,
+                                                              )
                                                         : Colors.blue
-                                                            .withValues(alpha: 0.8),
+                                                              .withValues(
+                                                                alpha: 0.8,
+                                                              ),
                                                     borderRadius:
-                                                        BorderRadius.circular(10),
+                                                        BorderRadius.circular(
+                                                          10,
+                                                        ),
                                                   ),
                                                   child: Text(
                                                     widget.price == 0
@@ -408,7 +437,8 @@ class _MiniEventCardState extends State<MiniEventCard>
                                                     style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 11,
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ),
@@ -419,28 +449,29 @@ class _MiniEventCardState extends State<MiniEventCard>
                                       ),
                                     ),
                                   ),
-                                  
+
                                   // Save indicator
                                   if (widget.isSaved)
                                     Padding(
                                       padding: const EdgeInsets.only(right: 12),
-                                      child: Icon(
-                                        Icons.bookmark,
-                                        color: Colors.amber,
-                                        size: 20,
-                                      ).animate().fadeIn().scale(
-                                        begin: const Offset(0, 0),
-                                        end: const Offset(1, 1),
-                                        duration: 300.ms,
-                                        curve: Curves.elasticOut,
-                                      ),
+                                      child:
+                                          Icon(
+                                            Icons.bookmark,
+                                            color: Colors.amber,
+                                            size: 20,
+                                          ).animate().fadeIn().scale(
+                                            begin: const Offset(0, 0),
+                                            end: const Offset(1, 1),
+                                            duration: 300.ms,
+                                            curve: Curves.elasticOut,
+                                          ),
                                     ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                        
+
                         // Preview overlay
                         if (_showPreview)
                           Container(

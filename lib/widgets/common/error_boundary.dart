@@ -7,7 +7,7 @@ class ErrorBoundary extends StatefulWidget {
   final Widget child;
   final Widget? fallbackWidget;
   final String? errorContext;
-  
+
   const ErrorBoundary({
     super.key,
     required this.child,
@@ -26,7 +26,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
   @override
   void initState() {
     super.initState();
-    
+
     // Set up error handling for this boundary
     FlutterError.onError = (FlutterErrorDetails details) {
       // Log the error for debugging
@@ -36,7 +36,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
         error: details.exception,
         stackTrace: details.stack,
       );
-      
+
       // Update state to show error UI
       if (mounted) {
         setState(() {
@@ -52,7 +52,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
     if (hasError) {
       return widget.fallbackWidget ?? _buildDefaultErrorWidget();
     }
-    
+
     return widget.child;
   }
 
@@ -105,10 +105,9 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                     OutlinedButton.icon(
                       onPressed: () {
                         // Navigate back to home or restart app
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/',
-                          (route) => false,
-                        );
+                        Navigator.of(
+                          context,
+                        ).pushNamedAndRemoveUntil('/', (route) => false);
                       },
                       icon: const Icon(Icons.home),
                       label: const Text('Go Home'),
@@ -135,7 +134,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
 class WidgetErrorBoundary extends StatelessWidget {
   final Widget child;
   final String componentName;
-  
+
   const WidgetErrorBoundary({
     super.key,
     required this.child,
@@ -149,7 +148,9 @@ class WidgetErrorBoundary extends StatelessWidget {
       fallbackWidget: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.1),
+          color: Theme.of(
+            context,
+          ).colorScheme.errorContainer.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3),

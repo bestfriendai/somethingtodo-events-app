@@ -36,7 +36,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
       duration: const Duration(seconds: 20),
       vsync: this,
     )..repeat();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -54,7 +54,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
     final authProvider = context.read<AuthProvider>();
     final user = authProvider.currentUser;
     final preferences = user?.preferences;
-    
+
     if (preferences != null) {
       setState(() {
         _notificationsEnabled = preferences.notificationsEnabled;
@@ -72,15 +72,13 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
     final authProvider = context.read<AuthProvider>();
     // In a real app, you would save these settings to the backend
     // await authProvider.updatePreferences(...)
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Settings saved successfully'),
         backgroundColor: Colors.green.withValues(alpha: 0.8),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -95,7 +93,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
         children: [
           // Animated floating orbs background
           _buildFloatingOrbs(),
-          
+
           // Main content
           SafeArea(
             child: SingleChildScrollView(
@@ -106,7 +104,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    
+
                     _buildGlassSection(
                       'Notifications',
                       Icons.notifications_outlined,
@@ -115,7 +113,8 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                           'Push Notifications',
                           'Receive notifications about events',
                           _notificationsEnabled,
-                          (value) => setState(() => _notificationsEnabled = value),
+                          (value) =>
+                              setState(() => _notificationsEnabled = value),
                         ),
                         _buildGlassSwitchTile(
                           'Marketing Emails',
@@ -125,9 +124,9 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     _buildGlassSection(
                       'Location & Privacy',
                       Icons.location_on_outlined,
@@ -149,29 +148,34 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
-                    _buildGlassSection(
-                      'Appearance',
-                      Icons.palette_outlined,
-                      [
-                        _buildGlassDropdownTile(
-                          'Theme',
-                          'Choose your preferred theme',
-                          _selectedTheme,
-                          [
-                            const DropdownMenuItem(value: 'light', child: Text('Light')),
-                            const DropdownMenuItem(value: 'dark', child: Text('Dark')),
-                            const DropdownMenuItem(value: 'system', child: Text('System')),
-                          ],
-                          (value) => setState(() => _selectedTheme = value!),
-                        ),
-                      ],
-                    ),
-                    
+
+                    _buildGlassSection('Appearance', Icons.palette_outlined, [
+                      _buildGlassDropdownTile(
+                        'Theme',
+                        'Choose your preferred theme',
+                        _selectedTheme,
+                        [
+                          const DropdownMenuItem(
+                            value: 'light',
+                            child: Text('Light'),
+                          ),
+                          const DropdownMenuItem(
+                            value: 'dark',
+                            child: Text('Dark'),
+                          ),
+                          const DropdownMenuItem(
+                            value: 'system',
+                            child: Text('System'),
+                          ),
+                        ],
+                        (value) => setState(() => _selectedTheme = value!),
+                      ),
+                    ]),
+
                     const SizedBox(height: 24),
-                    
+
                     _buildGlassSection(
                       'Event Preferences',
                       Icons.tune_outlined,
@@ -181,9 +185,18 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                           'Default price filter for events',
                           _pricePreference,
                           [
-                            const DropdownMenuItem(value: 'any', child: Text('Any Price')),
-                            const DropdownMenuItem(value: 'free', child: Text('Free Only')),
-                            const DropdownMenuItem(value: 'paid', child: Text('Paid Only')),
+                            const DropdownMenuItem(
+                              value: 'any',
+                              child: Text('Any Price'),
+                            ),
+                            const DropdownMenuItem(
+                              value: 'free',
+                              child: Text('Free Only'),
+                            ),
+                            const DropdownMenuItem(
+                              value: 'paid',
+                              child: Text('Paid Only'),
+                            ),
                           ],
                           (value) => setState(() => _pricePreference = value!),
                         ),
@@ -195,9 +208,9 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     _buildGlassSection(
                       'Account',
                       Icons.account_circle_outlined,
@@ -217,40 +230,36 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
-                    _buildGlassSection(
-                      'About',
-                      Icons.info_outline,
-                      [
-                        _buildGlassListTile(
-                          'Terms of Service',
-                          'Read our terms and conditions',
-                          Icons.description_outlined,
-                          () => _showTermsDialog(),
-                        ),
-                        _buildGlassListTile(
-                          'Privacy Policy',
-                          'How we handle your data',
-                          Icons.privacy_tip_outlined,
-                          () => _showPrivacyDialog(),
-                        ),
-                        _buildGlassListTile(
-                          'Contact Support',
-                          'Get help or report issues',
-                          Icons.support_outlined,
-                          () => _contactSupport(),
-                        ),
-                        _buildGlassListTile(
-                          'App Version',
-                          'v1.0.0 (Build 1)',
-                          Icons.info_outline,
-                          null,
-                        ),
-                      ],
-                    ),
-                    
+
+                    _buildGlassSection('About', Icons.info_outline, [
+                      _buildGlassListTile(
+                        'Terms of Service',
+                        'Read our terms and conditions',
+                        Icons.description_outlined,
+                        () => _showTermsDialog(),
+                      ),
+                      _buildGlassListTile(
+                        'Privacy Policy',
+                        'How we handle your data',
+                        Icons.privacy_tip_outlined,
+                        () => _showPrivacyDialog(),
+                      ),
+                      _buildGlassListTile(
+                        'Contact Support',
+                        'Get help or report issues',
+                        Icons.support_outlined,
+                        () => _contactSupport(),
+                      ),
+                      _buildGlassListTile(
+                        'App Version',
+                        'v1.0.0 (Build 1)',
+                        Icons.info_outline,
+                        null,
+                      ),
+                    ]),
+
                     const SizedBox(height: 32),
                   ],
                 ),
@@ -363,8 +372,12 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
           children: [
             // Large primary orb
             Positioned(
-              left: -50 + (100 * math.sin(_orbController.value * 2 * math.pi * 0.3)),
-              top: 100 + (50 * math.cos(_orbController.value * 2 * math.pi * 0.2)),
+              left:
+                  -50 +
+                  (100 * math.sin(_orbController.value * 2 * math.pi * 0.3)),
+              top:
+                  100 +
+                  (50 * math.cos(_orbController.value * 2 * math.pi * 0.2)),
               child: Container(
                 width: 150,
                 height: 150,
@@ -379,11 +392,15 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 ),
               ),
             ),
-            
+
             // Secondary orb
             Positioned(
-              right: -30 + (80 * math.cos(_orbController.value * 2 * math.pi * 0.4)),
-              top: 200 + (60 * math.sin(_orbController.value * 2 * math.pi * 0.3)),
+              right:
+                  -30 +
+                  (80 * math.cos(_orbController.value * 2 * math.pi * 0.4)),
+              top:
+                  200 +
+                  (60 * math.sin(_orbController.value * 2 * math.pi * 0.3)),
               child: Container(
                 width: 100,
                 height: 100,
@@ -398,11 +415,15 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 ),
               ),
             ),
-            
+
             // Small accent orb
             Positioned(
-              left: MediaQuery.of(context).size.width / 2 + (40 * math.sin(_orbController.value * 2 * math.pi * 0.6)),
-              bottom: 150 + (30 * math.cos(_orbController.value * 2 * math.pi * 0.5)),
+              left:
+                  MediaQuery.of(context).size.width / 2 +
+                  (40 * math.sin(_orbController.value * 2 * math.pi * 0.6)),
+              bottom:
+                  150 +
+                  (30 * math.cos(_orbController.value * 2 * math.pi * 0.5)),
               child: Container(
                 width: 80,
                 height: 80,
@@ -423,7 +444,11 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
     );
   }
 
-  Widget _buildGlassSection(String title, IconData icon, List<Widget> children) {
+  Widget _buildGlassSection(
+    String title,
+    IconData icon,
+    List<Widget> children,
+  ) {
     return GlassmorphicContainer(
       width: double.infinity,
       height: 60,
@@ -481,25 +506,27 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
               ],
             ),
           ),
-          ...children.map((child) => 
-            child == children.last ? child : Column(
-              children: [
-                child, 
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  height: 1,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        Colors.white.withValues(alpha: 0.1),
-                        Colors.transparent,
-                      ],
-                    ),
+          ...children.map(
+            (child) => child == children.last
+                ? child
+                : Column(
+                    children: [
+                      child,
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        height: 1,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              Colors.white.withValues(alpha: 0.1),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
           ),
         ],
       ),
@@ -701,23 +728,25 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                   Colors.white.withValues(alpha: 0.05),
                 ],
               ),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-              ),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<T>(
                 value: value,
-                items: items.map((item) => DropdownMenuItem<T>(
-                  value: item.value,
-                  child: DefaultTextStyle(
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                    child: item.child!,
-                  ),
-                )).toList(),
+                items: items
+                    .map(
+                      (item) => DropdownMenuItem<T>(
+                        value: item.value,
+                        child: DefaultTextStyle(
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                          child: item.child!,
+                        ),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (newValue) {
                   HapticFeedback.selectionClick();
                   onChanged(newValue);
@@ -767,7 +796,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                 ),
               ),
               child: Icon(
-                icon, 
+                icon,
                 color: textColor ?? Colors.white.withValues(alpha: 0.9),
                 size: 20,
               ),
@@ -860,7 +889,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
     final oldPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => _buildGlassDialog(
@@ -932,10 +961,15 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
         ),
         [
           _buildGlassDialogButton('Cancel', () => Navigator.pop(context)),
-          _buildGlassDialogButton('Delete', () {
-            Navigator.pop(context);
-            _showDeleteConfirmationDialog();
-          }, isPrimary: true, isDestructive: true),
+          _buildGlassDialogButton(
+            'Delete',
+            () {
+              Navigator.pop(context);
+              _showDeleteConfirmationDialog();
+            },
+            isPrimary: true,
+            isDestructive: true,
+          ),
         ],
       ),
     );
@@ -943,7 +977,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
 
   void _showDeleteConfirmationDialog() {
     final passwordController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => _buildGlassDialog(
@@ -966,19 +1000,24 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
         ),
         [
           _buildGlassDialogButton('Cancel', () => Navigator.pop(context)),
-          _buildGlassDialogButton('Confirm Delete', () {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Account deletion initiated'),
-                backgroundColor: Colors.red.withValues(alpha: 0.8),
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+          _buildGlassDialogButton(
+            'Confirm Delete',
+            () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Account deletion initiated'),
+                  backgroundColor: Colors.red.withValues(alpha: 0.8),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-            );
-          }, isPrimary: true, isDestructive: true),
+              );
+            },
+            isPrimary: true,
+            isDestructive: true,
+          ),
         ],
       ),
     );
@@ -995,9 +1034,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
             style: TextStyle(color: Colors.white),
           ),
         ),
-        [
-          _buildGlassDialogButton('Close', () => Navigator.pop(context)),
-        ],
+        [_buildGlassDialogButton('Close', () => Navigator.pop(context))],
       ),
     );
   }
@@ -1013,9 +1050,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
             style: TextStyle(color: Colors.white),
           ),
         ),
-        [
-          _buildGlassDialogButton('Close', () => Navigator.pop(context)),
-        ],
+        [_buildGlassDialogButton('Close', () => Navigator.pop(context))],
       ),
     );
   }
@@ -1111,10 +1146,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
               const SizedBox(height: 16),
               content,
               const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: actions,
-              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: actions),
             ],
           ),
         ),
@@ -1123,7 +1155,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
   }
 
   Widget _buildGlassDialogButton(
-    String text, 
+    String text,
     VoidCallback onPressed, {
     bool isPrimary = false,
     bool isDestructive = false,
@@ -1159,7 +1191,8 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                   ),
             border: Border.all(
               color: isPrimary
-                  ? (isDestructive ? Colors.red : AppTheme.primaryColor).withValues(alpha: 0.3)
+                  ? (isDestructive ? Colors.red : AppTheme.primaryColor)
+                        .withValues(alpha: 0.3)
                   : Colors.white.withValues(alpha: 0.2),
             ),
           ),
@@ -1191,9 +1224,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
             Colors.white.withValues(alpha: 0.05),
           ],
         ),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: TextField(
         controller: controller,
@@ -1204,7 +1235,10 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
           labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
           prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.7)),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
         ),
       ),
     );

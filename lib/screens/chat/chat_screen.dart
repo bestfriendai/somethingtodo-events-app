@@ -21,18 +21,17 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen>
-    with TickerProviderStateMixin {
+class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _messageFocusNode = FocusNode();
-  
+
   late AnimationController _typingAnimationController;
   late AnimationController _messageAnimationController;
-  
+
   bool _isKeyboardVisible = false;
   ChatSession? _currentSession;
-  
+
   final List<String> _quickActions = [
     '🎵 Music events near me',
     '🍽️ Food festivals',
@@ -45,21 +44,21 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _typingAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat();
-    
+
     _messageAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeChat();
     });
-    
+
     // Listen to keyboard visibility
     _messageFocusNode.addListener(() {
       if (_messageFocusNode.hasFocus != _isKeyboardVisible) {
@@ -84,9 +83,9 @@ class _ChatScreenState extends State<ChatScreen>
     try {
       final chatProvider = context.read<ChatProvider>();
       final authProvider = context.read<AuthProvider>();
-      
+
       if (authProvider.currentUser == null) return;
-      
+
       if (widget.sessionId != null) {
         _currentSession = await chatProvider.getSession(widget.sessionId!);
       } else {
@@ -97,16 +96,15 @@ class _ChatScreenState extends State<ChatScreen>
           title: 'New Chat',
         );
       }
-      
+
       if (_currentSession != null && _currentSession!.messages.isEmpty) {
         // Send welcome message
         await _sendWelcomeMessage();
       }
-      
+
       setState(() {});
       _scrollToBottom();
     } catch (e) {
-      print('Error initializing chat: $e');
       // Continue without chat session - app should still work
       setState(() {});
     }
@@ -115,37 +113,38 @@ class _ChatScreenState extends State<ChatScreen>
   Future<void> _sendWelcomeMessage() async {
     final chatProvider = context.read<ChatProvider>();
     final authProvider = context.read<AuthProvider>();
-    
+
     if (_currentSession == null || authProvider.currentUser == null) return;
-    
+
     final welcomeMessage = ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       sessionId: _currentSession!.id,
       role: MessageRole.assistant,
-      content: 'Hi ${authProvider.currentUser!.displayName?.split(' ').first ?? 'there'}! 👋\n\n'
-                'I\'m your personal event discovery assistant. I can help you find amazing events based on your interests, location, and preferences.\n\n'
-                'What kind of events are you looking for today?',
+      content:
+          'Hi ${authProvider.currentUser!.displayName?.split(' ').first ?? 'there'}! 👋\n\n'
+          'I\'m your personal event discovery assistant. I can help you find amazing events based on your interests, location, and preferences.\n\n'
+          'What kind of events are you looking for today?',
       sender: MessageSender.assistant,
       timestamp: DateTime.now(),
     );
-    
+
     await chatProvider.addMessage(welcomeMessage);
   }
 
   Future<void> _sendMessage([String? predefinedMessage]) async {
     final message = predefinedMessage ?? _messageController.text.trim();
     if (message.isEmpty) return;
-    
+
     final chatProvider = context.read<ChatProvider>();
     final authProvider = context.read<AuthProvider>();
-    
+
     if (_currentSession == null || authProvider.currentUser == null) return;
-    
+
     // Clear input if it's user typing
     if (predefinedMessage == null) {
       _messageController.clear();
     }
-    
+
     // Add user message
     final userMessage = ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -155,12 +154,12 @@ class _ChatScreenState extends State<ChatScreen>
       sender: MessageSender.user,
       timestamp: DateTime.now(),
     );
-    
+
     await chatProvider.addMessage(userMessage);
-    
+
     // Scroll to bottom
     _scrollToBottom();
-    
+
     // Generate AI response
     await _generateAIResponse(message);
   }
@@ -168,159 +167,204 @@ class _ChatScreenState extends State<ChatScreen>
   Future<void> _generateAIResponse(String userMessage) async {
     final chatProvider = context.read<ChatProvider>();
     final eventsProvider = context.read<EventsProvider>();
-    
+
     if (_currentSession == null) return;
-    
+
     // Show typing indicator
     chatProvider.setTyping(true);
     setState(() {});
-    
+
     // Simulate AI thinking time
     await Future.delayed(const Duration(milliseconds: 1500));
-    
+
     // Generate response based on user message
     String responseText = '';
     List<EventRecommendation> recommendations = [];
-    
+
     final lowerMessage = userMessage.toLowerCase();
-    
+
     if (lowerMessage.contains('music') || lowerMessage.contains('🎵')) {
-      responseText = 'Great choice! Here are some amazing music events I found for you:';
-      final musicEvents = eventsProvider.getEventsByCategory(EventCategory.music);
-      recommendations = musicEvents.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 0.9,
-          reasons: ['Based on your interest in music events'],
-        )
-      ).toList();
+      responseText =
+          'Great choice! Here are some amazing music events I found for you:';
+      final musicEvents = eventsProvider.getEventsByCategory(
+        EventCategory.music,
+      );
+      recommendations = musicEvents
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 0.9,
+              reasons: ['Based on your interest in music events'],
+            ),
+          )
+          .toList();
     } else if (lowerMessage.contains('food') || lowerMessage.contains('🍽️')) {
-      responseText = 'Delicious! I\'ve found some fantastic food events for you:';
+      responseText =
+          'Delicious! I\'ve found some fantastic food events for you:';
       final foodEvents = eventsProvider.getEventsByCategory(EventCategory.food);
-      recommendations = foodEvents.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 0.85,
-          reasons: ['Perfect for food enthusiasts'],
-        )
-      ).toList();
+      recommendations = foodEvents
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 0.85,
+              reasons: ['Perfect for food enthusiasts'],
+            ),
+          )
+          .toList();
     } else if (lowerMessage.contains('art') || lowerMessage.contains('🎨')) {
       responseText = 'Wonderful! Here are some inspiring art events:';
       final artEvents = eventsProvider.getEventsByCategory(EventCategory.arts);
-      recommendations = artEvents.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 0.88,
-          reasons: ['Great for art and culture lovers'],
-        )
-      ).toList();
+      recommendations = artEvents
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 0.88,
+              reasons: ['Great for art and culture lovers'],
+            ),
+          )
+          .toList();
     } else if (lowerMessage.contains('sport') || lowerMessage.contains('⚽')) {
       responseText = 'Let\'s get active! Here are some exciting sports events:';
-      final sportsEvents = eventsProvider.getEventsByCategory(EventCategory.sports);
-      recommendations = sportsEvents.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 0.92,
-          reasons: ['Perfect for sports enthusiasts'],
-        )
-      ).toList();
-    } else if (lowerMessage.contains('free') || lowerMessage.contains('budget')) {
-      responseText = 'I understand budget is important! Here are some amazing free events:';
+      final sportsEvents = eventsProvider.getEventsByCategory(
+        EventCategory.sports,
+      );
+      recommendations = sportsEvents
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 0.92,
+              reasons: ['Perfect for sports enthusiasts'],
+            ),
+          )
+          .toList();
+    } else if (lowerMessage.contains('free') ||
+        lowerMessage.contains('budget')) {
+      responseText =
+          'I understand budget is important! Here are some amazing free events:';
       final freeEvents = eventsProvider.events
           .where((event) => event.pricing.isFree)
           .toList();
-      recommendations = freeEvents.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 0.95,
-          reasons: ['Free events that match your budget'],
-        )
-      ).toList();
-    } else if (lowerMessage.contains('tonight') || lowerMessage.contains('today')) {
-      responseText = 'Looking for something to do right now? Here are today\'s events:';
+      recommendations = freeEvents
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 0.95,
+              reasons: ['Free events that match your budget'],
+            ),
+          )
+          .toList();
+    } else if (lowerMessage.contains('tonight') ||
+        lowerMessage.contains('today')) {
+      responseText =
+          'Looking for something to do right now? Here are today\'s events:';
       final today = DateTime.now();
       final todayEvents = eventsProvider.events
-          .where((event) => 
-            event.startDateTime.year == today.year &&
-            event.startDateTime.month == today.month &&
-            event.startDateTime.day == today.day)
+          .where(
+            (event) =>
+                event.startDateTime.year == today.year &&
+                event.startDateTime.month == today.month &&
+                event.startDateTime.day == today.day,
+          )
           .toList();
-      recommendations = todayEvents.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 1.0,
-          reasons: ['Happening today!'],
-        )
-      ).toList();
-    } else if (lowerMessage.contains('weekend') || lowerMessage.contains('saturday') || lowerMessage.contains('sunday')) {
-      responseText = 'Weekend plans coming up! Here are some great weekend events:';
+      recommendations = todayEvents
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 1.0,
+              reasons: ['Happening today!'],
+            ),
+          )
+          .toList();
+    } else if (lowerMessage.contains('weekend') ||
+        lowerMessage.contains('saturday') ||
+        lowerMessage.contains('sunday')) {
+      responseText =
+          'Weekend plans coming up! Here are some great weekend events:';
       final weekendEvents = eventsProvider.getEventsThisWeekend();
-      recommendations = weekendEvents.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 0.90,
-          reasons: ['Perfect for your weekend'],
-        )
-      ).toList();
+      recommendations = weekendEvents
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 0.90,
+              reasons: ['Perfect for your weekend'],
+            ),
+          )
+          .toList();
     } else {
-      responseText = 'I\'d love to help you find the perfect events! Here are some popular events happening near you:';
+      responseText =
+          'I\'d love to help you find the perfect events! Here are some popular events happening near you:';
       final popularEvents = eventsProvider.events
           .where((event) => event.attendeeCount > 50)
           .toList();
-      recommendations = popularEvents.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 0.8,
-          reasons: ['Popular events in your area'],
-        )
-      ).toList();
+      recommendations = popularEvents
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 0.8,
+              reasons: ['Popular events in your area'],
+            ),
+          )
+          .toList();
     }
-    
+
     if (recommendations.isEmpty) {
-      responseText = 'I\'m still learning about events in your area! Here are some general recommendations:';
-      recommendations = eventsProvider.events.take(3).map((event) => 
-        EventRecommendation(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          eventId: event.id,
-          title: event.title,
-          description: event.description,
-          confidenceScore: 0.7,
-          reasons: ['Based on popular events'],
-        )
-      ).toList();
+      responseText =
+          'I\'m still learning about events in your area! Here are some general recommendations:';
+      recommendations = eventsProvider.events
+          .take(3)
+          .map(
+            (event) => EventRecommendation(
+              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              eventId: event.id,
+              title: event.title,
+              description: event.description,
+              confidenceScore: 0.7,
+              reasons: ['Based on popular events'],
+            ),
+          )
+          .toList();
     }
-    
+
     // Add follow-up suggestions
-    responseText += '\n\nWould you like me to:\n'
-                   '• Filter by date range?\n'
-                   '• Show only free events?\n'
-                   '• Find events in a specific location?\n'
-                   '• Get more details about any of these events?';
-    
+    responseText +=
+        '\n\nWould you like me to:\n'
+        '• Filter by date range?\n'
+        '• Show only free events?\n'
+        '• Find events in a specific location?\n'
+        '• Get more details about any of these events?';
+
     final aiMessage = ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       sessionId: _currentSession!.id,
@@ -330,12 +374,12 @@ class _ChatScreenState extends State<ChatScreen>
       timestamp: DateTime.now(),
       recommendations: recommendations.isNotEmpty ? recommendations : [],
     );
-    
+
     await chatProvider.addMessage(aiMessage);
-    
+
     // Hide typing indicator after response is generated
     chatProvider.setTyping(false);
-    
+
     setState(() {});
     _scrollToBottom();
   }
@@ -414,13 +458,13 @@ class _ChatScreenState extends State<ChatScreen>
         if (_currentSession == null) {
           return const Center(child: CircularProgressIndicator());
         }
-        
+
         final messages = _currentSession!.messages;
-        
+
         if (messages.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
-        
+
         return ListView.builder(
           controller: _scrollController,
           padding: const EdgeInsets.all(16),
@@ -429,7 +473,7 @@ class _ChatScreenState extends State<ChatScreen>
             if (index == messages.length && chatProvider.isTyping) {
               return _buildTypingIndicator();
             }
-            
+
             final message = messages[index];
             return _buildMessageBubble(message, index);
           },
@@ -440,9 +484,11 @@ class _ChatScreenState extends State<ChatScreen>
 
   Widget _buildMessageBubble(ChatMessage message, int index) {
     final isUser = message.sender == MessageSender.user;
-    final showAvatar = index == 0 || 
-        (index > 0 && _currentSession!.messages[index - 1].sender != message.sender);
-    
+    final showAvatar =
+        index == 0 ||
+        (index > 0 &&
+            _currentSession!.messages[index - 1].sender != message.sender);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -465,8 +511,8 @@ class _ChatScreenState extends State<ChatScreen>
           ],
           Expanded(
             child: Column(
-              crossAxisAlignment: isUser 
-                  ? CrossAxisAlignment.end 
+              crossAxisAlignment: isUser
+                  ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
                 Container(
@@ -475,38 +521,42 @@ class _ChatScreenState extends State<ChatScreen>
                   ),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isUser 
-                        ? AppTheme.primaryColor 
+                    color: isUser
+                        ? AppTheme.primaryColor
                         : Theme.of(context).cardColor,
                     borderRadius: BorderRadius.circular(16).copyWith(
-                      bottomLeft: isUser ? const Radius.circular(16) : const Radius.circular(4),
-                      bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(16),
+                      bottomLeft: isUser
+                          ? const Radius.circular(16)
+                          : const Radius.circular(4),
+                      bottomRight: isUser
+                          ? const Radius.circular(4)
+                          : const Radius.circular(16),
                     ),
                   ),
                   child: Text(
                     message.content,
-                    style: TextStyle(
-                      color: isUser ? Colors.white : null,
-                    ),
+                    style: TextStyle(color: isUser ? Colors.white : null),
                   ),
                 ),
-                
+
                 // Event recommendations
-                if (message.recommendations?.isNotEmpty ?? false) ...[
+                if (message.recommendations.isNotEmpty) ...[
                   const SizedBox(height: 8),
-                  ...(message.recommendations ?? const <EventRecommendation>[]).map((rec) => 
-                    _buildRecommendationCard(rec)
+                  ...message.recommendations.map(
+                    (rec) => _buildRecommendationCard(rec),
                   ),
                 ],
-                
+
                 // Timestamp
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
-                    DateFormat('h:mm a').format(message.timestamp ?? DateTime.now()),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    DateFormat(
+                      'h:mm a',
+                    ).format(message.timestamp ?? DateTime.now()),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                 ),
               ],
@@ -523,7 +573,11 @@ class _ChatScreenState extends State<ChatScreen>
                       : null,
                   child: authProvider.currentUser?.photoUrl == null
                       ? Text(
-                          authProvider.currentUser?.displayName?.substring(0, 1) ?? 'U',
+                          authProvider.currentUser?.displayName?.substring(
+                                0,
+                                1,
+                              ) ??
+                              'U',
                           style: const TextStyle(fontSize: 12),
                         )
                       : null,
@@ -538,17 +592,17 @@ class _ChatScreenState extends State<ChatScreen>
 
   Widget _buildRecommendationCard(EventRecommendation recommendation) {
     final eventsProvider = context.read<EventsProvider>();
-    
+
     // Guard against empty events list
     if (eventsProvider.events.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     final event = eventsProvider.events.firstWhere(
       (e) => e.id == recommendation.eventId,
       orElse: () => eventsProvider.events.first, // fallback
     );
-    
+
     return Container(
       margin: const EdgeInsets.only(top: 8),
       child: EventCard(
@@ -572,20 +626,16 @@ class _ChatScreenState extends State<ChatScreen>
           CircleAvatar(
             radius: 16,
             backgroundColor: AppTheme.primaryColor,
-            child: const Icon(
-              Icons.smart_toy,
-              color: Colors.white,
-              size: 16,
-            ),
+            child: const Icon(Icons.smart_toy, color: Colors.white, size: 16),
           ),
           const SizedBox(width: 12),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(16).copyWith(
-                bottomLeft: const Radius.circular(4),
-              ),
+              borderRadius: BorderRadius.circular(
+                16,
+              ).copyWith(bottomLeft: const Radius.circular(4)),
             ),
             child: AnimatedBuilder(
               animation: _typingAnimationController,
@@ -616,7 +666,7 @@ class _ChatScreenState extends State<ChatScreen>
         curve: Interval(delay, delay + 0.4, curve: Curves.easeInOut),
       ),
     );
-    
+
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -637,7 +687,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   Widget _buildQuickActions() {
     if (_isKeyboardVisible) return const SizedBox.shrink();
-    
+
     return Container(
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -649,10 +699,7 @@ class _ChatScreenState extends State<ChatScreen>
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ActionChip(
-              label: Text(
-                action,
-                style: const TextStyle(fontSize: 12),
-              ),
+              label: Text(action, style: const TextStyle(fontSize: 12)),
               onPressed: () => _sendMessage(action),
               backgroundColor: Theme.of(context).cardColor,
             ),
@@ -667,11 +714,7 @@ class _ChatScreenState extends State<ChatScreen>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).dividerColor,
-          ),
-        ),
+        border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
       ),
       child: SafeArea(
         child: Row(
@@ -705,15 +748,13 @@ class _ChatScreenState extends State<ChatScreen>
                 return FloatingActionButton(
                   heroTag: 'chat_send_fab',
                   mini: true,
-                  onPressed: value.text.trim().isNotEmpty ? () => _sendMessage() : null,
-                  backgroundColor: value.text.trim().isNotEmpty 
-                      ? AppTheme.primaryColor 
+                  onPressed: value.text.trim().isNotEmpty
+                      ? () => _sendMessage()
+                      : null,
+                  backgroundColor: value.text.trim().isNotEmpty
+                      ? AppTheme.primaryColor
                       : Colors.grey[400],
-                  child: const Icon(
-                    Icons.send,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+                  child: const Icon(Icons.send, color: Colors.white, size: 20),
                 );
               },
             ),
@@ -740,24 +781,22 @@ class _ChatScreenState extends State<ChatScreen>
                 Text(
                   'Chat History',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 if (chatProvider.sessions.isEmpty)
-                  const Center(
-                    child: Text('No chat history yet'),
-                  )
+                  const Center(child: Text('No chat history yet'))
                 else
                   ...chatProvider.sessions.map((session) {
-                    final lastMessage = session.messages.isNotEmpty 
-                        ? session.messages.last 
+                    final lastMessage = session.messages.isNotEmpty
+                        ? session.messages.last
                         : null;
-                    
+
                     return ListTile(
                       title: Text(
-                        session.title ?? 'Chat Session',
+                        session.title,
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                       subtitle: lastMessage != null
@@ -768,7 +807,9 @@ class _ChatScreenState extends State<ChatScreen>
                             )
                           : null,
                       trailing: Text(
-                        DateFormat('MMM dd').format(session.createdAt ?? DateTime.now()),
+                        DateFormat(
+                          'MMM dd',
+                        ).format(session.createdAt ?? DateTime.now()),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       onTap: () {
@@ -780,9 +821,9 @@ class _ChatScreenState extends State<ChatScreen>
                       },
                     );
                   }),
-                
+
                 const SizedBox(height: 16),
-                
+
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(context);

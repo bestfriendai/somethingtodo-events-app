@@ -1,17 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'dart:async';
 import '../models/event.dart';
-import '../services/firestore_service.dart';
 import '../services/rapidapi_events_service.dart';
 import '../services/location_service.dart';
-import '../services/cache_service.dart';
 import '../services/enhanced_cache_service.dart';
 import '../utils/performance_optimizer.dart';
 
 /// Optimized events provider with better state management and performance
 class OptimizedEventsProvider extends ChangeNotifier {
   // Services
-  final FirestoreService _firestoreService = FirestoreService();
   final RapidAPIEventsService _rapidAPIService = RapidAPIEventsService();
   final LocationService _locationService = LocationService();
   final EnhancedCacheService _cacheService = EnhancedCacheService.instance;
@@ -352,10 +349,9 @@ class OptimizedEventsProvider extends ChangeNotifier {
 
     try {
       // Run search in background to prevent UI blocking
-      final results = await Future.microtask(() => _searchInIsolate({
-        'query': query,
-        'events': _events,
-      }));
+      final results = await Future.microtask(
+        () => _searchInIsolate({'query': query, 'events': _events}),
+      );
 
       _searchResults = results;
     } catch (e) {
@@ -374,7 +370,7 @@ class OptimizedEventsProvider extends ChangeNotifier {
 
     return events.where((event) {
       return event.title.toLowerCase().contains(lowerQuery) ||
-          (event.description?.toLowerCase().contains(lowerQuery) ?? false) ||
+          (event.description.toLowerCase().contains(lowerQuery)) ||
           event.category.toLowerCase().contains(lowerQuery);
     }).toList();
   }
@@ -404,7 +400,7 @@ class OptimizedEventsProvider extends ChangeNotifier {
 
     if (_selectedCategory != null && _selectedCategory!.isNotEmpty) {
       filtered = filtered
-          .where((e) => e.category == _selectedCategory)
+          .where((e) => e.category.name == _selectedCategory)
           .toList();
     }
 
@@ -429,15 +425,24 @@ class OptimizedEventsProvider extends ChangeNotifier {
   List<Event> _filterByPrice(List<Event> events, String priceFilter) {
     switch (priceFilter) {
       case 'free':
-        return events.where((e) => e.price == null || e.price == 0).toList();
+        return events.where((e) => e.pricing.isFree).toList();
       case 'low':
-        return events.where((e) => e.price != null && e.price! <= 25).toList();
+        return events
+            .where((e) => !e.pricing.isFree && e.pricing.price <= 25)
+            .toList();
       case 'medium':
         return events
-            .where((e) => e.price != null && e.price! > 25 && e.price! <= 75)
+            .where(
+              (e) =>
+                  !e.pricing.isFree &&
+                  e.pricing.price > 25 &&
+                  e.pricing.price <= 75,
+            )
             .toList();
       case 'high':
-        return events.where((e) => e.price != null && e.price! > 75).toList();
+        return events
+            .where((e) => !e.pricing.isFree && e.pricing.price > 75)
+            .toList();
       default:
         return events;
     }
@@ -450,7 +455,6 @@ class OptimizedEventsProvider extends ChangeNotifier {
 
     // Optimistic update
     final event = _events[eventIndex];
-    final wasFavorite = event.isFavorite;
 
     // Create new event with toggled favorite
     final updatedEvent = Event(

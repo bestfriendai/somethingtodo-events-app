@@ -43,7 +43,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
   final ScrollController _scrollController = ScrollController();
   final GlobalKey<LiquidPullToRefreshState> _refreshKey =
       GlobalKey<LiquidPullToRefreshState>();
-  
+
   bool _isLoadingMore = false;
   List<Event> _cachedEvents = [];
 
@@ -75,7 +75,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
 
   void _onScroll() {
     // Infinite scroll with performance optimization
-    if (_scrollController.position.pixels >= 
+    if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       _loadMoreEvents();
     }
@@ -83,7 +83,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
 
   Future<void> _loadMoreEvents() async {
     if (_isLoadingMore) return;
-    
+
     setState(() {
       _isLoadingMore = true;
     });
@@ -101,7 +101,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
 
   Future<void> _handleRefresh() async {
     PlatformInteractions.lightImpact();
-    
+
     if (widget.onRefresh != null) {
       widget.onRefresh!();
     } else {
@@ -113,7 +113,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
 
   void _openFeedView(List<Event> events, int startIndex) {
     PlatformInteractions.mediumImpact();
-    
+
     Navigator.push(
       context,
       PlatformInteractions.createPlatformRoute(
@@ -126,17 +126,19 @@ class _OptimizedEventListState extends State<OptimizedEventList>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    
+
     return Consumer<EventsProvider>(
       builder: (context, eventsProvider, child) {
         final events = widget.events ?? eventsProvider.events;
-        
-        if (eventsProvider.isLoading && events.isEmpty && _cachedEvents.isEmpty) {
+
+        if (eventsProvider.isLoading &&
+            events.isEmpty &&
+            _cachedEvents.isEmpty) {
           return _buildLoadingState();
         }
 
         final displayEvents = events.isNotEmpty ? events : _cachedEvents;
-        
+
         if (displayEvents.isEmpty) {
           return _buildEmptyState();
         }
@@ -145,17 +147,18 @@ class _OptimizedEventListState extends State<OptimizedEventList>
           controller: _scrollController,
           physics: widget.physics ?? PlatformInteractions.platformScrollPhysics,
           padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 24),
-          itemCount: displayEvents.length + 
-                    (eventsProvider.hasMoreEvents ? 1 : 0) +
-                    (widget.showFeedButton ? 1 : 0),
+          itemCount:
+              displayEvents.length +
+              (eventsProvider.hasMoreEvents ? 1 : 0) +
+              (widget.showFeedButton ? 1 : 0),
           itemBuilder: (context, index) {
             // Feed view button (first item)
             if (widget.showFeedButton && index == 0) {
               return _buildFeedViewButton(displayEvents);
             }
-            
+
             final adjustedIndex = widget.showFeedButton ? index - 1 : index;
-            
+
             // Loading indicator at the end
             if (adjustedIndex >= displayEvents.length) {
               return _buildLoadingMore();
@@ -189,9 +192,7 @@ class _OptimizedEventListState extends State<OptimizedEventList>
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: ModernTheme.neonGradient,
-        ),
+        gradient: const LinearGradient(colors: ModernTheme.neonGradient),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -333,10 +334,10 @@ class _OptimizedEventListState extends State<OptimizedEventList>
 
   void _handleFavorite(Event event) async {
     PlatformInteractions.mediumImpact();
-    
+
     // Cache favorite locally first
     await CacheService.instance.cacheFavoriteEvent(event.id);
-    
+
     PlatformInteractions.showToast(
       context: context,
       message: 'Added to favorites',
@@ -356,9 +357,9 @@ class _OptimizedEventListState extends State<OptimizedEventList>
           icon: Icons.link,
           onPressed: () {
             // Copy event link to clipboard
-            Clipboard.setData(ClipboardData(
-              text: 'Check out this event: ${event.title}',
-            ));
+            Clipboard.setData(
+              ClipboardData(text: 'Check out this event: ${event.title}'),
+            );
             PlatformInteractions.showToast(
               context: context,
               message: 'Link copied to clipboard',
@@ -383,7 +384,8 @@ class _OptimizedEventListState extends State<OptimizedEventList>
           icon: Icons.info_outline,
           onPressed: () {
             // Share event details
-            final text = '''
+            final text =
+                '''
 ${event.title}
 
 📅 ${DateFormat('EEEE, MMMM d • h:mm a').format(event.startDateTime)}
@@ -392,7 +394,7 @@ ${event.title}
 
 ${event.description}
             ''';
-            
+
             Clipboard.setData(ClipboardData(text: text));
             PlatformInteractions.showToast(
               context: context,
@@ -429,18 +431,15 @@ class OptimizedEventGrid extends StatefulWidget {
 
 class _OptimizedEventGridState extends State<OptimizedEventGrid>
     with AutomaticKeepAliveClientMixin {
-  
   @override
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    
+
     if (widget.events.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: SizedBox(height: 200),
-      );
+      return const SliverToBoxAdapter(child: SizedBox(height: 200));
     }
 
     Widget gridWidget = SliverGrid(
@@ -513,7 +512,7 @@ class _OptimizedEventGridState extends State<OptimizedEventGrid>
     // Open in feed view for immersive experience
     final events = widget.events;
     final startIndex = events.indexOf(event);
-    
+
     Navigator.push(
       context,
       PlatformInteractions.createPlatformRoute(
@@ -525,10 +524,10 @@ class _OptimizedEventGridState extends State<OptimizedEventGrid>
 
   void _handleFavorite(Event event) async {
     PlatformInteractions.mediumImpact();
-    
+
     // Cache favorite locally
     await CacheService.instance.cacheFavoriteEvent(event.id);
-    
+
     PlatformInteractions.showToast(
       context: context,
       message: 'Added to favorites',
@@ -547,9 +546,9 @@ class _OptimizedEventGridState extends State<OptimizedEventGrid>
           title: 'Copy Link',
           icon: Icons.link,
           onPressed: () {
-            Clipboard.setData(ClipboardData(
-              text: 'Check out this event: ${event.title}',
-            ));
+            Clipboard.setData(
+              ClipboardData(text: 'Check out this event: ${event.title}'),
+            );
             PlatformInteractions.showToast(
               context: context,
               message: 'Link copied to clipboard',
@@ -588,9 +587,7 @@ class OptimizedEventCarousel extends StatefulWidget {
 
 class _OptimizedEventCarouselState extends State<OptimizedEventCarousel>
     with AutomaticKeepAliveClientMixin {
-  final PageController _pageController = PageController(
-    viewportFraction: 0.85,
-  );
+  final PageController _pageController = PageController(viewportFraction: 0.85);
 
   @override
   bool get wantKeepAlive => true;
@@ -604,7 +601,7 @@ class _OptimizedEventCarouselState extends State<OptimizedEventCarousel>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    
+
     if (widget.events.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -628,7 +625,10 @@ class _OptimizedEventCarouselState extends State<OptimizedEventCarousel>
                 GestureDetector(
                   onTap: widget.onSeeAll,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -645,7 +645,7 @@ class _OptimizedEventCarouselState extends State<OptimizedEventCarousel>
             ],
           ),
         ),
-        
+
         // Carousel
         SizedBox(
           height: 280,

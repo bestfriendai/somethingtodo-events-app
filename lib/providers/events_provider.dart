@@ -368,24 +368,24 @@ class EventsProvider extends ChangeNotifier {
         debugPrint('Total events loaded: ${_events.length}');
       } catch (apiError) {
         // Check if it's a rate limit error (429 status code)
-        if (apiError.toString().contains('429') || 
+        if (apiError.toString().contains('429') ||
             apiError.toString().contains('rate') ||
             apiError.toString().contains('Too Many Requests')) {
           debugPrint('RapidAPI rate limited - loading demo events');
           _error = 'API rate limit reached - showing sample events';
-          
+
           // Load demo events instead
           _events = await SampleEvents.getDemoEvents();
           _featuredEvents = await SampleEvents.getFeaturedEvents();
           _nearbyEvents = _events.take(10).toList();
           _hasMoreEvents = false;
-          
+
           // Still cache these for offline use
           await CacheService.instance.cacheEvents(_events);
           await CacheService.instance.cacheFeaturedEvents(_featuredEvents);
         } else {
           // For other errors, try cache then demo
-          throw apiError;
+          rethrow;
         }
       }
     } catch (e) {
@@ -499,7 +499,9 @@ class EventsProvider extends ChangeNotifier {
         _events.addAll(newEvents);
         _hasMoreEvents = newEvents.isNotEmpty;
 
-        debugPrint('Loaded ${newEvents.length} more events via enhanced method');
+        debugPrint(
+          'Loaded ${newEvents.length} more events via enhanced method',
+        );
       } catch (e) {
         debugPrint('Failed to load more events: $e');
       } finally {

@@ -19,52 +19,54 @@ class ModernTheme {
   static const Color accentColor = Color(0xFF06B6D4); // Cyber Blue
   static const Color warningColor = Color(0xFFEAB308); // Yellow
   static const Color errorColor = Color(0xFFEF4444); // Red
-  
+
   // 2025 Dark theme base colors - Rich blacks and vibrant accents
-  static const Color darkBackground = Color(0xFF0A0A0B); // Rich black like Arc Browser
+  static const Color darkBackground = Color(
+    0xFF0A0A0B,
+  ); // Rich black like Arc Browser
   static const Color darkSurface = Color(0xFF111111); // Slightly lighter black
   static const Color darkCardSurface = Color(0xFF1A1A1B); // Card surface
   static const Color darkOnSurface = Color(0xFFFAFAFA); // Pure white text
   static const Color darkOnBackground = Color(0xFFE8E8E8); // Light gray text
-  
+
   // Light theme colors (for accessibility)
   static const Color lightBackground = Color(0xFFFAFAFA);
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightCardSurface = Color(0xFFF8FAFC);
   static const Color lightOnSurface = Color(0xFF1E293B);
   static const Color lightOnBackground = Color(0xFF334155);
-  
+
   // 2025 Ultra-vibrant gradients for $10M startup feel
   static const List<Color> sunsetGradient = [
     Color(0xFFFF6B6B),
     Color(0xFFFFBE0B),
   ];
-  
+
   static const List<Color> oceanGradient = [
     Color(0xFF06B6D4), // Cyber Blue
     Color(0xFF3B82F6), // Bright Blue
   ];
-  
+
   static const List<Color> forestGradient = [
     Color(0xFF10B981),
     Color(0xFF34D399),
   ];
-  
+
   static const List<Color> purpleGradient = [
     Color(0xFF7C3AED), // Electric Purple
     Color(0xFF8B5CF6), // Violet
   ];
-  
+
   static const List<Color> pinkGradient = [
     Color(0xFFEC4899), // Neon Pink
     Color(0xFFF97316), // Orange
   ];
-  
+
   static const List<Color> neonGradient = [
     Color(0xFF06B6D4), // Cyber Blue
     Color(0xFF7C3AED), // Electric Purple
   ];
-  
+
   // NEW: Aurora Borealis gradient for backgrounds
   static const List<Color> auroraGradient = [
     Color(0xFF0A0A0B), // Rich Black
@@ -73,7 +75,7 @@ class ModernTheme {
     Color(0xFF06B6D4), // Cyber Blue
     Color(0xFF0A0A0B), // Back to Rich Black
   ];
-  
+
   // NEW: Mesh gradient for modern backgrounds
   static const List<Color> meshGradient = [
     Color(0xFF0A0A0B),
@@ -81,25 +83,22 @@ class ModernTheme {
     Color(0xFF0A1A1A),
     Color(0xFF0A0A0B),
   ];
-  
+
   // NEW: Glassmorphic colors
   static const Color glassWhite = Color(0x1AFFFFFF);
   static const Color glassBorder = Color(0x2AFFFFFF);
-  
+
   static const List<Color> warningGradient = [
     Color(0xFFFFB800),
     Color(0xFFFF6B00),
   ];
-  
-  static const List<Color> primaryGradient = [
-    primaryColor,
-    secondaryColor,
-  ];
-  
+
+  static const List<Color> primaryGradient = [primaryColor, secondaryColor];
+
   // Typography - Inter font for modern feel
   static String get primaryFont => GoogleFonts.inter().fontFamily ?? 'Inter';
   static String get displayFont => GoogleFonts.inter().fontFamily ?? 'Inter';
-  
+
   static TextTheme get modernTextTheme => const TextTheme(
     displayLarge: TextStyle(
       fontSize: 36,
@@ -209,10 +208,9 @@ class ModernTheme {
     ),
     scaffoldBackgroundColor: darkBackground,
     cardColor: darkCardSurface,
-    textTheme: GoogleFonts.interTextTheme(modernTextTheme).apply(
-      bodyColor: darkOnBackground,
-      displayColor: darkOnSurface,
-    ),
+    textTheme: GoogleFonts.interTextTheme(
+      modernTextTheme,
+    ).apply(bodyColor: darkOnBackground, displayColor: darkOnSurface),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: false,
@@ -231,9 +229,7 @@ class ModernTheme {
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
         textStyle: const TextStyle(
           fontFamily: 'Inter',
@@ -244,9 +240,7 @@ class ModernTheme {
     ),
     cardTheme: CardThemeData(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       color: darkCardSurface,
       margin: EdgeInsets.zero,
     ),
@@ -275,10 +269,9 @@ class ModernTheme {
     ),
     scaffoldBackgroundColor: lightBackground,
     cardColor: lightCardSurface,
-    textTheme: GoogleFonts.interTextTheme(modernTextTheme).apply(
-      bodyColor: lightOnBackground,
-      displayColor: lightOnSurface,
-    ),
+    textTheme: GoogleFonts.interTextTheme(
+      modernTextTheme,
+    ).apply(bodyColor: lightOnBackground, displayColor: lightOnSurface),
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: false,
@@ -297,9 +290,7 @@ class ModernTheme {
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
         textStyle: const TextStyle(
           fontFamily: 'Inter',
@@ -310,9 +301,7 @@ class ModernTheme {
     ),
     cardTheme: CardThemeData(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       color: lightCardSurface,
       margin: EdgeInsets.zero,
     ),
@@ -348,7 +337,7 @@ class ModernTheme {
         ],
       );
     }
-    
+
     return BoxDecoration(
       borderRadius: BorderRadius.circular(borderRadius),
       color: isDark ? darkCardSurface : lightCardSurface,
@@ -417,20 +406,22 @@ class ModernTheme {
         ),
       );
     }
-    
+
     return BoxDecoration(
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
-        colors: gradient ?? [
-          const Color(0xFF0A0A0B), // Rich black
-          const Color(0xFF111111),
-          const Color(0xFF1A1A1B),
-        ],
+        colors:
+            gradient ??
+            [
+              const Color(0xFF0A0A0B), // Rich black
+              const Color(0xFF111111),
+              const Color(0xFF1A1A1B),
+            ],
       ),
     );
   }
-  
+
   // NEW: Glassmorphic decoration
   static BoxDecoration glassmorphicDecoration({
     double borderRadius = 20,
@@ -439,10 +430,7 @@ class ModernTheme {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(borderRadius),
       color: glassWhite,
-      border: Border.all(
-        color: glassBorder,
-        width: 1,
-      ),
+      border: Border.all(color: glassBorder, width: 1),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withValues(alpha: 0.1),
@@ -452,14 +440,12 @@ class ModernTheme {
       ],
     );
   }
-  
+
   // NEW: Floating navigation bar decoration
-  static BoxDecoration floatingNavDecoration({
-    bool isDark = true,
-  }) {
+  static BoxDecoration floatingNavDecoration({bool isDark = true}) {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(28),
-      color: isDark 
+      color: isDark
           ? const Color(0x90111111) // Semi-transparent dark
           : const Color(0x90FFFFFF), // Semi-transparent white
       border: Border.all(
@@ -486,41 +472,47 @@ class ModernTheme {
   /// black theme that provides better visual consistency.
   static const Map<String, List<Color>> categoryGradients = {
     // Technology: Black gradient
-    'technology': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'technology': [
+      Color(0xFF000000),
+      Color(0xFF1A1A1A),
+    ], // Pure Black to Dark Gray
     'tech': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for technology
-
     // Arts: Black gradient
     'arts': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
     'art': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for arts
-
     // Sports: Black gradient
     'sports': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
     'sport': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for sports
-
     // Food: Black gradient
     'food': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
     'dining': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for food
-
     // Music: Black gradient
     'music': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
     'entertainment': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for music
-
     // Business: Black gradient
-    'business': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
-    'professional': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for business
-
+    'business': [
+      Color(0xFF000000),
+      Color(0xFF1A1A1A),
+    ], // Pure Black to Dark Gray
+    'professional': [
+      Color(0xFF000000),
+      Color(0xFF1A1A1A),
+    ], // Alias for business
     // Education: Black gradient
-    'education': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'education': [
+      Color(0xFF000000),
+      Color(0xFF1A1A1A),
+    ], // Pure Black to Dark Gray
     'learning': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for education
-
     // Health: Black gradient
     'health': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
     'wellness': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for health
-
     // Community: Black gradient
-    'community': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray
+    'community': [
+      Color(0xFF000000),
+      Color(0xFF1A1A1A),
+    ], // Pure Black to Dark Gray
     'social': [Color(0xFF000000), Color(0xFF1A1A1A)], // Alias for community
-
     // Default fallback
     'other': [Color(0xFF000000), Color(0xFF1A1A1A)], // Black gradient
   };
@@ -528,12 +520,12 @@ class ModernTheme {
   // Get category gradient with enhanced matching
   static List<Color> getCategoryGradient(String category) {
     final normalizedCategory = category.toLowerCase().trim();
-    
+
     // Direct match first
     if (categoryGradients.containsKey(normalizedCategory)) {
       return categoryGradients[normalizedCategory]!;
     }
-    
+
     // Fuzzy matching for common variations
     if (normalizedCategory.contains('tech')) {
       return categoryGradients['technology']!;
@@ -541,26 +533,33 @@ class ModernTheme {
       return categoryGradients['arts']!;
     } else if (normalizedCategory.contains('sport')) {
       return categoryGradients['sports']!;
-    } else if (normalizedCategory.contains('food') || normalizedCategory.contains('restaurant')) {
+    } else if (normalizedCategory.contains('food') ||
+        normalizedCategory.contains('restaurant')) {
       return categoryGradients['food']!;
-    } else if (normalizedCategory.contains('music') || normalizedCategory.contains('concert')) {
+    } else if (normalizedCategory.contains('music') ||
+        normalizedCategory.contains('concert')) {
       return categoryGradients['music']!;
-    } else if (normalizedCategory.contains('business') || normalizedCategory.contains('work')) {
+    } else if (normalizedCategory.contains('business') ||
+        normalizedCategory.contains('work')) {
       return categoryGradients['business']!;
-    } else if (normalizedCategory.contains('education') || normalizedCategory.contains('learn')) {
+    } else if (normalizedCategory.contains('education') ||
+        normalizedCategory.contains('learn')) {
       return categoryGradients['education']!;
-    } else if (normalizedCategory.contains('health') || normalizedCategory.contains('fitness')) {
+    } else if (normalizedCategory.contains('health') ||
+        normalizedCategory.contains('fitness')) {
       return categoryGradients['health']!;
-    } else if (normalizedCategory.contains('community') || normalizedCategory.contains('social')) {
+    } else if (normalizedCategory.contains('community') ||
+        normalizedCategory.contains('social')) {
       return categoryGradients['community']!;
     }
-    
+
     // Fallback to default gradient
     return categoryGradients['other']!;
   }
-  
+
   // Get category gradient as LinearGradient widget
-  static LinearGradient getCategoryLinearGradient(String category, {
+  static LinearGradient getCategoryLinearGradient(
+    String category, {
     Alignment begin = Alignment.topLeft,
     Alignment end = Alignment.bottomRight,
   }) {
@@ -570,12 +569,12 @@ class ModernTheme {
       colors: getCategoryGradient(category),
     );
   }
-  
+
   // Get category primary color (first color of gradient)
   static Color getCategoryPrimaryColor(String category) {
     return getCategoryGradient(category).first;
   }
-  
+
   // Get category secondary color (second color of gradient)
   static Color getCategorySecondaryColor(String category) {
     return getCategoryGradient(category).last;

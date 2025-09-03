@@ -6,7 +6,7 @@ import '../services/logging_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
-  
+
   AppUser? _currentUser;
   User? _firebaseUser;
   bool _isLoading = false;
@@ -38,11 +38,16 @@ class AuthProvider extends ChangeNotifier {
         id: 'demo_user_${DateTime.now().millisecondsSinceEpoch}',
         email: 'guest@demo.com',
         displayName: 'Demo User',
-        photoUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+        photoUrl:
+            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         isPremium: false,
-        favoriteEventIds: ['demo_1', 'demo_7', 'demo_12'], // Some pre-favorited events
+        favoriteEventIds: [
+          'demo_1',
+          'demo_7',
+          'demo_12',
+        ], // Some pre-favorited events
         interests: ['music', 'food', 'technology', 'arts'],
         location: const UserLocation(
           latitude: 37.7749,
@@ -62,18 +67,25 @@ class AuthProvider extends ChangeNotifier {
           pricePreference: 'any',
         ),
       );
-      
-      LoggingService.info('Demo user created: ${_currentUser?.id}', tag: 'AuthProvider');
+
+      LoggingService.info(
+        'Demo user created: ${_currentUser?.id}',
+        tag: 'AuthProvider',
+      );
       _isDemoMode = true; // Enable demo mode for guest authentication
       _firebaseUser = null; // No Firebase user in guest mode
-      
+
       LoggingService.debug('Notifying listeners...', tag: 'AuthProvider');
       notifyListeners();
-      
+
       LoggingService.info('SignInAsGuest successful', tag: 'AuthProvider');
       return true;
     } catch (e) {
-      LoggingService.error('Error in signInAsGuest', tag: 'AuthProvider', error: e);
+      LoggingService.error(
+        'Error in signInAsGuest',
+        tag: 'AuthProvider',
+        error: e,
+      );
       _setError('Failed to sign in as guest: $e');
       return false;
     } finally {
@@ -117,7 +129,7 @@ class AuthProvider extends ChangeNotifier {
         password: password,
         displayName: displayName,
       );
-      
+
       return credential != null;
     } catch (e) {
       _setError(e.toString());
@@ -144,10 +156,7 @@ class AuthProvider extends ChangeNotifier {
     required String email,
     required String password,
   }) async {
-    return await signInWithEmailPassword(
-      email: email,
-      password: password,
-    );
+    return await signInWithEmailPassword(email: email, password: password);
   }
 
   Future<bool> resetPassword(String email) async {
@@ -166,7 +175,7 @@ class AuthProvider extends ChangeNotifier {
         email: email,
         password: password,
       );
-      
+
       return credential != null;
     } catch (e) {
       _setError(e.toString());
@@ -225,7 +234,9 @@ class AuthProvider extends ChangeNotifier {
     _clearError();
 
     try {
-      final userCredential = await _authService.signInWithPhoneCredential(credential);
+      final userCredential = await _authService.signInWithPhoneCredential(
+        credential,
+      );
       return userCredential != null;
     } catch (e) {
       _setError(e.toString());
@@ -252,7 +263,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> signOut() async {
     _setLoading(true);
-    
+
     try {
       if (!_isDemoMode) {
         await _authService.signOut();
@@ -314,7 +325,7 @@ class AuthProvider extends ChangeNotifier {
         isPremium: isPremium,
         expiresAt: expiresAt,
       );
-      
+
       _currentUser = _currentUser!.copyWith(
         isPremium: isPremium,
         premiumExpiresAt: expiresAt,
@@ -335,8 +346,10 @@ class AuthProvider extends ChangeNotifier {
       if (!_isDemoMode) {
         await _authService.addFavoriteEvent(_currentUser!.id, eventId);
       }
-      
-      final updatedFavorites = List<String>.from(_currentUser!.favoriteEventIds);
+
+      final updatedFavorites = List<String>.from(
+        _currentUser!.favoriteEventIds,
+      );
       if (!updatedFavorites.contains(eventId)) {
         updatedFavorites.add(eventId);
         _currentUser = _currentUser!.copyWith(
@@ -360,8 +373,10 @@ class AuthProvider extends ChangeNotifier {
       if (!_isDemoMode) {
         await _authService.removeFavoriteEvent(_currentUser!.id, eventId);
       }
-      
-      final updatedFavorites = List<String>.from(_currentUser!.favoriteEventIds);
+
+      final updatedFavorites = List<String>.from(
+        _currentUser!.favoriteEventIds,
+      );
       updatedFavorites.remove(eventId);
       _currentUser = _currentUser!.copyWith(
         favoriteEventIds: updatedFavorites,
@@ -383,7 +398,7 @@ class AuthProvider extends ChangeNotifier {
       if (!_isDemoMode) {
         await _authService.updateUserLocation(_currentUser!.id, location);
       }
-      
+
       _currentUser = _currentUser!.copyWith(
         location: location,
         updatedAt: DateTime.now(),
@@ -422,7 +437,7 @@ class AuthProvider extends ChangeNotifier {
 
   // Premium Features
   bool get isPremium => _currentUser?.isPremium ?? false;
-  
+
   bool get isPremiumExpired {
     if (!isPremium) return false;
     final expiresAt = _currentUser?.premiumExpiresAt;
@@ -432,7 +447,8 @@ class AuthProvider extends ChangeNotifier {
   bool get isPremiumActive => isPremium && !isPremiumExpired;
 
   // User Preferences
-  UserPreferences get preferences => _currentUser?.preferences ?? const UserPreferences();
+  UserPreferences get preferences =>
+      _currentUser?.preferences ?? const UserPreferences();
 
   Future<void> updatePreferences(UserPreferences preferences) async {
     if (_currentUser == null) return;

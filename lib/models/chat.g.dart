@@ -11,13 +11,16 @@ _$ChatSessionImpl _$$ChatSessionImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       userId: json['userId'] as String,
       title: json['title'] as String,
-      messages: (json['messages'] as List<dynamic>?)
+      messages:
+          (json['messages'] as List<dynamic>?)
               ?.map((e) => ChatMessage.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      type: $enumDecodeNullable(_$ChatTypeEnumMap, json['type']) ??
+      type:
+          $enumDecodeNullable(_$ChatTypeEnumMap, json['type']) ??
           ChatType.eventDiscovery,
-      status: $enumDecodeNullable(_$ChatStatusEnumMap, json['status']) ??
+      status:
+          $enumDecodeNullable(_$ChatStatusEnumMap, json['status']) ??
           ChatStatus.active,
       context: json['context'] as Map<String, dynamic>?,
       createdAt: json['createdAt'] == null
@@ -59,18 +62,23 @@ _$ChatMessageImpl _$$ChatMessageImplFromJson(Map<String, dynamic> json) =>
       sessionId: json['sessionId'] as String,
       role: $enumDecode(_$MessageRoleEnumMap, json['role']),
       content: json['content'] as String,
-      type: $enumDecodeNullable(_$MessageTypeEnumMap, json['type']) ??
+      type:
+          $enumDecodeNullable(_$MessageTypeEnumMap, json['type']) ??
           MessageType.text,
-      sender: $enumDecodeNullable(_$MessageSenderEnumMap, json['sender']) ??
+      sender:
+          $enumDecodeNullable(_$MessageSenderEnumMap, json['sender']) ??
           MessageSender.user,
       metadata: json['metadata'] as Map<String, dynamic>?,
-      actions: (json['actions'] as List<dynamic>?)
+      actions:
+          (json['actions'] as List<dynamic>?)
               ?.map((e) => MessageAction.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      recommendations: (json['recommendations'] as List<dynamic>?)
-              ?.map((e) =>
-                  EventRecommendation.fromJson(e as Map<String, dynamic>))
+      recommendations:
+          (json['recommendations'] as List<dynamic>?)
+              ?.map(
+                (e) => EventRecommendation.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           const [],
       timestamp: json['timestamp'] == null
@@ -140,35 +148,36 @@ const _$ActionTypeEnumMap = {
 };
 
 _$ChatRecommendationImpl _$$ChatRecommendationImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ChatRecommendationImpl(
-      id: json['id'] as String,
-      eventId: json['eventId'] as String,
-      reason: json['reason'] as String,
-      confidenceScore: (json['confidenceScore'] as num).toDouble(),
-      matchingCriteria: (json['matchingCriteria'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      status:
-          $enumDecodeNullable(_$RecommendationStatusEnumMap, json['status']) ??
-              RecommendationStatus.pending,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-    );
+  Map<String, dynamic> json,
+) => _$ChatRecommendationImpl(
+  id: json['id'] as String,
+  eventId: json['eventId'] as String,
+  reason: json['reason'] as String,
+  confidenceScore: (json['confidenceScore'] as num).toDouble(),
+  matchingCriteria:
+      (json['matchingCriteria'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
+  status:
+      $enumDecodeNullable(_$RecommendationStatusEnumMap, json['status']) ??
+      RecommendationStatus.pending,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+);
 
 Map<String, dynamic> _$$ChatRecommendationImplToJson(
-        _$ChatRecommendationImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'eventId': instance.eventId,
-      'reason': instance.reason,
-      'confidenceScore': instance.confidenceScore,
-      'matchingCriteria': instance.matchingCriteria,
-      'status': _$RecommendationStatusEnumMap[instance.status]!,
-      'createdAt': instance.createdAt?.toIso8601String(),
-    };
+  _$ChatRecommendationImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'eventId': instance.eventId,
+  'reason': instance.reason,
+  'confidenceScore': instance.confidenceScore,
+  'matchingCriteria': instance.matchingCriteria,
+  'status': _$RecommendationStatusEnumMap[instance.status]!,
+  'createdAt': instance.createdAt?.toIso8601String(),
+};
 
 const _$RecommendationStatusEnumMap = {
   RecommendationStatus.pending: 'pending',
@@ -178,34 +187,33 @@ const _$RecommendationStatusEnumMap = {
 };
 
 _$EventRecommendationImpl _$$EventRecommendationImplFromJson(
-        Map<String, dynamic> json) =>
-    _$EventRecommendationImpl(
-      id: json['id'] as String,
-      eventId: json['eventId'] as String,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      confidenceScore: (json['confidenceScore'] as num?)?.toDouble() ?? 0.0,
-      reasons: (json['reasons'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      status:
-          $enumDecodeNullable(_$RecommendationStatusEnumMap, json['status']) ??
-              RecommendationStatus.pending,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-    );
+  Map<String, dynamic> json,
+) => _$EventRecommendationImpl(
+  id: json['id'] as String,
+  eventId: json['eventId'] as String,
+  title: json['title'] as String,
+  description: json['description'] as String,
+  confidenceScore: (json['confidenceScore'] as num?)?.toDouble() ?? 0.0,
+  reasons:
+      (json['reasons'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+      const [],
+  status:
+      $enumDecodeNullable(_$RecommendationStatusEnumMap, json['status']) ??
+      RecommendationStatus.pending,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+);
 
 Map<String, dynamic> _$$EventRecommendationImplToJson(
-        _$EventRecommendationImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'eventId': instance.eventId,
-      'title': instance.title,
-      'description': instance.description,
-      'confidenceScore': instance.confidenceScore,
-      'reasons': instance.reasons,
-      'status': _$RecommendationStatusEnumMap[instance.status]!,
-      'createdAt': instance.createdAt?.toIso8601String(),
-    };
+  _$EventRecommendationImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'eventId': instance.eventId,
+  'title': instance.title,
+  'description': instance.description,
+  'confidenceScore': instance.confidenceScore,
+  'reasons': instance.reasons,
+  'status': _$RecommendationStatusEnumMap[instance.status]!,
+  'createdAt': instance.createdAt?.toIso8601String(),
+};
