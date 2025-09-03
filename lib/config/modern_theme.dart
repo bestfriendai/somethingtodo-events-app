@@ -2,7 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Modern theme configuration for the SomethingToDo app.
+///
+/// This class provides a comprehensive theme system with black-based
+/// category gradients, modern color palettes, and consistent styling
+/// across the entire application.
+///
+/// The theme has been updated to use a monochromatic black design
+/// for all event categories and UI components.
 class ModernTheme {
+  /// Private constructor to prevent instantiation
+  const ModernTheme._();
   // 2025 Ultra-Modern Color Palette (Discord, Spotify, Linear vibes)
   static const Color primaryColor = Color(0xFF7C3AED); // Electric Purple
   static const Color secondaryColor = Color(0xFFEC4899); // Neon Pink (perfect!)
@@ -466,7 +476,14 @@ class ModernTheme {
     );
   }
 
-  // Black gradient variations for all categories
+  /// Black gradient variations for all event categories.
+  ///
+  /// All categories now use consistent black gradients ranging from
+  /// pure black (#000000) to dark gray (#1A1A1A) for a professional,
+  /// monochromatic appearance.
+  ///
+  /// This replaces the previous colorful category system with a unified
+  /// black theme that provides better visual consistency.
   static const Map<String, List<Color>> categoryGradients = {
     // Technology: Black gradient
     'technology': [Color(0xFF000000), Color(0xFF1A1A1A)], // Pure Black to Dark Gray

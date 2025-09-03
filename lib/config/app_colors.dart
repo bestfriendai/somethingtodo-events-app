@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
+/// Application color constants and theme definitions.
+///
+/// This class provides centralized color management for the SomethingToDo app.
+/// All colors have been updated to use a black monochromatic theme for
+/// consistency and professional appearance.
 class AppColors {
+  /// Private constructor to prevent instantiation
+  const AppColors._();
   // Primary colors
   static const Color primary = Color(0xFF6C63FF);
   static const Color primaryDark = Color(0xFF4A47A3);
@@ -77,7 +84,11 @@ class AppColors {
   static const Color error = Color(0xFFF44336);
   static const Color info = Color(0xFF2196F3);
   
-  // Event category colors - all black for consistent theme
+  /// Event category colors - unified black theme.
+  ///
+  /// All event categories now use pure black (#000000) for consistent
+  /// visual appearance across the application. This replaces the previous
+  /// multi-colored category system with a professional monochromatic design.
   static const Map<String, Color> categoryColors = {
     'Music': Color(0xFF000000),
     'Sports': Color(0xFF000000),
