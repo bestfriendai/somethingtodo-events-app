@@ -421,7 +421,7 @@ class PlatformSwitch extends StatelessWidget {
       return Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: activeColor,
+        activeTrackColor: activeColor,
       );
     }
   }

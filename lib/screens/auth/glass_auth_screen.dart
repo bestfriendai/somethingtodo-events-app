@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'dart:math' as math;
 import '../../providers/auth_provider.dart';
+import '../../utils/navigation_helper.dart';
 
 class GlassAuthScreen extends StatefulWidget {
   const GlassAuthScreen({super.key});
@@ -98,29 +100,61 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
     });
 
     try {
+      print('🔍 ${_isSignIn ? 'Sign In' : 'Sign Up'} attempt started');
+      print('🔍 Email: ${_emailController.text.trim()}');
+      print('🔍 Password length: ${_passwordController.text.length}');
+      if (!_isSignIn) {
+        print('🔍 Display name: ${_nameController.text.trim()}');
+      }
+
       final authProvider = context.read<AuthProvider>();
 
+      bool success = false;
       if (_isSignIn) {
-        await authProvider.signInWithEmail(
+        print('🔍 Calling signInWithEmail...');
+        success = await authProvider.signInWithEmail(
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
       } else {
-        await authProvider.signUpWithEmail(
+        print('🔍 Calling signUpWithEmail...');
+        success = await authProvider.signUpWithEmail(
           email: _emailController.text.trim(),
           password: _passwordController.text,
           displayName: _nameController.text.trim(),
         );
       }
 
-      if (mounted && authProvider.isAuthenticated) {
-        Navigator.pushReplacementNamed(context, '/home');
+      print(
+        '🔍 Auth result: success=$success, isAuthenticated=${authProvider.isAuthenticated}',
+      );
+
+      if (mounted) {
+        if (success && authProvider.isAuthenticated) {
+          print('🔍 Navigation to /home...');
+          // Use the navigation helper to avoid layout issues
+          NavigationHelper.navigateToHome(context);
+        } else {
+          print(
+            '🔍 Authentication failed - success=$success, isAuthenticated=${authProvider.isAuthenticated}',
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '${_isSignIn ? 'Sign in' : 'Sign up'} failed. Please try again.',
+              ),
+              backgroundColor: Colors.red.withValues(alpha: 0.8),
+            ),
+          );
+        }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('❌ Auth error: $e');
+      print('❌ Stack trace: $stackTrace');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
+            content: Text('Error: ${e.toString()}'),
             backgroundColor: Colors.red.withValues(alpha: 0.8),
           ),
         );
@@ -173,9 +207,24 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
       final authProvider = context.read<AuthProvider>();
       await authProvider.signInAsGuest();
 
-      if (mounted && authProvider.isAuthenticated) {
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {}
+      if (mounted) {
+        if (authProvider.isAuthenticated) {
+          print('🔍 Guest navigation to /home...');
+          // Use the navigation helper to avoid layout issues
+          NavigationHelper.navigateToHome(context);
+        } else {
+          print('🔍 Guest authentication failed');
+          // Authentication failed - show error
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text(
+                'Failed to sign in as guest. Please try again.',
+              ),
+              backgroundColor: Colors.red.withValues(alpha: 0.8),
+            ),
+          );
+        }
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -247,6 +296,11 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
 
                     // Guest mode
                     _buildGuestMode(),
+
+                    const SizedBox(height: 20),
+
+                    // Test button (for debugging)
+                    _buildTestButton(),
                   ],
                 ),
               ),
@@ -635,7 +689,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
             ),
             const SizedBox(height: 20),
             GestureDetector(
-              onTap: _isLoading ? null : _signInWithGoogle,
+              onTap: _isLoading || kIsWeb ? null : _signInWithGoogle,
               child: GlassmorphicContainer(
                 width: double.infinity,
                 height: 50,
@@ -681,10 +735,14 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Text(
-                      'Continue with Google',
+                    Text(
+                      kIsWeb
+                          ? 'Google Sign-In (Mobile Only)'
+                          : 'Continue with Google',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: kIsWeb
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -701,14 +759,44 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
   }
 
   Widget _buildGuestMode() {
-    return TextButton(
-      onPressed: _isLoading ? null : _continueAsGuest,
-      child: Text(
-        'Continue as Guest (Demo Mode)',
-        style: TextStyle(
-          color: Colors.white.withValues(alpha: 0.5),
-          fontSize: 14,
-          decoration: TextDecoration.underline,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _continueAsGuest,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white.withValues(alpha: 0.1),
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+            side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+          ),
+        ),
+        child: const Text(
+          '🚀 Try Demo Mode (No Sign-up Required)',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      ),
+    ).animate().fadeIn(duration: 1200.ms, delay: 400.ms);
+  }
+
+  Widget _buildTestButton() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      child: ElevatedButton(
+        onPressed: () => Navigator.pushNamed(context, '/test-auth'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.orange.withValues(alpha: 0.8),
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ),
+        child: const Text(
+          '🧪 Test Firebase Auth',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     ).animate().fadeIn(duration: 1200.ms, delay: 400.ms);

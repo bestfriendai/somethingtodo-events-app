@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart';
@@ -9,12 +10,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'firebase_options.dart';
 import 'config/app_config.dart';
-import 'providers/auth_provider.dart';
+import 'providers/auth_provider.dart' as app_auth;
 import 'providers/events_provider.dart';
 import 'providers/chat_provider.dart';
 import 'providers/theme_provider.dart';
 import 'services/performance_service.dart';
 import 'services/cache_service.dart';
+import 'services/chat_service.dart';
 import 'screens/splash/animated_splash_screen.dart';
 import 'screens/onboarding/glass_onboarding_screen.dart';
 import 'screens/auth/glass_auth_screen.dart';
@@ -30,6 +32,7 @@ import 'screens/favorites/favorites_screen.dart';
 import 'screens/search/search_screen.dart';
 import 'screens/notifications/notifications_screen.dart';
 import 'screens/feed/vertical_feed_screen.dart';
+import 'screens/test_auth_screen.dart';
 import 'screens/settings/theme_settings_screen.dart';
 import 'screens/search/enhanced_search_screen.dart';
 import 'services/navigation_service.dart';
@@ -38,12 +41,29 @@ import 'utils/app_debugger.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase with options
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    // Initialize Firebase with options
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('✅ Firebase initialized successfully');
+
+    // Verify Firebase Auth is working
+    final auth = FirebaseAuth.instance;
+    print('✅ Firebase Auth instance created: ${auth.app.options.projectId}');
+  } catch (e) {
+    print('❌ Firebase initialization failed: $e');
+    // Continue anyway - the app will use fallback authentication
+  }
 
   // Initialize Crashlytics (only on mobile platforms)
   if (AppConfig.crashReportingEnabled && !kIsWeb) {
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    try {
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
+    } catch (e) {
+      print('⚠️ Crashlytics initialization failed: $e');
+    }
   }
 
   // Initialize Hive for local storage
@@ -54,6 +74,9 @@ void main() async {
 
   // Initialize performance service
   PerformanceService.instance.initialize();
+
+  // Initialize chat service
+  await ChatService().initialize();
 
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([
@@ -89,12 +112,12 @@ class SomethingToDoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => EventsProvider()..initialize()),
+        ChangeNotifierProvider(create: (_) => app_auth.AuthProvider()),
+        ChangeNotifierProvider(create: (_) => EventsProvider()),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()..initialize()),
       ],
-      child: Consumer2<AuthProvider, ThemeProvider>(
+      child: Consumer2<app_auth.AuthProvider, ThemeProvider>(
         builder: (context, authProvider, themeProvider, child) {
           // Schedule theme update after build
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -114,7 +137,7 @@ class SomethingToDoApp extends StatelessWidget {
                         : ThemeMode.light),
               navigatorKey: NavigationService.navigatorKey,
               navigatorObservers: [observer],
-              home: const AnimatedSplashScreen(),
+              home: _buildHome(authProvider),
               routes: _buildRoutes(),
               onGenerateRoute: _generateRoute,
             ),
@@ -122,6 +145,16 @@ class SomethingToDoApp extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Widget _buildHome(app_auth.AuthProvider authProvider) {
+    // If user is authenticated, go directly to main app
+    if (authProvider.isAuthenticated) {
+      return const ModernMainNavigationScreen();
+    }
+
+    // Otherwise, show splash screen which will handle navigation
+    return const AnimatedSplashScreen();
   }
 
   Map<String, WidgetBuilder> _buildRoutes() {
@@ -141,6 +174,7 @@ class SomethingToDoApp extends StatelessWidget {
       '/enhanced-search': (context) => const EnhancedSearchScreen(),
       '/notifications': (context) => const NotificationsScreen(),
       '/feed': (context) => const VerticalFeedScreen(),
+      '/test-auth': (context) => const TestAuthScreen(),
     };
   }
 

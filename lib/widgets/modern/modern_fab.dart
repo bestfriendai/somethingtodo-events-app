@@ -626,8 +626,8 @@ class FABSparklePainter extends CustomPainter {
 
       // Use modern theme colors for sparkles
       final colorIndex = i % ModernTheme.auroraGradient.length;
-      paint.color = ModernTheme.auroraGradient[colorIndex].withOpacity(
-        0.5 + (0.4 * sin(progress * 2 * pi + i)),
+      paint.color = ModernTheme.auroraGradient[colorIndex].withValues(
+        alpha: 0.5 + (0.4 * sin(progress * 2 * pi + i)),
       );
 
       // Draw sparkle

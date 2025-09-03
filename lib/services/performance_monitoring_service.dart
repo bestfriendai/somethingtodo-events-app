@@ -312,7 +312,7 @@ class PerformanceMonitoringService {
       networkMetrics: Map.from(_networkMetrics),
       slowOperationsCount: slowOperations,
       averageFrameRate: averageFrameRate,
-      cacheHitRate: cacheStats.hitRate,
+      cacheHitRate: cacheStats['hitRate'] ?? 0.0,
       memorySnapshots: List.from(_memorySnapshots),
       recentEvents: _events.take(20).toList(),
     );

@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import '../models/event.dart';
 import '../config/mapbox_config.dart';
 import '../config/theme.dart';
+import '../config/glass_theme.dart';
 
 class MapboxMapWidget extends StatefulWidget {
   final List<Event> events;
@@ -177,106 +178,119 @@ class _MapboxMapWidgetState extends State<MapboxMapWidget> {
     required IconData icon,
     required VoidCallback onTap,
   }) {
-    return Material(
-      elevation: 4,
-      borderRadius: BorderRadius.circular(8),
+    return GlassTheme.glassCard(
+      width: 44,
+      height: 44,
+      borderRadius: 12,
+      padding: EdgeInsets.zero,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
+        child: Center(
+          child: Icon(
+            icon,
+            size: 20,
+            color: Colors.white.withValues(alpha: 0.9),
           ),
-          child: Icon(icon, size: 20),
         ),
       ),
     );
   }
 
   Widget _buildEventCard(Event event) {
-    return Card(
-      elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    return GlassTheme.glassCard(
+      borderRadius: 18,
+      padding: const EdgeInsets.all(14),
       child: InkWell(
         onTap: () => widget.onEventSelected?.call(event),
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Event image
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: _getCategoryColor(
-                    event.category,
-                  ).withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(18),
+        child: Row(
+          children: [
+            // Icon badge
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: Colors.white.withValues(alpha: 0.08),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  width: 1,
                 ),
-                child: Center(
-                  child: Icon(
-                    _getCategoryIcon(event.category),
-                    color: _getCategoryColor(event.category),
-                    size: 30,
+              ),
+              child: Center(
+                child: Icon(
+                  _getCategoryIcon(event.category),
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+
+            // Event details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    event.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    event.venue.name,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    event.pricing.isFree
+                        ? 'FREE'
+                        : '\$${event.pricing.price.toStringAsFixed(0)}+',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: event.pricing.isFree
+                          ? const Color(0xFF10B981)
+                          : Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Navigate button
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.08),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  width: 1,
                 ),
               ),
-              const SizedBox(width: 16),
-
-              // Event details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      event.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      event.venue.name,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      event.pricing.isFree
-                          ? 'FREE'
-                          : '\$${event.pricing.price.toStringAsFixed(0)}+',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: event.pricing.isFree
-                            ? Colors.green
-                            : Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
+              child: IconButton(
+                tooltip: 'Directions',
+                icon: const Icon(Icons.directions, size: 20),
+                color: Colors.white,
+                onPressed: () => widget.onEventSelected?.call(event),
               ),
-
-              // Navigate button
-              IconButton(
-                icon: const Icon(Icons.directions),
-                color: Theme.of(context).primaryColor,
-                onPressed: () {
-                  // Open in maps
-                  widget.onEventSelected?.call(event);
-                },
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

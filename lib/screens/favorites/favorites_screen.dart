@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart' as share_plus;
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../models/event.dart';
@@ -118,6 +118,8 @@ class _FavoritesScreenState extends State<FavoritesScreen>
     if (authProvider.currentUser == null) return;
 
     try {
+      final selectedCount = _selectedEvents.length;
+
       for (final _ in _selectedEvents) {
         // Remove from favorites
         // await firestoreService.removeFromFavorites(authProvider.currentUser!.id, eventId);
@@ -130,21 +132,23 @@ class _FavoritesScreenState extends State<FavoritesScreen>
 
       await _loadFavorites();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Removed ${_selectedEvents.length} events from favorites',
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Removed $selectedCount events from favorites'),
+            backgroundColor: AppTheme.successColor,
           ),
-          backgroundColor: AppTheme.successColor,
-        ),
-      );
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to remove events from favorites'),
-          backgroundColor: AppTheme.errorColor,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to remove events from favorites'),
+            backgroundColor: AppTheme.errorColor,
+          ),
+        );
+      }
     }
   }
 
@@ -166,7 +170,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
 
     shareText += 'Discover more events on SomethingToDo!';
 
-    await share_plus.Share.share(shareText);
+    await SharePlus.instance.share(ShareParams(text: shareText));
   }
 
   @override
@@ -611,6 +615,6 @@ class _FavoritesScreenState extends State<FavoritesScreen>
 
     shareText += 'Discover more events on SomethingToDo!';
 
-    await share_plus.Share.share(shareText);
+    await SharePlus.instance.share(ShareParams(text: shareText));
   }
 }

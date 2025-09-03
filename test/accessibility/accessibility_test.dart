@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:somethingtodo/widgets/modern/modern_skeleton.dart';
 import 'package:somethingtodo/widgets/common/delightful_refresh.dart';
+import 'package:somethingtodo/widgets/common/optimized_list_view.dart';
 import 'package:somethingtodo/services/performance_service.dart';
 
 void main() {
@@ -13,13 +14,13 @@ void main() {
       TestWidgetsFlutterBinding.ensureInitialized();
     });
 
-    testWidgets('should meet basic accessibility requirements', (WidgetTester tester) async {
+    testWidgets('should meet basic accessibility requirements', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Accessibility Test'),
-            ),
+            appBar: AppBar(title: const Text('Accessibility Test')),
             body: const Column(
               children: [
                 Text('Main Content'),
@@ -48,14 +49,18 @@ void main() {
       expect(find.text('Accessibility Test'), findsOneWidget);
       expect(find.text('Main Content'), findsOneWidget);
       expect(find.text('Accessible Button'), findsOneWidget);
-      
+
       // Verify FAB has tooltip (accessibility helper)
-      final fab = tester.widget<FloatingActionButton>(find.byType(FloatingActionButton));
+      final fab = tester.widget<FloatingActionButton>(
+        find.byType(FloatingActionButton),
+      );
       expect(fab.tooltip, isNotNull);
       expect(fab.tooltip, 'Main Action');
     });
 
-    testWidgets('should provide semantic labels for interactive elements', (WidgetTester tester) async {
+    testWidgets('should provide semantic labels for interactive elements', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -101,7 +106,8 @@ void main() {
       );
 
       // Verify semantic labels are accessible
-      expect(tester.getSemantics(find.byIcon(Icons.close)), 
+      expect(
+        tester.getSemantics(find.byIcon(Icons.close)),
         matchesSemantics(
           label: 'Close dialog button',
           isButton: true,
@@ -110,62 +116,77 @@ void main() {
       );
     });
 
-    testWidgets('should support screen readers with proper content descriptions', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: ListView(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.event),
-                  title: const Text('Concert at Central Park'),
-                  subtitle: const Text('Tonight at 7 PM'),
-                  trailing: Semantics(
-                    label: 'Add to favorites',
-                    button: true,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.favorite_border),
+    testWidgets(
+      'should support screen readers with proper content descriptions',
+      (WidgetTester tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: ListView(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.event),
+                    title: const Text('Concert at Central Park'),
+                    subtitle: const Text('Tonight at 7 PM'),
+                    trailing: Semantics(
+                      label: 'Add to favorites',
+                      button: true,
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.favorite_border),
+                      ),
                     ),
                   ),
-                ),
-                Card(
-                  child: Semantics(
-                    label: 'Event card: Music Festival, Saturday 3 PM, Outdoor venue',
-                    button: true,
-                    child: InkWell(
-                      onTap: () {},
-                      child: const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Music Festival', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            Text('Saturday 3 PM'),
-                            Text('Outdoor venue'),
-                          ],
+                  Card(
+                    child: Semantics(
+                      label:
+                          'Event card: Music Festival, Saturday 3 PM, Outdoor venue',
+                      button: true,
+                      child: InkWell(
+                        onTap: () {},
+                        child: const Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Music Festival',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text('Saturday 3 PM'),
+                              Text('Outdoor venue'),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      // Verify list items have proper semantics
-      expect(find.text('Concert at Central Park'), findsOneWidget);
-      expect(find.text('Tonight at 7 PM'), findsOneWidget);
-      expect(find.text('Music Festival'), findsOneWidget);
-      
-      // Check IconButton has accessibility label
-      final iconButton = tester.widget<IconButton>(find.byType(IconButton));
-      expect(iconButton.tooltip, anyOf(isNotNull, isNull)); // May or may not have tooltip
-    });
+        // Verify list items have proper semantics
+        expect(find.text('Concert at Central Park'), findsOneWidget);
+        expect(find.text('Tonight at 7 PM'), findsOneWidget);
+        expect(find.text('Music Festival'), findsOneWidget);
 
-    testWidgets('should handle text scaling for accessibility', (WidgetTester tester) async {
+        // Check IconButton has accessibility label
+        final iconButton = tester.widget<IconButton>(find.byType(IconButton));
+        expect(
+          iconButton.tooltip,
+          anyOf(isNotNull, isNull),
+        ); // May or may not have tooltip
+      },
+    );
+
+    testWidgets('should handle text scaling for accessibility', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -173,7 +194,9 @@ void main() {
               children: [
                 Text(
                   'Scalable Text',
-                  style: Theme.of(tester.element(find.byType(Scaffold))).textTheme.headlineMedium,
+                  style: Theme.of(
+                    tester.element(find.byType(Scaffold)),
+                  ).textTheme.headlineMedium,
                 ),
                 const Text(
                   'Body text that should scale with accessibility settings',
@@ -190,16 +213,21 @@ void main() {
 
       // Test with different text scale factors
       await tester.binding.setSurfaceSize(const Size(400, 800));
-      
+
       // Normal scale
       expect(find.text('Scalable Text'), findsOneWidget);
-      expect(find.text('Body text that should scale with accessibility settings'), findsOneWidget);
-      
+      expect(
+        find.text('Body text that should scale with accessibility settings'),
+        findsOneWidget,
+      );
+
       // Test that text is properly rendered (not checking exact scaling as it's handled by Flutter)
       expect(find.byType(Text), findsNWidgets(3)); // Including button text
     });
 
-    testWidgets('should provide proper focus management', (WidgetTester tester) async {
+    testWidgets('should provide proper focus management', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -211,10 +239,7 @@ void main() {
                 const TextField(
                   decoration: InputDecoration(labelText: 'Second Field'),
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Submit'),
-                ),
+                ElevatedButton(onPressed: () {}, child: const Text('Submit')),
               ],
             ),
           ),
@@ -224,30 +249,33 @@ void main() {
       // Test focus traversal
       await tester.tap(find.byType(TextField).first);
       await tester.pump();
-      
+
       // Move focus to next field using tab (simulated)
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.pump();
-      
+
       // Focus should be manageable
       expect(find.byType(TextField), findsNWidgets(2));
       expect(find.byType(ElevatedButton), findsOneWidget);
     });
 
-    testWidgets('should work with high contrast mode', (WidgetTester tester) async {
+    testWidgets('should work with high contrast mode', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(
             brightness: Brightness.light,
             // Simulate high contrast settings
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blue,
-              brightness: Brightness.light,
-            ).copyWith(
-              outline: Colors.black,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
+            colorScheme:
+                ColorScheme.fromSeed(
+                  seedColor: Colors.blue,
+                  brightness: Brightness.light,
+                ).copyWith(
+                  outline: Colors.black,
+                  surface: Colors.white,
+                  onSurface: Colors.black,
+                ),
           ),
           home: Scaffold(
             backgroundColor: Colors.white,
@@ -293,7 +321,9 @@ void main() {
     });
 
     group('Custom Widget Accessibility', () {
-      testWidgets('ModernSkeleton should be accessible', (WidgetTester tester) async {
+      testWidgets('ModernSkeleton should be accessible', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -321,7 +351,9 @@ void main() {
         expect(find.byType(ModernEventCardSkeleton), findsOneWidget);
       });
 
-      testWidgets('DelightfulRefresh should be accessible', (WidgetTester tester) async {
+      testWidgets('DelightfulRefresh should be accessible', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: DelightfulRefresh(
@@ -346,7 +378,9 @@ void main() {
         expect(find.text('Event 2'), findsOneWidget);
       });
 
-      testWidgets('Performance widgets should be accessible', (WidgetTester tester) async {
+      testWidgets('Performance widgets should be accessible', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -363,14 +397,12 @@ void main() {
                     label: 'Performance optimized list',
                     child: SizedBox(
                       height: 200,
-                      child: PerformantListView(
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
+                      child: OptimizedListView<int>(
+                        items: List.generate(5, (index) => index),
+                        itemBuilder: (context, item, index) {
                           return Semantics(
                             label: 'List item ${index + 1}',
-                            child: ListTile(
-                              title: Text('Item $index'),
-                            ),
+                            child: ListTile(title: Text('Item $index')),
                           );
                         },
                       ),
@@ -390,7 +422,9 @@ void main() {
     });
 
     group('Color Contrast and Visual Accessibility', () {
-      testWidgets('should maintain good color contrast ratios', (WidgetTester tester) async {
+      testWidgets('should maintain good color contrast ratios', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -430,7 +464,9 @@ void main() {
         expect(find.text('White on Dark Blue'), findsOneWidget);
       });
 
-      testWidgets('should not rely solely on color to convey information', (WidgetTester tester) async {
+      testWidgets('should not rely solely on color to convey information', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -471,7 +507,9 @@ void main() {
     });
 
     group('Keyboard Navigation', () {
-      testWidgets('should support keyboard navigation', (WidgetTester tester) async {
+      testWidgets('should support keyboard navigation', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -497,11 +535,11 @@ void main() {
         // Test that focusable elements are present
         expect(find.byType(ElevatedButton), findsNWidgets(2));
         expect(find.byType(TextField), findsOneWidget);
-        
+
         // Focus on first button
         await tester.tap(find.text('Button 1'));
         await tester.pump();
-        
+
         // Tab navigation simulation would require more complex setup
         // For now, verify elements are focusable
         expect(find.text('Button 1'), findsOneWidget);
@@ -510,7 +548,9 @@ void main() {
     });
 
     group('Screen Reader Support', () {
-      testWidgets('should provide meaningful content for screen readers', (WidgetTester tester) async {
+      testWidgets('should provide meaningful content for screen readers', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -530,7 +570,10 @@ void main() {
                     header: true,
                     child: const Text(
                       'Upcoming Events',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Expanded(
@@ -538,7 +581,8 @@ void main() {
                       itemCount: 3,
                       itemBuilder: (context, index) {
                         return Semantics(
-                          label: 'Event ${index + 1}: Sample Event, Today at ${6 + index} PM, Tap to view details',
+                          label:
+                              'Event ${index + 1}: Sample Event, Today at ${6 + index} PM, Tap to view details',
                           button: true,
                           child: ListTile(
                             leading: const Icon(Icons.event),
@@ -567,12 +611,16 @@ void main() {
         expect(find.text('Event 1'), findsOneWidget);
         expect(find.text('Event 2'), findsOneWidget);
         expect(find.text('Event 3'), findsOneWidget);
-        
+
         // Check tooltips are present
-        final searchButton = tester.widget<IconButton>(find.byIcon(Icons.search));
+        final searchButton = tester.widget<IconButton>(
+          find.byIcon(Icons.search),
+        );
         expect(searchButton.tooltip, 'Search events');
-        
-        final fab = tester.widget<FloatingActionButton>(find.byType(FloatingActionButton));
+
+        final fab = tester.widget<FloatingActionButton>(
+          find.byType(FloatingActionButton),
+        );
         expect(fab.tooltip, 'Add new event');
       });
     });

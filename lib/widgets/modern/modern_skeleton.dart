@@ -194,74 +194,69 @@ class ModernEventCardSkeleton extends StatelessWidget {
               borderRadius: 0,
             ),
           ),
-          // Content skeleton
+          // Content skeleton with better spacing
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Category chip skeleton
-                      const ModernSkeleton(
-                        width: 80,
-                        height: 24,
-                        borderRadius: 20,
-                      ),
-                      const SizedBox(height: 12),
-                      // Title skeleton - removed double.infinity
-                      const ModernSkeleton(
-                        width: null, // Let LayoutBuilder handle it
-                        height: 20,
-                        borderRadius: 8,
-                      ),
-                      const SizedBox(height: 8),
-                      const ModernSkeleton(
-                        width: 150,
-                        height: 20,
-                        borderRadius: 8,
-                      ),
-                    ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Category chip skeleton
+                        const ModernSkeleton(
+                          width: 80,
+                          height: 20,
+                          borderRadius: 20,
+                        ),
+                        const SizedBox(height: 8),
+                        // Title skeleton
+                        const ModernSkeleton(
+                          width: null,
+                          height: 16,
+                          borderRadius: 8,
+                        ),
+                        const SizedBox(height: 6),
+                        const ModernSkeleton(
+                          width: 120,
+                          height: 16,
+                          borderRadius: 8,
+                        ),
+                      ],
+                    ),
                   ),
-                  // Bottom row skeleton
+                  // Bottom row skeleton with reduced height
                   Row(
                     children: [
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             const ModernSkeleton(
-                              width: 120,
-                              height: 14,
+                              width: 100,
+                              height: 12,
                               borderRadius: 6,
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 4),
                             const ModernSkeleton(
-                              width: 100,
-                              height: 14,
+                              width: 80,
+                              height: 12,
                               borderRadius: 6,
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Column(
-                        children: [
-                          const ModernSkeleton(
-                            width: 60,
-                            height: 32,
-                            borderRadius: 20,
-                          ),
-                          const SizedBox(height: 8),
-                          const ModernSkeleton(
-                            width: 32,
-                            height: 32,
-                            borderRadius: 12,
-                          ),
-                        ],
+                      const SizedBox(width: 8),
+                      const ModernSkeleton(
+                        width: 50,
+                        height: 24,
+                        borderRadius: 12,
                       ),
                     ],
                   ),

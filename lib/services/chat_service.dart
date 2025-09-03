@@ -28,16 +28,18 @@ class ChatService {
 
   // Initialize chat service
   Future<void> initialize() async {
-    if (!AppConfig.demoMode) {
-      _dio.options.baseUrl = 'https://api.openai.com/v1/';
-      _dio.options.headers = {
-        'Authorization': 'Bearer ${AppConfig.openAIApiKey}',
-        'Content-Type': 'application/json',
-      };
-      _dio.options.connectTimeout = const Duration(
-        seconds: AppConfig.chatTimeoutSeconds,
-      );
-    }
+    _dio.options.baseUrl = 'https://api.openai.com/v1/';
+    _dio.options.headers = {
+      'Authorization': 'Bearer ${AppConfig.openAIApiKey}',
+      'Content-Type': 'application/json',
+    };
+    _dio.options.connectTimeout = const Duration(
+      seconds: AppConfig.chatTimeoutSeconds,
+    );
+
+    print(
+      'ChatService initialized with API key: ${AppConfig.openAIApiKey.isNotEmpty ? "✅ Configured" : "❌ Missing"}',
+    );
   }
 
   // Chat Session Management
@@ -238,7 +240,21 @@ class ChatService {
 
       ChatMessage aiResponse;
 
-      if (AppConfig.demoMode) {
+      // Check if we should use demo mode or real API
+      final useRealAPI =
+          AppConfig.openAIApiKey.isNotEmpty && !AppConfig.demoMode;
+
+      if (useRealAPI) {
+        // Get conversation history
+        final messages = await getSessionMessages(sessionId);
+
+        // Generate AI response using real OpenAI API
+        aiResponse = await _generateAIResponse(
+          messages: messages,
+          chatType: chatType,
+          context: context,
+        );
+      } else {
         // Use demo response
         aiResponse = ChatMessage(
           id: _uuid.v4(),
@@ -246,16 +262,6 @@ class ChatService {
           role: MessageRole.assistant,
           content: SampleChatResponses.getResponse(userMessage),
           timestamp: DateTime.now(),
-        );
-      } else {
-        // Get conversation history
-        final messages = await getSessionMessages(sessionId);
-
-        // Generate AI response
-        aiResponse = await _generateAIResponse(
-          messages: messages,
-          chatType: chatType,
-          context: context,
         );
       }
 

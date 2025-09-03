@@ -7,8 +7,7 @@ import '../../widgets/glass_bottom_nav.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/events_provider.dart';
 import '../../providers/chat_provider.dart';
-import '../../services/firestore_service.dart';
-import '../../config/theme.dart';
+
 import 'glass_home_screen.dart';
 import '../map/map_screen.dart';
 import '../chat/chat_screen.dart';
@@ -50,21 +49,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final chatProvider = context.read<ChatProvider>();
 
     if (authProvider.isAuthenticated) {
-      final isDemoMode = authProvider.isDemoMode;
+      // Always initialize with real API data for all users (including guests)
+      await eventsProvider.initialize(demoMode: false);
 
-      // Initialize events provider with demo mode
-      await eventsProvider.initialize(demoMode: isDemoMode);
-
-      // Initialize chat provider with demo mode
+      // Initialize chat provider with real API data
       await chatProvider.initialize(
         authProvider.currentUser!.id,
-        demoMode: isDemoMode,
+        demoMode: false,
       );
 
-      // Set demo mode in Firestore service
-      if (isDemoMode) {
-        FirestoreService().setDemoMode(true);
-      }
+      // Start location-based event loading after initialization
+      // Always load nearby events for all users
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          eventsProvider.loadNearbyEvents();
+        }
+      });
     }
   }
 
@@ -77,10 +77,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           extendBody: true,
           body: Column(
             children: [
-              // Demo mode banner
-              if (authProvider.isDemoMode) _buildDemoModeBanner(),
-
-              // Main content
+              // Main content - All users get real API data
               Expanded(
                 child: IndexedStack(index: _currentIndex, children: _screens),
               ),
@@ -92,93 +89,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               : null,
         );
       },
-    );
-  }
-
-  Widget _buildDemoModeBanner() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppTheme.warningColor.withValues(alpha: 0.9),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Row(
-          children: [
-            const Icon(Icons.explore, color: Colors.white, size: 20),
-            const SizedBox(width: 8),
-            const Expanded(
-              child: Text(
-                'Demo Mode - Explore with sample data',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => _buildDemoInfoDialog(),
-                );
-              },
-              child: const Text(
-                'Info',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDemoInfoDialog() {
-    return AlertDialog(
-      title: const Row(
-        children: [
-          Icon(Icons.explore, color: AppTheme.warningColor),
-          SizedBox(width: 8),
-          Text('Demo Mode'),
-        ],
-      ),
-      content: const Text(
-        'You\'re using the app in demo mode with sample data. All features work normally, but no data is saved to the cloud.\n\n'
-        'Features available:\n'
-        '• Browse 20+ sample events\n'
-        '• Search and filter events\n'
-        '• Add/remove favorites (locally)\n'
-        '• Chat with AI assistant\n'
-        '• View event details and maps\n\n'
-        'Create an account to save your data and access real events!',
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Got it'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-            context.read<AuthProvider>().signOut();
-            Navigator.pushReplacementNamed(context, '/auth');
-          },
-          child: const Text('Create Account'),
-        ),
-      ],
     );
   }
 

@@ -1,535 +1,445 @@
-import 'package:flutter/foundation.dart';
 import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/event.dart';
+import '../services/firestore_service.dart';
 import '../services/rapidapi_events_service.dart';
-import '../services/location_service.dart';
-import '../services/enhanced_cache_service.dart';
-import '../utils/performance_optimizer.dart';
+import '../services/cache_service.dart';
+import '../services/performance_service.dart';
+import '../config/app_config.dart';
 
-/// Optimized events provider with better state management and performance
+/// Optimized Events Provider with performance improvements
+///
+/// Key optimizations:
+/// - Lazy loading with pagination
+/// - Memory-efficient state management
+/// - Debounced search
+/// - Smart caching strategies
+/// - Automatic cleanup of unused data
 class OptimizedEventsProvider extends ChangeNotifier {
-  // Services
+  final FirestoreService _firestoreService = FirestoreService();
   final RapidAPIEventsService _rapidAPIService = RapidAPIEventsService();
-  final LocationService _locationService = LocationService();
-  final EnhancedCacheService _cacheService = EnhancedCacheService.instance;
-  final PerformanceOptimizer _performanceOptimizer = PerformanceOptimizer();
 
-  // State - using separate lists to prevent unnecessary rebuilds
+  // Pagination and lazy loading
+  static const int _pageSize = 20;
+  static const int _maxEventsInMemory = 100;
+
+  // Event lists with memory management
   List<Event> _events = [];
   List<Event> _featuredEvents = [];
   List<Event> _nearbyEvents = [];
-  List<Event> _filteredEvents = [];
+  final Map<String, Event> _eventCache = {}; // Quick lookup cache
+
+  // Search with debouncing
   List<Event> _searchResults = [];
+  Timer? _searchDebounce;
+  String _lastSearchQuery = '';
 
-  // Loading states - granular control
-  bool _isLoadingEvents = false;
-  bool _isLoadingFeatured = false;
-  bool _isLoadingNearby = false;
-  bool _isSearching = false;
-
-  // Error handling
+  // Loading states
+  bool _isLoading = false;
+  bool _isLoadingMore = false;
+  bool _hasMoreEvents = true;
   String? _error;
 
   // Pagination
   int _currentPage = 0;
-  static const int _pageSize = 20;
-  bool _hasMoreEvents = true;
+  DocumentSnapshot? _lastDocument;
 
-  // Filters
-  String? _selectedCategory;
-  double? _maxDistance;
-  String? _priceFilter;
-  DateTime? _dateFilter;
-
-  // Location
+  // Filter state
+  EventCategory? _selectedCategory;
+  double _searchRadius = AppConfig.defaultSearchRadius;
   double? _userLatitude;
   double? _userLongitude;
 
   // Memory management
-  final int _maxEventsInMemory = 100;
   Timer? _cleanupTimer;
+  final Set<String> _viewedEventIds = {};
 
-  // Getters with const where possible
+  // Getters with defensive copying for immutability
   List<Event> get events => List.unmodifiable(_events);
   List<Event> get featuredEvents => List.unmodifiable(_featuredEvents);
   List<Event> get nearbyEvents => List.unmodifiable(_nearbyEvents);
-  List<Event> get filteredEvents => List.unmodifiable(_filteredEvents);
   List<Event> get searchResults => List.unmodifiable(_searchResults);
 
-  bool get isLoading => _isLoadingEvents;
-  bool get isLoadingFeatured => _isLoadingFeatured;
-  bool get isLoadingNearby => _isLoadingNearby;
-  bool get isSearching => _isSearching;
+  bool get isLoading => _isLoading;
+  bool get isLoadingMore => _isLoadingMore;
   bool get hasMoreEvents => _hasMoreEvents;
   String? get error => _error;
 
-  String? get selectedCategory => _selectedCategory;
-  double? get maxDistance => _maxDistance;
-  String? get priceFilter => _priceFilter;
-  DateTime? get dateFilter => _dateFilter;
+  EventCategory? get selectedCategory => _selectedCategory;
+  double get searchRadius => _searchRadius;
 
-  OptimizedEventsProvider() {
-    _initialize();
-  }
+  /// Initialize provider with optimizations
+  Future<void> initialize() async {
+    // Start performance tracking
+    PerformanceService.instance.startOperation('events_init');
 
-  Future<void> _initialize() async {
-    // Set up periodic cleanup
-    _cleanupTimer = Timer.periodic(const Duration(minutes: 5), (_) {
-      _cleanupMemory();
-    });
+    try {
+      // Initialize cache service
+      await CacheService.instance.initialize();
 
-    // Load cached data first for instant display
-    await _loadCachedData();
+      // Load cached data first for instant UI
+      await _loadCachedData();
 
-    // Then fetch fresh data in background
-    _loadInitialData();
-  }
+      // Start periodic cleanup
+      _startPeriodicCleanup();
 
-  @override
-  void dispose() {
-    _cleanupTimer?.cancel();
-    _performanceOptimizer.dispose();
-    super.dispose();
+      // Load fresh data in background
+      _loadFreshData();
+    } finally {
+      PerformanceService.instance.endOperation('events_init');
+    }
   }
 
   /// Load cached data for instant display
   Future<void> _loadCachedData() async {
     try {
-      final cachedEvents = await _cacheService.getCachedNearbyEvents(
-        _userLatitude ?? 0,
-        _userLongitude ?? 0,
-      );
+      final cachedEvents = await CacheService.instance.getCachedEvents();
+      final cachedFeatured = await CacheService.instance
+          .getCachedFeaturedEvents();
 
       if (cachedEvents != null && cachedEvents.isNotEmpty) {
-        _events = cachedEvents.take(_pageSize).toList();
-        // Don't notify here - wait for UI to be ready
-        Future.microtask(() => notifyListeners());
+        _events = cachedEvents.take(_maxEventsInMemory).toList();
+        _updateEventCache(_events);
+      }
+
+      if (cachedFeatured != null && cachedFeatured.isNotEmpty) {
+        _featuredEvents = cachedFeatured;
+      }
+
+      if (_events.isNotEmpty || _featuredEvents.isNotEmpty) {
+        notifyListeners();
       }
     } catch (e) {
-      debugPrint('Failed to load cached data: $e');
+      debugPrint('Error loading cached data: $e');
     }
   }
 
-  /// Load initial data
-  Future<void> _loadInitialData() async {
-    await Future.wait([
-      loadEvents(refresh: false),
-      loadFeaturedEvents(),
-      _getUserLocation(),
-    ]);
-  }
+  /// Load fresh data in background
+  Future<void> _loadFreshData() async {
+    if (_isLoading) return;
 
-  /// Get user location with caching
-  Future<void> _getUserLocation() async {
     try {
-      final location = await _locationService.getCurrentLocation();
-      if (location != null) {
-        _userLatitude = location.latitude;
-        _userLongitude = location.longitude;
+      // Check connectivity first
+      final isConnected = await CacheService.instance.isConnected;
+      if (!isConnected) return;
 
-        // Debounce location-based loading
-        _performanceOptimizer.debounce(
-          'location_load',
-          const Duration(seconds: 5),
-          () => loadNearbyEvents(),
-        );
-      }
+      await loadEvents(refresh: true);
     } catch (e) {
-      debugPrint('Failed to get location: $e');
+      debugPrint('Error loading fresh data: $e');
     }
   }
 
   /// Load events with pagination
   Future<void> loadEvents({bool refresh = false}) async {
-    if (_isLoadingEvents) return;
+    if (_isLoading) return;
 
     if (refresh) {
       _currentPage = 0;
+      _lastDocument = null;
       _hasMoreEvents = true;
+      _events.clear();
+      _eventCache.clear();
     }
 
-    _isLoadingEvents = true;
-    _error = null;
-
-    // Only notify if this is a refresh or first load
-    if (refresh || _events.isEmpty) {
-      notifyListeners();
-    }
+    _setLoading(true);
+    PerformanceService.instance.startOperation('load_events');
 
     try {
-      // Try cache first for non-refresh loads
-      if (!refresh) {
-        final cacheKey = _cacheService.generateCacheKey(
-          latitude: _userLatitude,
-          longitude: _userLongitude,
-          limit: _pageSize,
-        );
-        final cachedEvents = await _cacheService.getCachedEvents(cacheKey);
-        if (cachedEvents != null && cachedEvents.isNotEmpty) {
-          _events = cachedEvents;
-          _isLoadingEvents = false;
-          notifyListeners();
-          return;
-        }
+      final isConnected = await CacheService.instance.isConnected;
+
+      if (!isConnected) {
+        // Use cached data when offline
+        await _loadCachedData();
+        return;
       }
 
-      // Fetch from API
-      final newEvents = await _rapidAPIService.searchEvents(
-        query: '',
-        limit: _pageSize,
-      );
+      // Load from API with pagination
+      final newEvents = await _loadEventsPage();
 
       if (refresh) {
         _events = newEvents;
       } else {
-        // Prevent duplicates
-        final existingIds = _events.map((e) => e.id).toSet();
-        final uniqueNewEvents = newEvents
-            .where((e) => !existingIds.contains(e.id))
-            .toList();
-        _events = [..._events, ...uniqueNewEvents];
+        // Append new events, avoiding duplicates
+        for (final event in newEvents) {
+          if (!_eventCache.containsKey(event.id)) {
+            _events.add(event);
+          }
+        }
       }
 
-      // Trim if too many events in memory
-      if (_events.length > _maxEventsInMemory) {
-        _events = _events.take(_maxEventsInMemory).toList();
+      // Update cache
+      _updateEventCache(newEvents);
+
+      // Trim events list if too large
+      _trimEventsIfNeeded();
+
+      // Cache for offline use
+      if (_currentPage == 0) {
+        await CacheService.instance.cacheEvents(_events);
       }
 
-      _hasMoreEvents = newEvents.length == _pageSize;
       _currentPage++;
+      _hasMoreEvents = newEvents.length >= _pageSize;
 
-      // Cache the events
-      final cacheKey = _cacheService.generateCacheKey(
-        latitude: _userLatitude,
-        longitude: _userLongitude,
-        limit: _pageSize,
-      );
-      await _cacheService.cacheEvents(cacheKey, _events);
-    } catch (e) {
-      _error = e.toString();
-      // Load from cache as fallback
-      final cacheKey = _cacheService.generateCacheKey(
-        latitude: _userLatitude,
-        longitude: _userLongitude,
-        limit: _pageSize,
-      );
-      final cachedEvents = await _cacheService.getCachedEvents(cacheKey);
-      if (cachedEvents != null) {
-        _events = cachedEvents;
-      }
-    } finally {
-      _isLoadingEvents = false;
       notifyListeners();
+    } catch (e) {
+      _setError('Failed to load events: $e');
+    } finally {
+      _setLoading(false);
+      PerformanceService.instance.endOperation('load_events');
     }
   }
 
-  /// Load more events for infinite scroll
-  Future<void> loadMoreEvents() async {
-    if (!_hasMoreEvents || _isLoadingEvents) return;
-
-    // Throttle load more requests
-    _performanceOptimizer.throttle(
-      'load_more',
-      const Duration(milliseconds: 500),
-      () => loadEvents(refresh: false),
-    );
-  }
-
-  /// Load featured events
-  Future<void> loadFeaturedEvents() async {
-    if (_isLoadingFeatured) return;
-
-    _isLoadingFeatured = true;
-
+  /// Load a single page of events
+  Future<List<Event>> _loadEventsPage() async {
     try {
-      // Check cache first
-      final cached = await _cacheService.getCachedFeaturedEvents();
-      if (cached != null && cached.isNotEmpty) {
-        _featuredEvents = cached;
-        _isLoadingFeatured = false;
-        notifyListeners();
-        return;
+      // Use cached API response if available
+      final cacheKey = 'events_page_$_currentPage';
+      final cachedResponse = await CacheService.instance.getCachedApiResponse(
+        cacheKey,
+      );
+
+      if (cachedResponse != null) {
+        return (cachedResponse as List).map((e) => Event.fromJson(e)).toList();
       }
 
-      // Fetch from API
+      // Load from API
       final events = await _rapidAPIService.searchEvents(
-        query: 'featured popular trending',
-        limit: 10,
+        query: 'events',
+        location: 'San Francisco, CA',
+        limit: _pageSize,
       );
 
-      _featuredEvents = events;
-      await _cacheService.cacheFeaturedEvents(events);
+      // Cache the response
+      await CacheService.instance.cacheApiResponse(cacheKey, {
+        'events': events.map((e) => e.toJson()).toList(),
+        'count': events.length,
+      });
+
+      return events;
     } catch (e) {
-      debugPrint('Failed to load featured events: $e');
-    } finally {
-      _isLoadingFeatured = false;
-      notifyListeners();
+      debugPrint('Error loading events page: $e');
+      return [];
     }
   }
 
-  /// Load nearby events with debouncing
-  Future<void> loadNearbyEvents() async {
-    if (_userLatitude == null || _userLongitude == null) return;
-    if (_isLoadingNearby) return;
+  /// Load more events (pagination)
+  Future<void> loadMoreEvents() async {
+    if (_isLoadingMore || !_hasMoreEvents) return;
 
-    _isLoadingNearby = true;
+    _isLoadingMore = true;
+    notifyListeners();
 
     try {
-      // Check cache first
-      final cached = await _cacheService.getCachedNearbyEvents(
-        _userLatitude!,
-        _userLongitude!,
-      );
-
-      if (cached != null && cached.isNotEmpty) {
-        _nearbyEvents = cached;
-        _isLoadingNearby = false;
-        notifyListeners();
-
-        // Still fetch fresh data in background
-        _fetchNearbyEventsInBackground();
-        return;
-      }
-
-      await _fetchNearbyEvents();
-    } catch (e) {
-      debugPrint('Failed to load nearby events: $e');
+      await loadEvents(refresh: false);
     } finally {
-      _isLoadingNearby = false;
+      _isLoadingMore = false;
       notifyListeners();
     }
-  }
-
-  Future<void> _fetchNearbyEvents() async {
-    final events = await _rapidAPIService.getEventsNearLocation(
-      latitude: _userLatitude!,
-      longitude: _userLongitude!,
-      radiusKm: _maxDistance ?? 50,
-      limit: 20,
-    );
-
-    _nearbyEvents = events;
-    await _cacheService.cacheNearbyEvents(
-      _userLatitude!,
-      _userLongitude!,
-      events,
-    );
-  }
-
-  void _fetchNearbyEventsInBackground() {
-    Future.delayed(const Duration(seconds: 2), () async {
-      try {
-        await _fetchNearbyEvents();
-        notifyListeners();
-      } catch (e) {
-        // Silent fail for background refresh
-      }
-    });
   }
 
   /// Search events with debouncing
   Future<void> searchEvents(String query) async {
+    // Cancel previous search
+    _searchDebounce?.cancel();
+
     if (query.isEmpty) {
-      _searchResults = [];
+      _searchResults.clear();
+      _lastSearchQuery = '';
       notifyListeners();
       return;
     }
 
-    // Debounce search requests
-    _performanceOptimizer.debounce(
-      'search',
-      const Duration(milliseconds: 300),
-      () => _performSearch(query),
-    );
+    // Debounce search to avoid excessive API calls
+    _searchDebounce = Timer(const Duration(milliseconds: 500), () async {
+      if (query == _lastSearchQuery) return;
+
+      _lastSearchQuery = query;
+      PerformanceService.instance.startOperation('search_events');
+
+      try {
+        // First search in local cache
+        final localResults = _searchInCache(query);
+
+        if (localResults.isNotEmpty) {
+          _searchResults = localResults;
+          notifyListeners();
+        }
+
+        // Then search via API
+        final isConnected = await CacheService.instance.isConnected;
+        if (isConnected) {
+          final apiResults = await _rapidAPIService.searchEvents(
+            query: query,
+            location: 'San Francisco, CA',
+            limit: 30,
+          );
+
+          _searchResults = apiResults;
+          notifyListeners();
+        }
+      } catch (e) {
+        debugPrint('Search error: $e');
+      } finally {
+        PerformanceService.instance.endOperation('search_events');
+      }
+    });
   }
 
-  Future<void> _performSearch(String query) async {
-    _isSearching = true;
-    notifyListeners();
+  /// Search in local cache
+  List<Event> _searchInCache(String query) {
+    final lowercaseQuery = query.toLowerCase();
+
+    return _eventCache.values
+        .where((event) {
+          return event.title.toLowerCase().contains(lowercaseQuery) ||
+              event.description.toLowerCase().contains(lowercaseQuery) ||
+              event.venue.name.toLowerCase().contains(lowercaseQuery);
+        })
+        .take(20)
+        .toList();
+  }
+
+  /// Load nearby events
+  Future<void> loadNearbyEvents() async {
+    if (_userLatitude == null || _userLongitude == null) return;
+
+    PerformanceService.instance.startOperation('load_nearby');
 
     try {
-      // Run search in background to prevent UI blocking
-      final results = await Future.microtask(
-        () => _searchInIsolate({'query': query, 'events': _events}),
+      final isConnected = await CacheService.instance.isConnected;
+      if (!isConnected) {
+        // Use cached nearby events
+        _nearbyEvents = _events.take(10).toList();
+        notifyListeners();
+        return;
+      }
+
+      final events = await _rapidAPIService.getEventsNearLocation(
+        latitude: _userLatitude!,
+        longitude: _userLongitude!,
+        radiusKm: _searchRadius,
+        limit: 30,
       );
 
-      _searchResults = results;
+      _nearbyEvents = events;
+      _updateEventCache(events);
+      notifyListeners();
     } catch (e) {
-      _searchResults = [];
+      debugPrint('Error loading nearby events: $e');
     } finally {
-      _isSearching = false;
-      notifyListeners();
+      PerformanceService.instance.endOperation('load_nearby');
     }
   }
 
-  /// Search in isolate to prevent UI blocking
-  static List<Event> _searchInIsolate(Map<String, dynamic> params) {
-    final query = params['query'] as String;
-    final events = params['events'] as List<Event>;
-    final lowerQuery = query.toLowerCase();
-
-    return events.where((event) {
-      return event.title.toLowerCase().contains(lowerQuery) ||
-          (event.description.toLowerCase().contains(lowerQuery)) ||
-          event.category.toLowerCase().contains(lowerQuery);
-    }).toList();
+  /// Set user location
+  void setUserLocation(double latitude, double longitude) {
+    _userLatitude = latitude;
+    _userLongitude = longitude;
+    loadNearbyEvents();
   }
 
-  /// Apply filters efficiently
-  void applyFilters({
-    String? category,
-    double? maxDistance,
-    String? priceFilter,
-    DateTime? dateFilter,
-  }) {
-    _selectedCategory = category;
-    _maxDistance = maxDistance;
-    _priceFilter = priceFilter;
-    _dateFilter = dateFilter;
+  /// Get event by ID with caching
+  Event? getEventById(String eventId) {
+    // Mark as viewed for memory management
+    _viewedEventIds.add(eventId);
 
-    // Debounce filter application
-    _performanceOptimizer.debounce(
-      'filter',
-      const Duration(milliseconds: 200),
-      () => _applyFilters(),
-    );
+    return _eventCache[eventId];
   }
 
-  void _applyFilters() {
-    List<Event> filtered = List.from(_events);
-
-    if (_selectedCategory != null && _selectedCategory!.isNotEmpty) {
-      filtered = filtered
-          .where((e) => e.category.name == _selectedCategory)
-          .toList();
-    }
-
-    if (_dateFilter != null) {
-      filtered = filtered
-          .where(
-            (e) =>
-                e.startDate.isAfter(_dateFilter!) ||
-                e.startDate.isAtSameMomentAs(_dateFilter!),
-          )
-          .toList();
-    }
-
-    if (_priceFilter != null) {
-      filtered = _filterByPrice(filtered, _priceFilter!);
-    }
-
-    _filteredEvents = filtered;
-    notifyListeners();
-  }
-
-  List<Event> _filterByPrice(List<Event> events, String priceFilter) {
-    switch (priceFilter) {
-      case 'free':
-        return events.where((e) => e.pricing.isFree).toList();
-      case 'low':
-        return events
-            .where((e) => !e.pricing.isFree && e.pricing.price <= 25)
-            .toList();
-      case 'medium':
-        return events
-            .where(
-              (e) =>
-                  !e.pricing.isFree &&
-                  e.pricing.price > 25 &&
-                  e.pricing.price <= 75,
-            )
-            .toList();
-      case 'high':
-        return events
-            .where((e) => !e.pricing.isFree && e.pricing.price > 75)
-            .toList();
-      default:
-        return events;
+  /// Update event cache
+  void _updateEventCache(List<Event> events) {
+    for (final event in events) {
+      _eventCache[event.id] = event;
     }
   }
 
-  /// Toggle favorite with optimistic update
-  Future<void> toggleFavorite(String eventId) async {
-    final eventIndex = _events.indexWhere((e) => e.id == eventId);
-    if (eventIndex == -1) return;
-
-    // Optimistic update
-    final event = _events[eventIndex];
-
-    // Create new event with toggled favorite
-    final updatedEvent = Event(
-      id: event.id,
-      title: event.title,
-      description: event.description,
-      organizerName: event.organizerName,
-      organizerImageUrl: event.organizerImageUrl,
-      venue: event.venue,
-      imageUrls: event.imageUrls,
-      category: event.category,
-      pricing: event.pricing,
-      startDateTime: event.startDateTime,
-      endDateTime: event.endDateTime,
-      tags: event.tags,
-      attendeeCount: event.attendeeCount,
-      maxAttendees: event.maxAttendees,
-      favoriteCount: event.favoriteCount,
-      status: event.status,
-      websiteUrl: event.websiteUrl,
-      ticketUrl: event.ticketUrl,
-      contactEmail: event.contactEmail,
-      contactPhone: event.contactPhone,
-      isFeatured: event.isFeatured,
-      isPremium: event.isPremium,
-      isOnline: event.isOnline,
-      createdAt: event.createdAt,
-      updatedAt: event.updatedAt,
-      createdBy: event.createdBy,
-    );
-
-    _events[eventIndex] = updatedEvent;
-    notifyListeners();
-
-    try {
-      // Persist to backend - using updateUserFavorites instead
-      // await _firestoreService.toggleEventFavorite(eventId, !wasFavorite);
-      // TODO: Implement proper favorite toggle in FirestoreService
-    } catch (e) {
-      // Revert on error
-      _events[eventIndex] = event;
-      notifyListeners();
-    }
-  }
-
-  /// Clean up memory periodically
-  void _cleanupMemory() {
-    // Remove old events from memory
+  /// Trim events list if too large to prevent memory issues
+  void _trimEventsIfNeeded() {
     if (_events.length > _maxEventsInMemory) {
-      _events = _events.take(_maxEventsInMemory).toList();
-    }
+      // Keep only the most recent events
+      final recentEvents = _events
+          .skip(_events.length - _maxEventsInMemory)
+          .toList();
 
-    // Clear search results if not searching
-    if (!_isSearching && _searchResults.isNotEmpty) {
-      _searchResults = [];
-    }
+      // Keep viewed events in cache
+      final viewedEvents = _events
+          .where((e) => _viewedEventIds.contains(e.id))
+          .toList();
 
-    // Clear filtered results if no filters applied
-    if (_selectedCategory == null &&
-        _priceFilter == null &&
-        _dateFilter == null &&
-        _filteredEvents.isNotEmpty) {
-      _filteredEvents = [];
+      _events = {...recentEvents, ...viewedEvents}.toList();
+
+      // Clean up cache
+      final keepIds = _events.map((e) => e.id).toSet();
+      _eventCache.removeWhere((key, value) => !keepIds.contains(key));
     }
   }
 
-  /// Clear all data
-  void clearAll() {
-    _events = [];
-    _featuredEvents = [];
-    _nearbyEvents = [];
-    _filteredEvents = [];
-    _searchResults = [];
-    _currentPage = 0;
-    _hasMoreEvents = true;
+  /// Start periodic cleanup to prevent memory leaks
+  void _startPeriodicCleanup() {
+    _cleanupTimer?.cancel();
+    _cleanupTimer = Timer.periodic(const Duration(minutes: 5), (_) {
+      _performCleanup();
+    });
+  }
+
+  /// Perform memory cleanup
+  void _performCleanup() {
+    // Clear old viewed event IDs
+    if (_viewedEventIds.length > 100) {
+      _viewedEventIds.clear();
+    }
+
+    // Trim events if needed
+    _trimEventsIfNeeded();
+
+    // Clear old search results
+    if (_searchResults.length > 50) {
+      _searchResults = _searchResults.take(30).toList();
+    }
+
+    // Trigger garbage collection hint
+    if (kDebugMode) {
+      debugPrint('Performing events provider cleanup');
+    }
+  }
+
+  /// Set filters
+  void setFilters({EventCategory? category, double? radius}) {
+    _selectedCategory = category;
+    if (radius != null) _searchRadius = radius;
+
+    // Reload with new filters
+    loadEvents(refresh: true);
+  }
+
+  /// Clear filters
+  void clearFilters() {
+    _selectedCategory = null;
+    _searchRadius = AppConfig.defaultSearchRadius;
     notifyListeners();
+  }
+
+  /// Helper methods
+  void _setLoading(bool loading) {
+    _isLoading = loading;
+    notifyListeners();
+  }
+
+  void _setError(String error) {
+    _error = error;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _searchDebounce?.cancel();
+    _cleanupTimer?.cancel();
+    _events.clear();
+    _eventCache.clear();
+    _searchResults.clear();
+    _viewedEventIds.clear();
+    super.dispose();
   }
 }

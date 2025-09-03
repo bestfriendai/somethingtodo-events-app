@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/scheduler.dart' as scheduler;
 
 import 'package:somethingtodo/services/performance_service.dart';
+import 'package:somethingtodo/widgets/common/optimized_list_view.dart';
 
 void main() {
   group('PerformanceService Tests', () {
@@ -41,7 +42,7 @@ void main() {
 
     test('should set performance mode to high', () {
       performanceService.setPerformanceMode(PerformanceMode.high);
-      
+
       expect(performanceService.enableAnimations, isTrue);
       expect(performanceService.enableBlur, isTrue);
       expect(performanceService.enableShadows, isTrue);
@@ -50,7 +51,7 @@ void main() {
 
     test('should set performance mode to balanced', () {
       performanceService.setPerformanceMode(PerformanceMode.balanced);
-      
+
       expect(performanceService.enableAnimations, isTrue);
       expect(performanceService.enableBlur, isFalse);
       expect(performanceService.enableShadows, isTrue);
@@ -59,7 +60,7 @@ void main() {
 
     test('should set performance mode to battery', () {
       performanceService.setPerformanceMode(PerformanceMode.battery);
-      
+
       expect(performanceService.enableAnimations, isFalse);
       expect(performanceService.enableBlur, isFalse);
       expect(performanceService.enableShadows, isFalse);
@@ -68,7 +69,7 @@ void main() {
 
     test('should enable battery optimization', () {
       performanceService.enableBatteryOptimization();
-      
+
       expect(performanceService.enableAnimations, isFalse);
       expect(performanceService.enableBlur, isFalse);
       expect(performanceService.enableShadows, isFalse);
@@ -78,7 +79,7 @@ void main() {
     test('should disable battery optimization', () {
       performanceService.enableBatteryOptimization();
       performanceService.disableBatteryOptimization();
-      
+
       expect(performanceService.enableAnimations, isTrue);
       expect(performanceService.enableBlur, isTrue);
       expect(performanceService.enableShadows, isTrue);
@@ -87,7 +88,7 @@ void main() {
 
     test('should return performance stats', () {
       final stats = performanceService.getPerformanceStats();
-      
+
       expect(stats, isA<Map<String, dynamic>>());
       expect(stats.containsKey('currentFPS'), isTrue);
       expect(stats.containsKey('averageFPS'), isTrue);
@@ -101,7 +102,9 @@ void main() {
       expect(() => performanceService.optimizeMemoryUsage(), returnsNormally);
     });
 
-    testWidgets('should build optimized container', (WidgetTester tester) async {
+    testWidgets('should build optimized container', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -118,9 +121,11 @@ void main() {
       expect(find.text('Test'), findsOneWidget);
     });
 
-    testWidgets('should build optimized blur with blur enabled', (WidgetTester tester) async {
+    testWidgets('should build optimized blur with blur enabled', (
+      WidgetTester tester,
+    ) async {
       performanceService.setPerformanceMode(PerformanceMode.high);
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -135,9 +140,11 @@ void main() {
       expect(find.text('Blurred Text'), findsOneWidget);
     });
 
-    testWidgets('should build container instead of blur when blur disabled', (WidgetTester tester) async {
+    testWidgets('should build container instead of blur when blur disabled', (
+      WidgetTester tester,
+    ) async {
       performanceService.setPerformanceMode(PerformanceMode.battery);
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -153,7 +160,9 @@ void main() {
       expect(find.text('Blurred Text'), findsOneWidget);
     });
 
-    testWidgets('should create optimized animation controller', (WidgetTester tester) async {
+    testWidgets('should create optimized animation controller', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -161,11 +170,12 @@ void main() {
               builder: (context) {
                 return StatefulBuilder(
                   builder: (context, setState) {
-                    final controller = performanceService.createOptimizedAnimationController(
-                      duration: const Duration(seconds: 1),
-                      vsync: TestTicker.provider(context),
-                    );
-                    
+                    final controller = performanceService
+                        .createOptimizedAnimationController(
+                          duration: const Duration(seconds: 1),
+                          vsync: TestTicker.provider(context),
+                        );
+
                     return Text('Controller created: ${controller.duration}');
                   },
                 );
@@ -178,16 +188,16 @@ void main() {
       expect(find.textContaining('Controller created:'), findsOneWidget);
     });
 
-    testWidgets('should build optimized list view', (WidgetTester tester) async {
+    testWidgets('should build optimized list view', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: performanceService.buildOptimizedListView(
               itemCount: 5,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text('Item $index'),
-                );
+                return ListTile(title: Text('Item $index'));
               },
             ),
           ),
@@ -206,7 +216,8 @@ void main() {
             body: performanceService.buildOptimizedImage(
               imageUrl: 'https://example.com/test.jpg',
               placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, error, stackTrace) => const Icon(Icons.error),
+              errorWidget: (context, error, stackTrace) =>
+                  const Icon(Icons.error),
             ),
           ),
         ),
@@ -237,11 +248,7 @@ void main() {
     testWidgets('PerformantBlur should work', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: PerformantBlur(
-              child: Text('Performant Blur'),
-            ),
-          ),
+          home: Scaffold(body: PerformantBlur(child: Text('Performant Blur'))),
         ),
       );
 
@@ -253,12 +260,10 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: PerformantListView(
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text('Performant Item $index'),
-                );
+            body: OptimizedListView<int>(
+              items: List.generate(3, (index) => index),
+              itemBuilder: (context, item, index) {
+                return ListTile(title: Text('Performant Item $index'));
               },
             ),
           ),

@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
 import '../config/app_config.dart';
-import '../config/api_config.dart';
+import '../config/functions_config.dart';
 import '../models/event.dart';
 import 'rapidapi_exception.dart';
 import 'logging_service.dart';
 import 'rate_limit_service.dart';
-import 'enhanced_cache_service.dart';
+import 'cache_service.dart';
 import 'demo_data_service.dart';
 
 /// Enhanced RapidAPI Events Service with intelligent pagination,
@@ -15,7 +16,7 @@ import 'demo_data_service.dart';
 class RapidAPIEventsService {
   late final Dio _dio;
   final RateLimitService _rateLimitService = RateLimitService();
-  final EnhancedCacheService _cacheService = EnhancedCacheService();
+  final CacheService _cacheService = CacheService.instance;
 
   // Circuit breaker state
   bool _circuitBreakerOpen = false;
@@ -37,30 +38,23 @@ class RapidAPIEventsService {
     _rateLimitService.initialize();
     _cacheService.initialize();
 
-    // Configure API
-    _dio.options.baseUrl = ApiConfig.rapidApiBaseUrl;
+    // Configure API through Firebase Functions proxy
+    _dio.options.baseUrl = FunctionsConfig.baseUrl;
     _dio.options.connectTimeout = const Duration(seconds: 20);
     _dio.options.receiveTimeout = const Duration(seconds: 20);
 
-    // Get API key from configuration
-    final apiKey = ApiConfig.apiKey;
-
-    if (!ApiConfig.isApiConfigured || ApiConfig.useDemoMode) {
-      LoggingService.warning(
-        'RapidAPI not configured or demo mode enabled. Using demo data.',
-      );
-    }
-
-    _dio.options.headers = {
-      if (apiKey.isNotEmpty) 'X-RapidAPI-Key': apiKey,
-      'X-RapidAPI-Host': ApiConfig.rapidApiHost,
-      'Content-Type': 'application/json',
-    };
-
-    // Add request/response interceptors for logging and error handling
+    // Attach Firebase ID token when available
     _dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
+          try {
+            final user = fb_auth.FirebaseAuth.instance.currentUser;
+            final idToken = await user?.getIdToken();
+            if (idToken != null && idToken.isNotEmpty) {
+              options.headers['Authorization'] = 'Bearer $idToken';
+            }
+          } catch (_) {}
+          options.headers['Content-Type'] = 'application/json';
           LoggingService.apiRequest(options.method, options.path);
           handler.next(options);
         },
@@ -238,7 +232,9 @@ class RapidAPIEventsService {
     int limit = 50,
   }) async {
     // Use demo data if API is not configured or demo mode is enabled
-    if (!ApiConfig.isApiConfigured || ApiConfig.useDemoMode) {
+    // When running without backend (e.g., emulator not available),
+    // optionally fall back to demo data in debug builds.
+    if (AppConfig.demoMode) {
       LoggingService.info('Using demo data for search', tag: 'API');
       return await DemoEventMethods.getDemoEvents(
         location: location ?? 'San Francisco',
@@ -246,9 +242,14 @@ class RapidAPIEventsService {
       );
     }
 
-    // Check cache first
-    final cacheKey =
-        'search_${query}_${location}_${startDate}_${endDate}_$limit';
+    // Check cache first using intelligent key generation
+    final cacheKey = _cacheService.generateApiCacheKey(
+      query: query,
+      location: location,
+      startDate: startDate,
+      endDate: endDate,
+      limit: limit,
+    );
     final cached = await _cacheService.getCachedEvents(cacheKey);
     if (cached != null) {
       LoggingService.info('Cache hit for search: $query', tag: 'Cache');
@@ -263,15 +264,14 @@ class RapidAPIEventsService {
           request: () async {
             return await _makeRequest<List<Event>>(() async {
               final response = await _dio.get(
-                '/search-events',
+                '/events/search',
                 queryParameters: {
                   'query': query,
                   if (location != null) 'location': location,
-                  if (startDate != null)
-                    'start_date': startDate.toIso8601String().split('T')[0],
-                  if (endDate != null)
-                    'end_date': endDate.toIso8601String().split('T')[0],
-                  'limit': limit.toString(),
+                  if (startDate != null) 'start': startDate.toIso8601String(),
+                  if (endDate != null) 'end': endDate.toIso8601String(),
+                  'limit': limit,
+                  'page': 1,
                 },
               );
 
@@ -326,11 +326,7 @@ class RapidAPIEventsService {
         .then((events) async {
           // Cache the results
           if (events.isNotEmpty) {
-            await _cacheService.cacheEvents(
-              cacheKey,
-              events,
-              queryType: 'search',
-            );
+            await _cacheService.cacheEvents(events, cacheKey);
           }
           return events;
         });
@@ -343,7 +339,7 @@ class RapidAPIEventsService {
     int limit = 50,
   }) async {
     // Use demo data if API is not configured or demo mode is enabled
-    if (!ApiConfig.isApiConfigured || ApiConfig.useDemoMode) {
+    if (AppConfig.demoMode) {
       LoggingService.info('Using demo data for location search', tag: 'API');
       return await DemoEventMethods.getDemoEvents(
         location: 'San Francisco',
@@ -367,11 +363,11 @@ class RapidAPIEventsService {
           request: () async {
             return await _makeRequest<List<Event>>(() async {
               final response = await _dio.get(
-                '/search-events',
+                '/events/nearby',
                 queryParameters: {
-                  'query': 'events near me',
-                  'location': '$latitude,$longitude',
-                  'radius': radiusKm.toInt(),
+                  'lat': latitude,
+                  'lng': longitude,
+                  'radius': radiusKm,
                   'limit': limit,
                 },
               );
@@ -403,11 +399,7 @@ class RapidAPIEventsService {
         .then((events) async {
           // Cache the results
           if (events.isNotEmpty) {
-            await _cacheService.cacheEvents(
-              cacheKey,
-              events,
-              queryType: 'location',
-            );
+            await _cacheService.cacheEvents(events, cacheKey);
           }
           return events;
         });
@@ -418,7 +410,7 @@ class RapidAPIEventsService {
     int limit = 50,
   }) async {
     // Use demo data if API is not configured or demo mode is enabled
-    if (!ApiConfig.isApiConfigured || ApiConfig.useDemoMode) {
+    if (AppConfig.demoMode) {
       LoggingService.info('Using demo data for trending events', tag: 'API');
       return await DemoEventMethods.getTrendingEvents(limit: limit);
     }
@@ -439,9 +431,8 @@ class RapidAPIEventsService {
           request: () async {
             return await _makeRequest<List<Event>>(() async {
               final response = await _dio.get(
-                '/search-events',
+                '/events/trending',
                 queryParameters: {
-                  'query': 'popular events',
                   if (location != null) 'location': location,
                   'limit': limit,
                 },
@@ -474,11 +465,7 @@ class RapidAPIEventsService {
         .then((events) async {
           // Cache the results with shorter TTL for trending
           if (events.isNotEmpty) {
-            await _cacheService.cacheEvents(
-              cacheKey,
-              events,
-              queryType: 'trending',
-            );
+            await _cacheService.cacheEvents(events, cacheKey);
           }
           return events;
         });
@@ -488,7 +475,7 @@ class RapidAPIEventsService {
     try {
       return await _makeRequest<Event?>(() async {
         final response = await _dio.get(
-          '/event-details',
+          '/events/details',
           queryParameters: {'event_id': eventId},
         );
 
@@ -525,7 +512,7 @@ class RapidAPIEventsService {
     int limit = 50,
   }) async {
     // Use demo data if API is not configured or demo mode is enabled
-    if (!ApiConfig.isApiConfigured || ApiConfig.useDemoMode) {
+    if (AppConfig.demoMode) {
       LoggingService.info(
         'Using demo data for category: $category',
         tag: 'API',
@@ -575,11 +562,11 @@ class RapidAPIEventsService {
           request: () async {
             return await _makeRequest<List<Event>>(() async {
               final response = await _dio.get(
-                '/search-events',
+                '/events/category',
                 queryParameters: {
-                  'query': category,
+                  'category': category,
                   if (location != null) 'location': location,
-                  'limit': limit.toString(),
+                  'limit': limit,
                 },
               );
 
@@ -610,11 +597,7 @@ class RapidAPIEventsService {
         .then((events) async {
           // Cache the results
           if (events.isNotEmpty) {
-            await _cacheService.cacheEvents(
-              cacheKey,
-              events,
-              queryType: 'category',
-            );
+            await _cacheService.cacheEvents(events, cacheKey);
           }
           return events;
         });

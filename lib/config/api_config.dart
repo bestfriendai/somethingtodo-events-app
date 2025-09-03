@@ -1,34 +1,25 @@
 /// API Configuration for the SomethingToDo app
 ///
-/// IMPORTANT: For production, use environment variables or secure key management.
-/// Never commit real API keys to version control.
+/// IMPORTANT: RapidAPI keys must never be shipped in the client. All traffic is
+/// routed through Firebase Functions (see FunctionsConfig).
 class ApiConfig {
-  // For development/testing only - Replace with your actual API key
-  // Get your free API key from: https://rapidapi.com/real-time-events-search/api/real-time-events-search
+  // Deprecated: client-side RapidAPI access (kept for backward compatibility)
   static const String rapidApiKey = 'YOUR_RAPIDAPI_KEY_HERE';
 
-  // Set to true to use demo data instead of real API calls
-  static const bool useDemoMode = true;
+  // Demo mode still supported when backend is unavailable
+  static const bool useDemoMode = false;
 
-  // API endpoints
+  // Deprecated: RapidAPI host/base (no longer used directly by the app)
   static const String rapidApiHost = 'real-time-events-search.p.rapidapi.com';
   static const String rapidApiBaseUrl =
       'https://real-time-events-search.p.rapidapi.com';
 
-  /// Check if API is configured
-  static bool get isApiConfigured =>
-      rapidApiKey != 'YOUR_RAPIDAPI_KEY_HERE' && rapidApiKey.isNotEmpty;
+  /// Treat RapidAPI as not configured on client to prevent direct calls
+  static bool get isApiConfigured => false;
 
-  /// Get the API key (with fallback to environment variable)
+  /// Deprecated API key getter
   static String get apiKey {
-    // Try environment variable first
-    const envKey = String.fromEnvironment('RAPIDAPI_KEY', defaultValue: '');
-    if (envKey.isNotEmpty) return envKey;
-
-    // Fall back to hardcoded key for development
-    if (rapidApiKey != 'YOUR_RAPIDAPI_KEY_HERE') return rapidApiKey;
-
-    // Return empty if not configured
+    // Always return empty to avoid accidental client-side usage
     return '';
   }
 }

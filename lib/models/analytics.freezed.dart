@@ -12,8 +12,7 @@ part of 'analytics.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 UserEvent _$UserEventFromJson(Map<String, dynamic> json) {
   return _UserEvent.fromJson(json);
@@ -45,16 +44,15 @@ abstract class $UserEventCopyWith<$Res> {
   factory $UserEventCopyWith(UserEvent value, $Res Function(UserEvent) then) =
       _$UserEventCopyWithImpl<$Res, UserEvent>;
   @useResult
-  $Res call({
-    String id,
-    String userId,
-    String eventType,
-    String eventName,
-    Map<String, dynamic>? parameters,
-    String? sessionId,
-    String? screenName,
-    DateTime? timestamp,
-  });
+  $Res call(
+      {String id,
+      String userId,
+      String eventType,
+      String eventName,
+      Map<String, dynamic>? parameters,
+      String? sessionId,
+      String? screenName,
+      DateTime? timestamp});
 }
 
 /// @nodoc
@@ -81,43 +79,40 @@ class _$UserEventCopyWithImpl<$Res, $Val extends UserEvent>
     Object? screenName = freezed,
     Object? timestamp = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            userId: null == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            eventType: null == eventType
-                ? _value.eventType
-                : eventType // ignore: cast_nullable_to_non_nullable
-                      as String,
-            eventName: null == eventName
-                ? _value.eventName
-                : eventName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            parameters: freezed == parameters
-                ? _value.parameters
-                : parameters // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>?,
-            sessionId: freezed == sessionId
-                ? _value.sessionId
-                : sessionId // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            screenName: freezed == screenName
-                ? _value.screenName
-                : screenName // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            timestamp: freezed == timestamp
-                ? _value.timestamp
-                : timestamp // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      eventType: null == eventType
+          ? _value.eventType
+          : eventType // ignore: cast_nullable_to_non_nullable
+              as String,
+      eventName: null == eventName
+          ? _value.eventName
+          : eventName // ignore: cast_nullable_to_non_nullable
+              as String,
+      parameters: freezed == parameters
+          ? _value.parameters
+          : parameters // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      sessionId: freezed == sessionId
+          ? _value.sessionId
+          : sessionId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      screenName: freezed == screenName
+          ? _value.screenName
+          : screenName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
@@ -125,21 +120,19 @@ class _$UserEventCopyWithImpl<$Res, $Val extends UserEvent>
 abstract class _$$UserEventImplCopyWith<$Res>
     implements $UserEventCopyWith<$Res> {
   factory _$$UserEventImplCopyWith(
-    _$UserEventImpl value,
-    $Res Function(_$UserEventImpl) then,
-  ) = __$$UserEventImplCopyWithImpl<$Res>;
+          _$UserEventImpl value, $Res Function(_$UserEventImpl) then) =
+      __$$UserEventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String userId,
-    String eventType,
-    String eventName,
-    Map<String, dynamic>? parameters,
-    String? sessionId,
-    String? screenName,
-    DateTime? timestamp,
-  });
+  $Res call(
+      {String id,
+      String userId,
+      String eventType,
+      String eventName,
+      Map<String, dynamic>? parameters,
+      String? sessionId,
+      String? screenName,
+      DateTime? timestamp});
 }
 
 /// @nodoc
@@ -147,9 +140,8 @@ class __$$UserEventImplCopyWithImpl<$Res>
     extends _$UserEventCopyWithImpl<$Res, _$UserEventImpl>
     implements _$$UserEventImplCopyWith<$Res> {
   __$$UserEventImplCopyWithImpl(
-    _$UserEventImpl _value,
-    $Res Function(_$UserEventImpl) _then,
-  ) : super(_value, _then);
+      _$UserEventImpl _value, $Res Function(_$UserEventImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of UserEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -165,58 +157,56 @@ class __$$UserEventImplCopyWithImpl<$Res>
     Object? screenName = freezed,
     Object? timestamp = freezed,
   }) {
-    return _then(
-      _$UserEventImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        userId: null == userId
-            ? _value.userId
-            : userId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        eventType: null == eventType
-            ? _value.eventType
-            : eventType // ignore: cast_nullable_to_non_nullable
-                  as String,
-        eventName: null == eventName
-            ? _value.eventName
-            : eventName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        parameters: freezed == parameters
-            ? _value._parameters
-            : parameters // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>?,
-        sessionId: freezed == sessionId
-            ? _value.sessionId
-            : sessionId // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        screenName: freezed == screenName
-            ? _value.screenName
-            : screenName // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        timestamp: freezed == timestamp
-            ? _value.timestamp
-            : timestamp // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$UserEventImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      eventType: null == eventType
+          ? _value.eventType
+          : eventType // ignore: cast_nullable_to_non_nullable
+              as String,
+      eventName: null == eventName
+          ? _value.eventName
+          : eventName // ignore: cast_nullable_to_non_nullable
+              as String,
+      parameters: freezed == parameters
+          ? _value._parameters
+          : parameters // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      sessionId: freezed == sessionId
+          ? _value.sessionId
+          : sessionId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      screenName: freezed == screenName
+          ? _value.screenName
+          : screenName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserEventImpl implements _UserEvent {
-  const _$UserEventImpl({
-    required this.id,
-    required this.userId,
-    required this.eventType,
-    required this.eventName,
-    final Map<String, dynamic>? parameters,
-    this.sessionId,
-    this.screenName,
-    this.timestamp,
-  }) : _parameters = parameters;
+  const _$UserEventImpl(
+      {required this.id,
+      required this.userId,
+      required this.eventType,
+      required this.eventName,
+      final Map<String, dynamic>? parameters,
+      this.sessionId,
+      this.screenName,
+      this.timestamp})
+      : _parameters = parameters;
 
   factory _$UserEventImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserEventImplFromJson(json);
@@ -262,10 +252,8 @@ class _$UserEventImpl implements _UserEvent {
                 other.eventType == eventType) &&
             (identical(other.eventName, eventName) ||
                 other.eventName == eventName) &&
-            const DeepCollectionEquality().equals(
-              other._parameters,
-              _parameters,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._parameters, _parameters) &&
             (identical(other.sessionId, sessionId) ||
                 other.sessionId == sessionId) &&
             (identical(other.screenName, screenName) ||
@@ -277,16 +265,15 @@ class _$UserEventImpl implements _UserEvent {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    userId,
-    eventType,
-    eventName,
-    const DeepCollectionEquality().hash(_parameters),
-    sessionId,
-    screenName,
-    timestamp,
-  );
+      runtimeType,
+      id,
+      userId,
+      eventType,
+      eventName,
+      const DeepCollectionEquality().hash(_parameters),
+      sessionId,
+      screenName,
+      timestamp);
 
   /// Create a copy of UserEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -298,21 +285,22 @@ class _$UserEventImpl implements _UserEvent {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserEventImplToJson(this);
+    return _$$UserEventImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _UserEvent implements UserEvent {
-  const factory _UserEvent({
-    required final String id,
-    required final String userId,
-    required final String eventType,
-    required final String eventName,
-    final Map<String, dynamic>? parameters,
-    final String? sessionId,
-    final String? screenName,
-    final DateTime? timestamp,
-  }) = _$UserEventImpl;
+  const factory _UserEvent(
+      {required final String id,
+      required final String userId,
+      required final String eventType,
+      required final String eventName,
+      final Map<String, dynamic>? parameters,
+      final String? sessionId,
+      final String? screenName,
+      final DateTime? timestamp}) = _$UserEventImpl;
 
   factory _UserEvent.fromJson(Map<String, dynamic> json) =
       _$UserEventImpl.fromJson;
@@ -374,24 +362,22 @@ mixin _$SessionData {
 /// @nodoc
 abstract class $SessionDataCopyWith<$Res> {
   factory $SessionDataCopyWith(
-    SessionData value,
-    $Res Function(SessionData) then,
-  ) = _$SessionDataCopyWithImpl<$Res, SessionData>;
+          SessionData value, $Res Function(SessionData) then) =
+      _$SessionDataCopyWithImpl<$Res, SessionData>;
   @useResult
-  $Res call({
-    String sessionId,
-    String userId,
-    DateTime startTime,
-    DateTime? endTime,
-    int duration,
-    int screenViews,
-    int eventsViewed,
-    int searchQueries,
-    int chatMessages,
-    List<String> categoriesViewed,
-    String? lastScreenName,
-    Map<String, dynamic>? deviceInfo,
-  });
+  $Res call(
+      {String sessionId,
+      String userId,
+      DateTime startTime,
+      DateTime? endTime,
+      int duration,
+      int screenViews,
+      int eventsViewed,
+      int searchQueries,
+      int chatMessages,
+      List<String> categoriesViewed,
+      String? lastScreenName,
+      Map<String, dynamic>? deviceInfo});
 }
 
 /// @nodoc
@@ -422,59 +408,56 @@ class _$SessionDataCopyWithImpl<$Res, $Val extends SessionData>
     Object? lastScreenName = freezed,
     Object? deviceInfo = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            sessionId: null == sessionId
-                ? _value.sessionId
-                : sessionId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            userId: null == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            startTime: null == startTime
-                ? _value.startTime
-                : startTime // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            endTime: freezed == endTime
-                ? _value.endTime
-                : endTime // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-            duration: null == duration
-                ? _value.duration
-                : duration // ignore: cast_nullable_to_non_nullable
-                      as int,
-            screenViews: null == screenViews
-                ? _value.screenViews
-                : screenViews // ignore: cast_nullable_to_non_nullable
-                      as int,
-            eventsViewed: null == eventsViewed
-                ? _value.eventsViewed
-                : eventsViewed // ignore: cast_nullable_to_non_nullable
-                      as int,
-            searchQueries: null == searchQueries
-                ? _value.searchQueries
-                : searchQueries // ignore: cast_nullable_to_non_nullable
-                      as int,
-            chatMessages: null == chatMessages
-                ? _value.chatMessages
-                : chatMessages // ignore: cast_nullable_to_non_nullable
-                      as int,
-            categoriesViewed: null == categoriesViewed
-                ? _value.categoriesViewed
-                : categoriesViewed // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-            lastScreenName: freezed == lastScreenName
-                ? _value.lastScreenName
-                : lastScreenName // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            deviceInfo: freezed == deviceInfo
-                ? _value.deviceInfo
-                : deviceInfo // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      sessionId: null == sessionId
+          ? _value.sessionId
+          : sessionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      startTime: null == startTime
+          ? _value.startTime
+          : startTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endTime: freezed == endTime
+          ? _value.endTime
+          : endTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      duration: null == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as int,
+      screenViews: null == screenViews
+          ? _value.screenViews
+          : screenViews // ignore: cast_nullable_to_non_nullable
+              as int,
+      eventsViewed: null == eventsViewed
+          ? _value.eventsViewed
+          : eventsViewed // ignore: cast_nullable_to_non_nullable
+              as int,
+      searchQueries: null == searchQueries
+          ? _value.searchQueries
+          : searchQueries // ignore: cast_nullable_to_non_nullable
+              as int,
+      chatMessages: null == chatMessages
+          ? _value.chatMessages
+          : chatMessages // ignore: cast_nullable_to_non_nullable
+              as int,
+      categoriesViewed: null == categoriesViewed
+          ? _value.categoriesViewed
+          : categoriesViewed // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      lastScreenName: freezed == lastScreenName
+          ? _value.lastScreenName
+          : lastScreenName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      deviceInfo: freezed == deviceInfo
+          ? _value.deviceInfo
+          : deviceInfo // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+    ) as $Val);
   }
 }
 
@@ -482,25 +465,23 @@ class _$SessionDataCopyWithImpl<$Res, $Val extends SessionData>
 abstract class _$$SessionDataImplCopyWith<$Res>
     implements $SessionDataCopyWith<$Res> {
   factory _$$SessionDataImplCopyWith(
-    _$SessionDataImpl value,
-    $Res Function(_$SessionDataImpl) then,
-  ) = __$$SessionDataImplCopyWithImpl<$Res>;
+          _$SessionDataImpl value, $Res Function(_$SessionDataImpl) then) =
+      __$$SessionDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String sessionId,
-    String userId,
-    DateTime startTime,
-    DateTime? endTime,
-    int duration,
-    int screenViews,
-    int eventsViewed,
-    int searchQueries,
-    int chatMessages,
-    List<String> categoriesViewed,
-    String? lastScreenName,
-    Map<String, dynamic>? deviceInfo,
-  });
+  $Res call(
+      {String sessionId,
+      String userId,
+      DateTime startTime,
+      DateTime? endTime,
+      int duration,
+      int screenViews,
+      int eventsViewed,
+      int searchQueries,
+      int chatMessages,
+      List<String> categoriesViewed,
+      String? lastScreenName,
+      Map<String, dynamic>? deviceInfo});
 }
 
 /// @nodoc
@@ -508,9 +489,8 @@ class __$$SessionDataImplCopyWithImpl<$Res>
     extends _$SessionDataCopyWithImpl<$Res, _$SessionDataImpl>
     implements _$$SessionDataImplCopyWith<$Res> {
   __$$SessionDataImplCopyWithImpl(
-    _$SessionDataImpl _value,
-    $Res Function(_$SessionDataImpl) _then,
-  ) : super(_value, _then);
+      _$SessionDataImpl _value, $Res Function(_$SessionDataImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SessionData
   /// with the given fields replaced by the non-null parameter values.
@@ -530,79 +510,77 @@ class __$$SessionDataImplCopyWithImpl<$Res>
     Object? lastScreenName = freezed,
     Object? deviceInfo = freezed,
   }) {
-    return _then(
-      _$SessionDataImpl(
-        sessionId: null == sessionId
-            ? _value.sessionId
-            : sessionId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        userId: null == userId
-            ? _value.userId
-            : userId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        startTime: null == startTime
-            ? _value.startTime
-            : startTime // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        endTime: freezed == endTime
-            ? _value.endTime
-            : endTime // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-        duration: null == duration
-            ? _value.duration
-            : duration // ignore: cast_nullable_to_non_nullable
-                  as int,
-        screenViews: null == screenViews
-            ? _value.screenViews
-            : screenViews // ignore: cast_nullable_to_non_nullable
-                  as int,
-        eventsViewed: null == eventsViewed
-            ? _value.eventsViewed
-            : eventsViewed // ignore: cast_nullable_to_non_nullable
-                  as int,
-        searchQueries: null == searchQueries
-            ? _value.searchQueries
-            : searchQueries // ignore: cast_nullable_to_non_nullable
-                  as int,
-        chatMessages: null == chatMessages
-            ? _value.chatMessages
-            : chatMessages // ignore: cast_nullable_to_non_nullable
-                  as int,
-        categoriesViewed: null == categoriesViewed
-            ? _value._categoriesViewed
-            : categoriesViewed // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-        lastScreenName: freezed == lastScreenName
-            ? _value.lastScreenName
-            : lastScreenName // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        deviceInfo: freezed == deviceInfo
-            ? _value._deviceInfo
-            : deviceInfo // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>?,
-      ),
-    );
+    return _then(_$SessionDataImpl(
+      sessionId: null == sessionId
+          ? _value.sessionId
+          : sessionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      startTime: null == startTime
+          ? _value.startTime
+          : startTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endTime: freezed == endTime
+          ? _value.endTime
+          : endTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      duration: null == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as int,
+      screenViews: null == screenViews
+          ? _value.screenViews
+          : screenViews // ignore: cast_nullable_to_non_nullable
+              as int,
+      eventsViewed: null == eventsViewed
+          ? _value.eventsViewed
+          : eventsViewed // ignore: cast_nullable_to_non_nullable
+              as int,
+      searchQueries: null == searchQueries
+          ? _value.searchQueries
+          : searchQueries // ignore: cast_nullable_to_non_nullable
+              as int,
+      chatMessages: null == chatMessages
+          ? _value.chatMessages
+          : chatMessages // ignore: cast_nullable_to_non_nullable
+              as int,
+      categoriesViewed: null == categoriesViewed
+          ? _value._categoriesViewed
+          : categoriesViewed // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      lastScreenName: freezed == lastScreenName
+          ? _value.lastScreenName
+          : lastScreenName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      deviceInfo: freezed == deviceInfo
+          ? _value._deviceInfo
+          : deviceInfo // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SessionDataImpl implements _SessionData {
-  const _$SessionDataImpl({
-    required this.sessionId,
-    required this.userId,
-    required this.startTime,
-    this.endTime,
-    this.duration = 0,
-    this.screenViews = 0,
-    this.eventsViewed = 0,
-    this.searchQueries = 0,
-    this.chatMessages = 0,
-    final List<String> categoriesViewed = const [],
-    this.lastScreenName,
-    final Map<String, dynamic>? deviceInfo,
-  }) : _categoriesViewed = categoriesViewed,
-       _deviceInfo = deviceInfo;
+  const _$SessionDataImpl(
+      {required this.sessionId,
+      required this.userId,
+      required this.startTime,
+      this.endTime,
+      this.duration = 0,
+      this.screenViews = 0,
+      this.eventsViewed = 0,
+      this.searchQueries = 0,
+      this.chatMessages = 0,
+      final List<String> categoriesViewed = const [],
+      this.lastScreenName,
+      final Map<String, dynamic>? deviceInfo})
+      : _categoriesViewed = categoriesViewed,
+        _deviceInfo = deviceInfo;
 
   factory _$SessionDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$SessionDataImplFromJson(json);
@@ -618,7 +596,7 @@ class _$SessionDataImpl implements _SessionData {
   @override
   @JsonKey()
   final int duration;
-  // in seconds
+// in seconds
   @override
   @JsonKey()
   final int screenViews;
@@ -679,35 +657,30 @@ class _$SessionDataImpl implements _SessionData {
                 other.searchQueries == searchQueries) &&
             (identical(other.chatMessages, chatMessages) ||
                 other.chatMessages == chatMessages) &&
-            const DeepCollectionEquality().equals(
-              other._categoriesViewed,
-              _categoriesViewed,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._categoriesViewed, _categoriesViewed) &&
             (identical(other.lastScreenName, lastScreenName) ||
                 other.lastScreenName == lastScreenName) &&
-            const DeepCollectionEquality().equals(
-              other._deviceInfo,
-              _deviceInfo,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._deviceInfo, _deviceInfo));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    sessionId,
-    userId,
-    startTime,
-    endTime,
-    duration,
-    screenViews,
-    eventsViewed,
-    searchQueries,
-    chatMessages,
-    const DeepCollectionEquality().hash(_categoriesViewed),
-    lastScreenName,
-    const DeepCollectionEquality().hash(_deviceInfo),
-  );
+      runtimeType,
+      sessionId,
+      userId,
+      startTime,
+      endTime,
+      duration,
+      screenViews,
+      eventsViewed,
+      searchQueries,
+      chatMessages,
+      const DeepCollectionEquality().hash(_categoriesViewed),
+      lastScreenName,
+      const DeepCollectionEquality().hash(_deviceInfo));
 
   /// Create a copy of SessionData
   /// with the given fields replaced by the non-null parameter values.
@@ -719,25 +692,26 @@ class _$SessionDataImpl implements _SessionData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SessionDataImplToJson(this);
+    return _$$SessionDataImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _SessionData implements SessionData {
-  const factory _SessionData({
-    required final String sessionId,
-    required final String userId,
-    required final DateTime startTime,
-    final DateTime? endTime,
-    final int duration,
-    final int screenViews,
-    final int eventsViewed,
-    final int searchQueries,
-    final int chatMessages,
-    final List<String> categoriesViewed,
-    final String? lastScreenName,
-    final Map<String, dynamic>? deviceInfo,
-  }) = _$SessionDataImpl;
+  const factory _SessionData(
+      {required final String sessionId,
+      required final String userId,
+      required final DateTime startTime,
+      final DateTime? endTime,
+      final int duration,
+      final int screenViews,
+      final int eventsViewed,
+      final int searchQueries,
+      final int chatMessages,
+      final List<String> categoriesViewed,
+      final String? lastScreenName,
+      final Map<String, dynamic>? deviceInfo}) = _$SessionDataImpl;
 
   factory _SessionData.fromJson(Map<String, dynamic> json) =
       _$SessionDataImpl.fromJson;
@@ -806,23 +780,21 @@ mixin _$EventAnalytics {
 /// @nodoc
 abstract class $EventAnalyticsCopyWith<$Res> {
   factory $EventAnalyticsCopyWith(
-    EventAnalytics value,
-    $Res Function(EventAnalytics) then,
-  ) = _$EventAnalyticsCopyWithImpl<$Res, EventAnalytics>;
+          EventAnalytics value, $Res Function(EventAnalytics) then) =
+      _$EventAnalyticsCopyWithImpl<$Res, EventAnalytics>;
   @useResult
-  $Res call({
-    String eventId,
-    int views,
-    int favorites,
-    int shares,
-    int ticketClicks,
-    int mapViews,
-    int chatMentions,
-    double averageViewDuration,
-    Map<String, int> viewsByCategory,
-    Map<String, int> viewsByLocation,
-    DateTime? lastUpdated,
-  });
+  $Res call(
+      {String eventId,
+      int views,
+      int favorites,
+      int shares,
+      int ticketClicks,
+      int mapViews,
+      int chatMentions,
+      double averageViewDuration,
+      Map<String, int> viewsByCategory,
+      Map<String, int> viewsByLocation,
+      DateTime? lastUpdated});
 }
 
 /// @nodoc
@@ -852,80 +824,75 @@ class _$EventAnalyticsCopyWithImpl<$Res, $Val extends EventAnalytics>
     Object? viewsByLocation = null,
     Object? lastUpdated = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            eventId: null == eventId
-                ? _value.eventId
-                : eventId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            views: null == views
-                ? _value.views
-                : views // ignore: cast_nullable_to_non_nullable
-                      as int,
-            favorites: null == favorites
-                ? _value.favorites
-                : favorites // ignore: cast_nullable_to_non_nullable
-                      as int,
-            shares: null == shares
-                ? _value.shares
-                : shares // ignore: cast_nullable_to_non_nullable
-                      as int,
-            ticketClicks: null == ticketClicks
-                ? _value.ticketClicks
-                : ticketClicks // ignore: cast_nullable_to_non_nullable
-                      as int,
-            mapViews: null == mapViews
-                ? _value.mapViews
-                : mapViews // ignore: cast_nullable_to_non_nullable
-                      as int,
-            chatMentions: null == chatMentions
-                ? _value.chatMentions
-                : chatMentions // ignore: cast_nullable_to_non_nullable
-                      as int,
-            averageViewDuration: null == averageViewDuration
-                ? _value.averageViewDuration
-                : averageViewDuration // ignore: cast_nullable_to_non_nullable
-                      as double,
-            viewsByCategory: null == viewsByCategory
-                ? _value.viewsByCategory
-                : viewsByCategory // ignore: cast_nullable_to_non_nullable
-                      as Map<String, int>,
-            viewsByLocation: null == viewsByLocation
-                ? _value.viewsByLocation
-                : viewsByLocation // ignore: cast_nullable_to_non_nullable
-                      as Map<String, int>,
-            lastUpdated: freezed == lastUpdated
-                ? _value.lastUpdated
-                : lastUpdated // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as String,
+      views: null == views
+          ? _value.views
+          : views // ignore: cast_nullable_to_non_nullable
+              as int,
+      favorites: null == favorites
+          ? _value.favorites
+          : favorites // ignore: cast_nullable_to_non_nullable
+              as int,
+      shares: null == shares
+          ? _value.shares
+          : shares // ignore: cast_nullable_to_non_nullable
+              as int,
+      ticketClicks: null == ticketClicks
+          ? _value.ticketClicks
+          : ticketClicks // ignore: cast_nullable_to_non_nullable
+              as int,
+      mapViews: null == mapViews
+          ? _value.mapViews
+          : mapViews // ignore: cast_nullable_to_non_nullable
+              as int,
+      chatMentions: null == chatMentions
+          ? _value.chatMentions
+          : chatMentions // ignore: cast_nullable_to_non_nullable
+              as int,
+      averageViewDuration: null == averageViewDuration
+          ? _value.averageViewDuration
+          : averageViewDuration // ignore: cast_nullable_to_non_nullable
+              as double,
+      viewsByCategory: null == viewsByCategory
+          ? _value.viewsByCategory
+          : viewsByCategory // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+      viewsByLocation: null == viewsByLocation
+          ? _value.viewsByLocation
+          : viewsByLocation // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+      lastUpdated: freezed == lastUpdated
+          ? _value.lastUpdated
+          : lastUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$EventAnalyticsImplCopyWith<$Res>
     implements $EventAnalyticsCopyWith<$Res> {
-  factory _$$EventAnalyticsImplCopyWith(
-    _$EventAnalyticsImpl value,
-    $Res Function(_$EventAnalyticsImpl) then,
-  ) = __$$EventAnalyticsImplCopyWithImpl<$Res>;
+  factory _$$EventAnalyticsImplCopyWith(_$EventAnalyticsImpl value,
+          $Res Function(_$EventAnalyticsImpl) then) =
+      __$$EventAnalyticsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String eventId,
-    int views,
-    int favorites,
-    int shares,
-    int ticketClicks,
-    int mapViews,
-    int chatMentions,
-    double averageViewDuration,
-    Map<String, int> viewsByCategory,
-    Map<String, int> viewsByLocation,
-    DateTime? lastUpdated,
-  });
+  $Res call(
+      {String eventId,
+      int views,
+      int favorites,
+      int shares,
+      int ticketClicks,
+      int mapViews,
+      int chatMentions,
+      double averageViewDuration,
+      Map<String, int> viewsByCategory,
+      Map<String, int> viewsByLocation,
+      DateTime? lastUpdated});
 }
 
 /// @nodoc
@@ -933,9 +900,8 @@ class __$$EventAnalyticsImplCopyWithImpl<$Res>
     extends _$EventAnalyticsCopyWithImpl<$Res, _$EventAnalyticsImpl>
     implements _$$EventAnalyticsImplCopyWith<$Res> {
   __$$EventAnalyticsImplCopyWithImpl(
-    _$EventAnalyticsImpl _value,
-    $Res Function(_$EventAnalyticsImpl) _then,
-  ) : super(_value, _then);
+      _$EventAnalyticsImpl _value, $Res Function(_$EventAnalyticsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of EventAnalytics
   /// with the given fields replaced by the non-null parameter values.
@@ -954,74 +920,72 @@ class __$$EventAnalyticsImplCopyWithImpl<$Res>
     Object? viewsByLocation = null,
     Object? lastUpdated = freezed,
   }) {
-    return _then(
-      _$EventAnalyticsImpl(
-        eventId: null == eventId
-            ? _value.eventId
-            : eventId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        views: null == views
-            ? _value.views
-            : views // ignore: cast_nullable_to_non_nullable
-                  as int,
-        favorites: null == favorites
-            ? _value.favorites
-            : favorites // ignore: cast_nullable_to_non_nullable
-                  as int,
-        shares: null == shares
-            ? _value.shares
-            : shares // ignore: cast_nullable_to_non_nullable
-                  as int,
-        ticketClicks: null == ticketClicks
-            ? _value.ticketClicks
-            : ticketClicks // ignore: cast_nullable_to_non_nullable
-                  as int,
-        mapViews: null == mapViews
-            ? _value.mapViews
-            : mapViews // ignore: cast_nullable_to_non_nullable
-                  as int,
-        chatMentions: null == chatMentions
-            ? _value.chatMentions
-            : chatMentions // ignore: cast_nullable_to_non_nullable
-                  as int,
-        averageViewDuration: null == averageViewDuration
-            ? _value.averageViewDuration
-            : averageViewDuration // ignore: cast_nullable_to_non_nullable
-                  as double,
-        viewsByCategory: null == viewsByCategory
-            ? _value._viewsByCategory
-            : viewsByCategory // ignore: cast_nullable_to_non_nullable
-                  as Map<String, int>,
-        viewsByLocation: null == viewsByLocation
-            ? _value._viewsByLocation
-            : viewsByLocation // ignore: cast_nullable_to_non_nullable
-                  as Map<String, int>,
-        lastUpdated: freezed == lastUpdated
-            ? _value.lastUpdated
-            : lastUpdated // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$EventAnalyticsImpl(
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as String,
+      views: null == views
+          ? _value.views
+          : views // ignore: cast_nullable_to_non_nullable
+              as int,
+      favorites: null == favorites
+          ? _value.favorites
+          : favorites // ignore: cast_nullable_to_non_nullable
+              as int,
+      shares: null == shares
+          ? _value.shares
+          : shares // ignore: cast_nullable_to_non_nullable
+              as int,
+      ticketClicks: null == ticketClicks
+          ? _value.ticketClicks
+          : ticketClicks // ignore: cast_nullable_to_non_nullable
+              as int,
+      mapViews: null == mapViews
+          ? _value.mapViews
+          : mapViews // ignore: cast_nullable_to_non_nullable
+              as int,
+      chatMentions: null == chatMentions
+          ? _value.chatMentions
+          : chatMentions // ignore: cast_nullable_to_non_nullable
+              as int,
+      averageViewDuration: null == averageViewDuration
+          ? _value.averageViewDuration
+          : averageViewDuration // ignore: cast_nullable_to_non_nullable
+              as double,
+      viewsByCategory: null == viewsByCategory
+          ? _value._viewsByCategory
+          : viewsByCategory // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+      viewsByLocation: null == viewsByLocation
+          ? _value._viewsByLocation
+          : viewsByLocation // ignore: cast_nullable_to_non_nullable
+              as Map<String, int>,
+      lastUpdated: freezed == lastUpdated
+          ? _value.lastUpdated
+          : lastUpdated // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EventAnalyticsImpl implements _EventAnalytics {
-  const _$EventAnalyticsImpl({
-    required this.eventId,
-    this.views = 0,
-    this.favorites = 0,
-    this.shares = 0,
-    this.ticketClicks = 0,
-    this.mapViews = 0,
-    this.chatMentions = 0,
-    this.averageViewDuration = 0.0,
-    final Map<String, int> viewsByCategory = const {},
-    final Map<String, int> viewsByLocation = const {},
-    this.lastUpdated,
-  }) : _viewsByCategory = viewsByCategory,
-       _viewsByLocation = viewsByLocation;
+  const _$EventAnalyticsImpl(
+      {required this.eventId,
+      this.views = 0,
+      this.favorites = 0,
+      this.shares = 0,
+      this.ticketClicks = 0,
+      this.mapViews = 0,
+      this.chatMentions = 0,
+      this.averageViewDuration = 0.0,
+      final Map<String, int> viewsByCategory = const {},
+      final Map<String, int> viewsByLocation = const {},
+      this.lastUpdated})
+      : _viewsByCategory = viewsByCategory,
+        _viewsByLocation = viewsByLocation;
 
   factory _$EventAnalyticsImpl.fromJson(Map<String, dynamic> json) =>
       _$$EventAnalyticsImplFromJson(json);
@@ -1093,14 +1057,10 @@ class _$EventAnalyticsImpl implements _EventAnalytics {
                 other.chatMentions == chatMentions) &&
             (identical(other.averageViewDuration, averageViewDuration) ||
                 other.averageViewDuration == averageViewDuration) &&
-            const DeepCollectionEquality().equals(
-              other._viewsByCategory,
-              _viewsByCategory,
-            ) &&
-            const DeepCollectionEquality().equals(
-              other._viewsByLocation,
-              _viewsByLocation,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._viewsByCategory, _viewsByCategory) &&
+            const DeepCollectionEquality()
+                .equals(other._viewsByLocation, _viewsByLocation) &&
             (identical(other.lastUpdated, lastUpdated) ||
                 other.lastUpdated == lastUpdated));
   }
@@ -1108,19 +1068,18 @@ class _$EventAnalyticsImpl implements _EventAnalytics {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    eventId,
-    views,
-    favorites,
-    shares,
-    ticketClicks,
-    mapViews,
-    chatMentions,
-    averageViewDuration,
-    const DeepCollectionEquality().hash(_viewsByCategory),
-    const DeepCollectionEquality().hash(_viewsByLocation),
-    lastUpdated,
-  );
+      runtimeType,
+      eventId,
+      views,
+      favorites,
+      shares,
+      ticketClicks,
+      mapViews,
+      chatMentions,
+      averageViewDuration,
+      const DeepCollectionEquality().hash(_viewsByCategory),
+      const DeepCollectionEquality().hash(_viewsByLocation),
+      lastUpdated);
 
   /// Create a copy of EventAnalytics
   /// with the given fields replaced by the non-null parameter values.
@@ -1129,30 +1088,29 @@ class _$EventAnalyticsImpl implements _EventAnalytics {
   @pragma('vm:prefer-inline')
   _$$EventAnalyticsImplCopyWith<_$EventAnalyticsImpl> get copyWith =>
       __$$EventAnalyticsImplCopyWithImpl<_$EventAnalyticsImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EventAnalyticsImplToJson(this);
+    return _$$EventAnalyticsImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _EventAnalytics implements EventAnalytics {
-  const factory _EventAnalytics({
-    required final String eventId,
-    final int views,
-    final int favorites,
-    final int shares,
-    final int ticketClicks,
-    final int mapViews,
-    final int chatMentions,
-    final double averageViewDuration,
-    final Map<String, int> viewsByCategory,
-    final Map<String, int> viewsByLocation,
-    final DateTime? lastUpdated,
-  }) = _$EventAnalyticsImpl;
+  const factory _EventAnalytics(
+      {required final String eventId,
+      final int views,
+      final int favorites,
+      final int shares,
+      final int ticketClicks,
+      final int mapViews,
+      final int chatMentions,
+      final double averageViewDuration,
+      final Map<String, int> viewsByCategory,
+      final Map<String, int> viewsByLocation,
+      final DateTime? lastUpdated}) = _$EventAnalyticsImpl;
 
   factory _EventAnalytics.fromJson(Map<String, dynamic> json) =
       _$EventAnalyticsImpl.fromJson;
@@ -1217,21 +1175,19 @@ mixin _$SearchAnalytics {
 /// @nodoc
 abstract class $SearchAnalyticsCopyWith<$Res> {
   factory $SearchAnalyticsCopyWith(
-    SearchAnalytics value,
-    $Res Function(SearchAnalytics) then,
-  ) = _$SearchAnalyticsCopyWithImpl<$Res, SearchAnalytics>;
+          SearchAnalytics value, $Res Function(SearchAnalytics) then) =
+      _$SearchAnalyticsCopyWithImpl<$Res, SearchAnalytics>;
   @useResult
-  $Res call({
-    String id,
-    String userId,
-    String query,
-    String category,
-    int resultCount,
-    String? location,
-    Map<String, dynamic>? filters,
-    int clickedResults,
-    DateTime? timestamp,
-  });
+  $Res call(
+      {String id,
+      String userId,
+      String query,
+      String category,
+      int resultCount,
+      String? location,
+      Map<String, dynamic>? filters,
+      int clickedResults,
+      DateTime? timestamp});
 }
 
 /// @nodoc
@@ -1259,70 +1215,65 @@ class _$SearchAnalyticsCopyWithImpl<$Res, $Val extends SearchAnalytics>
     Object? clickedResults = null,
     Object? timestamp = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            userId: null == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            query: null == query
-                ? _value.query
-                : query // ignore: cast_nullable_to_non_nullable
-                      as String,
-            category: null == category
-                ? _value.category
-                : category // ignore: cast_nullable_to_non_nullable
-                      as String,
-            resultCount: null == resultCount
-                ? _value.resultCount
-                : resultCount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            location: freezed == location
-                ? _value.location
-                : location // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            filters: freezed == filters
-                ? _value.filters
-                : filters // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>?,
-            clickedResults: null == clickedResults
-                ? _value.clickedResults
-                : clickedResults // ignore: cast_nullable_to_non_nullable
-                      as int,
-            timestamp: freezed == timestamp
-                ? _value.timestamp
-                : timestamp // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      query: null == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      resultCount: null == resultCount
+          ? _value.resultCount
+          : resultCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String?,
+      filters: freezed == filters
+          ? _value.filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      clickedResults: null == clickedResults
+          ? _value.clickedResults
+          : clickedResults // ignore: cast_nullable_to_non_nullable
+              as int,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$SearchAnalyticsImplCopyWith<$Res>
     implements $SearchAnalyticsCopyWith<$Res> {
-  factory _$$SearchAnalyticsImplCopyWith(
-    _$SearchAnalyticsImpl value,
-    $Res Function(_$SearchAnalyticsImpl) then,
-  ) = __$$SearchAnalyticsImplCopyWithImpl<$Res>;
+  factory _$$SearchAnalyticsImplCopyWith(_$SearchAnalyticsImpl value,
+          $Res Function(_$SearchAnalyticsImpl) then) =
+      __$$SearchAnalyticsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String userId,
-    String query,
-    String category,
-    int resultCount,
-    String? location,
-    Map<String, dynamic>? filters,
-    int clickedResults,
-    DateTime? timestamp,
-  });
+  $Res call(
+      {String id,
+      String userId,
+      String query,
+      String category,
+      int resultCount,
+      String? location,
+      Map<String, dynamic>? filters,
+      int clickedResults,
+      DateTime? timestamp});
 }
 
 /// @nodoc
@@ -1330,9 +1281,8 @@ class __$$SearchAnalyticsImplCopyWithImpl<$Res>
     extends _$SearchAnalyticsCopyWithImpl<$Res, _$SearchAnalyticsImpl>
     implements _$$SearchAnalyticsImplCopyWith<$Res> {
   __$$SearchAnalyticsImplCopyWithImpl(
-    _$SearchAnalyticsImpl _value,
-    $Res Function(_$SearchAnalyticsImpl) _then,
-  ) : super(_value, _then);
+      _$SearchAnalyticsImpl _value, $Res Function(_$SearchAnalyticsImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of SearchAnalytics
   /// with the given fields replaced by the non-null parameter values.
@@ -1349,63 +1299,61 @@ class __$$SearchAnalyticsImplCopyWithImpl<$Res>
     Object? clickedResults = null,
     Object? timestamp = freezed,
   }) {
-    return _then(
-      _$SearchAnalyticsImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        userId: null == userId
-            ? _value.userId
-            : userId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        query: null == query
-            ? _value.query
-            : query // ignore: cast_nullable_to_non_nullable
-                  as String,
-        category: null == category
-            ? _value.category
-            : category // ignore: cast_nullable_to_non_nullable
-                  as String,
-        resultCount: null == resultCount
-            ? _value.resultCount
-            : resultCount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        location: freezed == location
-            ? _value.location
-            : location // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        filters: freezed == filters
-            ? _value._filters
-            : filters // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>?,
-        clickedResults: null == clickedResults
-            ? _value.clickedResults
-            : clickedResults // ignore: cast_nullable_to_non_nullable
-                  as int,
-        timestamp: freezed == timestamp
-            ? _value.timestamp
-            : timestamp // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$SearchAnalyticsImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      query: null == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      resultCount: null == resultCount
+          ? _value.resultCount
+          : resultCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String?,
+      filters: freezed == filters
+          ? _value._filters
+          : filters // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      clickedResults: null == clickedResults
+          ? _value.clickedResults
+          : clickedResults // ignore: cast_nullable_to_non_nullable
+              as int,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SearchAnalyticsImpl implements _SearchAnalytics {
-  const _$SearchAnalyticsImpl({
-    required this.id,
-    required this.userId,
-    required this.query,
-    required this.category,
-    this.resultCount = 0,
-    this.location,
-    final Map<String, dynamic>? filters,
-    this.clickedResults = 0,
-    this.timestamp,
-  }) : _filters = filters;
+  const _$SearchAnalyticsImpl(
+      {required this.id,
+      required this.userId,
+      required this.query,
+      required this.category,
+      this.resultCount = 0,
+      this.location,
+      final Map<String, dynamic>? filters,
+      this.clickedResults = 0,
+      this.timestamp})
+      : _filters = filters;
 
   factory _$SearchAnalyticsImpl.fromJson(Map<String, dynamic> json) =>
       _$$SearchAnalyticsImplFromJson(json);
@@ -1468,17 +1416,16 @@ class _$SearchAnalyticsImpl implements _SearchAnalytics {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    userId,
-    query,
-    category,
-    resultCount,
-    location,
-    const DeepCollectionEquality().hash(_filters),
-    clickedResults,
-    timestamp,
-  );
+      runtimeType,
+      id,
+      userId,
+      query,
+      category,
+      resultCount,
+      location,
+      const DeepCollectionEquality().hash(_filters),
+      clickedResults,
+      timestamp);
 
   /// Create a copy of SearchAnalytics
   /// with the given fields replaced by the non-null parameter values.
@@ -1487,28 +1434,27 @@ class _$SearchAnalyticsImpl implements _SearchAnalytics {
   @pragma('vm:prefer-inline')
   _$$SearchAnalyticsImplCopyWith<_$SearchAnalyticsImpl> get copyWith =>
       __$$SearchAnalyticsImplCopyWithImpl<_$SearchAnalyticsImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SearchAnalyticsImplToJson(this);
+    return _$$SearchAnalyticsImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _SearchAnalytics implements SearchAnalytics {
-  const factory _SearchAnalytics({
-    required final String id,
-    required final String userId,
-    required final String query,
-    required final String category,
-    final int resultCount,
-    final String? location,
-    final Map<String, dynamic>? filters,
-    final int clickedResults,
-    final DateTime? timestamp,
-  }) = _$SearchAnalyticsImpl;
+  const factory _SearchAnalytics(
+      {required final String id,
+      required final String userId,
+      required final String query,
+      required final String category,
+      final int resultCount,
+      final String? location,
+      final Map<String, dynamic>? filters,
+      final int clickedResults,
+      final DateTime? timestamp}) = _$SearchAnalyticsImpl;
 
   factory _SearchAnalytics.fromJson(Map<String, dynamic> json) =
       _$SearchAnalyticsImpl.fromJson;

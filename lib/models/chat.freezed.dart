@@ -12,8 +12,7 @@ part of 'chat.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ChatSession _$ChatSessionFromJson(Map<String, dynamic> json) {
   return _ChatSession.fromJson(json);
@@ -44,21 +43,19 @@ mixin _$ChatSession {
 /// @nodoc
 abstract class $ChatSessionCopyWith<$Res> {
   factory $ChatSessionCopyWith(
-    ChatSession value,
-    $Res Function(ChatSession) then,
-  ) = _$ChatSessionCopyWithImpl<$Res, ChatSession>;
+          ChatSession value, $Res Function(ChatSession) then) =
+      _$ChatSessionCopyWithImpl<$Res, ChatSession>;
   @useResult
-  $Res call({
-    String id,
-    String userId,
-    String title,
-    List<ChatMessage> messages,
-    ChatType type,
-    ChatStatus status,
-    Map<String, dynamic>? context,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  });
+  $Res call(
+      {String id,
+      String userId,
+      String title,
+      List<ChatMessage> messages,
+      ChatType type,
+      ChatStatus status,
+      Map<String, dynamic>? context,
+      DateTime? createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -86,47 +83,44 @@ class _$ChatSessionCopyWithImpl<$Res, $Val extends ChatSession>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            userId: null == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            title: null == title
-                ? _value.title
-                : title // ignore: cast_nullable_to_non_nullable
-                      as String,
-            messages: null == messages
-                ? _value.messages
-                : messages // ignore: cast_nullable_to_non_nullable
-                      as List<ChatMessage>,
-            type: null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                      as ChatType,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as ChatStatus,
-            context: freezed == context
-                ? _value.context
-                : context // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>?,
-            createdAt: freezed == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-            updatedAt: freezed == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      messages: null == messages
+          ? _value.messages
+          : messages // ignore: cast_nullable_to_non_nullable
+              as List<ChatMessage>,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as ChatType,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ChatStatus,
+      context: freezed == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
@@ -134,22 +128,20 @@ class _$ChatSessionCopyWithImpl<$Res, $Val extends ChatSession>
 abstract class _$$ChatSessionImplCopyWith<$Res>
     implements $ChatSessionCopyWith<$Res> {
   factory _$$ChatSessionImplCopyWith(
-    _$ChatSessionImpl value,
-    $Res Function(_$ChatSessionImpl) then,
-  ) = __$$ChatSessionImplCopyWithImpl<$Res>;
+          _$ChatSessionImpl value, $Res Function(_$ChatSessionImpl) then) =
+      __$$ChatSessionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String userId,
-    String title,
-    List<ChatMessage> messages,
-    ChatType type,
-    ChatStatus status,
-    Map<String, dynamic>? context,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  });
+  $Res call(
+      {String id,
+      String userId,
+      String title,
+      List<ChatMessage> messages,
+      ChatType type,
+      ChatStatus status,
+      Map<String, dynamic>? context,
+      DateTime? createdAt,
+      DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -157,9 +149,8 @@ class __$$ChatSessionImplCopyWithImpl<$Res>
     extends _$ChatSessionCopyWithImpl<$Res, _$ChatSessionImpl>
     implements _$$ChatSessionImplCopyWith<$Res> {
   __$$ChatSessionImplCopyWithImpl(
-    _$ChatSessionImpl _value,
-    $Res Function(_$ChatSessionImpl) _then,
-  ) : super(_value, _then);
+      _$ChatSessionImpl _value, $Res Function(_$ChatSessionImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ChatSession
   /// with the given fields replaced by the non-null parameter values.
@@ -176,64 +167,62 @@ class __$$ChatSessionImplCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(
-      _$ChatSessionImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        userId: null == userId
-            ? _value.userId
-            : userId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        title: null == title
-            ? _value.title
-            : title // ignore: cast_nullable_to_non_nullable
-                  as String,
-        messages: null == messages
-            ? _value._messages
-            : messages // ignore: cast_nullable_to_non_nullable
-                  as List<ChatMessage>,
-        type: null == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
-                  as ChatType,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as ChatStatus,
-        context: freezed == context
-            ? _value._context
-            : context // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>?,
-        createdAt: freezed == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-        updatedAt: freezed == updatedAt
-            ? _value.updatedAt
-            : updatedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$ChatSessionImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      messages: null == messages
+          ? _value._messages
+          : messages // ignore: cast_nullable_to_non_nullable
+              as List<ChatMessage>,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as ChatType,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ChatStatus,
+      context: freezed == context
+          ? _value._context
+          : context // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ChatSessionImpl implements _ChatSession {
-  const _$ChatSessionImpl({
-    required this.id,
-    required this.userId,
-    required this.title,
-    final List<ChatMessage> messages = const [],
-    this.type = ChatType.eventDiscovery,
-    this.status = ChatStatus.active,
-    final Map<String, dynamic>? context,
-    this.createdAt,
-    this.updatedAt,
-  }) : _messages = messages,
-       _context = context;
+  const _$ChatSessionImpl(
+      {required this.id,
+      required this.userId,
+      required this.title,
+      final List<ChatMessage> messages = const [],
+      this.type = ChatType.eventDiscovery,
+      this.status = ChatStatus.active,
+      final Map<String, dynamic>? context,
+      this.createdAt,
+      this.updatedAt})
+      : _messages = messages,
+        _context = context;
 
   factory _$ChatSessionImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatSessionImplFromJson(json);
@@ -300,17 +289,16 @@ class _$ChatSessionImpl implements _ChatSession {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    userId,
-    title,
-    const DeepCollectionEquality().hash(_messages),
-    type,
-    status,
-    const DeepCollectionEquality().hash(_context),
-    createdAt,
-    updatedAt,
-  );
+      runtimeType,
+      id,
+      userId,
+      title,
+      const DeepCollectionEquality().hash(_messages),
+      type,
+      status,
+      const DeepCollectionEquality().hash(_context),
+      createdAt,
+      updatedAt);
 
   /// Create a copy of ChatSession
   /// with the given fields replaced by the non-null parameter values.
@@ -322,22 +310,23 @@ class _$ChatSessionImpl implements _ChatSession {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ChatSessionImplToJson(this);
+    return _$$ChatSessionImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ChatSession implements ChatSession {
-  const factory _ChatSession({
-    required final String id,
-    required final String userId,
-    required final String title,
-    final List<ChatMessage> messages,
-    final ChatType type,
-    final ChatStatus status,
-    final Map<String, dynamic>? context,
-    final DateTime? createdAt,
-    final DateTime? updatedAt,
-  }) = _$ChatSessionImpl;
+  const factory _ChatSession(
+      {required final String id,
+      required final String userId,
+      required final String title,
+      final List<ChatMessage> messages,
+      final ChatType type,
+      final ChatStatus status,
+      final Map<String, dynamic>? context,
+      final DateTime? createdAt,
+      final DateTime? updatedAt}) = _$ChatSessionImpl;
 
   factory _ChatSession.fromJson(Map<String, dynamic> json) =
       _$ChatSessionImpl.fromJson;
@@ -400,22 +389,20 @@ mixin _$ChatMessage {
 /// @nodoc
 abstract class $ChatMessageCopyWith<$Res> {
   factory $ChatMessageCopyWith(
-    ChatMessage value,
-    $Res Function(ChatMessage) then,
-  ) = _$ChatMessageCopyWithImpl<$Res, ChatMessage>;
+          ChatMessage value, $Res Function(ChatMessage) then) =
+      _$ChatMessageCopyWithImpl<$Res, ChatMessage>;
   @useResult
-  $Res call({
-    String id,
-    String sessionId,
-    MessageRole role,
-    String content,
-    MessageType type,
-    MessageSender sender,
-    Map<String, dynamic>? metadata,
-    List<MessageAction> actions,
-    List<EventRecommendation> recommendations,
-    DateTime? timestamp,
-  });
+  $Res call(
+      {String id,
+      String sessionId,
+      MessageRole role,
+      String content,
+      MessageType type,
+      MessageSender sender,
+      Map<String, dynamic>? metadata,
+      List<MessageAction> actions,
+      List<EventRecommendation> recommendations,
+      DateTime? timestamp});
 }
 
 /// @nodoc
@@ -444,51 +431,48 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
     Object? recommendations = null,
     Object? timestamp = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            sessionId: null == sessionId
-                ? _value.sessionId
-                : sessionId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            role: null == role
-                ? _value.role
-                : role // ignore: cast_nullable_to_non_nullable
-                      as MessageRole,
-            content: null == content
-                ? _value.content
-                : content // ignore: cast_nullable_to_non_nullable
-                      as String,
-            type: null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                      as MessageType,
-            sender: null == sender
-                ? _value.sender
-                : sender // ignore: cast_nullable_to_non_nullable
-                      as MessageSender,
-            metadata: freezed == metadata
-                ? _value.metadata
-                : metadata // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>?,
-            actions: null == actions
-                ? _value.actions
-                : actions // ignore: cast_nullable_to_non_nullable
-                      as List<MessageAction>,
-            recommendations: null == recommendations
-                ? _value.recommendations
-                : recommendations // ignore: cast_nullable_to_non_nullable
-                      as List<EventRecommendation>,
-            timestamp: freezed == timestamp
-                ? _value.timestamp
-                : timestamp // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      sessionId: null == sessionId
+          ? _value.sessionId
+          : sessionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      role: null == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as MessageRole,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as MessageType,
+      sender: null == sender
+          ? _value.sender
+          : sender // ignore: cast_nullable_to_non_nullable
+              as MessageSender,
+      metadata: freezed == metadata
+          ? _value.metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      actions: null == actions
+          ? _value.actions
+          : actions // ignore: cast_nullable_to_non_nullable
+              as List<MessageAction>,
+      recommendations: null == recommendations
+          ? _value.recommendations
+          : recommendations // ignore: cast_nullable_to_non_nullable
+              as List<EventRecommendation>,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
@@ -496,23 +480,21 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
 abstract class _$$ChatMessageImplCopyWith<$Res>
     implements $ChatMessageCopyWith<$Res> {
   factory _$$ChatMessageImplCopyWith(
-    _$ChatMessageImpl value,
-    $Res Function(_$ChatMessageImpl) then,
-  ) = __$$ChatMessageImplCopyWithImpl<$Res>;
+          _$ChatMessageImpl value, $Res Function(_$ChatMessageImpl) then) =
+      __$$ChatMessageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String sessionId,
-    MessageRole role,
-    String content,
-    MessageType type,
-    MessageSender sender,
-    Map<String, dynamic>? metadata,
-    List<MessageAction> actions,
-    List<EventRecommendation> recommendations,
-    DateTime? timestamp,
-  });
+  $Res call(
+      {String id,
+      String sessionId,
+      MessageRole role,
+      String content,
+      MessageType type,
+      MessageSender sender,
+      Map<String, dynamic>? metadata,
+      List<MessageAction> actions,
+      List<EventRecommendation> recommendations,
+      DateTime? timestamp});
 }
 
 /// @nodoc
@@ -520,9 +502,8 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
     extends _$ChatMessageCopyWithImpl<$Res, _$ChatMessageImpl>
     implements _$$ChatMessageImplCopyWith<$Res> {
   __$$ChatMessageImplCopyWithImpl(
-    _$ChatMessageImpl _value,
-    $Res Function(_$ChatMessageImpl) _then,
-  ) : super(_value, _then);
+      _$ChatMessageImpl _value, $Res Function(_$ChatMessageImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ChatMessage
   /// with the given fields replaced by the non-null parameter values.
@@ -540,70 +521,68 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
     Object? recommendations = null,
     Object? timestamp = freezed,
   }) {
-    return _then(
-      _$ChatMessageImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        sessionId: null == sessionId
-            ? _value.sessionId
-            : sessionId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        role: null == role
-            ? _value.role
-            : role // ignore: cast_nullable_to_non_nullable
-                  as MessageRole,
-        content: null == content
-            ? _value.content
-            : content // ignore: cast_nullable_to_non_nullable
-                  as String,
-        type: null == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
-                  as MessageType,
-        sender: null == sender
-            ? _value.sender
-            : sender // ignore: cast_nullable_to_non_nullable
-                  as MessageSender,
-        metadata: freezed == metadata
-            ? _value._metadata
-            : metadata // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>?,
-        actions: null == actions
-            ? _value._actions
-            : actions // ignore: cast_nullable_to_non_nullable
-                  as List<MessageAction>,
-        recommendations: null == recommendations
-            ? _value._recommendations
-            : recommendations // ignore: cast_nullable_to_non_nullable
-                  as List<EventRecommendation>,
-        timestamp: freezed == timestamp
-            ? _value.timestamp
-            : timestamp // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$ChatMessageImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      sessionId: null == sessionId
+          ? _value.sessionId
+          : sessionId // ignore: cast_nullable_to_non_nullable
+              as String,
+      role: null == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as MessageRole,
+      content: null == content
+          ? _value.content
+          : content // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as MessageType,
+      sender: null == sender
+          ? _value.sender
+          : sender // ignore: cast_nullable_to_non_nullable
+              as MessageSender,
+      metadata: freezed == metadata
+          ? _value._metadata
+          : metadata // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      actions: null == actions
+          ? _value._actions
+          : actions // ignore: cast_nullable_to_non_nullable
+              as List<MessageAction>,
+      recommendations: null == recommendations
+          ? _value._recommendations
+          : recommendations // ignore: cast_nullable_to_non_nullable
+              as List<EventRecommendation>,
+      timestamp: freezed == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ChatMessageImpl implements _ChatMessage {
-  const _$ChatMessageImpl({
-    required this.id,
-    required this.sessionId,
-    required this.role,
-    required this.content,
-    this.type = MessageType.text,
-    this.sender = MessageSender.user,
-    final Map<String, dynamic>? metadata,
-    final List<MessageAction> actions = const [],
-    final List<EventRecommendation> recommendations = const [],
-    this.timestamp,
-  }) : _metadata = metadata,
-       _actions = actions,
-       _recommendations = recommendations;
+  const _$ChatMessageImpl(
+      {required this.id,
+      required this.sessionId,
+      required this.role,
+      required this.content,
+      this.type = MessageType.text,
+      this.sender = MessageSender.user,
+      final Map<String, dynamic>? metadata,
+      final List<MessageAction> actions = const [],
+      final List<EventRecommendation> recommendations = const [],
+      this.timestamp})
+      : _metadata = metadata,
+        _actions = actions,
+        _recommendations = recommendations;
 
   factory _$ChatMessageImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatMessageImplFromJson(json);
@@ -672,10 +651,8 @@ class _$ChatMessageImpl implements _ChatMessage {
             (identical(other.sender, sender) || other.sender == sender) &&
             const DeepCollectionEquality().equals(other._metadata, _metadata) &&
             const DeepCollectionEquality().equals(other._actions, _actions) &&
-            const DeepCollectionEquality().equals(
-              other._recommendations,
-              _recommendations,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._recommendations, _recommendations) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp));
   }
@@ -683,18 +660,17 @@ class _$ChatMessageImpl implements _ChatMessage {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    sessionId,
-    role,
-    content,
-    type,
-    sender,
-    const DeepCollectionEquality().hash(_metadata),
-    const DeepCollectionEquality().hash(_actions),
-    const DeepCollectionEquality().hash(_recommendations),
-    timestamp,
-  );
+      runtimeType,
+      id,
+      sessionId,
+      role,
+      content,
+      type,
+      sender,
+      const DeepCollectionEquality().hash(_metadata),
+      const DeepCollectionEquality().hash(_actions),
+      const DeepCollectionEquality().hash(_recommendations),
+      timestamp);
 
   /// Create a copy of ChatMessage
   /// with the given fields replaced by the non-null parameter values.
@@ -706,23 +682,24 @@ class _$ChatMessageImpl implements _ChatMessage {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ChatMessageImplToJson(this);
+    return _$$ChatMessageImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ChatMessage implements ChatMessage {
-  const factory _ChatMessage({
-    required final String id,
-    required final String sessionId,
-    required final MessageRole role,
-    required final String content,
-    final MessageType type,
-    final MessageSender sender,
-    final Map<String, dynamic>? metadata,
-    final List<MessageAction> actions,
-    final List<EventRecommendation> recommendations,
-    final DateTime? timestamp,
-  }) = _$ChatMessageImpl;
+  const factory _ChatMessage(
+      {required final String id,
+      required final String sessionId,
+      required final MessageRole role,
+      required final String content,
+      final MessageType type,
+      final MessageSender sender,
+      final Map<String, dynamic>? metadata,
+      final List<MessageAction> actions,
+      final List<EventRecommendation> recommendations,
+      final DateTime? timestamp}) = _$ChatMessageImpl;
 
   factory _ChatMessage.fromJson(Map<String, dynamic> json) =
       _$ChatMessageImpl.fromJson;
@@ -781,17 +758,15 @@ mixin _$MessageAction {
 /// @nodoc
 abstract class $MessageActionCopyWith<$Res> {
   factory $MessageActionCopyWith(
-    MessageAction value,
-    $Res Function(MessageAction) then,
-  ) = _$MessageActionCopyWithImpl<$Res, MessageAction>;
+          MessageAction value, $Res Function(MessageAction) then) =
+      _$MessageActionCopyWithImpl<$Res, MessageAction>;
   @useResult
-  $Res call({
-    String id,
-    String label,
-    ActionType type,
-    Map<String, dynamic>? payload,
-    bool isCompleted,
-  });
+  $Res call(
+      {String id,
+      String label,
+      ActionType type,
+      Map<String, dynamic>? payload,
+      bool isCompleted});
 }
 
 /// @nodoc
@@ -815,31 +790,28 @@ class _$MessageActionCopyWithImpl<$Res, $Val extends MessageAction>
     Object? payload = freezed,
     Object? isCompleted = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            label: null == label
-                ? _value.label
-                : label // ignore: cast_nullable_to_non_nullable
-                      as String,
-            type: null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                      as ActionType,
-            payload: freezed == payload
-                ? _value.payload
-                : payload // ignore: cast_nullable_to_non_nullable
-                      as Map<String, dynamic>?,
-            isCompleted: null == isCompleted
-                ? _value.isCompleted
-                : isCompleted // ignore: cast_nullable_to_non_nullable
-                      as bool,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as ActionType,
+      payload: freezed == payload
+          ? _value.payload
+          : payload // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      isCompleted: null == isCompleted
+          ? _value.isCompleted
+          : isCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
   }
 }
 
@@ -847,18 +819,16 @@ class _$MessageActionCopyWithImpl<$Res, $Val extends MessageAction>
 abstract class _$$MessageActionImplCopyWith<$Res>
     implements $MessageActionCopyWith<$Res> {
   factory _$$MessageActionImplCopyWith(
-    _$MessageActionImpl value,
-    $Res Function(_$MessageActionImpl) then,
-  ) = __$$MessageActionImplCopyWithImpl<$Res>;
+          _$MessageActionImpl value, $Res Function(_$MessageActionImpl) then) =
+      __$$MessageActionImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String label,
-    ActionType type,
-    Map<String, dynamic>? payload,
-    bool isCompleted,
-  });
+  $Res call(
+      {String id,
+      String label,
+      ActionType type,
+      Map<String, dynamic>? payload,
+      bool isCompleted});
 }
 
 /// @nodoc
@@ -866,9 +836,8 @@ class __$$MessageActionImplCopyWithImpl<$Res>
     extends _$MessageActionCopyWithImpl<$Res, _$MessageActionImpl>
     implements _$$MessageActionImplCopyWith<$Res> {
   __$$MessageActionImplCopyWithImpl(
-    _$MessageActionImpl _value,
-    $Res Function(_$MessageActionImpl) _then,
-  ) : super(_value, _then);
+      _$MessageActionImpl _value, $Res Function(_$MessageActionImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of MessageAction
   /// with the given fields replaced by the non-null parameter values.
@@ -881,43 +850,41 @@ class __$$MessageActionImplCopyWithImpl<$Res>
     Object? payload = freezed,
     Object? isCompleted = null,
   }) {
-    return _then(
-      _$MessageActionImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        label: null == label
-            ? _value.label
-            : label // ignore: cast_nullable_to_non_nullable
-                  as String,
-        type: null == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
-                  as ActionType,
-        payload: freezed == payload
-            ? _value._payload
-            : payload // ignore: cast_nullable_to_non_nullable
-                  as Map<String, dynamic>?,
-        isCompleted: null == isCompleted
-            ? _value.isCompleted
-            : isCompleted // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
+    return _then(_$MessageActionImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as ActionType,
+      payload: freezed == payload
+          ? _value._payload
+          : payload // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>?,
+      isCompleted: null == isCompleted
+          ? _value.isCompleted
+          : isCompleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MessageActionImpl implements _MessageAction {
-  const _$MessageActionImpl({
-    required this.id,
-    required this.label,
-    required this.type,
-    final Map<String, dynamic>? payload,
-    this.isCompleted = false,
-  }) : _payload = payload;
+  const _$MessageActionImpl(
+      {required this.id,
+      required this.label,
+      required this.type,
+      final Map<String, dynamic>? payload,
+      this.isCompleted = false})
+      : _payload = payload;
 
   factory _$MessageActionImpl.fromJson(Map<String, dynamic> json) =>
       _$$MessageActionImplFromJson(json);
@@ -962,14 +929,8 @@ class _$MessageActionImpl implements _MessageAction {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    label,
-    type,
-    const DeepCollectionEquality().hash(_payload),
-    isCompleted,
-  );
+  int get hashCode => Object.hash(runtimeType, id, label, type,
+      const DeepCollectionEquality().hash(_payload), isCompleted);
 
   /// Create a copy of MessageAction
   /// with the given fields replaced by the non-null parameter values.
@@ -981,18 +942,19 @@ class _$MessageActionImpl implements _MessageAction {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MessageActionImplToJson(this);
+    return _$$MessageActionImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _MessageAction implements MessageAction {
-  const factory _MessageAction({
-    required final String id,
-    required final String label,
-    required final ActionType type,
-    final Map<String, dynamic>? payload,
-    final bool isCompleted,
-  }) = _$MessageActionImpl;
+  const factory _MessageAction(
+      {required final String id,
+      required final String label,
+      required final ActionType type,
+      final Map<String, dynamic>? payload,
+      final bool isCompleted}) = _$MessageActionImpl;
 
   factory _MessageAction.fromJson(Map<String, dynamic> json) =
       _$MessageActionImpl.fromJson;
@@ -1043,19 +1005,17 @@ mixin _$ChatRecommendation {
 /// @nodoc
 abstract class $ChatRecommendationCopyWith<$Res> {
   factory $ChatRecommendationCopyWith(
-    ChatRecommendation value,
-    $Res Function(ChatRecommendation) then,
-  ) = _$ChatRecommendationCopyWithImpl<$Res, ChatRecommendation>;
+          ChatRecommendation value, $Res Function(ChatRecommendation) then) =
+      _$ChatRecommendationCopyWithImpl<$Res, ChatRecommendation>;
   @useResult
-  $Res call({
-    String id,
-    String eventId,
-    String reason,
-    double confidenceScore,
-    List<String> matchingCriteria,
-    RecommendationStatus status,
-    DateTime? createdAt,
-  });
+  $Res call(
+      {String id,
+      String eventId,
+      String reason,
+      double confidenceScore,
+      List<String> matchingCriteria,
+      RecommendationStatus status,
+      DateTime? createdAt});
 }
 
 /// @nodoc
@@ -1081,70 +1041,64 @@ class _$ChatRecommendationCopyWithImpl<$Res, $Val extends ChatRecommendation>
     Object? status = null,
     Object? createdAt = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            eventId: null == eventId
-                ? _value.eventId
-                : eventId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            reason: null == reason
-                ? _value.reason
-                : reason // ignore: cast_nullable_to_non_nullable
-                      as String,
-            confidenceScore: null == confidenceScore
-                ? _value.confidenceScore
-                : confidenceScore // ignore: cast_nullable_to_non_nullable
-                      as double,
-            matchingCriteria: null == matchingCriteria
-                ? _value.matchingCriteria
-                : matchingCriteria // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as RecommendationStatus,
-            createdAt: freezed == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as String,
+      reason: null == reason
+          ? _value.reason
+          : reason // ignore: cast_nullable_to_non_nullable
+              as String,
+      confidenceScore: null == confidenceScore
+          ? _value.confidenceScore
+          : confidenceScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      matchingCriteria: null == matchingCriteria
+          ? _value.matchingCriteria
+          : matchingCriteria // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as RecommendationStatus,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ChatRecommendationImplCopyWith<$Res>
     implements $ChatRecommendationCopyWith<$Res> {
-  factory _$$ChatRecommendationImplCopyWith(
-    _$ChatRecommendationImpl value,
-    $Res Function(_$ChatRecommendationImpl) then,
-  ) = __$$ChatRecommendationImplCopyWithImpl<$Res>;
+  factory _$$ChatRecommendationImplCopyWith(_$ChatRecommendationImpl value,
+          $Res Function(_$ChatRecommendationImpl) then) =
+      __$$ChatRecommendationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String eventId,
-    String reason,
-    double confidenceScore,
-    List<String> matchingCriteria,
-    RecommendationStatus status,
-    DateTime? createdAt,
-  });
+  $Res call(
+      {String id,
+      String eventId,
+      String reason,
+      double confidenceScore,
+      List<String> matchingCriteria,
+      RecommendationStatus status,
+      DateTime? createdAt});
 }
 
 /// @nodoc
 class __$$ChatRecommendationImplCopyWithImpl<$Res>
     extends _$ChatRecommendationCopyWithImpl<$Res, _$ChatRecommendationImpl>
     implements _$$ChatRecommendationImplCopyWith<$Res> {
-  __$$ChatRecommendationImplCopyWithImpl(
-    _$ChatRecommendationImpl _value,
-    $Res Function(_$ChatRecommendationImpl) _then,
-  ) : super(_value, _then);
+  __$$ChatRecommendationImplCopyWithImpl(_$ChatRecommendationImpl _value,
+      $Res Function(_$ChatRecommendationImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of ChatRecommendation
   /// with the given fields replaced by the non-null parameter values.
@@ -1159,53 +1113,51 @@ class __$$ChatRecommendationImplCopyWithImpl<$Res>
     Object? status = null,
     Object? createdAt = freezed,
   }) {
-    return _then(
-      _$ChatRecommendationImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        eventId: null == eventId
-            ? _value.eventId
-            : eventId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        reason: null == reason
-            ? _value.reason
-            : reason // ignore: cast_nullable_to_non_nullable
-                  as String,
-        confidenceScore: null == confidenceScore
-            ? _value.confidenceScore
-            : confidenceScore // ignore: cast_nullable_to_non_nullable
-                  as double,
-        matchingCriteria: null == matchingCriteria
-            ? _value._matchingCriteria
-            : matchingCriteria // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as RecommendationStatus,
-        createdAt: freezed == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$ChatRecommendationImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as String,
+      reason: null == reason
+          ? _value.reason
+          : reason // ignore: cast_nullable_to_non_nullable
+              as String,
+      confidenceScore: null == confidenceScore
+          ? _value.confidenceScore
+          : confidenceScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      matchingCriteria: null == matchingCriteria
+          ? _value._matchingCriteria
+          : matchingCriteria // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as RecommendationStatus,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ChatRecommendationImpl implements _ChatRecommendation {
-  const _$ChatRecommendationImpl({
-    required this.id,
-    required this.eventId,
-    required this.reason,
-    required this.confidenceScore,
-    final List<String> matchingCriteria = const [],
-    this.status = RecommendationStatus.pending,
-    this.createdAt,
-  }) : _matchingCriteria = matchingCriteria;
+  const _$ChatRecommendationImpl(
+      {required this.id,
+      required this.eventId,
+      required this.reason,
+      required this.confidenceScore,
+      final List<String> matchingCriteria = const [],
+      this.status = RecommendationStatus.pending,
+      this.createdAt})
+      : _matchingCriteria = matchingCriteria;
 
   factory _$ChatRecommendationImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatRecommendationImplFromJson(json);
@@ -1249,10 +1201,8 @@ class _$ChatRecommendationImpl implements _ChatRecommendation {
             (identical(other.reason, reason) || other.reason == reason) &&
             (identical(other.confidenceScore, confidenceScore) ||
                 other.confidenceScore == confidenceScore) &&
-            const DeepCollectionEquality().equals(
-              other._matchingCriteria,
-              _matchingCriteria,
-            ) &&
+            const DeepCollectionEquality()
+                .equals(other._matchingCriteria, _matchingCriteria) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
@@ -1261,15 +1211,14 @@ class _$ChatRecommendationImpl implements _ChatRecommendation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    eventId,
-    reason,
-    confidenceScore,
-    const DeepCollectionEquality().hash(_matchingCriteria),
-    status,
-    createdAt,
-  );
+      runtimeType,
+      id,
+      eventId,
+      reason,
+      confidenceScore,
+      const DeepCollectionEquality().hash(_matchingCriteria),
+      status,
+      createdAt);
 
   /// Create a copy of ChatRecommendation
   /// with the given fields replaced by the non-null parameter values.
@@ -1278,26 +1227,25 @@ class _$ChatRecommendationImpl implements _ChatRecommendation {
   @pragma('vm:prefer-inline')
   _$$ChatRecommendationImplCopyWith<_$ChatRecommendationImpl> get copyWith =>
       __$$ChatRecommendationImplCopyWithImpl<_$ChatRecommendationImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ChatRecommendationImplToJson(this);
+    return _$$ChatRecommendationImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ChatRecommendation implements ChatRecommendation {
-  const factory _ChatRecommendation({
-    required final String id,
-    required final String eventId,
-    required final String reason,
-    required final double confidenceScore,
-    final List<String> matchingCriteria,
-    final RecommendationStatus status,
-    final DateTime? createdAt,
-  }) = _$ChatRecommendationImpl;
+  const factory _ChatRecommendation(
+      {required final String id,
+      required final String eventId,
+      required final String reason,
+      required final double confidenceScore,
+      final List<String> matchingCriteria,
+      final RecommendationStatus status,
+      final DateTime? createdAt}) = _$ChatRecommendationImpl;
 
   factory _ChatRecommendation.fromJson(Map<String, dynamic> json) =
       _$ChatRecommendationImpl.fromJson;
@@ -1353,20 +1301,18 @@ mixin _$EventRecommendation {
 /// @nodoc
 abstract class $EventRecommendationCopyWith<$Res> {
   factory $EventRecommendationCopyWith(
-    EventRecommendation value,
-    $Res Function(EventRecommendation) then,
-  ) = _$EventRecommendationCopyWithImpl<$Res, EventRecommendation>;
+          EventRecommendation value, $Res Function(EventRecommendation) then) =
+      _$EventRecommendationCopyWithImpl<$Res, EventRecommendation>;
   @useResult
-  $Res call({
-    String id,
-    String eventId,
-    String title,
-    String description,
-    double confidenceScore,
-    List<String> reasons,
-    RecommendationStatus status,
-    DateTime? createdAt,
-  });
+  $Res call(
+      {String id,
+      String eventId,
+      String title,
+      String description,
+      double confidenceScore,
+      List<String> reasons,
+      RecommendationStatus status,
+      DateTime? createdAt});
 }
 
 /// @nodoc
@@ -1393,75 +1339,69 @@ class _$EventRecommendationCopyWithImpl<$Res, $Val extends EventRecommendation>
     Object? status = null,
     Object? createdAt = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            eventId: null == eventId
-                ? _value.eventId
-                : eventId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            title: null == title
-                ? _value.title
-                : title // ignore: cast_nullable_to_non_nullable
-                      as String,
-            description: null == description
-                ? _value.description
-                : description // ignore: cast_nullable_to_non_nullable
-                      as String,
-            confidenceScore: null == confidenceScore
-                ? _value.confidenceScore
-                : confidenceScore // ignore: cast_nullable_to_non_nullable
-                      as double,
-            reasons: null == reasons
-                ? _value.reasons
-                : reasons // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as RecommendationStatus,
-            createdAt: freezed == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      confidenceScore: null == confidenceScore
+          ? _value.confidenceScore
+          : confidenceScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      reasons: null == reasons
+          ? _value.reasons
+          : reasons // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as RecommendationStatus,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$EventRecommendationImplCopyWith<$Res>
     implements $EventRecommendationCopyWith<$Res> {
-  factory _$$EventRecommendationImplCopyWith(
-    _$EventRecommendationImpl value,
-    $Res Function(_$EventRecommendationImpl) then,
-  ) = __$$EventRecommendationImplCopyWithImpl<$Res>;
+  factory _$$EventRecommendationImplCopyWith(_$EventRecommendationImpl value,
+          $Res Function(_$EventRecommendationImpl) then) =
+      __$$EventRecommendationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String eventId,
-    String title,
-    String description,
-    double confidenceScore,
-    List<String> reasons,
-    RecommendationStatus status,
-    DateTime? createdAt,
-  });
+  $Res call(
+      {String id,
+      String eventId,
+      String title,
+      String description,
+      double confidenceScore,
+      List<String> reasons,
+      RecommendationStatus status,
+      DateTime? createdAt});
 }
 
 /// @nodoc
 class __$$EventRecommendationImplCopyWithImpl<$Res>
     extends _$EventRecommendationCopyWithImpl<$Res, _$EventRecommendationImpl>
     implements _$$EventRecommendationImplCopyWith<$Res> {
-  __$$EventRecommendationImplCopyWithImpl(
-    _$EventRecommendationImpl _value,
-    $Res Function(_$EventRecommendationImpl) _then,
-  ) : super(_value, _then);
+  __$$EventRecommendationImplCopyWithImpl(_$EventRecommendationImpl _value,
+      $Res Function(_$EventRecommendationImpl) _then)
+      : super(_value, _then);
 
   /// Create a copy of EventRecommendation
   /// with the given fields replaced by the non-null parameter values.
@@ -1477,58 +1417,56 @@ class __$$EventRecommendationImplCopyWithImpl<$Res>
     Object? status = null,
     Object? createdAt = freezed,
   }) {
-    return _then(
-      _$EventRecommendationImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        eventId: null == eventId
-            ? _value.eventId
-            : eventId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        title: null == title
-            ? _value.title
-            : title // ignore: cast_nullable_to_non_nullable
-                  as String,
-        description: null == description
-            ? _value.description
-            : description // ignore: cast_nullable_to_non_nullable
-                  as String,
-        confidenceScore: null == confidenceScore
-            ? _value.confidenceScore
-            : confidenceScore // ignore: cast_nullable_to_non_nullable
-                  as double,
-        reasons: null == reasons
-            ? _value._reasons
-            : reasons // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as RecommendationStatus,
-        createdAt: freezed == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-      ),
-    );
+    return _then(_$EventRecommendationImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      eventId: null == eventId
+          ? _value.eventId
+          : eventId // ignore: cast_nullable_to_non_nullable
+              as String,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      confidenceScore: null == confidenceScore
+          ? _value.confidenceScore
+          : confidenceScore // ignore: cast_nullable_to_non_nullable
+              as double,
+      reasons: null == reasons
+          ? _value._reasons
+          : reasons // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as RecommendationStatus,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$EventRecommendationImpl implements _EventRecommendation {
-  const _$EventRecommendationImpl({
-    required this.id,
-    required this.eventId,
-    required this.title,
-    required this.description,
-    this.confidenceScore = 0.0,
-    final List<String> reasons = const [],
-    this.status = RecommendationStatus.pending,
-    this.createdAt,
-  }) : _reasons = reasons;
+  const _$EventRecommendationImpl(
+      {required this.id,
+      required this.eventId,
+      required this.title,
+      required this.description,
+      this.confidenceScore = 0.0,
+      final List<String> reasons = const [],
+      this.status = RecommendationStatus.pending,
+      this.createdAt})
+      : _reasons = reasons;
 
   factory _$EventRecommendationImpl.fromJson(Map<String, dynamic> json) =>
       _$$EventRecommendationImplFromJson(json);
@@ -1585,16 +1523,15 @@ class _$EventRecommendationImpl implements _EventRecommendation {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    eventId,
-    title,
-    description,
-    confidenceScore,
-    const DeepCollectionEquality().hash(_reasons),
-    status,
-    createdAt,
-  );
+      runtimeType,
+      id,
+      eventId,
+      title,
+      description,
+      confidenceScore,
+      const DeepCollectionEquality().hash(_reasons),
+      status,
+      createdAt);
 
   /// Create a copy of EventRecommendation
   /// with the given fields replaced by the non-null parameter values.
@@ -1603,27 +1540,26 @@ class _$EventRecommendationImpl implements _EventRecommendation {
   @pragma('vm:prefer-inline')
   _$$EventRecommendationImplCopyWith<_$EventRecommendationImpl> get copyWith =>
       __$$EventRecommendationImplCopyWithImpl<_$EventRecommendationImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$EventRecommendationImplToJson(this);
+    return _$$EventRecommendationImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _EventRecommendation implements EventRecommendation {
-  const factory _EventRecommendation({
-    required final String id,
-    required final String eventId,
-    required final String title,
-    required final String description,
-    final double confidenceScore,
-    final List<String> reasons,
-    final RecommendationStatus status,
-    final DateTime? createdAt,
-  }) = _$EventRecommendationImpl;
+  const factory _EventRecommendation(
+      {required final String id,
+      required final String eventId,
+      required final String title,
+      required final String description,
+      final double confidenceScore,
+      final List<String> reasons,
+      final RecommendationStatus status,
+      final DateTime? createdAt}) = _$EventRecommendationImpl;
 
   factory _EventRecommendation.fromJson(Map<String, dynamic> json) =
       _$EventRecommendationImpl.fromJson;

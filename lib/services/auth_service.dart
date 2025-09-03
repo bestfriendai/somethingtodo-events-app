@@ -41,24 +41,51 @@ class AuthService {
     required String displayName,
   }) async {
     try {
+      print('🔍 AuthService: Creating user with email: $email');
+
+      // Check if Firebase is properly initialized
+      if (_auth.app.options.apiKey.isEmpty) {
+        throw Exception('Firebase API key not configured');
+      }
+
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      print(
+        '🔍 AuthService: User created successfully: ${credential.user?.uid}',
+      );
 
       if (credential.user != null) {
         await credential.user!.updateDisplayName(displayName);
-        await _createUserProfile(credential.user!, {'signup_method': 'email'});
 
-        await _analytics.logEvent(
-          name: AnalyticsEvents.userSignUp,
-          parameters: {'method': 'email', 'user_id': credential.user!.uid},
-        );
+        // Try to create user profile, but don't fail if it doesn't work
+        try {
+          await _createUserProfile(credential.user!, {
+            'signup_method': 'email',
+          });
+        } catch (e) {
+          print('⚠️ Warning: Could not create user profile: $e');
+        }
+
+        // Try to log analytics, but don't fail if it doesn't work
+        try {
+          await _analytics.logEvent(
+            name: AnalyticsEvents.userSignUp,
+            parameters: {'method': 'email', 'user_id': credential.user!.uid},
+          );
+        } catch (e) {
+          print('⚠️ Warning: Could not log analytics: $e');
+        }
       }
 
       return credential;
     } on FirebaseAuthException catch (e) {
+      print('❌ Firebase Auth Exception: ${e.code} - ${e.message}');
       throw _handleAuthException(e);
+    } catch (e) {
+      print('❌ General Auth Exception: $e');
+      throw Exception('Authentication failed: $e');
     }
   }
 
@@ -67,19 +94,39 @@ class AuthService {
     required String password,
   }) async {
     try {
+      print('🔍 AuthService: Signing in with email: $email');
+
+      // Check if Firebase is properly initialized
+      if (_auth.app.options.apiKey.isEmpty) {
+        throw Exception('Firebase API key not configured');
+      }
+
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      print('🔍 AuthService: Sign in successful: ${credential.user?.uid}');
 
-      await _analytics.logEvent(
-        name: AnalyticsEvents.userLogin,
-        parameters: {'method': 'email', 'user_id': credential.user?.uid ?? ''},
-      );
+      // Try to log analytics, but don't fail if it doesn't work
+      try {
+        await _analytics.logEvent(
+          name: AnalyticsEvents.userLogin,
+          parameters: {
+            'method': 'email',
+            'user_id': credential.user?.uid ?? '',
+          },
+        );
+      } catch (e) {
+        print('⚠️ Warning: Could not log analytics: $e');
+      }
 
       return credential;
     } on FirebaseAuthException catch (e) {
+      print('❌ Firebase Auth Exception: ${e.code} - ${e.message}');
       throw _handleAuthException(e);
+    } catch (e) {
+      print('❌ General Auth Exception: $e');
+      throw Exception('Authentication failed: $e');
     }
   }
 
@@ -367,6 +414,8 @@ class AuthService {
 
   // Error Handling
   String _handleAuthException(FirebaseAuthException e) {
+    print('🔍 Handling Firebase Auth Exception: ${e.code} - ${e.message}');
+
     switch (e.code) {
       case 'weak-password':
         return 'The password provided is too weak.';
@@ -383,9 +432,15 @@ class AuthService {
       case 'too-many-requests':
         return 'Too many requests. Try again later.';
       case 'operation-not-allowed':
-        return 'This operation is not allowed.';
+        return 'Email/password authentication is not enabled. Please contact support.';
+      case 'network-request-failed':
+        return 'Network error. Please check your internet connection.';
+      case 'invalid-api-key':
+        return 'Firebase configuration error. Please contact support.';
+      case 'app-not-authorized':
+        return 'App not authorized to use Firebase Authentication.';
       default:
-        return 'An error occurred: ${e.message}';
+        return 'Authentication error: ${e.message ?? e.code}';
     }
   }
 }

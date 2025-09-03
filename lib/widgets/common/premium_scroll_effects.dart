@@ -82,7 +82,7 @@ class _PremiumScrollEffectsState extends State<PremiumScrollEffects>
 
   void _checkVisibility() {
     final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null) return;
+    if (renderBox == null || !renderBox.hasSize) return;
 
     final position = renderBox.localToGlobal(Offset.zero);
     final size = renderBox.size;
@@ -205,7 +205,7 @@ class _ScrollRevealListState extends State<ScrollRevealList> {
     for (int i = 0; i < _itemKeys.length; i++) {
       final RenderBox? renderBox =
           _itemKeys[i].currentContext?.findRenderObject() as RenderBox?;
-      if (renderBox == null) continue;
+      if (renderBox == null || !renderBox.hasSize) continue;
 
       final position = renderBox.localToGlobal(Offset.zero);
       final size = renderBox.size;

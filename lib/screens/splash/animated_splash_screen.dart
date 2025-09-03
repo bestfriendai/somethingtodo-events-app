@@ -44,15 +44,20 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     HapticFeedback.mediumImpact();
 
     // Simulate app initialization
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(
+      const Duration(seconds: 2),
+    ); // Reduced from 3 to 2 seconds
 
     if (mounted) {
       setState(() => _isLoading = false);
 
       // Navigate after animation completes
-      await Future.delayed(const Duration(milliseconds: 800));
+      await Future.delayed(const Duration(milliseconds: 500)); // Reduced delay
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/onboarding');
+        Navigator.pushReplacementNamed(
+          context,
+          '/auth',
+        ); // Skip onboarding, go directly to auth
       }
     }
   }
@@ -87,10 +92,10 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                       -math.sin(_rotationController.value * 2 * math.pi),
                     ),
                     colors: const [
-                      Color(0xFF6B46C1),
-                      Color(0xFF9333EA),
-                      Color(0xFFEC4899),
-                      Color(0xFFF43F5E),
+                      Color(0xFF374151),
+                      Color(0xFF4B5563),
+                      Color(0xFF6B7280),
+                      Color(0xFF64748B),
                     ],
                     stops: const [0.0, 0.3, 0.6, 1.0],
                   ),

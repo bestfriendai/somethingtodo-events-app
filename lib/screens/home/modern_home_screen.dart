@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'dart:ui';
 import 'dart:math';
-import 'package:glassmorphism/glassmorphism.dart';
 
 import '../../providers/events_provider.dart';
 import '../../providers/auth_provider.dart';
@@ -13,6 +14,7 @@ import '../../models/event.dart';
 import '../../config/modern_theme.dart';
 import '../../widgets/modern/modern_skeleton.dart';
 import '../../widgets/mobile/optimized_event_list.dart';
+
 import '../../widgets/common/delightful_refresh.dart';
 import '../../services/platform_interactions.dart';
 import '../../services/delight_service.dart';
@@ -113,39 +115,83 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
           // Animated gradient background
           _buildAnimatedBackground(),
 
-          // Main content with delightful pull to refresh
-          DelightfulRefresh(
+          // Floating glass orbs
+          ..._buildFloatingOrbs(),
+
+          // Main content
+          RefreshIndicator(
             onRefresh: _refreshData,
-            refreshMessage: 'Summoning epic events from the cosmos...',
             child: CustomScrollView(
               controller: _scrollController,
-              physics: PlatformInteractions.platformScrollPhysics,
               slivers: [
-                _buildModernAppBar(),
-                _buildSearchSection(),
-                _buildFeedViewPromo(),
-                // Error banner near top if exists
-                SliverToBoxAdapter(
-                  child: Consumer<EventsProvider>(
-                    builder: (context, provider, _) {
-                      final msg = provider.error;
-                      if (msg == null) return const SizedBox.shrink();
-                      return _buildErrorBanner(msg, onRetry: _refreshData);
-                    },
-                  ),
-                ),
+                _buildGlassAppBar(),
+                _buildSearchBar(),
                 _buildFeaturedEvents(),
-                _buildQuickStats(),
                 _buildCategoryFilters(),
                 _buildEventsSection(),
-                // Bottom padding for FAB
-                const SliverToBoxAdapter(child: SizedBox(height: 100)),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  List<Widget> _buildFloatingOrbs() {
+    return [
+      Positioned(
+        top: 100,
+        left: -50,
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, 20 * _animationController.value),
+              child: Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white.withValues(alpha: 0.3),
+                      Colors.white.withValues(alpha: 0.1),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+      Positioned(
+        bottom: 200,
+        right: -30,
+        child: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, -15 * _animationController.value),
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.purple.withValues(alpha: 0.3),
+                      Colors.purple.withValues(alpha: 0.1),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ];
   }
 
   Widget _buildAnimatedBackground() {
@@ -174,7 +220,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                         center: Alignment.topLeft,
                         radius: 1.5,
                         colors: [
-                          const Color(0xFF7C3AED).withValues(alpha: 0.05),
+                          const Color(0xFF64748B).withValues(alpha: 0.03),
                           Colors.transparent,
                         ],
                       ),
@@ -224,6 +270,84 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
     );
   }
 
+  Widget _buildGlassAppBar() {
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        return SliverAppBar(
+          floating: true,
+          snap: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          expandedHeight: 120,
+          flexibleSpace: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.2),
+                      Colors.white.withValues(alpha: 0.1),
+                    ],
+                  ),
+                ),
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Good ${_getTimeOfDay()},',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.8),
+                            fontSize: 14,
+                          ),
+                        ).animate().fadeIn(duration: 600.ms),
+                        Text(
+                          authProvider.currentUser?.displayName ?? 'Explorer',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ).animate().fadeIn(delay: 200.ms, duration: 600.ms),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: 0.2),
+                ),
+                child: const Icon(
+                  Icons.notifications_outlined,
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+              ),
+            ).animate().scale(delay: 400.ms, duration: 400.ms),
+            const SizedBox(width: 8),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildModernAppBar() {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
@@ -250,14 +374,14 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Time-based greeting with animation
+                      // Time-based greeting with improved animation
                       AnimatedBuilder(
                         animation: _headerAnimationController,
                         builder: (context, child) {
                           return Transform.translate(
                             offset: Offset(
                               0,
-                              30 * (1 - _headerAnimationController.value),
+                              20 * (1 - _headerAnimationController.value),
                             ),
                             child: Opacity(
                               opacity: _headerAnimationController.value,
@@ -284,14 +408,14 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                         },
                       ),
                       const SizedBox(height: 4),
-                      // User name with slide animation
+                      // User name with improved slide animation
                       AnimatedBuilder(
                         animation: _headerAnimationController,
                         builder: (context, child) {
                           return Transform.translate(
                             offset: Offset(
                               0,
-                              40 * (1 - _headerAnimationController.value),
+                              30 * (1 - _headerAnimationController.value),
                             ),
                             child: Opacity(
                               opacity: _headerAnimationController.value,
@@ -319,13 +443,13 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
             ),
           ),
           actions: [
-            // Modern notification button
+            // Improved notification button with glassmorphic design
             AnimatedBuilder(
               animation: _headerAnimationController,
               builder: (context, child) {
                 return Transform.translate(
                   offset: Offset(
-                    20 * (1 - _headerAnimationController.value),
+                    15 * (1 - _headerAnimationController.value),
                     0,
                   ),
                   child: Opacity(
@@ -364,6 +488,61 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
           ],
         );
       },
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const SearchScreen()),
+          ),
+          child: GlassmorphicContainer(
+            width: double.infinity,
+            height: 56,
+            borderRadius: 28,
+            blur: 20,
+            alignment: Alignment.center,
+            border: 2,
+            linearGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withValues(alpha: 0.2),
+                Colors.white.withValues(alpha: 0.1),
+              ],
+            ),
+            borderGradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withValues(alpha: 0.5),
+                Colors.white.withValues(alpha: 0.2),
+              ],
+            ),
+            child: Row(
+              children: [
+                const SizedBox(width: 20),
+                Icon(Icons.search, color: Colors.white.withValues(alpha: 0.7)),
+                const SizedBox(width: 12),
+                Text(
+                  'Search events...',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.7),
+                    fontSize: 16,
+                  ),
+                ),
+                const Spacer(),
+                Icon(Icons.tune, color: Colors.white.withValues(alpha: 0.5)),
+                const SizedBox(width: 20),
+              ],
+            ),
+          ).animate().fadeIn(delay: 600.ms, duration: 600.ms),
+        ),
+      ),
     );
   }
 
@@ -561,6 +740,264 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
     );
   }
 
+  Widget _buildFeaturedEvents() {
+    return Consumer<EventsProvider>(
+      builder: (context, eventsProvider, child) {
+        if (eventsProvider.isLoading && eventsProvider.featuredEvents.isEmpty) {
+          return SliverToBoxAdapter(
+            child: Container(
+              height: 300,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: PageView.builder(
+                itemCount: 3,
+                itemBuilder: (context, index) =>
+                    const ModernFeaturedEventSkeleton(),
+              ),
+            ),
+          );
+        }
+
+        final featuredEvents = eventsProvider.featuredEvents;
+        if (featuredEvents.isEmpty) {
+          return const SliverToBoxAdapter(child: SizedBox.shrink());
+        }
+
+        return SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Section header with better formatting
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: ModernTheme.sunsetGradient,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.star_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Featured Events',
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Featured events carousel with better formatting
+              SizedBox(
+                height: 300,
+                child: PageView.builder(
+                  controller: _featuredPageController,
+                  itemCount: featuredEvents.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentFeaturedIndex = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    final event = featuredEvents[index];
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      child: _buildFeaturedEventCard(event),
+                    );
+                  },
+                ),
+              ),
+
+              // Page indicators with better spacing
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  featuredEvents.length,
+                  (index) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: _currentFeaturedIndex == index ? 32 : 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: _currentFeaturedIndex == index
+                          ? ModernTheme.primaryColor
+                          : Colors.white.withValues(alpha: 0.3),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFeaturedEventCard(Event event) {
+    final categoryGradient = ModernTheme.getCategoryGradient(
+      event.category.name,
+    );
+
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => EventDetailsScreen(event: event)),
+        );
+      },
+      child: Container(
+        decoration: ModernTheme.modernCardDecoration(
+          isDark: true,
+          borderRadius: 28,
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Background image with better error handling
+              if (event.imageUrls.isNotEmpty)
+                Hero(
+                  tag: 'featured-event-${event.id}',
+                  child: CachedNetworkImage(
+                    imageUrl: event.imageUrls.first,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: categoryGradient),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: categoryGradient),
+                      ),
+                      child: const Icon(
+                        Icons.event_rounded,
+                        color: Colors.white,
+                        size: 64,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: categoryGradient),
+                  ),
+                  child: const Icon(
+                    Icons.event_rounded,
+                    color: Colors.white,
+                    size: 64,
+                  ),
+                ),
+
+              // Improved gradient overlay
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.transparent, Colors.black87],
+                  ),
+                ),
+              ),
+
+              // Content with better spacing
+              Positioned(
+                bottom: 24,
+                left: 24,
+                right: 24,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: categoryGradient),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        event.category.displayName.toUpperCase(),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      event.title,
+                      style: Theme.of(context).textTheme.headlineLarge
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            height: 1.2,
+                          ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on_rounded,
+                          color: Colors.white.withValues(alpha: 0.8),
+                          size: 18,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            event.venue.name,
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildQuickStats() {
     return SliverToBoxAdapter(
       child: Container(
@@ -659,258 +1096,6 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFeaturedEvents() {
-    return Consumer<EventsProvider>(
-      builder: (context, eventsProvider, child) {
-        if (eventsProvider.isLoading && eventsProvider.featuredEvents.isEmpty) {
-          return SliverToBoxAdapter(
-            child: Container(
-              height: 320,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: PageView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) =>
-                    const ModernFeaturedEventSkeleton(),
-              ),
-            ),
-          );
-        }
-
-        final featuredEvents = eventsProvider.featuredEvents;
-        if (featuredEvents.isEmpty) {
-          return const SliverToBoxAdapter(child: SizedBox.shrink());
-        }
-
-        return SliverToBoxAdapter(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Section header
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: ModernTheme.sunsetGradient,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.star_rounded,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Featured Events',
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Featured events carousel
-              SizedBox(
-                height: 320,
-                child: PageView.builder(
-                  controller: _featuredPageController,
-                  itemCount: featuredEvents.length,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentFeaturedIndex = index;
-                    });
-                  },
-                  itemBuilder: (context, index) {
-                    final event = featuredEvents[index];
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      child: _buildFeaturedEventCard(event),
-                    );
-                  },
-                ),
-              ),
-
-              // Page indicators
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  featuredEvents.length,
-                  (index) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentFeaturedIndex == index ? 32 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: _currentFeaturedIndex == index
-                          ? ModernTheme.primaryColor
-                          : Colors.white.withValues(alpha: 0.3),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildFeaturedEventCard(Event event) {
-    final categoryGradient = ModernTheme.getCategoryGradient(
-      event.category.name,
-    );
-
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => EventDetailsScreen(event: event)),
-        );
-      },
-      child: Container(
-        decoration: ModernTheme.modernCardDecoration(
-          isDark: true,
-          borderRadius: 28,
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(28),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // Background image
-              if (event.imageUrls.isNotEmpty)
-                Hero(
-                  tag: 'featured-event-${event.id}',
-                  child: CachedNetworkImage(
-                    imageUrl: event.imageUrls.first,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: categoryGradient),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: categoryGradient),
-                      ),
-                      child: const Icon(
-                        Icons.event_rounded,
-                        color: Colors.white,
-                        size: 64,
-                      ),
-                    ),
-                  ),
-                )
-              else
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: categoryGradient),
-                  ),
-                  child: const Icon(
-                    Icons.event_rounded,
-                    color: Colors.white,
-                    size: 64,
-                  ),
-                ),
-
-              // Gradient overlay
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black87],
-                  ),
-                ),
-              ),
-
-              // Content
-              Positioned(
-                bottom: 24,
-                left: 24,
-                right: 24,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: categoryGradient),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        event.category.displayName.toUpperCase(),
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.0,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      event.title,
-                      style: Theme.of(context).textTheme.headlineLarge
-                          ?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            height: 1.2,
-                          ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_rounded,
-                          color: Colors.white.withValues(alpha: 0.8),
-                          size: 18,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            event.venue.name,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -1027,10 +1212,10 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) => const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ModernEventCardSkeleton(),
               ),
-              childCount: 5,
+              childCount: 3, // Reduced skeleton count for faster loading
             ),
           );
         }
@@ -1039,26 +1224,21 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
         if (events.isEmpty) {
           return SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.all(24),
-              padding: const EdgeInsets.all(40),
-              decoration: ModernTheme.modernCardDecoration(
-                isDark: Theme.of(context).brightness == Brightness.dark,
+              margin: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey[800]!),
               ),
               child: Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.1),
-                    ),
-                    child: Icon(
-                      Icons.event_busy_rounded,
-                      size: 48,
-                      color: Colors.white.withValues(alpha: 0.5),
-                    ),
+                  Icon(
+                    Icons.event_busy_rounded,
+                    size: 48,
+                    color: Colors.grey[600],
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   Text(
                     'No events found',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -1069,9 +1249,9 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                   const SizedBox(height: 8),
                   Text(
                     'Try adjusting your filters or check back later',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.7),
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -1080,6 +1260,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
           );
         }
 
+        // Use the original optimized event list with glassmorphic design
         return SliverToBoxAdapter(
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
@@ -1089,9 +1270,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
               enableSwipeActions: true,
               showFeedButton: false, // Already shown above
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              onRefresh: () {
-                _refreshData();
-              },
+              onRefresh: _refreshData,
             ),
           ),
         );
@@ -1175,9 +1354,9 @@ class ParticleEffectPainter extends CustomPainter {
       final opacity = 0.3 + (sin(progress * 4 * pi + i * 0.2) * 0.2);
 
       paint.color = [
-        const Color(0xFF7C3AED), // Electric Purple
-        const Color(0xFFEC4899), // Neon Pink
-        const Color(0xFF06B6D4), // Cyber Blue
+        const Color(0xFF64748B), // Slate Gray
+        const Color(0xFF475569), // Dark Slate
+        const Color(0xFF6B7280), // Medium Gray
         Colors.white,
       ][i % 4].withValues(alpha: opacity);
 

@@ -6,7 +6,7 @@ import '../../widgets/modern/modern_fab.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/events_provider.dart';
 import '../../providers/chat_provider.dart';
-import '../../services/firestore_service.dart';
+
 import '../../services/cache_service.dart';
 import '../../services/platform_interactions.dart';
 import '../../services/delight_service.dart';
@@ -77,23 +77,27 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
       final chatProvider = context.read<ChatProvider>();
 
       if (authProvider.isAuthenticated) {
-        final isDemoMode = authProvider.isDemoMode;
+        // Always initialize with real API data for all users (including guests)
+        await eventsProvider.initialize(demoMode: false);
 
-        // Initialize events provider with demo mode
-        await eventsProvider.initialize(demoMode: isDemoMode);
-
-        // Initialize chat provider with demo mode
+        // Initialize chat provider with real API data
         await chatProvider.initialize(
           authProvider.currentUser!.id,
-          demoMode: isDemoMode,
+          demoMode: false,
         );
 
-        // Set demo mode in Firestore service
-        if (isDemoMode) {
-          FirestoreService().setDemoMode(true);
-        }
+        // Start location-based event loading after initialization
+        // Always load nearby events for all users
+        Future.delayed(const Duration(seconds: 2), () {
+          if (mounted) {
+            eventsProvider.loadNearbyEvents();
+          }
+        });
       }
-    } catch (e) {}
+    } catch (e) {
+      // Silently handle initialization errors in demo mode
+      // This is acceptable as demo mode is optional
+    }
   }
 
   void _onNavTap(int index) {
@@ -113,17 +117,20 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
 
       // Chat tab gets a sparkle effect
       if (index == 2) {
-        final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
-        if (renderBox != null) {
-          final position = renderBox.localToGlobal(Offset.zero);
-          DelightService.instance.showSparkleEffect(
-            context,
-            Offset(
-              position.dx + renderBox.size.width / 2,
-              position.dy + renderBox.size.height - 100,
-            ),
-          );
-        }
+        // Defer RenderBox access until after layout is complete
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+          if (renderBox != null && renderBox.hasSize) {
+            final position = renderBox.localToGlobal(Offset.zero);
+            DelightService.instance.showSparkleEffect(
+              context,
+              Offset(
+                position.dx + renderBox.size.width / 2,
+                position.dy + renderBox.size.height - 100,
+              ),
+            );
+          }
+        });
       }
     }
 
@@ -157,18 +164,20 @@ class _ModernMainNavigationScreenState extends State<ModernMainNavigationScreen>
   void _showSpeedDial() {
     PlatformInteractions.lightImpact();
 
-    // Show sparkle effect when speed dial opens
-    final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox != null) {
-      final position = renderBox.localToGlobal(Offset.zero);
-      DelightService.instance.showSparkleEffect(
-        context,
-        Offset(
-          position.dx + renderBox.size.width / 2,
-          position.dy + renderBox.size.height - 120,
-        ),
-      );
-    }
+    // Show sparkle effect when speed dial opens - defer until layout is complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+      if (renderBox != null && renderBox.hasSize) {
+        final position = renderBox.localToGlobal(Offset.zero);
+        DelightService.instance.showSparkleEffect(
+          context,
+          Offset(
+            position.dx + renderBox.size.width / 2,
+            position.dy + renderBox.size.height - 120,
+          ),
+        );
+      }
+    });
 
     // TODO: Implement speed dial actions
   }

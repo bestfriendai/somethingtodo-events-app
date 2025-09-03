@@ -44,10 +44,14 @@ class OptimizedImage extends StatelessWidget {
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
     final cacheWidth =
         memCacheWidth ??
-        (width != null ? (width! * devicePixelRatio).round() : null);
+        (width != null && width!.isFinite
+            ? (width! * devicePixelRatio).round()
+            : null);
     final cacheHeight =
         memCacheHeight ??
-        (height != null ? (height! * devicePixelRatio).round() : null);
+        (height != null && height!.isFinite
+            ? (height! * devicePixelRatio).round()
+            : null);
 
     Widget imageWidget = CachedNetworkImage(
       imageUrl: imageUrl!,

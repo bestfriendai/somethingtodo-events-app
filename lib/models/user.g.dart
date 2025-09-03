@@ -6,42 +6,42 @@ part of 'user.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AppUserImpl _$$AppUserImplFromJson(
-  Map<String, dynamic> json,
-) => _$AppUserImpl(
-  id: json['id'] as String,
-  email: json['email'] as String,
-  displayName: json['displayName'] as String?,
-  photoUrl: json['photoUrl'] as String?,
-  phoneNumber: json['phoneNumber'] as String?,
-  isPremium: json['isPremium'] as bool? ?? false,
-  premiumExpiresAt: json['premiumExpiresAt'] == null
-      ? null
-      : DateTime.parse(json['premiumExpiresAt'] as String),
-  interests:
-      (json['interests'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const [],
-  favoriteEventIds:
-      (json['favoriteEventIds'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList() ??
-      const [],
-  preferences: json['preferences'] == null
-      ? null
-      : UserPreferences.fromJson(json['preferences'] as Map<String, dynamic>),
-  location: json['location'] == null
-      ? null
-      : UserLocation.fromJson(json['location'] as Map<String, dynamic>),
-  lastActiveAt: json['lastActiveAt'] == null
-      ? null
-      : DateTime.parse(json['lastActiveAt'] as String),
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
-  updatedAt: json['updatedAt'] == null
-      ? null
-      : DateTime.parse(json['updatedAt'] as String),
-);
+_$AppUserImpl _$$AppUserImplFromJson(Map<String, dynamic> json) =>
+    _$AppUserImpl(
+      id: json['id'] as String,
+      email: json['email'] as String,
+      displayName: json['displayName'] as String?,
+      photoUrl: json['photoUrl'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
+      isPremium: json['isPremium'] as bool? ?? false,
+      premiumExpiresAt: json['premiumExpiresAt'] == null
+          ? null
+          : DateTime.parse(json['premiumExpiresAt'] as String),
+      interests: (json['interests'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      favoriteEventIds: (json['favoriteEventIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      preferences: json['preferences'] == null
+          ? null
+          : UserPreferences.fromJson(
+              json['preferences'] as Map<String, dynamic>),
+      location: json['location'] == null
+          ? null
+          : UserLocation.fromJson(json['location'] as Map<String, dynamic>),
+      lastActiveAt: json['lastActiveAt'] == null
+          ? null
+          : DateTime.parse(json['lastActiveAt'] as String),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+    );
 
 Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
     <String, dynamic>{
@@ -62,32 +62,31 @@ Map<String, dynamic> _$$AppUserImplToJson(_$AppUserImpl instance) =>
     };
 
 _$UserPreferencesImpl _$$UserPreferencesImplFromJson(
-  Map<String, dynamic> json,
-) => _$UserPreferencesImpl(
-  notificationsEnabled: json['notificationsEnabled'] as bool? ?? true,
-  locationEnabled: json['locationEnabled'] as bool? ?? true,
-  marketingEmails: json['marketingEmails'] as bool? ?? true,
-  theme: json['theme'] as String? ?? 'light',
-  maxDistance: (json['maxDistance'] as num?)?.toDouble() ?? 10.0,
-  preferredCategories:
-      (json['preferredCategories'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList() ??
-      const [],
-  pricePreference: json['pricePreference'] as String? ?? 'any',
-);
+        Map<String, dynamic> json) =>
+    _$UserPreferencesImpl(
+      notificationsEnabled: json['notificationsEnabled'] as bool? ?? true,
+      locationEnabled: json['locationEnabled'] as bool? ?? true,
+      marketingEmails: json['marketingEmails'] as bool? ?? true,
+      theme: json['theme'] as String? ?? 'light',
+      maxDistance: (json['maxDistance'] as num?)?.toDouble() ?? 10.0,
+      preferredCategories: (json['preferredCategories'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      pricePreference: json['pricePreference'] as String? ?? 'any',
+    );
 
 Map<String, dynamic> _$$UserPreferencesImplToJson(
-  _$UserPreferencesImpl instance,
-) => <String, dynamic>{
-  'notificationsEnabled': instance.notificationsEnabled,
-  'locationEnabled': instance.locationEnabled,
-  'marketingEmails': instance.marketingEmails,
-  'theme': instance.theme,
-  'maxDistance': instance.maxDistance,
-  'preferredCategories': instance.preferredCategories,
-  'pricePreference': instance.pricePreference,
-};
+        _$UserPreferencesImpl instance) =>
+    <String, dynamic>{
+      'notificationsEnabled': instance.notificationsEnabled,
+      'locationEnabled': instance.locationEnabled,
+      'marketingEmails': instance.marketingEmails,
+      'theme': instance.theme,
+      'maxDistance': instance.maxDistance,
+      'preferredCategories': instance.preferredCategories,
+      'pricePreference': instance.pricePreference,
+    };
 
 _$UserLocationImpl _$$UserLocationImplFromJson(Map<String, dynamic> json) =>
     _$UserLocationImpl(

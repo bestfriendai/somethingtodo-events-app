@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/theme_provider.dart';
-import '../../config/unified_design_system.dart';
+import '../../config/consolidated_design_system.dart';
+import '../../widgets/theme/enhanced_theme_preview.dart';
+import '../../config/responsive_breakpoints.dart';
 
 /// Theme settings screen for switching between design variants
 class ThemeSettingsScreen extends StatelessWidget {
@@ -14,7 +16,7 @@ class ThemeSettingsScreen extends StatelessWidget {
       body: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(UnifiedDesignSystem.spacingMd),
+            padding: const EdgeInsets.all(ConsolidatedDesignSystem.spacingMd),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -23,27 +25,27 @@ class ThemeSettingsScreen extends StatelessWidget {
                   'Design Style',
                   'Choose your preferred visual design',
                 ),
-                const SizedBox(height: UnifiedDesignSystem.spacingMd),
+                const SizedBox(height: ConsolidatedDesignSystem.spacingMd),
                 _buildThemeVariantSelector(context, themeProvider),
-                const SizedBox(height: UnifiedDesignSystem.spacingXl),
+                const SizedBox(height: ConsolidatedDesignSystem.spacingXl),
 
                 _buildSectionHeader(
                   context,
                   'Appearance',
                   'Customize brightness and system integration',
                 ),
-                const SizedBox(height: UnifiedDesignSystem.spacingMd),
+                const SizedBox(height: ConsolidatedDesignSystem.spacingMd),
                 _buildAppearanceSettings(context, themeProvider),
-                const SizedBox(height: UnifiedDesignSystem.spacingXl),
+                const SizedBox(height: ConsolidatedDesignSystem.spacingXl),
 
                 _buildSectionHeader(
                   context,
                   'Preview',
                   'See how your theme looks',
                 ),
-                const SizedBox(height: UnifiedDesignSystem.spacingMd),
+                const SizedBox(height: ConsolidatedDesignSystem.spacingMd),
                 _buildThemePreview(context, themeProvider),
-                const SizedBox(height: UnifiedDesignSystem.spacingXl),
+                const SizedBox(height: ConsolidatedDesignSystem.spacingXl),
 
                 _buildResetButton(context, themeProvider),
               ],
@@ -63,7 +65,7 @@ class ThemeSettingsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: UnifiedDesignSystem.spacingXs),
+        const SizedBox(height: ConsolidatedDesignSystem.spacingXs),
         Text(
           subtitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -83,14 +85,14 @@ class ThemeSettingsScreen extends StatelessWidget {
         final isSelected = themeProvider.currentVariant == variant.id;
 
         return Container(
-          margin: const EdgeInsets.only(bottom: UnifiedDesignSystem.spacingSm),
+          margin: const EdgeInsets.only(bottom: ConsolidatedDesignSystem.spacingSm),
           child: Card(
             elevation: isSelected ? 4 : 1,
             child: InkWell(
               onTap: () => themeProvider.setThemeVariant(variant.id),
-              borderRadius: BorderRadius.circular(UnifiedDesignSystem.radiusLg),
+              borderRadius: BorderRadius.circular(ConsolidatedDesignSystem.radiusLg),
               child: Padding(
-                padding: const EdgeInsets.all(UnifiedDesignSystem.spacingMd),
+                padding: const EdgeInsets.all(ConsolidatedDesignSystem.spacingMd),
                 child: Row(
                   children: [
                     Container(
@@ -103,7 +105,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                                 context,
                               ).colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(
-                          UnifiedDesignSystem.radiusMd,
+                          ConsolidatedDesignSystem.radiusMd,
                         ),
                       ),
                       child: Icon(
@@ -113,7 +115,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                             : Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    const SizedBox(width: UnifiedDesignSystem.spacingMd),
+                    const SizedBox(width: ConsolidatedDesignSystem.spacingMd),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +129,7 @@ class ThemeSettingsScreen extends StatelessWidget {
                                       : FontWeight.w500,
                                 ),
                           ),
-                          const SizedBox(height: UnifiedDesignSystem.spacingXs),
+                          const SizedBox(height: ConsolidatedDesignSystem.spacingXs),
                           Text(
                             variant.description,
                             style: Theme.of(context).textTheme.bodySmall
@@ -161,7 +163,7 @@ class ThemeSettingsScreen extends StatelessWidget {
   ) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(UnifiedDesignSystem.spacingMd),
+        padding: const EdgeInsets.all(ConsolidatedDesignSystem.spacingMd),
         child: Column(
           children: [
             SwitchListTile(
@@ -192,60 +194,9 @@ class ThemeSettingsScreen extends StatelessWidget {
   }
 
   Widget _buildThemePreview(BuildContext context, ThemeProvider themeProvider) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(UnifiedDesignSystem.spacingMd),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Preview Components',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: UnifiedDesignSystem.spacingMd),
-
-            // Button previews
-            Wrap(
-              spacing: UnifiedDesignSystem.spacingSm,
-              runSpacing: UnifiedDesignSystem.spacingSm,
-              children: [
-                ElevatedButton(onPressed: () {}, child: const Text('Elevated')),
-                FilledButton(onPressed: () {}, child: const Text('Filled')),
-                OutlinedButton(onPressed: () {}, child: const Text('Outlined')),
-                TextButton(onPressed: () {}, child: const Text('Text')),
-              ],
-            ),
-            const SizedBox(height: UnifiedDesignSystem.spacingMd),
-
-            // Chip previews
-            Wrap(
-              spacing: UnifiedDesignSystem.spacingSm,
-              children: [
-                Chip(
-                  label: const Text('Chip'),
-                  avatar: const Icon(Icons.star, size: 16),
-                ),
-                const Chip(
-                  label: Text('Selected'),
-                  backgroundColor: Colors.blue,
-                ),
-                ActionChip(label: const Text('Action'), onPressed: () {}),
-              ],
-            ),
-            const SizedBox(height: UnifiedDesignSystem.spacingMd),
-
-            // Text field preview
-            TextField(
-              decoration: const InputDecoration(
-                labelText: 'Sample Input',
-                hintText: 'Enter some text...',
-                prefixIcon: Icon(Icons.search),
-              ),
-              enabled: false,
-            ),
-          ],
-        ),
-      ),
+    return EnhancedThemePreview(
+      variantName: themeProvider.currentVariantDisplayName,
+      isDark: themeProvider.isDarkMode,
     );
   }
 

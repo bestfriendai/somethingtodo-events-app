@@ -205,7 +205,7 @@ class ErrorHandlingService {
         final eventId = cacheKey.substring(6);
         cachedData = await cacheService.getCachedEvent(eventId);
       } else {
-        cachedData = cacheService.getCachedUserPreference<T>(cacheKey);
+        cachedData = await cacheService.getCachedUserPreference<T>(cacheKey);
       }
 
       if (cachedData != null) {

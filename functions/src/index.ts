@@ -61,7 +61,7 @@ const app = express();
 // Parse allowed origins from config
 const getAllowedOrigins = (): string[] => {
   const originsStr = config.ALLOWED_ORIGINS || '';
-  const origins = originsStr.split(',').map(origin => origin.trim()).filter(Boolean);
+  const origins = originsStr.split(',').map((origin: string) => origin.trim()).filter(Boolean);
   
   // Default origins for development if none specified
   if (origins.length === 0) {
@@ -190,11 +190,12 @@ const validateInput = (schema: any) => {
 };
 
 // Authentication middleware
-const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
+const authenticateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      res.status(401).json({ error: 'Unauthorized' });
+      return;
     }
     
     const token = authHeader.substring(7);
@@ -623,31 +624,31 @@ function getMockEvents(lat: number, lng: number, limit: number) {
 // Export the Express app as a Cloud Function
 export const api = functions.https.onRequest(app);
 
-// Cloud Function Triggers
+// Cloud Function Triggers using v1 API for compatibility
 export const onEventCreated = functions.firestore
   .document('events/{eventId}')
-  .onCreate(async (snap, context) => {
+  .onCreate(async (snap: any, context: any) => {
     const eventId = context.params.eventId;
     await handleEventCreated(eventId);
   });
 
 export const onEventUpdated = functions.firestore
   .document('events/{eventId}')
-  .onUpdate(async (change, context) => {
+  .onUpdate(async (change: any, context: any) => {
     const eventId = context.params.eventId;
     await handleEventUpdated(eventId);
   });
 
 export const onEventDeleted = functions.firestore
   .document('events/{eventId}')
-  .onDelete(async (snap, context) => {
+  .onDelete(async (snap: any, context: any) => {
     const eventId = context.params.eventId;
     await handleEventDeleted(eventId);
   });
 
 export const onUserCreated = functions.auth
   .user()
-  .onCreate(async (user) => {
+  .onCreate(async (user: any) => {
     // Initialize user preferences and send welcome notification
     await initializeNewUser(user);
   });
@@ -656,7 +657,7 @@ export const onUserCreated = functions.auth
 export const dailyRecommendations = functions.pubsub
   .schedule('0 9 * * *') // Daily at 9 AM
   .timeZone('America/Los_Angeles')
-  .onRun(async (context) => {
+  .onRun(async (context: any) => {
     await sendDailyRecommendations();
   });
 
@@ -850,7 +851,7 @@ async function handleEventDeleted(eventId: string): Promise<void> {
   // Clean up related data
 }
 
-async function initializeNewUser(user: admin.auth.UserRecord): Promise<void> {
+async function initializeNewUser(user: any): Promise<void> {
   // Create user profile document
   await admin.firestore()
     .collection('users')

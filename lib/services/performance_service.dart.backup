@@ -1,0 +1,677 @@
+import 'dart:ui';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+class PerformanceService {
+  static PerformanceService? _instance;
+  static PerformanceService get instance =>
+      _instance ??= PerformanceService._();
+
+  PerformanceService._();
+
+  // Frame rate monitoring
+  int _frameCount = 0;
+  DateTime _lastFrameTime = DateTime.now();
+  double _currentFPS = 60.0;
+  final List<double> _fpsHistory = [];
+  
+  // Performance metrics
+  int _jankFrames = 0;
+  double _averageFrameTime = 16.67; // Target 60fps
+  final Map<String, Duration> _operationTimings = {};
+  final Map<String, int> _operationCounts = {};
+  
+  // Memory monitoring
+  int _lastMemoryUsage = 0;
+  final List<int> _memoryHistory = [];
+  
+  // Network monitoring
+  int _activeNetworkRequests = 0;
+  int _totalNetworkRequests = 0;
+  Duration _averageNetworkLatency = Duration.zero;
+
+  // Performance optimization flags
+  bool _enableAnimations = true;
+  bool _enableBlur = true;
+  bool _enableShadows = true;
+  bool _enableGradients = true;
+
+  // Initialize performance monitoring with enhanced metrics
+  void initialize() {
+    // Add frame callback for FPS monitoring (always monitor in release too)
+    WidgetsBinding.instance.addPersistentFrameCallback(_onFrame);
+    
+    // Add timeline events listener for performance tracking
+    WidgetsBinding.instance.addTimingsCallback(_onTimings);
+
+    // Optimize for mobile
+    _optimizeForMobile();
+    
+    // Start memory monitoring
+    _startMemoryMonitoring();
+    
+    // Configure image cache for optimal performance
+    _configureImageCache();
+  }
+  
+  void _onTimings(List<FrameTiming> timings) {
+    for (final timing in timings) {
+      final buildDuration = timing.buildDuration;
+      final rasterDuration = timing.rasterDuration;
+      final totalDuration = timing.totalSpan;
+      
+      // Track jank frames (>16ms frame time)
+      if (totalDuration.inMilliseconds > 16) {
+        _jankFrames++;
+      }
+      
+      // Update average frame time
+      _averageFrameTime = (_averageFrameTime * 0.9) + 
+                         (totalDuration.inMicroseconds / 1000.0 * 0.1);
+                         
+      if (kDebugMode) {
+        if (totalDuration.inMilliseconds > 100) {
+          print('⚠️ Severe jank detected: ${totalDuration.inMilliseconds}ms');
+        }
+      }
+    }
+  }
+  
+  void _startMemoryMonitoring() {
+    Timer.periodic(Duration(seconds: 30), (_) {
+      _checkMemoryUsage();
+    });
+  }
+  
+  void _checkMemoryUsage() {
+    // This is a placeholder - in production, you'd use platform channels
+    // to get actual memory usage from native code
+    final currentMemory = PaintingBinding.instance.imageCache.currentSizeBytes;
+    
+    _memoryHistory.add(currentMemory);
+    if (_memoryHistory.length > 20) {
+      _memoryHistory.removeAt(0);
+    }
+    
+    // Trigger cleanup if memory is high
+    if (currentMemory > 100 * 1024 * 1024) { // 100MB
+      optimizeMemoryUsage();
+    }
+    
+    _lastMemoryUsage = currentMemory;
+  }
+  
+  void _configureImageCache() {
+    const int maxCacheSize = 200 * 1024 * 1024; // 200MB
+    const int maxCacheCount = 200;
+    
+    PaintingBinding.instance.imageCache
+      ..maximumSize = maxCacheCount
+      ..maximumSizeBytes = maxCacheSize;
+
+  void _onFrame(Duration timeStamp) {
+    final now = DateTime.now();
+    _frameCount++;
+
+    if (now.difference(_lastFrameTime).inMilliseconds >= 1000) {
+      _currentFPS = _frameCount.toDouble();
+      _fpsHistory.add(_currentFPS);
+
+      // Keep only last 10 FPS readings
+      if (_fpsHistory.length > 10) {
+        _fpsHistory.removeAt(0);
+      }
+
+      // Adjust performance based on FPS
+      _adjustPerformanceSettings();
+
+      _frameCount = 0;
+      _lastFrameTime = now;
+
+      if (kDebugMode) {
+        print('FPS: $_currentFPS');
+      }
+    }
+  }
+
+  void _adjustPerformanceSettings() {
+    final avgFPS = _fpsHistory.isNotEmpty
+        ? _fpsHistory.reduce((a, b) => a + b) / _fpsHistory.length
+        : 60.0;
+    
+    // Calculate jank percentage
+    final jankPercentage = _frameCount > 0 
+        ? (_jankFrames / _frameCount) * 100
+        : 0.0;
+
+    // More granular performance adjustments based on multiple metrics
+    if (avgFPS < 30 || jankPercentage > 20) {
+      // Critical performance issues - disable all non-essential features
+      _setPerformanceLevel(0);
+    } else if (avgFPS < 45 || jankPercentage > 10) {
+      // Poor performance - disable expensive features
+      _setPerformanceLevel(1);
+    } else if (avgFPS < 55 || jankPercentage > 5) {
+      // Moderate performance - disable some features
+      _setPerformanceLevel(2);
+    } else {
+      // Good performance - enable all features
+      _setPerformanceLevel(3);
+    }
+    
+    // Log performance metrics periodically
+    if (_frameCount % 300 == 0 && kDebugMode) {
+      print('Performance: FPS: ${avgFPS.toStringAsFixed(1)}, '
+            'Jank: ${jankPercentage.toStringAsFixed(1)}%, '
+            'Memory: ${(_lastMemoryUsage / 1024 / 1024).toStringAsFixed(1)}MB');
+    }
+  }
+  
+  void _setPerformanceLevel(int level) {
+    switch (level) {
+      case 0: // Critical - bare minimum
+        _enableAnimations = false;
+        _enableBlur = false;
+        _enableShadows = false;
+        _enableGradients = false;
+        break;
+      case 1: // Poor - basic features only
+        _enableAnimations = true;
+        _enableBlur = false;
+        _enableShadows = false;
+        _enableGradients = false;
+        break;
+      case 2: // Moderate - most features
+        _enableAnimations = true;
+        _enableBlur = false;
+        _enableShadows = true;
+        _enableGradients = true;
+        break;
+      case 3: // Good - all features
+        _enableAnimations = true;
+        _enableBlur = true;
+        _enableShadows = true;
+        _enableGradients = true;
+        break;
+    }
+  }
+
+  void _optimizeForMobile() {
+    // Set high refresh rate on supported devices
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS) {
+      // Request 120Hz if available
+      try {
+        WidgetsBinding.instance.platformDispatcher.onMetricsChanged = () {
+          final display =
+              WidgetsBinding.instance.platformDispatcher.displays.first;
+          if (display.refreshRate > 60) {
+            print('High refresh rate detected: ${display.refreshRate}Hz');
+          }
+        };
+      } catch (e) {
+        print('Error setting refresh rate: $e');
+      }
+    }
+  }
+
+  // Performance getters
+  double get currentFPS => _currentFPS;
+  bool get enableAnimations => _enableAnimations;
+  bool get enableBlur => _enableBlur;
+  bool get enableShadows => _enableShadows;
+  bool get enableGradients => _enableGradients;
+
+  // Manual performance overrides
+  void setPerformanceMode(PerformanceMode mode) {
+    switch (mode) {
+      case PerformanceMode.high:
+        _enableAnimations = true;
+        _enableBlur = true;
+        _enableShadows = true;
+        _enableGradients = true;
+        break;
+      case PerformanceMode.balanced:
+        _enableAnimations = true;
+        _enableBlur = false;
+        _enableShadows = true;
+        _enableGradients = true;
+        break;
+      case PerformanceMode.battery:
+        _enableAnimations = false;
+        _enableBlur = false;
+        _enableShadows = false;
+        _enableGradients = false;
+        break;
+    }
+  }
+
+  // Optimized widget builders
+  Widget buildOptimizedContainer({
+    required Widget child,
+    Color? color,
+    Gradient? gradient,
+    BorderRadius? borderRadius,
+    List<BoxShadow>? boxShadow,
+    Border? border,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        gradient: _enableGradients ? gradient : null,
+        borderRadius: borderRadius,
+        boxShadow: _enableShadows ? boxShadow : null,
+        border: border,
+      ),
+      child: child,
+    );
+  }
+
+  Widget buildOptimizedBlur({
+    required Widget child,
+    double sigmaX = 10.0,
+    double sigmaY = 10.0,
+  }) {
+    if (!_enableBlur) {
+      return Container(
+        color: Colors.black.withValues(alpha: 0.3),
+        child: child,
+      );
+    }
+
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: sigmaX, sigmaY: sigmaY),
+      child: child,
+    );
+  }
+
+  AnimationController createOptimizedAnimationController({
+    required Duration duration,
+    required TickerProvider vsync,
+  }) {
+    return AnimationController(
+      duration: _enableAnimations ? duration : Duration.zero,
+      vsync: vsync,
+    );
+  }
+
+  // Image optimization helpers
+  Widget buildOptimizedImage({
+    required String imageUrl,
+    required Widget Function(BuildContext, String) placeholder,
+    required Widget Function(BuildContext, Object, StackTrace?) errorWidget,
+    BoxFit fit = BoxFit.cover,
+  }) {
+    return Image.network(
+      imageUrl,
+      fit: fit,
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded) return child;
+
+        return AnimatedOpacity(
+          opacity: frame == null ? 0 : 1,
+          duration: _enableAnimations
+              ? const Duration(milliseconds: 300)
+              : Duration.zero,
+          curve: Curves.easeOut,
+          child: child,
+        );
+      },
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+
+        return placeholder(context, imageUrl);
+      },
+      errorBuilder: errorWidget,
+    );
+  }
+
+  // Advanced list performance optimization with viewport caching
+  Widget buildOptimizedListView({
+    required IndexedWidgetBuilder itemBuilder,
+    required int itemCount,
+    ScrollController? controller,
+    ScrollPhysics? physics,
+    EdgeInsets? padding,
+    bool addAutomaticKeepAlives = false,
+    bool addRepaintBoundaries = true,
+    double? itemExtent,
+    Widget? prototypeItem,
+  }) {
+    // Use more efficient list variants when possible
+    if (itemExtent != null) {
+      // Fixed extent list is most efficient
+      return ListView.builder(
+        controller: controller,
+        physics: physics ?? const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
+        padding: padding,
+        itemCount: itemCount,
+        itemExtent: itemExtent,
+        itemBuilder: (context, index) => _wrapListItem(
+          itemBuilder(context, index),
+          index,
+          addRepaintBoundaries,
+        ),
+        addAutomaticKeepAlives: addAutomaticKeepAlives,
+        addRepaintBoundaries: false, // We handle this manually
+      );
+    } else if (prototypeItem != null) {
+      // Prototype item for consistent heights
+      return ListView.builder(
+        controller: controller,
+        physics: physics ?? const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
+        padding: padding,
+        itemCount: itemCount,
+        prototypeItem: prototypeItem,
+        itemBuilder: (context, index) => _wrapListItem(
+          itemBuilder(context, index),
+          index,
+          addRepaintBoundaries,
+        ),
+        addAutomaticKeepAlives: addAutomaticKeepAlives,
+        addRepaintBoundaries: false,
+      );
+    } else {
+      // Standard builder with optimizations
+      return ListView.builder(
+        controller: controller,
+        physics: physics ?? const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
+        padding: padding,
+        itemCount: itemCount,
+        cacheExtent: 250.0, // Cache items outside viewport
+        itemBuilder: (context, index) => _wrapListItem(
+          itemBuilder(context, index),
+          index,
+          addRepaintBoundaries,
+        ),
+        addAutomaticKeepAlives: addAutomaticKeepAlives,
+        addRepaintBoundaries: false,
+      );
+    }
+  }
+  
+  Widget _wrapListItem(Widget item, int index, bool addRepaintBoundaries) {
+    // Add repaint boundary for expensive items
+    if (addRepaintBoundaries && (index % 3 == 0)) {
+      // Add repaint boundaries every 3rd item to balance performance
+      item = RepaintBoundary(child: item);
+    }
+    
+    // Wrap in performance tracking widget in debug mode
+    if (kDebugMode) {
+      return _PerformanceTrackingWidget(
+        child: item,
+        onRender: (duration) {
+          if (duration.inMilliseconds > 16) {
+            print('Slow item render at index $index: ${duration.inMilliseconds}ms');
+          }
+        },
+      );
+    }
+    
+    return item;
+  }
+
+  // Enhanced memory management with smart cache clearing
+  void optimizeMemoryUsage() {
+    final stopwatch = Stopwatch()..start();
+    
+    if (kDebugMode) {
+      print('🧹 Optimizing memory usage...');
+      print('Before: ${(_lastMemoryUsage / 1024 / 1024).toStringAsFixed(1)}MB');
+    }
+
+    // Smart image cache clearing - keep frequently used images
+    final imageCache = PaintingBinding.instance.imageCache;
+    final currentSize = imageCache.currentSizeBytes;
+    
+    if (currentSize > 50 * 1024 * 1024) { // Over 50MB
+      // Clear only if cache is large
+      imageCache.evict();
+      
+      // Reduce cache limits temporarily
+      imageCache.maximumSizeBytes = 100 * 1024 * 1024;
+      imageCache.maximumSize = 100;
+    }
+    
+    // Schedule cache limit restoration
+    Future.delayed(Duration(minutes: 5), () {
+      imageCache.maximumSizeBytes = 200 * 1024 * 1024;
+      imageCache.maximumSize = 200;
+    });
+    
+    stopwatch.stop();
+    
+    if (kDebugMode) {
+      print('Memory optimization completed in ${stopwatch.elapsedMilliseconds}ms');
+    }
+  }
+
+  // Battery optimization
+  void enableBatteryOptimization() {
+    setPerformanceMode(PerformanceMode.battery);
+  }
+
+  void disableBatteryOptimization() {
+    setPerformanceMode(PerformanceMode.high);
+  }
+
+  // Comprehensive performance stats with actionable metrics
+  Map<String, dynamic> getPerformanceStats() {
+    final avgFPS = _fpsHistory.isNotEmpty
+        ? _fpsHistory.reduce((a, b) => a + b) / _fpsHistory.length
+        : 0.0;
+    
+    final avgMemory = _memoryHistory.isNotEmpty
+        ? _memoryHistory.reduce((a, b) => a + b) / _memoryHistory.length
+        : 0;
+    
+    final jankRate = _frameCount > 0 
+        ? (_jankFrames / _frameCount) * 100
+        : 0.0;
+    
+    return {
+      // Frame metrics
+      'currentFPS': _currentFPS,
+      'averageFPS': avgFPS,
+      'jankFrames': _jankFrames,
+      'jankRate': jankRate,
+      'averageFrameTime': _averageFrameTime,
+      
+      // Memory metrics
+      'currentMemoryMB': _lastMemoryUsage / 1024 / 1024,
+      'averageMemoryMB': avgMemory / 1024 / 1024,
+      
+      // Network metrics
+      'activeRequests': _activeNetworkRequests,
+      'totalRequests': _totalNetworkRequests,
+      'avgNetworkLatencyMs': _averageNetworkLatency.inMilliseconds,
+      
+      // Feature flags
+      'enableAnimations': _enableAnimations,
+      'enableBlur': _enableBlur,
+      'enableShadows': _enableShadows,
+      'enableGradients': _enableGradients,
+      
+      // Performance level
+      'performanceLevel': _getPerformanceLevel(),
+    };
+  }
+  
+  String _getPerformanceLevel() {
+    if (!_enableBlur && !_enableShadows) return 'Critical';
+    if (!_enableBlur) return 'Poor';
+    if (_enableBlur && _enableShadows && _enableGradients) return 'Excellent';
+    return 'Good';
+  }
+  
+  // Track operation performance
+  void startOperation(String name) {
+    _operationTimings[name] = DateTime.now().difference(DateTime(1970));
+  }
+  
+  void endOperation(String name) {
+    final startTime = _operationTimings[name];
+    if (startTime != null) {
+      final duration = DateTime.now().difference(DateTime(1970)) - startTime;
+      
+      _operationCounts[name] = (_operationCounts[name] ?? 0) + 1;
+      
+      if (kDebugMode && duration.inMilliseconds > 100) {
+        print('⚠️ Slow operation "$name": ${duration.inMilliseconds}ms');
+      }
+      
+      _operationTimings.remove(name);
+    }
+  }
+  
+  // Network tracking
+  void trackNetworkRequest({bool isStart = true}) {
+    if (isStart) {
+      _activeNetworkRequests++;
+      _totalNetworkRequests++;
+    } else {
+      _activeNetworkRequests = (_activeNetworkRequests - 1).clamp(0, 999);
+    }
+  }
+  
+  void updateNetworkLatency(Duration latency) {
+    // Rolling average
+    _averageNetworkLatency = Duration(
+      milliseconds: ((_averageNetworkLatency.inMilliseconds * 0.9) + 
+                    (latency.inMilliseconds * 0.1)).round(),
+    );
+  }
+}
+
+enum PerformanceMode { high, balanced, battery }
+
+// Performance-optimized widgets
+class PerformantContainer extends StatelessWidget {
+  final Widget child;
+  final Color? color;
+  final Gradient? gradient;
+  final BorderRadius? borderRadius;
+  final List<BoxShadow>? boxShadow;
+  final Border? border;
+
+  const PerformantContainer({
+    super.key,
+    required this.child,
+    this.color,
+    this.gradient,
+    this.borderRadius,
+    this.boxShadow,
+    this.border,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PerformanceService.instance.buildOptimizedContainer(
+      child: child,
+      color: color,
+      gradient: gradient,
+      borderRadius: borderRadius,
+      boxShadow: boxShadow,
+      border: border,
+    );
+  }
+}
+
+class PerformantBlur extends StatelessWidget {
+  final Widget child;
+  final double sigmaX;
+  final double sigmaY;
+
+  const PerformantBlur({
+    super.key,
+    required this.child,
+    this.sigmaX = 10.0,
+    this.sigmaY = 10.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PerformanceService.instance.buildOptimizedBlur(
+      child: child,
+      sigmaX: sigmaX,
+      sigmaY: sigmaY,
+    );
+  }
+}
+
+class PerformantListView extends StatelessWidget {
+  final IndexedWidgetBuilder itemBuilder;
+  final int itemCount;
+  final ScrollController? controller;
+  final ScrollPhysics? physics;
+  final EdgeInsets? padding;
+  final double? itemExtent;
+  final Widget? prototypeItem;
+
+  const PerformantListView({
+    super.key,
+    required this.itemBuilder,
+    required this.itemCount,
+    this.controller,
+    this.physics,
+    this.padding,
+    this.itemExtent,
+    this.prototypeItem,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PerformanceService.instance.buildOptimizedListView(
+      itemBuilder: itemBuilder,
+      itemCount: itemCount,
+      controller: controller,
+      physics: physics,
+      padding: padding,
+      itemExtent: itemExtent,
+      prototypeItem: prototypeItem,
+    );
+  }
+}
+
+// Performance tracking widget for debug mode
+class _PerformanceTrackingWidget extends StatefulWidget {
+  final Widget child;
+  final void Function(Duration) onRender;
+
+  const _PerformanceTrackingWidget({
+    required this.child,
+    required this.onRender,
+  });
+
+  @override
+  State<_PerformanceTrackingWidget> createState() => 
+      _PerformanceTrackingWidgetState();
+}
+
+class _PerformanceTrackingWidgetState extends State<_PerformanceTrackingWidget> {
+  late DateTime _buildStart;
+
+  @override
+  void initState() {
+    super.initState();
+    _buildStart = DateTime.now();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final renderDuration = DateTime.now().difference(_buildStart);
+      widget.onRender(renderDuration);
+    });
+    
+    return widget.child;
+  }
+}

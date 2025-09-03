@@ -13,66 +13,92 @@ import 'package:google_fonts/google_fonts.dart';
 class ModernTheme {
   /// Private constructor to prevent instantiation
   const ModernTheme._();
-  // 2025 Ultra-Modern Color Palette (Discord, Spotify, Linear vibes)
-  static const Color primaryColor = Color(0xFF7C3AED); // Electric Purple
-  static const Color secondaryColor = Color(0xFFEC4899); // Neon Pink (perfect!)
-  static const Color accentColor = Color(0xFF06B6D4); // Cyber Blue
-  static const Color warningColor = Color(0xFFEAB308); // Yellow
-  static const Color errorColor = Color(0xFFEF4444); // Red
+  // 2025 Ultra-Modern Color Palette (Refined & Professional)
+  static const Color primaryColor = Color(0xFF4F46E5); // Indigo 600 - More accessible
+  static const Color primaryLight = Color(0xFF818CF8); // Indigo 400 - For lighter elements
+  static const Color primaryDark = Color(0xFF3730A3); // Indigo 700 - For emphasis
+  static const Color secondaryColor = Color(0xFF7C3AED); // Violet 600
+  static const Color tertiaryColor = Color(0xFF059669); // Emerald 600 - For success states
+  static const Color accentColor = Color(0xFF6B7280); // Gray 500 - Better contrast
+  static const Color warningColor = Color(0xFFD97706); // Amber 600 - More accessible
+  static const Color errorColor = Color(0xFFDC2626); // Red 600 - Better contrast
+  static const Color successColor = Color(0xFF059669); // Emerald 600
 
-  // 2025 Dark theme base colors - Rich blacks and vibrant accents
-  static const Color darkBackground = Color(
-    0xFF0A0A0B,
-  ); // Rich black like Arc Browser
-  static const Color darkSurface = Color(0xFF111111); // Slightly lighter black
-  static const Color darkCardSurface = Color(0xFF1A1A1B); // Card surface
-  static const Color darkOnSurface = Color(0xFFFAFAFA); // Pure white text
-  static const Color darkOnBackground = Color(0xFFE8E8E8); // Light gray text
+  // Enhanced Dark Theme Colors - Better contrast and readability
+  static const Color darkBackground = Color(0xFF0F0F23); // Deep indigo-black for sophistication
+  static const Color darkSurface = Color(0xFF1E1E3F); // Slightly lighter with indigo tint
+  static const Color darkCardSurface = Color(0xFF2D2D5F); // Card surface with subtle indigo
+  static const Color darkSurfaceVariant = Color(0xFF374151); // For different elevation levels
+  static const Color darkOnSurface = Color(0xFFE5E7EB); // Softer white for better readability
+  static const Color darkOnBackground = Color(0xFFD1D5DB); // Light gray with better contrast
+  static const Color darkOnSurfaceVariant = Color(0xFF9CA3AF); // For secondary text
 
-  // Light theme colors (for accessibility)
-  static const Color lightBackground = Color(0xFFFAFAFA);
+  // Enhanced Light Theme Colors - Better hierarchy and contrast
+  static const Color lightBackground = Color(0xFFFAFBFF); // Subtle blue tint
   static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightCardSurface = Color(0xFFF8FAFC);
-  static const Color lightOnSurface = Color(0xFF1E293B);
-  static const Color lightOnBackground = Color(0xFF334155);
+  static const Color lightCardSurface = Color(0xFFF1F5F9); // Slate 50
+  static const Color lightSurfaceVariant = Color(0xFFE2E8F0); // Slate 200
+  static const Color lightOnSurface = Color(0xFF0F172A); // Slate 900
+  static const Color lightOnBackground = Color(0xFF1E293B); // Slate 800
+  static const Color lightOnSurfaceVariant = Color(0xFF475569); // Slate 600
 
-  // 2025 Ultra-vibrant gradients for $10M startup feel
+  // Modern Professional Gradients - Refined and accessible
+  static const List<Color> primaryGradient = [
+    primaryColor,
+    primaryLight,
+  ];
+
   static const List<Color> sunsetGradient = [
-    Color(0xFFFF6B6B),
-    Color(0xFFFFBE0B),
+    Color(0xFFF59E0B), // Amber 500
+    Color(0xFFEF4444), // Red 500
   ];
 
   static const List<Color> oceanGradient = [
-    Color(0xFF06B6D4), // Cyber Blue
-    Color(0xFF3B82F6), // Bright Blue
+    Color(0xFF0EA5E9), // Sky 500
+    Color(0xFF3B82F6), // Blue 500
   ];
 
   static const List<Color> forestGradient = [
-    Color(0xFF10B981),
-    Color(0xFF34D399),
+    Color(0xFF10B981), // Emerald 500
+    Color(0xFF059669), // Emerald 600
   ];
 
   static const List<Color> purpleGradient = [
-    Color(0xFF7C3AED), // Electric Purple
-    Color(0xFF8B5CF6), // Violet
+    primaryColor,
+    secondaryColor,
   ];
 
-  static const List<Color> pinkGradient = [
-    Color(0xFFEC4899), // Neon Pink
-    Color(0xFFF97316), // Orange
+  static const List<Color> successGradient = [
+    Color(0xFF10B981), // Emerald 500
+    Color(0xFF059669), // Emerald 600
+  ];
+
+  static const List<Color> warningGradient = [
+    Color(0xFFF59E0B), // Amber 500
+    Color(0xFFD97706), // Amber 600
+  ];
+
+  static const List<Color> errorGradient = [
+    Color(0xFFEF4444), // Red 500
+    errorColor,
   ];
 
   static const List<Color> neonGradient = [
-    Color(0xFF06B6D4), // Cyber Blue
-    Color(0xFF7C3AED), // Electric Purple
+    Color(0xFF06B6D4), // Cyan 500
+    Color(0xFF3B82F6), // Blue 500
+  ];
+
+  static const List<Color> pinkGradient = [
+    Color(0xFFEC4899), // Pink 500
+    Color(0xFFF97316), // Orange 500
   ];
 
   // NEW: Aurora Borealis gradient for backgrounds
   static const List<Color> auroraGradient = [
     Color(0xFF0A0A0B), // Rich Black
-    Color(0xFF7C3AED), // Electric Purple
-    Color(0xFFEC4899), // Neon Pink
-    Color(0xFF06B6D4), // Cyber Blue
+    Color(0xFF374151), // Cool Gray
+    Color(0xFF6B7280), // Medium Gray
+    Color(0xFF4B5563), // Dark Gray
     Color(0xFF0A0A0B), // Back to Rich Black
   ];
 
@@ -88,16 +114,10 @@ class ModernTheme {
   static const Color glassWhite = Color(0x1AFFFFFF);
   static const Color glassBorder = Color(0x2AFFFFFF);
 
-  static const List<Color> warningGradient = [
-    Color(0xFFFFB800),
-    Color(0xFFFF6B00),
-  ];
 
-  static const List<Color> primaryGradient = [primaryColor, secondaryColor];
-
-  // Typography - Inter font for modern feel
-  static String get primaryFont => GoogleFonts.inter().fontFamily ?? 'Inter';
-  static String get displayFont => GoogleFonts.inter().fontFamily ?? 'Inter';
+  // Typography - Inter font for modern feel with NotoSans fallback
+  static String get primaryFont => GoogleFonts.inter().fontFamily ?? 'NotoSans';
+  static String get displayFont => GoogleFonts.inter().fontFamily ?? 'NotoSans';
 
   static TextTheme get modernTextTheme => const TextTheme(
     displayLarge: TextStyle(
@@ -192,19 +212,30 @@ class ModernTheme {
     ),
   );
 
-  // Main dark theme (default for Gen Z)
+  // Enhanced Dark Theme - Modern and accessible
   static ThemeData get darkTheme => ThemeData(
     useMaterial3: true,
     fontFamily: primaryFont,
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(
+      brightness: Brightness.dark,
       primary: primaryColor,
+      onPrimary: Colors.white,
+      primaryContainer: primaryDark,
+      onPrimaryContainer: primaryLight,
       secondary: secondaryColor,
-      tertiary: accentColor,
+      onSecondary: Colors.white,
+      tertiary: tertiaryColor,
+      onTertiary: Colors.white,
       surface: darkSurface,
       onSurface: darkOnSurface,
-      error: errorColor,
       surfaceContainerHighest: darkCardSurface,
+      surfaceContainerHigh: darkSurfaceVariant,
+      onSurfaceVariant: darkOnSurfaceVariant,
+      error: errorColor,
+      onError: Colors.white,
+      outline: Color(0xFF6B7280),
+      outlineVariant: Color(0xFF374151),
     ),
     scaffoldBackgroundColor: darkBackground,
     cardColor: darkCardSurface,
@@ -218,7 +249,7 @@ class ModernTheme {
       foregroundColor: darkOnSurface,
       systemOverlayStyle: SystemUiOverlayStyle.light,
       titleTextStyle: TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: 'NotoSans',
         fontSize: 24,
         fontWeight: FontWeight.w700,
         color: darkOnSurface,
@@ -232,7 +263,7 @@ class ModernTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
         textStyle: const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'NotoSans',
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
@@ -253,19 +284,30 @@ class ModernTheme {
     ),
   );
 
-  // Light theme for accessibility
+  // Enhanced Light Theme - Clean and professional
   static ThemeData get lightTheme => ThemeData(
     useMaterial3: true,
     fontFamily: primaryFont,
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
+      brightness: Brightness.light,
       primary: primaryColor,
+      onPrimary: Colors.white,
+      primaryContainer: primaryLight,
+      onPrimaryContainer: primaryDark,
       secondary: secondaryColor,
-      tertiary: accentColor,
+      onSecondary: Colors.white,
+      tertiary: tertiaryColor,
+      onTertiary: Colors.white,
       surface: lightSurface,
       onSurface: lightOnSurface,
-      error: errorColor,
       surfaceContainerHighest: lightCardSurface,
+      surfaceContainerHigh: lightSurfaceVariant,
+      onSurfaceVariant: lightOnSurfaceVariant,
+      error: errorColor,
+      onError: Colors.white,
+      outline: Color(0xFF6B7280),
+      outlineVariant: Color(0xFFE2E8F0),
     ),
     scaffoldBackgroundColor: lightBackground,
     cardColor: lightCardSurface,
@@ -279,7 +321,7 @@ class ModernTheme {
       foregroundColor: lightOnSurface,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
       titleTextStyle: TextStyle(
-        fontFamily: 'Inter',
+        fontFamily: 'NotoSans',
         fontSize: 24,
         fontWeight: FontWeight.w700,
         color: lightOnSurface,
@@ -293,7 +335,7 @@ class ModernTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
         textStyle: const TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'NotoSans',
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),

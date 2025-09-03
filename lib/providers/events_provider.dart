@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -34,7 +35,7 @@ class EventsProvider extends ChangeNotifier {
   // Pagination
   DocumentSnapshot? _lastDocument;
 
-  // Configuration
+  // Configuration - Default to real API data for all users
   bool _useDemoData = false;
   bool _useRapidAPI = true;
 
@@ -70,10 +71,10 @@ class EventsProvider extends ChangeNotifier {
   DateTime? get endDateFilter => _endDateFilter;
   String get currentLocation => _currentLocation;
 
-  // Initialize
+  // Initialize - Always use real API data unless explicitly set to demo mode
   Future<void> initialize({bool demoMode = false}) async {
     _useDemoData = demoMode;
-    _useRapidAPI = !demoMode;
+    _useRapidAPI = true; // Always use real API data
 
     // Initialize cache service
     await CacheService.instance.initialize();
@@ -269,8 +270,45 @@ class EventsProvider extends ChangeNotifier {
     return locations.take(15).toList(); // Limit to 15 most common venues
   }
 
+  // Helper method to calculate distance between two points in kilometers
+  double _calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
+    const double earthRadius = 6371; // Earth's radius in kilometers
+    final double dLat = (lat2 - lat1) * (math.pi / 180);
+    final double dLon = (lon2 - lon1) * (math.pi / 180);
+    final double a =
+        math.sin(dLat / 2) * math.sin(dLat / 2) +
+        math.cos(lat1 * (math.pi / 180)) *
+            math.cos(lat2 * (math.pi / 180)) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
+    final double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+    return earthRadius * c;
+  }
+
   // Set User Location
   void setUserLocation(double latitude, double longitude) {
+    // Check if location has changed significantly (more than ~100 meters)
+    if (_userLatitude != null && _userLongitude != null) {
+      final distance = _calculateDistance(
+        _userLatitude!,
+        _userLongitude!,
+        latitude,
+        longitude,
+      );
+      if (distance < 0.1) {
+        // Less than 100 meters
+        debugPrint(
+          'EventsProvider: Location change too small, skipping reload',
+        );
+        return;
+      }
+    }
+
     _userLatitude = latitude;
     _userLongitude = longitude;
     debugPrint('EventsProvider: User location set to $latitude, $longitude');
@@ -284,6 +322,12 @@ class EventsProvider extends ChangeNotifier {
   Future<void> loadNearbyEvents() async {
     if (_userLatitude == null || _userLongitude == null) {
       debugPrint('EventsProvider: Cannot load nearby events: location not set');
+      return;
+    }
+
+    // Prevent multiple simultaneous calls
+    if (_isLoading) {
+      debugPrint('EventsProvider: Already loading nearby events, skipping');
       return;
     }
 

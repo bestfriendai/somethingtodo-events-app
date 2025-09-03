@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:math' as math;
 import 'package:glassmorphism/glassmorphism.dart';
+import 'responsive_breakpoints.dart';
 
 /// Consolidated Design System
 ///
@@ -34,8 +36,8 @@ class ConsolidatedDesignSystem {
 
   // Primary brand colors
   static const Color primarySeed = Color(0xFF6366F1); // Indigo
-  static const Color secondarySeed = Color(0xFFEC4899); // Pink
-  static const Color tertiarySeed = Color(0xFF06B6D4); // Cyan
+  static const Color secondarySeed = Color(0xFF8B5CF6); // Light Purple
+  static const Color tertiarySeed = Color(0xFF64748B); // Slate Gray
 
   // Semantic colors
   static const Color errorColor = Color(0xFFEF4444);
@@ -63,6 +65,13 @@ class ConsolidatedDesignSystem {
   static const double spacing16 = 80.0;
   static const double spacing20 = 96.0;
 
+  // Semantic spacing aliases for easier usage
+  static const double spacingXs = spacing2;
+  static const double spacingSm = spacing3;
+  static const double spacingMd = spacing5;
+  static const double spacingLg = spacing7;
+  static const double spacingXl = spacing8;
+
   // Border Radius Scale
   static const double radiusNone = 0.0;
   static const double radiusXs = 2.0;
@@ -73,6 +82,9 @@ class ConsolidatedDesignSystem {
   static const double radius2Xl = 20.0;
   static const double radius3Xl = 24.0;
   static const double radiusFull = 999.0;
+
+  // Semantic radius aliases
+  static const double radiusMd = radiusLg;
 
   // Elevation Scale
   static const double elevation0 = 0.0;
@@ -443,13 +455,13 @@ class ConsolidatedDesignSystem {
 
     return baseTheme.copyWith(
       // Override for glass-specific styling
-      appBarTheme: baseTheme.appBarTheme?.copyWith(
+      appBarTheme: baseTheme.appBarTheme.copyWith(
         backgroundColor: Colors.transparent,
         elevation: elevation0,
         scrolledUnderElevation: elevation0,
       ),
 
-      cardTheme: baseTheme.cardTheme?.copyWith(
+      cardTheme: baseTheme.cardTheme.copyWith(
         color: Colors.transparent,
         elevation: elevation0,
         surfaceTintColor: Colors.transparent,
@@ -481,7 +493,7 @@ class ConsolidatedDesignSystem {
           ? const Color(0xFF0A0A0B)
           : const Color(0xFFFAFAFA),
 
-      cardTheme: baseTheme.cardTheme?.copyWith(
+      cardTheme: baseTheme.cardTheme.copyWith(
         color: isDark ? const Color(0xFF1A1A1B) : const Color(0xFFFFFFFF),
         elevation: elevation3,
       ),
@@ -548,22 +560,96 @@ class ConsolidatedDesignSystem {
   };
 
   // ==========================================================================
+  // ACCESSIBILITY HELPERS
+  // ==========================================================================
+
+  /// Get semantic color for better contrast
+  static Color getSemanticColor(ColorScheme colorScheme, String semanticRole) {
+    switch (semanticRole) {
+      case 'primary':
+        return colorScheme.primary;
+      case 'secondary':
+        return colorScheme.secondary;
+      case 'error':
+        return colorScheme.error;
+      case 'success':
+        return successColor;
+      case 'warning':
+        return warningColor;
+      default:
+        return colorScheme.primary;
+    }
+  }
+
+  /// Ensure minimum contrast ratio for accessibility
+  static Color ensureContrast(
+    Color foreground,
+    Color background, {
+    double minRatio = 4.5,
+  }) {
+    final luminanceFg = foreground.computeLuminance();
+    final luminanceBg = background.computeLuminance();
+    final ratio =
+        (math.max(luminanceFg, luminanceBg) + 0.05) /
+        (math.min(luminanceFg, luminanceBg) + 0.05);
+
+    if (ratio >= minRatio) {
+      return foreground;
+    }
+
+    // If contrast is insufficient, return high contrast alternative
+    return luminanceBg > 0.5 ? Colors.black : Colors.white;
+  }
+
+  /// Get accessible touch target size
+  static double getAccessibleTouchTarget(
+    BuildContext context, {
+    double baseSize = touchTargetBase,
+  }) {
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+    return math.max(baseSize * textScale, touchTargetBase);
+  }
+
+  // ==========================================================================
+  // RESPONSIVE HELPERS
+  // ==========================================================================
+
+  /// Get responsive spacing value
+  static double responsiveSpacing(BuildContext context, double baseSpacing) {
+    return ResponsiveBreakpoints.getSpacing(context, baseSpacing);
+  }
+
+  /// Get responsive text size
+  static double responsiveTextSize(BuildContext context, double baseSize) {
+    final scaleFactor = ResponsiveBreakpoints.getTextScaleFactor(context);
+    return baseSize * scaleFactor;
+  }
+
+  // ==========================================================================
   // COMPONENT BUILDERS
   // ==========================================================================
 
-  /// Create a modern card with optional gradient
+  /// Create a modern card with optional gradient and responsive design
   static Widget modernCard({
     required Widget child,
+    required BuildContext context,
     EdgeInsetsGeometry? padding,
     EdgeInsetsGeometry? margin,
     double borderRadius = radius2Xl,
     bool isDark = false,
     List<Color>? gradient,
     VoidCallback? onTap,
+    String? semanticLabel,
+    bool isAccessible = true,
   }) {
+    final responsivePadding =
+        padding ?? EdgeInsets.all(responsiveSpacing(context, spacing5));
+    final responsiveMargin =
+        margin ?? EdgeInsets.all(responsiveSpacing(context, spacing3));
+
     Widget container = Container(
-      padding: padding ?? const EdgeInsets.all(spacing5),
-      margin: margin ?? const EdgeInsets.all(spacing3),
+      padding: responsivePadding,
+      margin: responsiveMargin,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         gradient: gradient != null
@@ -590,11 +676,22 @@ class ConsolidatedDesignSystem {
     );
 
     if (onTap != null) {
-      return InkWell(
+      Widget interactive = InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(borderRadius),
         child: container,
       );
+
+      // Add semantic wrapper for accessibility
+      if (isAccessible && semanticLabel != null) {
+        return Semantics(
+          label: semanticLabel,
+          button: true,
+          child: interactive,
+        );
+      }
+
+      return interactive;
     }
 
     return container;

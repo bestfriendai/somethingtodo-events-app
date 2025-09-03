@@ -38,10 +38,10 @@ class _PremiumChatScreenState extends ConsumerState<PremiumChatScreen>
   bool _isRecording = false;
   ChatMessage? _replyToMessage;
   bool _showScrollToBottom = false;
-  bool _isTyping = false;
-  String? _replyToMessageId;
-  List<String> _selectedImages = [];
-  Map<String, List<String>> _messageReactions = {};
+  final bool _isTyping = false;
+  String? _replyToMessageId; // Reserved for future reply feature
+  final List<String> _selectedImages = []; // Reserved for image sharing
+  final Map<String, List<String>> _messageReactions = {}; // Reserved for message reactions
 
   final List<String> _quickReplies = [
     "Show me events nearby",

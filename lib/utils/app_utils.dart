@@ -104,7 +104,7 @@ class AppUtils {
   }
 
   static Future<void> shareText(String text) async {
-    await Share.share(text);
+    await SharePlus.instance.share(ShareParams(text: text));
   }
 
   static Future<void> shareEvent({
@@ -124,7 +124,7 @@ Shared via SomethingToDo
     '''
             .trim();
 
-    await Share.share(text);
+    await SharePlus.instance.share(ShareParams(text: text));
   }
 
   // Validation utilities

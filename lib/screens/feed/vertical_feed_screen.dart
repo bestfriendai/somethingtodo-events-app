@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/event.dart';
 import '../../providers/events_provider.dart';
-import '../../services/gesture_service.dart';
+// import '../../services/gesture_service.dart'; // Reserved for future gesture handling
 import '../../services/platform_interactions.dart';
 import '../../services/cache_service.dart';
 import '../../widgets/mobile/swipeable_feed_card.dart';
@@ -95,17 +95,18 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
     }
   }
 
-  void _handleLeftSwipe() {
-    // Share event
-    final event = _events[_currentIndex];
-    _shareEvent(event);
-  }
+  // Reserved for future swipe gesture handling
+  // void _handleLeftSwipe() {
+  //   // Share event
+  //   final event = _events[_currentIndex];
+  //   _shareEvent(event);
+  // }
 
-  void _handleRightSwipe() {
-    // Like/favorite event
-    final event = _events[_currentIndex];
-    _toggleFavorite(event);
-  }
+  // void _handleRightSwipe() {
+  //   // Like/favorite event
+  //   final event = _events[_currentIndex];
+  //   _toggleFavorite(event);
+  // }
 
   void _shareEvent(Event event) {
     PlatformInteractions.mediumImpact();
@@ -151,12 +152,14 @@ class _VerticalFeedScreenState extends State<VerticalFeedScreen>
     // Cache favorite locally first (for offline support)
     await CacheService.instance.cacheFavoriteEvent(event.id);
 
-    PlatformInteractions.showToast(
-      context: context,
-      message: 'Added to favorites',
-      icon: Icons.favorite,
-      backgroundColor: Colors.pink,
-    );
+    if (mounted) {
+      PlatformInteractions.showToast(
+        context: context,
+        message: 'Added to favorites',
+        icon: Icons.favorite,
+        backgroundColor: Colors.pink,
+      );
+    }
   }
 
   void _showEventDetails(Event event) {

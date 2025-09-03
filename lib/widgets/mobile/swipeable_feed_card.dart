@@ -82,11 +82,13 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
     super.dispose();
   }
 
-  void _loadFavoriteStatus() {
-    final favorites = CacheService.instance.getCachedFavorites();
-    setState(() {
-      _isLiked = favorites.contains(widget.event.id);
-    });
+  void _loadFavoriteStatus() async {
+    final favorites = await CacheService.instance.getCachedFavorites();
+    if (mounted) {
+      setState(() {
+        _isLiked = favorites.contains(widget.event.id);
+      });
+    }
   }
 
   void _handleSwipeUp() {
@@ -127,13 +129,15 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       ][Random().nextInt(4)],
     );
 
-    // Heart explosion from button position
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox != null) {
-      final size = renderBox.size;
-      final heartPosition = Offset(size.width - 40, size.height - 200);
-      DelightService.instance.showHeartExplosion(context, heartPosition);
-    }
+    // Heart explosion from button position - defer until layout is complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final renderBox = context.findRenderObject() as RenderBox?;
+      if (renderBox != null && renderBox.hasSize) {
+        final size = renderBox.size;
+        final heartPosition = Offset(size.width - 40, size.height - 200);
+        DelightService.instance.showHeartExplosion(context, heartPosition);
+      }
+    });
 
     _likeAnimationController.forward().then((_) {
       _likeAnimationController.reverse();

@@ -22,7 +22,7 @@ class AppTheme {
   static const Color darkOnBackground = Color(0xFFE2E8F0);
 
   // Typography
-  static const String fontFamily = 'Inter';
+  static const String fontFamily = 'NotoSans';
 
   static TextTheme get _textTheme => const TextTheme(
     displayLarge: TextStyle(

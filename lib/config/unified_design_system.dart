@@ -183,7 +183,7 @@ class UnifiedDesignSystem {
   );
 
   static const LinearGradient oceanGradient = LinearGradient(
-    colors: [Color(0xFF06B6D4), Color(0xFF3B82F6)],
+    colors: [Color(0xFF475569), Color(0xFF64748B)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

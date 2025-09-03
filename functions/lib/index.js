@@ -92,7 +92,7 @@ const app = (0, express_1.default)();
 // Parse allowed origins from config
 const getAllowedOrigins = () => {
     const originsStr = config.ALLOWED_ORIGINS || '';
-    const origins = originsStr.split(',').map(origin => origin.trim()).filter(Boolean);
+    const origins = originsStr.split(',').map((origin) => origin.trim()).filter(Boolean);
     // Default origins for development if none specified
     if (origins.length === 0) {
         return ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5000'];
@@ -209,7 +209,8 @@ const authenticateUser = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ error: 'Unauthorized' });
+            res.status(401).json({ error: 'Unauthorized' });
+            return;
         }
         const token = authHeader.substring(7);
         const decodedToken = await admin.auth().verifyIdToken(token);
@@ -551,7 +552,7 @@ function getMockEvents(lat, lng, limit) {
 }
 // Export the Express app as a Cloud Function
 exports.api = functions.https.onRequest(app);
-// Cloud Function Triggers
+// Cloud Function Triggers using v1 API for compatibility
 exports.onEventCreated = functions.firestore
     .document('events/{eventId}')
     .onCreate(async (snap, context) => {
