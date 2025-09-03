@@ -4,7 +4,6 @@ import 'dart:ui_web' as ui_web;
 import 'dart:js' as js;
 import '../models/event.dart';
 import '../config/mapbox_config.dart';
-import '../config/theme.dart';
 import '../config/glass_theme.dart';
 
 class MapboxWebMap extends StatefulWidget {
