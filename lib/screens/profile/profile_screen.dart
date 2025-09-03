@@ -27,24 +27,24 @@ class _ProfileScreenState extends State<ProfileScreen>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   late AnimationController _avatarAnimationController;
   late AnimationController _statsAnimationController;
-  
+
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    
+
     _avatarAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _statsAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadUserData();
       _avatarAnimationController.forward();
@@ -64,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   Future<void> _loadUserData() async {
     final authProvider = context.read<AuthProvider>();
     final eventsProvider = context.read<EventsProvider>();
-    
+
     if (authProvider.currentUser != null) {
       await eventsProvider.loadFavoriteEvents(authProvider.currentUser!.id);
     }
@@ -73,14 +73,14 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    
+
     return Scaffold(
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) {
           if (authProvider.currentUser == null) {
             return _buildSignInPrompt();
           }
-          
+
           return RefreshIndicator(
             onRefresh: _loadUserData,
             child: CustomScrollView(
@@ -106,26 +106,22 @@ class _ProfileScreenState extends State<ProfileScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.person_outline,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.person_outline, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'Sign in to access your profile',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[700],
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[700],
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
               'Save your favorite events, get personalized recommendations, and sync across devices.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -168,18 +164,11 @@ class _ProfileScreenState extends State<ProfileScreen>
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                AppTheme.primaryColor,
-                AppTheme.primaryDarkColor,
-              ],
+              colors: [AppTheme.primaryColor, AppTheme.primaryDarkColor],
             ),
           ),
           child: const Center(
-            child: Icon(
-              Icons.person,
-              size: 60,
-              color: Colors.white,
-            ),
+            child: Icon(Icons.person, size: 60, color: Colors.white),
           ),
         ),
       ),
@@ -216,7 +205,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   : null,
                               child: user.photoUrl == null
                                   ? Text(
-                                      user.displayName?.substring(0, 1).toUpperCase() ?? 'U',
+                                      user.displayName
+                                              ?.substring(0, 1)
+                                              .toUpperCase() ??
+                                          'U',
                                       style: const TextStyle(
                                         fontSize: 32,
                                         fontWeight: FontWeight.bold,
@@ -250,28 +242,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                       );
                     },
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Name and email
                   Text(
                     user.displayName ?? 'User',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 4),
-                  
+
                   Text(
                     user.email,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   if (user.isPremium) ...[
                     const SizedBox(height: 12),
                     Container(
@@ -304,9 +296,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Edit Profile Button
                   OutlinedButton.icon(
                     onPressed: _showEditProfileDialog,
@@ -324,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   Widget _buildPremiumBanner(AppUser user) {
     if (user.isPremium) return const SliverToBoxAdapter();
-    
+
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -340,11 +332,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.star,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                  const Icon(Icons.star, color: Colors.white, size: 24),
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Column(
@@ -360,18 +348,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                         Text(
                           'Get unlimited recommendations and exclusive events',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
-                  ),
+                  const Icon(Icons.arrow_forward, color: Colors.white),
                 ],
               ),
             ),
@@ -428,7 +410,12 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Transform.scale(
       scale: _statsAnimationController.value,
       child: Card(
@@ -441,15 +428,15 @@ class _ProfileScreenState extends State<ProfileScreen>
               Text(
                 value,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
               ),
               Text(
                 label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -472,7 +459,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                 'Saved events you love',
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const FavoritesScreen(),
+                  ),
                 ),
               ),
               const Divider(height: 1),
@@ -482,7 +471,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                 'Event reminders and updates',
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationsScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationsScreen(),
+                  ),
                 ),
               ),
               const Divider(height: 1),
@@ -538,10 +529,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       leading: Icon(icon, color: textColor),
       title: Text(
         title,
-        style: TextStyle(
-          color: textColor,
-          fontWeight: FontWeight.w500,
-        ),
+        style: TextStyle(color: textColor, fontWeight: FontWeight.w500),
       ),
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -558,9 +546,9 @@ class _ProfileScreenState extends State<ProfileScreen>
           children: [
             Text(
               'Recent Activity',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Consumer<EventsProvider>(
@@ -579,16 +567,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                           const SizedBox(height: 16),
                           Text(
                             'No recent activity',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Start exploring events to see your activity here',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey[600]),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -596,23 +582,26 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ),
                   );
                 }
-                
+
                 return Column(
                   children: eventsProvider.favoriteEvents
                       .take(3)
-                      .map((event) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: EventCard(
-                              event: event,
-                              compact: true,
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EventDetailsScreen(event: event),
-                                ),
+                      .map(
+                        (event) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: EventCard(
+                            event: event,
+                            compact: true,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EventDetailsScreen(event: event),
                               ),
                             ),
-                          ))
+                          ),
+                        ),
+                      )
                       .toList(),
                 );
               },
@@ -627,10 +616,10 @@ class _ProfileScreenState extends State<ProfileScreen>
   void _showEditProfileDialog() {
     final authProvider = context.read<AuthProvider>();
     final user = authProvider.currentUser!;
-    
+
     final nameController = TextEditingController(text: user.displayName);
     final phoneController = TextEditingController(text: user.phoneNumber);
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -666,9 +655,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               // authProvider.updateProfile(...)
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Profile updated successfully'),
-                ),
+                const SnackBar(content: Text('Profile updated successfully')),
               );
             },
             child: const Text('Save'),

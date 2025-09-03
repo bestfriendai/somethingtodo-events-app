@@ -32,18 +32,17 @@ dependencies:
     sdk: flutter
   
   # Firebase
-  firebase_core: ^3.15.2
-  firebase_auth: ^5.7.0
-  cloud_firestore: ^5.6.12
-  cloud_functions: ^5.6.2
-  firebase_storage: ^12.4.10
-  firebase_messaging: ^15.2.10
-  firebase_analytics: ^11.6.0
-  firebase_crashlytics: ^4.3.10
-  firebase_performance: ^0.10.1+10
-  firebase_remote_config: ^5.5.0
-  firebase_app_check: ^0.3.2+10
-  firebase_dynamic_links: ^6.0.10
+  firebase_core: ^4.1.0
+  firebase_auth: ^6.0.2
+  cloud_firestore: ^6.0.1
+  cloud_functions: ^6.0.1
+  firebase_storage: ^13.0.1
+  firebase_messaging: ^16.0.1
+  firebase_analytics: ^12.0.1
+  firebase_crashlytics: ^5.0.1
+  firebase_performance: ^0.11.0+1
+  firebase_remote_config: ^6.0.1
+  firebase_app_check: ^0.4.0+1
   
   # State Management
   provider: ^6.1.2
@@ -61,10 +60,10 @@ dependencies:
   google_fonts: ^6.2.1
   
   # Maps
-  flutter_map: ^6.2.1
+  flutter_map: ^8.2.1
   latlong2: ^0.9.0
-  geolocator: ^13.0.4
-  geocoding: ^3.0.0
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
   
   # Utilities
   dio: ^5.7.0
@@ -74,12 +73,12 @@ dependencies:
   intl: ^0.20.2
   timeago: ^3.7.0
   url_launcher: ^6.3.1
-  share_plus: ^10.1.4
+  share_plus: ^11.1.0
   path_provider: ^2.1.5
   uuid: ^4.5.1
-  google_sign_in: ^6.3.0
-  flutter_local_notifications: ^17.2.4
-  timezone: ^0.9.4
+  google_sign_in: ^7.1.1
+  flutter_local_notifications: ^19.4.1
+  timezone: ^0.10.1
 
   # Payment
   in_app_purchase: ^3.2.0
@@ -101,14 +100,14 @@ dependencies:
   hive_flutter: ^1.1.0
   
   # Permissions
-  permission_handler: ^11.4.0
+  permission_handler: ^12.0.1
 
   # Sensors for shake detection
   sensors_plus: ^6.0.1
 
   # Mobile Gestures & Interactions
   flutter_swipe_action_cell: ^3.1.3
-  flutter_slidable: ^3.1.2
+  flutter_slidable: ^4.0.1
   liquid_pull_to_refresh: ^3.0.1
   modal_bottom_sheet: ^3.0.0-pre
   

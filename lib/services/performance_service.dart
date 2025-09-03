@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 
 class PerformanceService {
   static PerformanceService? _instance;
-  static PerformanceService get instance => _instance ??= PerformanceService._();
+  static PerformanceService get instance =>
+      _instance ??= PerformanceService._();
 
   PerformanceService._();
 
@@ -27,7 +28,7 @@ class PerformanceService {
       // Add frame callback for FPS monitoring
       WidgetsBinding.instance.addPersistentFrameCallback(_onFrame);
     }
-    
+
     // Optimize for mobile
     _optimizeForMobile();
   }
@@ -35,22 +36,22 @@ class PerformanceService {
   void _onFrame(Duration timeStamp) {
     final now = DateTime.now();
     _frameCount++;
-    
+
     if (now.difference(_lastFrameTime).inMilliseconds >= 1000) {
       _currentFPS = _frameCount.toDouble();
       _fpsHistory.add(_currentFPS);
-      
+
       // Keep only last 10 FPS readings
       if (_fpsHistory.length > 10) {
         _fpsHistory.removeAt(0);
       }
-      
+
       // Adjust performance based on FPS
       _adjustPerformanceSettings();
-      
+
       _frameCount = 0;
       _lastFrameTime = now;
-      
+
       if (kDebugMode) {
         print('FPS: $_currentFPS');
       }
@@ -58,7 +59,7 @@ class PerformanceService {
   }
 
   void _adjustPerformanceSettings() {
-    final avgFPS = _fpsHistory.isNotEmpty 
+    final avgFPS = _fpsHistory.isNotEmpty
         ? _fpsHistory.reduce((a, b) => a + b) / _fpsHistory.length
         : 60.0;
 
@@ -85,7 +86,8 @@ class PerformanceService {
       // Request 120Hz if available
       try {
         WidgetsBinding.instance.platformDispatcher.onMetricsChanged = () {
-          final display = WidgetsBinding.instance.platformDispatcher.displays.first;
+          final display =
+              WidgetsBinding.instance.platformDispatcher.displays.first;
           if (display.refreshRate > 60) {
             print('High refresh rate detected: ${display.refreshRate}Hz');
           }
@@ -188,10 +190,10 @@ class PerformanceService {
       fit: fit,
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
         if (wasSynchronouslyLoaded) return child;
-        
+
         return AnimatedOpacity(
           opacity: frame == null ? 0 : 1,
-          duration: _enableAnimations 
+          duration: _enableAnimations
               ? const Duration(milliseconds: 300)
               : Duration.zero,
           curve: Curves.easeOut,
@@ -200,7 +202,7 @@ class PerformanceService {
       },
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
-        
+
         return placeholder(context, imageUrl);
       },
       errorBuilder: errorWidget,
@@ -224,12 +226,12 @@ class PerformanceService {
       itemCount: itemCount,
       itemBuilder: (context, index) {
         Widget item = itemBuilder(context, index);
-        
+
         // Add repaint boundaries for better performance
         if (addRepaintBoundaries) {
           item = RepaintBoundary(child: item);
         }
-        
+
         return item;
       },
       addAutomaticKeepAlives: addAutomaticKeepAlives,
@@ -243,7 +245,7 @@ class PerformanceService {
     if (kDebugMode) {
       print('Optimizing memory usage...');
     }
-    
+
     // Clear image cache if memory pressure is high
     PaintingBinding.instance.imageCache.clear();
     PaintingBinding.instance.imageCache.clearLiveImages();
@@ -262,7 +264,7 @@ class PerformanceService {
   Map<String, dynamic> getPerformanceStats() {
     return {
       'currentFPS': _currentFPS,
-      'averageFPS': _fpsHistory.isNotEmpty 
+      'averageFPS': _fpsHistory.isNotEmpty
           ? _fpsHistory.reduce((a, b) => a + b) / _fpsHistory.length
           : 0.0,
       'enableAnimations': _enableAnimations,
@@ -273,11 +275,7 @@ class PerformanceService {
   }
 }
 
-enum PerformanceMode {
-  high,
-  balanced,
-  battery,
-}
+enum PerformanceMode { high, balanced, battery }
 
 // Performance-optimized widgets
 class PerformantContainer extends StatelessWidget {

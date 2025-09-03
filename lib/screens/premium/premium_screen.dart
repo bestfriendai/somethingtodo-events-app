@@ -17,10 +17,10 @@ class _PremiumScreenState extends State<PremiumScreen>
   late AnimationController _headerAnimationController;
   late AnimationController _featuresAnimationController;
   late AnimationController _plansAnimationController;
-  
+
   int _selectedPlanIndex = 1; // Default to annual plan
   bool _isProcessing = false;
-  
+
   final List<PremiumPlan> _plans = [
     PremiumPlan(
       id: 'monthly',
@@ -47,24 +47,27 @@ class _PremiumScreenState extends State<PremiumScreen>
       badge: 'Best Value',
     ),
   ];
-  
+
   final List<PremiumFeature> _features = [
     PremiumFeature(
       icon: Icons.star,
       title: 'Unlimited Event Recommendations',
-      description: 'Get personalized AI-powered event suggestions based on your preferences',
+      description:
+          'Get personalized AI-powered event suggestions based on your preferences',
       color: AppTheme.warningColor,
     ),
     PremiumFeature(
       icon: Icons.flash_on,
       title: 'Early Access to Events',
-      description: 'Be the first to know about exclusive events before they\'re public',
+      description:
+          'Be the first to know about exclusive events before they\'re public',
       color: AppTheme.primaryColor,
     ),
     PremiumFeature(
       icon: Icons.notifications_active,
       title: 'Smart Notifications',
-      description: 'Advanced notifications for events you\'ll love, delivered at the perfect time',
+      description:
+          'Advanced notifications for events you\'ll love, delivered at the perfect time',
       color: AppTheme.successColor,
     ),
     PremiumFeature(
@@ -76,7 +79,8 @@ class _PremiumScreenState extends State<PremiumScreen>
     PremiumFeature(
       icon: Icons.analytics,
       title: 'Event Analytics',
-      description: 'Detailed insights about your event preferences and attendance history',
+      description:
+          'Detailed insights about your event preferences and attendance history',
       color: AppTheme.primaryDarkColor,
     ),
     PremiumFeature(
@@ -90,22 +94,22 @@ class _PremiumScreenState extends State<PremiumScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _headerAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _featuresAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _plansAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _startAnimations();
   }
 
@@ -131,16 +135,16 @@ class _PremiumScreenState extends State<PremiumScreen>
     setState(() {
       _isProcessing = true;
     });
-    
+
     try {
       // In a real app, you would implement the payment flow here
       // For now, we'll simulate the process
       await Future.delayed(const Duration(seconds: 2));
-      
+
       // Update user's premium status
       final authProvider = context.read<AuthProvider>();
       // await authProvider.updatePremiumStatus(plan);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -172,15 +176,13 @@ class _PremiumScreenState extends State<PremiumScreen>
     setState(() {
       _isProcessing = true;
     });
-    
+
     try {
       // In a real app, you would restore purchases here
       await Future.delayed(const Duration(seconds: 1));
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No previous purchases found'),
-        ),
+        const SnackBar(content: Text('No previous purchases found')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -204,7 +206,7 @@ class _PremiumScreenState extends State<PremiumScreen>
           if (authProvider.isPremiumActive) {
             return _buildAlreadyPremiumState();
           }
-          
+
           return CustomScrollView(
             slivers: [
               _buildSliverAppBar(),
@@ -238,25 +240,21 @@ class _PremiumScreenState extends State<PremiumScreen>
                   color: AppTheme.warningColor,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.star,
-                  size: 60,
-                  color: Colors.white,
-                ),
+                child: const Icon(Icons.star, size: 60, color: Colors.white),
               ),
               const SizedBox(height: 24),
               Text(
                 'You\'re Premium!',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
               Text(
                 'Enjoy all the premium features and benefits.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -295,11 +293,7 @@ class _PremiumScreenState extends State<PremiumScreen>
               return Transform.scale(
                 scale: _headerAnimationController.value,
                 child: const Center(
-                  child: Icon(
-                    Icons.star,
-                    size: 80,
-                    color: Colors.white,
-                  ),
+                  child: Icon(Icons.star, size: 80, color: Colors.white),
                 ),
               );
             },
@@ -332,16 +326,16 @@ class _PremiumScreenState extends State<PremiumScreen>
               Text(
                 'Upgrade to Premium',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
                 'Unlock the full potential of event discovery',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -356,11 +350,7 @@ class _PremiumScreenState extends State<PremiumScreen>
                   const SizedBox(width: 8),
                   const Text('7-day free trial'),
                   const SizedBox(width: 16),
-                  Icon(
-                    Icons.cancel,
-                    color: AppTheme.errorColor,
-                    size: 20,
-                  ),
+                  Icon(Icons.cancel, color: AppTheme.errorColor, size: 20),
                   const SizedBox(width: 8),
                   const Text('Cancel anytime'),
                 ],
@@ -381,9 +371,9 @@ class _PremiumScreenState extends State<PremiumScreen>
           children: [
             Text(
               'Premium Features',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             AnimatedBuilder(
@@ -393,7 +383,7 @@ class _PremiumScreenState extends State<PremiumScreen>
                   children: _features.map((feature) {
                     final index = _features.indexOf(feature);
                     final delay = index * 0.1;
-                    
+
                     return Transform.translate(
                       offset: Offset(
                         50 * (1 - _featuresAnimationController.value),
@@ -427,11 +417,7 @@ class _PremiumScreenState extends State<PremiumScreen>
                 color: feature.color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                feature.icon,
-                color: feature.color,
-                size: 24,
-              ),
+              child: Icon(feature.icon, color: feature.color, size: 24),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -441,15 +427,15 @@ class _PremiumScreenState extends State<PremiumScreen>
                   Text(
                     feature.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     feature.description,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -469,9 +455,9 @@ class _PremiumScreenState extends State<PremiumScreen>
           children: [
             Text(
               'Choose Your Plan',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             AnimatedBuilder(
@@ -481,7 +467,7 @@ class _PremiumScreenState extends State<PremiumScreen>
                   children: _plans.map((plan) {
                     final index = _plans.indexOf(plan);
                     final isSelected = index == _selectedPlanIndex;
-                    
+
                     return Transform.scale(
                       scale: 0.8 + (0.2 * _plansAnimationController.value),
                       child: Opacity(
@@ -507,7 +493,9 @@ class _PremiumScreenState extends State<PremiumScreen>
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryColor.withValues(alpha: 0.1) : null,
+          color: isSelected
+              ? AppTheme.primaryColor.withValues(alpha: 0.1)
+              : null,
           border: Border.all(
             color: isSelected ? AppTheme.primaryColor : Colors.grey[300]!,
             width: isSelected ? 2 : 1,
@@ -531,9 +519,8 @@ class _PremiumScreenState extends State<PremiumScreen>
                     children: [
                       Text(
                         plan.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       if (plan.badge != null) ...[
                         const SizedBox(width: 8),
@@ -564,7 +551,8 @@ class _PremiumScreenState extends State<PremiumScreen>
                       if (plan.originalPrice != null) ...[
                         Text(
                           '\$${plan.originalPrice!.toStringAsFixed(2)}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 decoration: TextDecoration.lineThrough,
                                 color: Colors.grey[600],
                               ),
@@ -574,15 +562,15 @@ class _PremiumScreenState extends State<PremiumScreen>
                       Text(
                         '\$${plan.price.toStringAsFixed(2)}',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.primaryColor,
-                            ),
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryColor,
+                        ),
                       ),
                       Text(
                         plan.period == 'one-time' ? '' : ' / ${plan.period}',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                          color: Colors.grey[600],
+                        ),
                       ),
                     ],
                   ),
@@ -605,8 +593,8 @@ class _PremiumScreenState extends State<PremiumScreen>
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: _isProcessing 
-                    ? null 
+                onPressed: _isProcessing
+                    ? null
                     : () => _subscribeToPlan(_plans[_selectedPlanIndex]),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.warningColor,
@@ -633,26 +621,26 @@ class _PremiumScreenState extends State<PremiumScreen>
                       ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             TextButton(
               onPressed: _isProcessing ? null : _restorePurchases,
               child: const Text('Restore Purchases'),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             Text(
               'Subscription automatically renews unless cancelled at least 24 hours before the end of the current period.',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -671,7 +659,7 @@ class _PremiumScreenState extends State<PremiumScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 32),
           ],
         ),

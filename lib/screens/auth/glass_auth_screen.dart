@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'dart:math' as math;
-import '../../config/glass_theme.dart';
 import '../../providers/auth_provider.dart';
 
 class GlassAuthScreen extends StatefulWidget {
@@ -20,12 +19,12 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
   late AnimationController _backgroundController;
   late AnimationController _orb1Controller;
   late AnimationController _orb2Controller;
-  
+
   bool _isSignIn = true;
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  
+
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -35,32 +34,32 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _fadeAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _slideAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _backgroundController = AnimationController(
       duration: const Duration(seconds: 20),
       vsync: this,
     )..repeat();
-    
+
     _orb1Controller = AnimationController(
       duration: const Duration(seconds: 15),
       vsync: this,
     )..repeat();
-    
+
     _orb2Controller = AnimationController(
       duration: const Duration(seconds: 25),
       vsync: this,
     )..repeat();
-    
+
     _fadeAnimationController.forward();
     _slideAnimationController.forward();
   }
@@ -93,14 +92,14 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
 
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final authProvider = context.read<AuthProvider>();
-      
+
       if (_isSignIn) {
         await authProvider.signInWithEmail(
           email: _emailController.text.trim(),
@@ -113,7 +112,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
           displayName: _nameController.text.trim(),
         );
       }
-      
+
       if (mounted && authProvider.isAuthenticated) {
         Navigator.pushReplacementNamed(context, '/home');
       }
@@ -139,11 +138,11 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final authProvider = context.read<AuthProvider>();
       await authProvider.signInWithGoogle();
-      
+
       if (mounted && authProvider.isAuthenticated) {
         Navigator.pushReplacementNamed(context, '/home');
       }
@@ -166,25 +165,18 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
   }
 
   Future<void> _continueAsGuest() async {
-    print('Continue as Guest clicked');
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final authProvider = context.read<AuthProvider>();
-      print('Calling signInAsGuest...');
       await authProvider.signInAsGuest();
-      
-      print('Auth status: ${authProvider.isAuthenticated}');
+
       if (mounted && authProvider.isAuthenticated) {
-        print('Navigating to home...');
         Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        print('Not authenticated after guest sign in');
-      }
+      } else {}
     } catch (e) {
-      print('Error in _continueAsGuest: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -217,14 +209,11 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Colors.black,
-                      Colors.grey.shade900,
-                      Colors.black,
-                    ],
+                    colors: [Colors.black, Colors.grey.shade900, Colors.black],
                     stops: [
                       0.0,
-                      math.sin(_backgroundController.value * math.pi) * 0.5 + 0.5,
+                      math.sin(_backgroundController.value * math.pi) * 0.5 +
+                          0.5,
                       1.0,
                     ],
                   ),
@@ -232,10 +221,10 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
               );
             },
           ),
-          
+
           // Floating orbs
           ..._buildFloatingOrbs(),
-          
+
           // Main content
           SafeArea(
             child: Center(
@@ -247,15 +236,15 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
                     // Logo/Title
                     _buildLogo(),
                     const SizedBox(height: 40),
-                    
+
                     // Auth form
                     _buildAuthForm(),
                     const SizedBox(height: 24),
-                    
+
                     // Social sign in
                     _buildSocialSignIn(),
                     const SizedBox(height: 20),
-                    
+
                     // Guest mode
                     _buildGuestMode(),
                   ],
@@ -321,34 +310,35 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
     return Column(
       children: [
         GlassmorphicContainer(
-          width: 100,
-          height: 100,
-          borderRadius: 50,
-          blur: 30,
-          alignment: Alignment.center,
-          border: 2,
-          linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.purple.withValues(alpha: 0.2),
-              Colors.blue.withValues(alpha: 0.1),
-            ],
-          ),
-          borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.purple.withValues(alpha: 0.5),
-              Colors.blue.withValues(alpha: 0.2),
-            ],
-          ),
-          child: const Icon(
-            Icons.event_available,
-            size: 50,
-            color: Colors.white,
-          ),
-        ).animate()
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              blur: 30,
+              alignment: Alignment.center,
+              border: 2,
+              linearGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.purple.withValues(alpha: 0.2),
+                  Colors.blue.withValues(alpha: 0.1),
+                ],
+              ),
+              borderGradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.purple.withValues(alpha: 0.5),
+                  Colors.blue.withValues(alpha: 0.2),
+                ],
+              ),
+              child: const Icon(
+                Icons.event_available,
+                size: 50,
+                color: Colors.white,
+              ),
+            )
+            .animate()
             .scale(duration: 600.ms, curve: Curves.easeOutBack)
             .shimmer(duration: 2000.ms, delay: 600.ms),
         const SizedBox(height: 20),
@@ -375,190 +365,195 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
 
   Widget _buildAuthForm() {
     return GlassmorphicContainer(
-      width: double.infinity,
-      height: _isSignIn ? 320 : 420,
-      borderRadius: 20,
-      blur: 30,
-      alignment: Alignment.center,
-      border: 1,
-      linearGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Colors.white.withValues(alpha: 0.1),
-          Colors.white.withValues(alpha: 0.05),
-        ],
-      ),
-      borderGradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Colors.white.withValues(alpha: 0.3),
-          Colors.white.withValues(alpha: 0.1),
-        ],
-      ),
-      padding: const EdgeInsets.all(20),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            // Name field (sign up only)
-            if (!_isSignIn) ...[
-              _buildGlassTextField(
-                controller: _nameController,
-                hintText: 'Full Name',
-                icon: Icons.person,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your name';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
+          width: double.infinity,
+          height: _isSignIn ? 320 : 420,
+          borderRadius: 20,
+          blur: 30,
+          alignment: Alignment.center,
+          border: 1,
+          linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withValues(alpha: 0.1),
+              Colors.white.withValues(alpha: 0.05),
             ],
-            
-            // Email field
-            _buildGlassTextField(
-              controller: _emailController,
-              hintText: 'Email',
-              icon: Icons.email,
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your email';
-                }
-                if (!value.contains('@')) {
-                  return 'Please enter a valid email';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            
-            // Password field
-            _buildGlassTextField(
-              controller: _passwordController,
-              hintText: 'Password',
-              icon: Icons.lock,
-              obscureText: _obscurePassword,
-              suffixIcon: IconButton(
-                icon: Icon(
-                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.white.withValues(alpha: 0.5),
-                ),
-                onPressed: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
-                }
-                if (value.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-                return null;
-              },
-            ),
-            
-            // Confirm password (sign up only)
-            if (!_isSignIn) ...[
-              const SizedBox(height: 16),
-              _buildGlassTextField(
-                controller: _confirmPasswordController,
-                hintText: 'Confirm Password',
-                icon: Icons.lock_outline,
-                obscureText: _obscureConfirmPassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.white.withValues(alpha: 0.5),
+          ),
+          borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withValues(alpha: 0.3),
+              Colors.white.withValues(alpha: 0.1),
+            ],
+          ),
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                // Name field (sign up only)
+                if (!_isSignIn) ...[
+                  _buildGlassTextField(
+                    controller: _nameController,
+                    hintText: 'Full Name',
+                    icon: Icons.person,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
                   ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureConfirmPassword = !_obscureConfirmPassword;
-                    });
+                  const SizedBox(height: 16),
+                ],
+
+                // Email field
+                _buildGlassTextField(
+                  controller: _emailController,
+                  hintText: 'Email',
+                  icon: Icons.email,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
                   },
                 ),
-                validator: (value) {
-                  if (value != _passwordController.text) {
-                    return 'Passwords do not match';
-                  }
-                  return null;
-                },
-              ),
-            ],
-            
-            const SizedBox(height: 24),
-            
-            // Submit button
-            GestureDetector(
-              onTap: _isLoading ? null : _submitForm,
-              child: GlassmorphicContainer(
-                width: double.infinity,
-                height: 50,
-                borderRadius: 25,
-                blur: 20,
-                alignment: Alignment.center,
-                border: 2,
-                linearGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.purple.withValues(alpha: 0.3),
-                    Colors.blue.withValues(alpha: 0.2),
-                  ],
+                const SizedBox(height: 16),
+
+                // Password field
+                _buildGlassTextField(
+                  controller: _passwordController,
+                  hintText: 'Password',
+                  icon: Icons.lock,
+                  obscureText: _obscurePassword,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.white.withValues(alpha: 0.5),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
                 ),
-                borderGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.purple.withValues(alpha: 0.8),
-                    Colors.blue.withValues(alpha: 0.4),
-                  ],
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : Text(
-                        _isSignIn ? 'Sign In' : 'Sign Up',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+
+                // Confirm password (sign up only)
+                if (!_isSignIn) ...[
+                  const SizedBox(height: 16),
+                  _buildGlassTextField(
+                    controller: _confirmPasswordController,
+                    hintText: 'Confirm Password',
+                    icon: Icons.lock_outline,
+                    obscureText: _obscureConfirmPassword,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureConfirmPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.white.withValues(alpha: 0.5),
                       ),
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Toggle auth mode
-            TextButton(
-              onPressed: _toggleAuthMode,
-              child: Text(
-                _isSignIn
-                    ? "Don't have an account? Sign Up"
-                    : "Already have an account? Sign In",
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.7),
-                  fontSize: 14,
+                      onPressed: () {
+                        setState(() {
+                          _obscureConfirmPassword = !_obscureConfirmPassword;
+                        });
+                      },
+                    ),
+                    validator: (value) {
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+
+                const SizedBox(height: 24),
+
+                // Submit button
+                GestureDetector(
+                  onTap: _isLoading ? null : _submitForm,
+                  child: GlassmorphicContainer(
+                    width: double.infinity,
+                    height: 50,
+                    borderRadius: 25,
+                    blur: 20,
+                    alignment: Alignment.center,
+                    border: 2,
+                    linearGradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.purple.withValues(alpha: 0.3),
+                        Colors.blue.withValues(alpha: 0.2),
+                      ],
+                    ),
+                    borderGradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.purple.withValues(alpha: 0.8),
+                        Colors.blue.withValues(alpha: 0.4),
+                      ],
+                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            _isSignIn ? 'Sign In' : 'Sign Up',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ),
                 ),
-              ),
+
+                const SizedBox(height: 16),
+
+                // Toggle auth mode
+                TextButton(
+                  onPressed: _toggleAuthMode,
+                  child: Text(
+                    _isSignIn
+                        ? "Don't have an account? Sign Up"
+                        : "Already have an account? Sign In",
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.7),
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    ).animate()
+          ),
+        )
+        .animate()
         .fadeIn(duration: 800.ms)
         .slideY(begin: 0.2, curve: Curves.easeOutCubic);
   }
@@ -577,33 +572,21 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
       obscureText: obscureText,
       keyboardType: keyboardType,
       validator: validator,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 16,
-      ),
+      style: const TextStyle(color: Colors.white, fontSize: 16),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(
-          color: Colors.white.withValues(alpha: 0.5),
-        ),
-        prefixIcon: Icon(
-          icon,
-          color: Colors.white.withValues(alpha: 0.7),
-        ),
+        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+        prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.7)),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.white.withValues(alpha: 0.2),
-          ),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.white.withValues(alpha: 0.2),
-          ),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -614,9 +597,7 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.red.withValues(alpha: 0.5),
-          ),
+          borderSide: BorderSide(color: Colors.red.withValues(alpha: 0.5)),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -631,93 +612,90 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
 
   Widget _buildSocialSignIn() {
     return Column(
-      children: [
-        Row(
           children: [
-            Expanded(
-              child: Divider(
-                color: Colors.white.withValues(alpha: 0.2),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'OR',
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.5),
-                  fontSize: 12,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Divider(
-                color: Colors.white.withValues(alpha: 0.2),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        GestureDetector(
-          onTap: _isLoading ? null : _signInWithGoogle,
-          child: GlassmorphicContainer(
-            width: double.infinity,
-            height: 50,
-            borderRadius: 25,
-            blur: 20,
-            alignment: Alignment.center,
-            border: 1,
-            linearGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withValues(alpha: 0.1),
-                Colors.white.withValues(alpha: 0.05),
-              ],
-            ),
-            borderGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withValues(alpha: 0.3),
-                Colors.white.withValues(alpha: 0.1),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Row(
               children: [
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'G',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                Expanded(
+                  child: Divider(color: Colors.white.withValues(alpha: 0.2)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'OR',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontSize: 12,
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
-                const Text(
-                  'Continue with Google',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
+                Expanded(
+                  child: Divider(color: Colors.white.withValues(alpha: 0.2)),
                 ),
               ],
             ),
-          ),
-        ),
-      ],
-    ).animate()
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: _isLoading ? null : _signInWithGoogle,
+              child: GlassmorphicContainer(
+                width: double.infinity,
+                height: 50,
+                borderRadius: 25,
+                blur: 20,
+                alignment: Alignment.center,
+                border: 1,
+                linearGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.1),
+                    Colors.white.withValues(alpha: 0.05),
+                  ],
+                ),
+                borderGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.3),
+                    Colors.white.withValues(alpha: 0.1),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'G',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Continue with Google',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        )
+        .animate()
         .fadeIn(duration: 1000.ms, delay: 200.ms)
         .slideY(begin: 0.2, curve: Curves.easeOutCubic);
   }
@@ -733,7 +711,6 @@ class _GlassAuthScreenState extends State<GlassAuthScreen>
           decoration: TextDecoration.underline,
         ),
       ),
-    ).animate()
-        .fadeIn(duration: 1200.ms, delay: 400.ms);
+    ).animate().fadeIn(duration: 1200.ms, delay: 400.ms);
   }
 }

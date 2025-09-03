@@ -17,14 +17,11 @@ class ModernSkeleton extends StatefulWidget {
     this.isCircular = false,
   });
 
-  const ModernSkeleton.circular({
-    super.key,
-    required double size,
-    this.margin,
-  }) : width = size,
-       height = size,
-       borderRadius = 50,
-       isCircular = true;
+  const ModernSkeleton.circular({super.key, required double size, this.margin})
+    : width = size,
+      height = size,
+      borderRadius = 50,
+      isCircular = true;
 
   const ModernSkeleton.rectangular({
     super.key,
@@ -47,16 +44,17 @@ class _ModernSkeletonState extends State<ModernSkeleton>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 2000), // Slower animation for better performance
+      duration: const Duration(
+        milliseconds: 2000,
+      ), // Slower animation for better performance
       vsync: this,
     );
-    _animation = Tween<double>(
-      begin: -2.0,
-      end: 2.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.linear, // Linear for smoother performance
-    ));
+    _animation = Tween<double>(begin: -2.0, end: 2.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.linear, // Linear for smoother performance
+      ),
+    );
     _animationController.repeat();
   }
 
@@ -84,7 +82,8 @@ class _ModernSkeletonState extends State<ModernSkeleton>
           actualWidth = 200.0; // Fallback width
         }
 
-        return RepaintBoundary( // Add RepaintBoundary for performance
+        return RepaintBoundary(
+          // Add RepaintBoundary for performance
           child: Container(
             width: actualWidth,
             height: widget.height ?? 16.0,
@@ -140,7 +139,7 @@ class ModernEventCardSkeleton extends StatelessWidget {
   final bool isHorizontal;
   final bool isPlayful;
   final String? loadingMessage;
-  
+
   const ModernEventCardSkeleton({
     super.key,
     this.isHorizontal = true,
@@ -152,14 +151,12 @@ class ModernEventCardSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        color: isDark 
-            ? const Color(0xFF16213E)
-            : const Color(0xFFF8FAFC),
+        color: isDark ? const Color(0xFF16213E) : const Color(0xFFF8FAFC),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
@@ -170,7 +167,9 @@ class ModernEventCardSkeleton extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(24),
-        child: isHorizontal ? _buildHorizontalSkeleton(context) : _buildVerticalSkeleton(),
+        child: isHorizontal
+            ? _buildHorizontalSkeleton(context)
+            : _buildVerticalSkeleton(),
       ),
     );
   }
@@ -297,31 +296,15 @@ class ModernEventCardSkeleton extends StatelessWidget {
                 borderRadius: 8,
               ),
               const SizedBox(height: 8),
-              const ModernSkeleton(
-                width: 200,
-                height: 24,
-                borderRadius: 8,
-              ),
+              const ModernSkeleton(width: 200, height: 24, borderRadius: 8),
               const SizedBox(height: 16),
-              const ModernSkeleton(
-                width: 150,
-                height: 16,
-                borderRadius: 6,
-              ),
+              const ModernSkeleton(width: 150, height: 16, borderRadius: 6),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const ModernSkeleton(
-                    width: 120,
-                    height: 16,
-                    borderRadius: 6,
-                  ),
-                  const ModernSkeleton(
-                    width: 50,
-                    height: 28,
-                    borderRadius: 16,
-                  ),
+                  const ModernSkeleton(width: 120, height: 16, borderRadius: 6),
+                  const ModernSkeleton(width: 50, height: 28, borderRadius: 16),
                 ],
               ),
             ],
@@ -339,15 +322,13 @@ class ModernFeaturedEventSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     return Container(
       height: 320,
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
-        color: isDark 
-            ? const Color(0xFF16213E)
-            : const Color(0xFFF8FAFC),
+        color: isDark ? const Color(0xFF16213E) : const Color(0xFFF8FAFC),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
@@ -388,17 +369,9 @@ class ModernFeaturedEventSkeleton extends StatelessWidget {
                     borderRadius: 8,
                   ),
                   const SizedBox(height: 8),
-                  const ModernSkeleton(
-                    width: 200,
-                    height: 28,
-                    borderRadius: 8,
-                  ),
+                  const ModernSkeleton(width: 200, height: 28, borderRadius: 8),
                   const SizedBox(height: 16),
-                  const ModernSkeleton(
-                    width: 150,
-                    height: 20,
-                    borderRadius: 6,
-                  ),
+                  const ModernSkeleton(width: 150, height: 20, borderRadius: 6),
                 ],
               ),
             ),
@@ -413,13 +386,13 @@ class ModernFeaturedEventSkeleton extends StatelessWidget {
 class PlayfulShimmerList extends StatelessWidget {
   final int itemCount;
   final String loadingMessage;
-  
+
   const PlayfulShimmerList({
     super.key,
     this.itemCount = 5,
     required this.loadingMessage,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -429,9 +402,13 @@ class PlayfulShimmerList extends StatelessWidget {
           itemCount,
           (index) => ModernEventCardSkeleton(
             isPlayful: true,
-            loadingMessage: index == 0 ? '🔥 Hot event coming up!' : 
-                           index == 1 ? '🎪 Something fun this way comes!' :
-                           index == 2 ? '🚀 Preparing awesome stuff!' : null,
+            loadingMessage: index == 0
+                ? '🔥 Hot event coming up!'
+                : index == 1
+                ? '🎪 Something fun this way comes!'
+                : index == 2
+                ? '🚀 Preparing awesome stuff!'
+                : null,
           ), // Removed animations for better performance
         ),
       ],
@@ -442,9 +419,9 @@ class PlayfulShimmerList extends StatelessWidget {
 // Playful Loading Messages Widget
 class PlayfulLoadingMessage extends StatelessWidget {
   final String message;
-  
+
   const PlayfulLoadingMessage({super.key, required this.message});
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -501,7 +478,12 @@ class ModernSkeletonGroup extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: children
-          .map((child) => [child, if (child != children.last) SizedBox(height: spacing)])
+          .map(
+            (child) => [
+              child,
+              if (child != children.last) SizedBox(height: spacing),
+            ],
+          )
           .expand((widget) => widget)
           .toList(),
     );
@@ -511,10 +493,7 @@ class ModernSkeletonGroup extends StatelessWidget {
 class ModernListSkeleton extends StatelessWidget {
   final int itemCount;
 
-  const ModernListSkeleton({
-    super.key,
-    this.itemCount = 5,
-  });
+  const ModernListSkeleton({super.key, this.itemCount = 5});
 
   @override
   Widget build(BuildContext context) {

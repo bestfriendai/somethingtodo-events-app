@@ -8,16 +8,10 @@ import 'config/unified_design_system.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  runApp(
-    const ProviderScope(
-      child: PremiumChatApp(),
-    ),
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(const ProviderScope(child: PremiumChatApp()));
 }
 
 class PremiumChatApp extends ConsumerWidget {
@@ -74,20 +68,18 @@ class _ChatDemoScreenState extends ConsumerState<ChatDemoScreen> {
   Future<void> _initializeChat() async {
     // Initialize with demo mode
     final chatNotifier = ref.read(chatProvider.notifier);
-    
+
     // Create a demo session
     _currentSessionId = 'demo_session_${DateTime.now().millisecondsSinceEpoch}';
-    
+
     // Add some initial demo messages
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     chatNotifier.sendMessage(
       sessionId: _currentSessionId!,
-      content: "Welcome to SomethingToDo! I'm your AI event assistant. How can I help you discover amazing events today?",
-      metadata: {
-        'sender': 'assistant',
-        'type': 'welcome',
-      },
+      content:
+          "Welcome to SomethingToDo! I'm your AI event assistant. How can I help you discover amazing events today?",
+      metadata: {'sender': 'assistant', 'type': 'welcome'},
     );
   }
 
@@ -110,10 +102,10 @@ class _ChatDemoScreenState extends ConsumerState<ChatDemoScreen> {
               ),
             ),
           ),
-          
+
           // Chat Screen
           PremiumChatScreen(sessionId: _currentSessionId),
-          
+
           // Floating info button
           Positioned(
             top: MediaQuery.of(context).padding.top + 16,
@@ -139,9 +131,7 @@ class _ChatDemoScreenState extends ConsumerState<ChatDemoScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.black87,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: Text(
           'Premium Chat Features',
           style: UnifiedDesignSystem.headlineSmall.copyWith(
@@ -260,9 +250,8 @@ class PremiumChatLauncher extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ProviderScope(
-                          child: ChatDemoScreen(),
-                        ),
+                        builder: (context) =>
+                            const ProviderScope(child: ChatDemoScreen()),
                       ),
                     );
                   },

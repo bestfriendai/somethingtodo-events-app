@@ -4,10 +4,11 @@ import 'dart:io';
 import 'platform_interactions.dart';
 
 class NavigationService {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   static NavigatorState? get navigator => navigatorKey.currentState;
-  
+
   // Custom page transitions for mobile
   static Route<T> createSlideRoute<T>({
     required Widget page,
@@ -40,9 +41,10 @@ class NavigationService {
         const end = Offset.zero;
         const curve = Curves.easeOutCubic;
 
-        var tween = Tween(begin: begin, end: end).chain(
-          CurveTween(curve: curve),
-        );
+        var tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),
@@ -73,13 +75,15 @@ class NavigationService {
         const end = 1.0;
         const curve = Curves.easeOutBack;
 
-        var scaleTween = Tween(begin: begin, end: end).chain(
-          CurveTween(curve: curve),
-        );
-        
-        var fadeTween = Tween(begin: 0.0, end: 1.0).chain(
-          CurveTween(curve: Curves.easeOut),
-        );
+        var scaleTween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+
+        var fadeTween = Tween(
+          begin: 0.0,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeOut));
 
         return ScaleTransition(
           scale: animation.drive(scaleTween),
@@ -103,10 +107,7 @@ class NavigationService {
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionDuration: const Duration(milliseconds: 300),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: animation,
-          child: child,
-        );
+        return FadeTransition(opacity: animation, child: child);
       },
     );
   }
@@ -119,9 +120,9 @@ class NavigationService {
     SlideDirection direction = SlideDirection.fromRight,
   }) {
     PlatformInteractions.lightImpact();
-    
+
     Route<T> route;
-    
+
     if (Platform.isIOS) {
       route = CupertinoPageRoute<T>(
         builder: (context) => page,
@@ -135,7 +136,7 @@ class NavigationService {
         direction: direction,
       );
     }
-    
+
     return navigator?.push<T>(route) ?? Future.value(null);
   }
 
@@ -144,13 +145,11 @@ class NavigationService {
     RouteSettings? settings,
   }) {
     PlatformInteractions.mediumImpact();
-    
+
     return navigator?.push<T>(
-      createScaleRoute<T>(
-        page: page,
-        settings: settings,
-      ),
-    ) ?? Future.value(null);
+          createScaleRoute<T>(page: page, settings: settings),
+        ) ??
+        Future.value(null);
   }
 
   static Future<T?> pushReplacement<T, TO>({
@@ -159,14 +158,12 @@ class NavigationService {
     RouteSettings? settings,
   }) {
     PlatformInteractions.lightImpact();
-    
+
     return navigator?.pushReplacement<T, TO>(
-      createSlideRoute<T>(
-        page: page,
-        settings: settings,
-      ),
-      result: result,
-    ) ?? Future.value(null);
+          createSlideRoute<T>(page: page, settings: settings),
+          result: result,
+        ) ??
+        Future.value(null);
   }
 
   static void pop<T>([T? result]) {
@@ -180,7 +177,8 @@ class NavigationService {
 
   static Future<T?> pushNamed<T>(String routeName, {Object? arguments}) {
     PlatformInteractions.lightImpact();
-    return navigator?.pushNamed<T>(routeName, arguments: arguments) ?? Future.value(null);
+    return navigator?.pushNamed<T>(routeName, arguments: arguments) ??
+        Future.value(null);
   }
 
   static Future<T?> pushReplacementNamed<T, TO>(
@@ -189,10 +187,11 @@ class NavigationService {
     Object? arguments,
   }) {
     return navigator?.pushReplacementNamed<T, TO>(
-      routeName,
-      result: result,
-      arguments: arguments,
-    ) ?? Future.value(null);
+          routeName,
+          result: result,
+          arguments: arguments,
+        ) ??
+        Future.value(null);
   }
 
   // Gesture-based navigation
@@ -209,9 +208,9 @@ class NavigationService {
     try {
       final uri = Uri.parse(deepLink);
       final pathSegments = uri.pathSegments;
-      
+
       if (pathSegments.isEmpty) return;
-      
+
       switch (pathSegments.first) {
         case 'event':
           if (pathSegments.length > 1) {
@@ -234,7 +233,10 @@ class NavigationService {
   }
 
   // Analytics for navigation
-  static void logNavigation(String routeName, {Map<String, dynamic>? parameters}) {
+  static void logNavigation(
+    String routeName, {
+    Map<String, dynamic>? parameters,
+  }) {
     if (kDebugMode) {
       print('Navigation: $routeName ${parameters ?? ''}');
     }
@@ -242,56 +244,48 @@ class NavigationService {
   }
 }
 
-enum SlideDirection {
-  fromRight,
-  fromLeft,
-  fromTop,
-  fromBottom,
-}
+enum SlideDirection { fromRight, fromLeft, fromTop, fromBottom }
 
 // Custom route animations
 class SlideRightRoute<T> extends PageRouteBuilder<T> {
   final Widget page;
-  
+
   SlideRightRoute({required this.page})
-      : super(
-          pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(-1.0, 0.0);
-            const end = Offset.zero;
-            const curve = Curves.ease;
+    : super(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(-1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.ease;
 
-            var tween = Tween(begin: begin, end: end).chain(
-              CurveTween(curve: curve),
-            );
+          var tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
 
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        );
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      );
 }
 
 class ScaleRoute<T> extends PageRouteBuilder<T> {
   final Widget page;
-  
+
   ScaleRoute({required this.page})
-      : super(
-          pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.0,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Curves.fastOutSlowIn,
-              )),
-              child: child,
-            );
-          },
-        );
+    : super(
+        pageBuilder: (context, animation, secondaryAnimation) => page,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return ScaleTransition(
+            scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
+            ),
+            child: child,
+          );
+        },
+      );
 }
 
 // Swipe-back gesture detector for iOS-like navigation
@@ -299,11 +293,7 @@ class SwipeBackDetector extends StatelessWidget {
   final Widget child;
   final VoidCallback? onSwipeBack;
 
-  const SwipeBackDetector({
-    super.key,
-    required this.child,
-    this.onSwipeBack,
-  });
+  const SwipeBackDetector({super.key, required this.child, this.onSwipeBack});
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +312,7 @@ class SwipeBackDetector extends StatelessWidget {
       },
       onHorizontalDragEnd: (details) {
         // Check if swipe was fast enough and far enough
-        if (details.velocity.pixelsPerSecond.dx > 300 && 
+        if (details.velocity.pixelsPerSecond.dx > 300 &&
             details.primaryVelocity! > 0) {
           if (onSwipeBack != null) {
             onSwipeBack?.call();

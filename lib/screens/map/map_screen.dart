@@ -2,15 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/event.dart';
-import '../../config/theme.dart';
-import '../../config/app_config.dart';
 import '../../providers/events_provider.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/location_service.dart';
-import '../../widgets/common/event_card.dart';
 import '../../widgets/universal_map.dart';
-import '../../data/sample_events.dart';
-import '../events/event_details_screen.dart';
 
 class MapScreen extends StatefulWidget {
   final double? initialLatitude;
@@ -36,17 +30,17 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   double? _currentLatitude;
   double? _currentLongitude;
-  double _mapCenterLat = 37.7749; // Default: San Francisco
+  double _mapCenterLat = 37.7749;
   double _mapCenterLng = -122.4194;
-
   bool _isLoading = false;
-  final bool _showEventsList = false;
+  bool _showEventsList = false;
   bool _isLocationEnabled = false;
+
   EventCategory? _selectedCategory;
   Event? _selectedEvent;
 
   final PageController _eventPageController = PageController();
-  final int _currentEventIndex = 0;
+  int _currentEventIndex = 0;
 
   @override
   void initState() {

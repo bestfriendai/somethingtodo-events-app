@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'analytics.freezed.dart';
 part 'analytics.g.dart';
@@ -17,7 +16,7 @@ class UserEvent with _$UserEvent {
     DateTime? timestamp,
   }) = _UserEvent;
 
-  factory UserEvent.fromJson(Map<String, dynamic> json) => 
+  factory UserEvent.fromJson(Map<String, dynamic> json) =>
       _$UserEventFromJson(json);
 }
 
@@ -38,7 +37,7 @@ class SessionData with _$SessionData {
     Map<String, dynamic>? deviceInfo,
   }) = _SessionData;
 
-  factory SessionData.fromJson(Map<String, dynamic> json) => 
+  factory SessionData.fromJson(Map<String, dynamic> json) =>
       _$SessionDataFromJson(json);
 }
 
@@ -58,7 +57,7 @@ class EventAnalytics with _$EventAnalytics {
     DateTime? lastUpdated,
   }) = _EventAnalytics;
 
-  factory EventAnalytics.fromJson(Map<String, dynamic> json) => 
+  factory EventAnalytics.fromJson(Map<String, dynamic> json) =>
       _$EventAnalyticsFromJson(json);
 }
 
@@ -76,7 +75,7 @@ class SearchAnalytics with _$SearchAnalytics {
     DateTime? timestamp,
   }) = _SearchAnalytics;
 
-  factory SearchAnalytics.fromJson(Map<String, dynamic> json) => 
+  factory SearchAnalytics.fromJson(Map<String, dynamic> json) =>
       _$SearchAnalyticsFromJson(json);
 }
 
@@ -116,4 +115,3 @@ class ScreenNames {
   static const String favorites = 'favorites';
   static const String search = 'search';
 }
-

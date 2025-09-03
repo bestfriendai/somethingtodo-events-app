@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:math' as math;
 import '../../widgets/cards/premium_event_card.dart';
 import '../../widgets/cards/mini_event_card.dart';
 
 class EventCardsDemo extends StatefulWidget {
-  const EventCardsDemo({Key? key}) : super(key: key);
+  const EventCardsDemo({super.key});
 
   @override
   State<EventCardsDemo> createState() => _EventCardsDemoState();
@@ -14,16 +13,18 @@ class EventCardsDemo extends StatefulWidget {
 class _EventCardsDemoState extends State<EventCardsDemo> {
   final ScrollController _scrollController = ScrollController();
   bool _showMiniCards = false;
-  Set<String> _likedEvents = {};
-  Set<String> _savedEvents = {};
-  Set<String> _hiddenEvents = {};
+  final Set<String> _likedEvents = {};
+  final Set<String> _savedEvents = {};
+  final Set<String> _hiddenEvents = {};
 
   final List<Map<String, dynamic>> _premiumEvents = [
     {
       'id': '1',
       'title': 'Coachella Music Festival',
-      'description': 'The biggest music festival with world-class artists and unforgettable experiences',
-      'imageUrl': 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
+      'description':
+          'The biggest music festival with world-class artists and unforgettable experiences',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
       'category': 'Music',
       'price': 450.0,
       'distance': '2.5 mi',
@@ -40,8 +41,10 @@ class _EventCardsDemoState extends State<EventCardsDemo> {
     {
       'id': '2',
       'title': 'Tech Summit 2025',
-      'description': 'Connect with industry leaders and explore cutting-edge technology',
-      'imageUrl': 'https://images.unsplash.com/photo-1540575467063-178a50c2df87',
+      'description':
+          'Connect with industry leaders and explore cutting-edge technology',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1540575467063-178a50c2df87',
       'category': 'Tech',
       'price': 199.0,
       'distance': '1.2 mi',
@@ -73,8 +76,10 @@ class _EventCardsDemoState extends State<EventCardsDemo> {
     {
       'id': '4',
       'title': 'Art Gallery Opening',
-      'description': 'Experience contemporary art from emerging artists worldwide',
-      'imageUrl': 'https://images.unsplash.com/photo-1531913764164-f85c52e6e654',
+      'description':
+          'Experience contemporary art from emerging artists worldwide',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1531913764164-f85c52e6e654',
       'category': 'Art',
       'price': 75.0,
       'distance': '3.0 mi',
@@ -126,7 +131,8 @@ class _EventCardsDemoState extends State<EventCardsDemo> {
       'id': 'm4',
       'title': 'Live Jazz Night',
       'subtitle': 'Smooth jazz with local artists',
-      'imageUrl': 'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f',
       'category': 'Music',
       'price': 25.0,
       'time': '8:00 PM',
@@ -243,10 +249,7 @@ class _EventCardsDemoState extends State<EventCardsDemo> {
               child: Center(
                 child: Text(
                   'Event Details Would Go Here',
-                  style: TextStyle(
-                    color: Colors.white54,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.white54, fontSize: 16),
                 ),
               ),
             ),
@@ -265,11 +268,7 @@ class _EventCardsDemoState extends State<EventCardsDemo> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.black,
-              Colors.grey[900]!,
-              Colors.black,
-            ],
+            colors: [Colors.black, Colors.grey[900]!, Colors.black],
           ),
         ),
         child: SafeArea(
@@ -293,7 +292,9 @@ class _EventCardsDemoState extends State<EventCardsDemo> {
                       children: [
                         IconButton(
                           icon: Icon(
-                            _showMiniCards ? Icons.view_agenda : Icons.view_carousel,
+                            _showMiniCards
+                                ? Icons.view_agenda
+                                : Icons.view_carousel,
                             color: Colors.white,
                           ),
                           onPressed: () {

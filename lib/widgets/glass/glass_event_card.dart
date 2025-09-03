@@ -165,7 +165,7 @@ class _GlassEventCardState extends State<GlassEventCard>
                       size: 40,
                     ),
                   ),
-                
+
                 // Content section
                 Expanded(
                   child: Padding(
@@ -186,7 +186,9 @@ class _GlassEventCardState extends State<GlassEventCard>
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: _getCategoryColor().withValues(alpha: 0.3),
+                                    color: _getCategoryColor().withValues(
+                                      alpha: 0.3,
+                                    ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -203,7 +205,9 @@ class _GlassEventCardState extends State<GlassEventCard>
                                   IconButton(
                                     icon: Icon(
                                       Icons.favorite_border,
-                                      color: Colors.white.withValues(alpha: 0.7),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.7,
+                                      ),
                                       size: 20,
                                     ),
                                     padding: EdgeInsets.zero,
@@ -225,7 +229,7 @@ class _GlassEventCardState extends State<GlassEventCard>
                             ),
                           ],
                         ),
-                        
+
                         // Date, time and price
                         Row(
                           children: [
@@ -236,7 +240,9 @@ class _GlassEventCardState extends State<GlassEventCard>
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              DateFormat('MMM d').format(widget.event.startDateTime),
+                              DateFormat(
+                                'MMM d',
+                              ).format(widget.event.startDateTime),
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 12,
@@ -250,7 +256,9 @@ class _GlassEventCardState extends State<GlassEventCard>
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              DateFormat('h:mm a').format(widget.event.startDateTime),
+                              DateFormat(
+                                'h:mm a',
+                              ).format(widget.event.startDateTime),
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 12,
@@ -264,8 +272,12 @@ class _GlassEventCardState extends State<GlassEventCard>
                               ),
                               decoration: BoxDecoration(
                                 gradient: widget.event.pricing.isFree
-                                    ? LinearGradient(colors: GlassTheme.successGradient)
-                                    : LinearGradient(colors: GlassTheme.primaryGradient),
+                                    ? LinearGradient(
+                                        colors: GlassTheme.successGradient,
+                                      )
+                                    : LinearGradient(
+                                        colors: GlassTheme.primaryGradient,
+                                      ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
@@ -281,7 +293,7 @@ class _GlassEventCardState extends State<GlassEventCard>
                             ),
                           ],
                         ),
-                        
+
                         // Location
                         Row(
                           children: [

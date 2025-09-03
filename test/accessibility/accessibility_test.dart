@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:somethingtodo/widgets/modern/modern_skeleton.dart';
@@ -104,6 +105,7 @@ void main() {
         matchesSemantics(
           label: 'Close dialog button',
           isButton: true,
+          hasTapAction: true,
         ),
       );
     });

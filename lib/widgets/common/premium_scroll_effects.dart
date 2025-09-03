@@ -13,7 +13,7 @@ class PremiumScrollEffects extends StatefulWidget {
   final bool enableBlur;
   final double parallaxFactor;
   final Duration animationDuration;
-  
+
   const PremiumScrollEffects({
     super.key,
     required this.child,
@@ -25,7 +25,7 @@ class PremiumScrollEffects extends StatefulWidget {
     this.parallaxFactor = 0.3,
     this.animationDuration = const Duration(milliseconds: 600),
   });
-  
+
   @override
   State<PremiumScrollEffects> createState() => _PremiumScrollEffectsState();
 }
@@ -37,30 +37,30 @@ class _PremiumScrollEffectsState extends State<PremiumScrollEffects>
   late AnimationController _scaleController;
   double _scrollOffset = 0.0;
   bool _isVisible = false;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _scrollController = widget.controller ?? ScrollController();
     _scrollController.addListener(_onScroll);
-    
+
     _fadeController = AnimationController(
       duration: widget.animationDuration,
       vsync: this,
     );
-    
+
     _scaleController = AnimationController(
       duration: widget.animationDuration,
       vsync: this,
     );
-    
+
     // Start animation after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkVisibility();
     });
   }
-  
+
   @override
   void dispose() {
     if (widget.controller == null) {
@@ -72,25 +72,25 @@ class _PremiumScrollEffectsState extends State<PremiumScrollEffects>
     _scaleController.dispose();
     super.dispose();
   }
-  
+
   void _onScroll() {
     setState(() {
       _scrollOffset = _scrollController.offset;
     });
     _checkVisibility();
   }
-  
+
   void _checkVisibility() {
     final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
-    
+
     final position = renderBox.localToGlobal(Offset.zero);
     final size = renderBox.size;
     final screenHeight = MediaQuery.of(context).size.height;
-    
-    final isNowVisible = position.dy < screenHeight && 
-                        position.dy + size.height > 0;
-    
+
+    final isNowVisible =
+        position.dy < screenHeight && position.dy + size.height > 0;
+
     if (isNowVisible && !_isVisible) {
       _isVisible = true;
       if (widget.enableFadeIn) _fadeController.forward();
@@ -101,11 +101,11 @@ class _PremiumScrollEffectsState extends State<PremiumScrollEffects>
       if (widget.enableScale) _scaleController.reverse();
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     Widget child = widget.child;
-    
+
     // Apply parallax effect
     if (widget.enableParallax) {
       child = Transform.translate(
@@ -113,7 +113,7 @@ class _PremiumScrollEffectsState extends State<PremiumScrollEffects>
         child: child,
       );
     }
-    
+
     // Apply scale effect
     if (widget.enableScale) {
       child = AnimatedBuilder(
@@ -127,21 +127,18 @@ class _PremiumScrollEffectsState extends State<PremiumScrollEffects>
         child: child,
       );
     }
-    
+
     // Apply fade effect
     if (widget.enableFadeIn) {
       child = AnimatedBuilder(
         animation: _fadeController,
         builder: (context, child) {
-          return Opacity(
-            opacity: _fadeController.value,
-            child: child,
-          );
+          return Opacity(opacity: _fadeController.value, child: child);
         },
         child: child,
       );
     }
-    
+
     return child;
   }
 }
@@ -153,7 +150,7 @@ class ScrollRevealList extends StatefulWidget {
   final Curve curve;
   final ScrollController? controller;
   final RevealDirection direction;
-  
+
   const ScrollRevealList({
     super.key,
     required this.children,
@@ -163,7 +160,7 @@ class ScrollRevealList extends StatefulWidget {
     this.controller,
     this.direction = RevealDirection.up,
   });
-  
+
   @override
   State<ScrollRevealList> createState() => _ScrollRevealListState();
 }
@@ -172,26 +169,26 @@ class _ScrollRevealListState extends State<ScrollRevealList> {
   late ScrollController _scrollController;
   final List<bool> _visibilityStates = [];
   final List<GlobalKey> _itemKeys = [];
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _scrollController = widget.controller ?? ScrollController();
     _scrollController.addListener(_checkVisibility);
-    
+
     // Initialize states
     for (int i = 0; i < widget.children.length; i++) {
       _visibilityStates.add(false);
       _itemKeys.add(GlobalKey());
     }
-    
+
     // Check initial visibility
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkVisibility();
     });
   }
-  
+
   @override
   void dispose() {
     if (widget.controller == null) {
@@ -201,20 +198,22 @@ class _ScrollRevealListState extends State<ScrollRevealList> {
     }
     super.dispose();
   }
-  
+
   void _checkVisibility() {
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     for (int i = 0; i < _itemKeys.length; i++) {
-      final RenderBox? renderBox = _itemKeys[i].currentContext?.findRenderObject() as RenderBox?;
+      final RenderBox? renderBox =
+          _itemKeys[i].currentContext?.findRenderObject() as RenderBox?;
       if (renderBox == null) continue;
-      
+
       final position = renderBox.localToGlobal(Offset.zero);
       final size = renderBox.size;
-      
-      final isVisible = position.dy < screenHeight * 0.8 && 
-                       position.dy + size.height > screenHeight * 0.2;
-      
+
+      final isVisible =
+          position.dy < screenHeight * 0.8 &&
+          position.dy + size.height > screenHeight * 0.2;
+
       if (isVisible && !_visibilityStates[i]) {
         setState(() {
           _visibilityStates[i] = true;
@@ -222,37 +221,38 @@ class _ScrollRevealListState extends State<ScrollRevealList> {
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: widget.children.asMap().entries.map((entry) {
         final index = entry.key;
         final child = entry.value;
-        
+
         return Container(
           key: _itemKeys[index],
           child: _visibilityStates[index]
               ? child
-                  .animate(
-                    delay: Duration(
-                      milliseconds: widget.staggerDelay.inMilliseconds * index,
-                    ),
-                  )
-                  .slideY(
-                    begin: widget.direction == RevealDirection.up ? 0.3 : -0.3,
-                    duration: widget.itemDuration,
-                    curve: widget.curve,
-                  )
-                  .fadeIn(
-                    duration: Duration(
-                      milliseconds: (widget.itemDuration.inMilliseconds * 0.8).round(),
-                    ),
-                  )
-              : Opacity(
-                  opacity: 0,
-                  child: child,
-                ),
+                    .animate(
+                      delay: Duration(
+                        milliseconds:
+                            widget.staggerDelay.inMilliseconds * index,
+                      ),
+                    )
+                    .slideY(
+                      begin: widget.direction == RevealDirection.up
+                          ? 0.3
+                          : -0.3,
+                      duration: widget.itemDuration,
+                      curve: widget.curve,
+                    )
+                    .fadeIn(
+                      duration: Duration(
+                        milliseconds: (widget.itemDuration.inMilliseconds * 0.8)
+                            .round(),
+                      ),
+                    )
+              : Opacity(opacity: 0, child: child),
         );
       }).toList(),
     );
@@ -266,7 +266,7 @@ class FloatingScrollButton extends StatefulWidget {
   final double showOffset;
   final Duration animationDuration;
   final List<Color>? colors;
-  
+
   const FloatingScrollButton({
     super.key,
     required this.controller,
@@ -276,7 +276,7 @@ class FloatingScrollButton extends StatefulWidget {
     this.animationDuration = const Duration(milliseconds: 300),
     this.colors,
   });
-  
+
   @override
   State<FloatingScrollButton> createState() => _FloatingScrollButtonState();
 }
@@ -287,45 +287,39 @@ class _FloatingScrollButtonState extends State<FloatingScrollButton>
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotationAnimation;
   bool _isVisible = false;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _controller = AnimationController(
       duration: widget.animationDuration,
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.elasticOut,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
+
     _rotationAnimation = Tween<double>(
       begin: 0.0,
       end: 0.5,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
-    
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
     widget.controller.addListener(_onScroll);
   }
-  
+
   @override
   void dispose() {
     widget.controller.removeListener(_onScroll);
     _controller.dispose();
     super.dispose();
   }
-  
+
   void _onScroll() {
     final shouldShow = widget.controller.offset > widget.showOffset;
-    
+
     if (shouldShow && !_isVisible) {
       setState(() => _isVisible = true);
       _controller.forward();
@@ -334,7 +328,7 @@ class _FloatingScrollButtonState extends State<FloatingScrollButton>
       _controller.reverse();
     }
   }
-  
+
   void _scrollToTop() {
     widget.controller.animateTo(
       0,
@@ -342,11 +336,11 @@ class _FloatingScrollButtonState extends State<FloatingScrollButton>
       curve: Curves.easeOutCubic,
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final colors = widget.colors ?? ModernTheme.primaryGradient;
-    
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -378,11 +372,7 @@ class _FloatingScrollButtonState extends State<FloatingScrollButton>
                 child: InkWell(
                   borderRadius: BorderRadius.circular(28),
                   onTap: widget.onPressed ?? _scrollToTop,
-                  child: Icon(
-                    widget.icon,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                  child: Icon(widget.icon, color: Colors.white, size: 24),
                 ),
               ),
             ),
@@ -400,7 +390,7 @@ class ParallaxBackground extends StatefulWidget {
   final List<Color>? gradient;
   final double parallaxFactor;
   final ScrollController? controller;
-  
+
   const ParallaxBackground({
     super.key,
     required this.child,
@@ -410,7 +400,7 @@ class ParallaxBackground extends StatefulWidget {
     this.parallaxFactor = 0.5,
     this.controller,
   });
-  
+
   @override
   State<ParallaxBackground> createState() => _ParallaxBackgroundState();
 }
@@ -418,14 +408,14 @@ class ParallaxBackground extends StatefulWidget {
 class _ParallaxBackgroundState extends State<ParallaxBackground> {
   late ScrollController _controller;
   double _scrollOffset = 0.0;
-  
+
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? ScrollController();
     _controller.addListener(_onScroll);
   }
-  
+
   @override
   void dispose() {
     if (widget.controller == null) {
@@ -435,13 +425,13 @@ class _ParallaxBackgroundState extends State<ParallaxBackground> {
     }
     super.dispose();
   }
-  
+
   void _onScroll() {
     setState(() {
       _scrollOffset = _controller.offset;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -482,7 +472,7 @@ class StickyHeader extends StatefulWidget {
   final ScrollController? controller;
   final double offset;
   final Duration animationDuration;
-  
+
   const StickyHeader({
     super.key,
     required this.child,
@@ -490,7 +480,7 @@ class StickyHeader extends StatefulWidget {
     this.offset = 100,
     this.animationDuration = const Duration(milliseconds: 200),
   });
-  
+
   @override
   State<StickyHeader> createState() => _StickyHeaderState();
 }
@@ -502,36 +492,28 @@ class _StickyHeaderState extends State<StickyHeader>
   late Animation<double> _opacityAnimation;
   late Animation<double> _slideAnimation;
   bool _isSticky = false;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _controller = widget.controller ?? ScrollController();
     _controller.addListener(_onScroll);
-    
+
     _animationController = AnimationController(
       duration: widget.animationDuration,
       vsync: this,
     );
-    
-    _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    ));
-    
-    _slideAnimation = Tween<double>(
-      begin: -50.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    ));
+
+    _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+
+    _slideAnimation = Tween<double>(begin: -50.0, end: 0.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
   }
-  
+
   @override
   void dispose() {
     if (widget.controller == null) {
@@ -542,10 +524,10 @@ class _StickyHeaderState extends State<StickyHeader>
     _animationController.dispose();
     super.dispose();
   }
-  
+
   void _onScroll() {
     final shouldStick = _controller.offset > widget.offset;
-    
+
     if (shouldStick && !_isSticky) {
       setState(() => _isSticky = true);
       _animationController.forward();
@@ -554,7 +536,7 @@ class _StickyHeaderState extends State<StickyHeader>
       _animationController.reverse();
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -562,19 +544,11 @@ class _StickyHeaderState extends State<StickyHeader>
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(0, _slideAnimation.value),
-          child: Opacity(
-            opacity: _opacityAnimation.value,
-            child: widget.child,
-          ),
+          child: Opacity(opacity: _opacityAnimation.value, child: widget.child),
         );
       },
     );
   }
 }
 
-enum RevealDirection {
-  up,
-  down,
-  left,
-  right,
-}
+enum RevealDirection { up, down, left, right }

@@ -45,7 +45,8 @@ _$SessionDataImpl _$$SessionDataImplFromJson(Map<String, dynamic> json) =>
       eventsViewed: (json['eventsViewed'] as num?)?.toInt() ?? 0,
       searchQueries: (json['searchQueries'] as num?)?.toInt() ?? 0,
       chatMessages: (json['chatMessages'] as num?)?.toInt() ?? 0,
-      categoriesViewed: (json['categoriesViewed'] as List<dynamic>?)
+      categoriesViewed:
+          (json['categoriesViewed'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -80,11 +81,13 @@ _$EventAnalyticsImpl _$$EventAnalyticsImplFromJson(Map<String, dynamic> json) =>
       chatMentions: (json['chatMentions'] as num?)?.toInt() ?? 0,
       averageViewDuration:
           (json['averageViewDuration'] as num?)?.toDouble() ?? 0.0,
-      viewsByCategory: (json['viewsByCategory'] as Map<String, dynamic>?)?.map(
+      viewsByCategory:
+          (json['viewsByCategory'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, (e as num).toInt()),
           ) ??
           const {},
-      viewsByLocation: (json['viewsByLocation'] as Map<String, dynamic>?)?.map(
+      viewsByLocation:
+          (json['viewsByLocation'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, (e as num).toInt()),
           ) ??
           const {},
@@ -94,47 +97,47 @@ _$EventAnalyticsImpl _$$EventAnalyticsImplFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$$EventAnalyticsImplToJson(
-        _$EventAnalyticsImpl instance) =>
-    <String, dynamic>{
-      'eventId': instance.eventId,
-      'views': instance.views,
-      'favorites': instance.favorites,
-      'shares': instance.shares,
-      'ticketClicks': instance.ticketClicks,
-      'mapViews': instance.mapViews,
-      'chatMentions': instance.chatMentions,
-      'averageViewDuration': instance.averageViewDuration,
-      'viewsByCategory': instance.viewsByCategory,
-      'viewsByLocation': instance.viewsByLocation,
-      'lastUpdated': instance.lastUpdated?.toIso8601String(),
-    };
+  _$EventAnalyticsImpl instance,
+) => <String, dynamic>{
+  'eventId': instance.eventId,
+  'views': instance.views,
+  'favorites': instance.favorites,
+  'shares': instance.shares,
+  'ticketClicks': instance.ticketClicks,
+  'mapViews': instance.mapViews,
+  'chatMentions': instance.chatMentions,
+  'averageViewDuration': instance.averageViewDuration,
+  'viewsByCategory': instance.viewsByCategory,
+  'viewsByLocation': instance.viewsByLocation,
+  'lastUpdated': instance.lastUpdated?.toIso8601String(),
+};
 
 _$SearchAnalyticsImpl _$$SearchAnalyticsImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SearchAnalyticsImpl(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      query: json['query'] as String,
-      category: json['category'] as String,
-      resultCount: (json['resultCount'] as num?)?.toInt() ?? 0,
-      location: json['location'] as String?,
-      filters: json['filters'] as Map<String, dynamic>?,
-      clickedResults: (json['clickedResults'] as num?)?.toInt() ?? 0,
-      timestamp: json['timestamp'] == null
-          ? null
-          : DateTime.parse(json['timestamp'] as String),
-    );
+  Map<String, dynamic> json,
+) => _$SearchAnalyticsImpl(
+  id: json['id'] as String,
+  userId: json['userId'] as String,
+  query: json['query'] as String,
+  category: json['category'] as String,
+  resultCount: (json['resultCount'] as num?)?.toInt() ?? 0,
+  location: json['location'] as String?,
+  filters: json['filters'] as Map<String, dynamic>?,
+  clickedResults: (json['clickedResults'] as num?)?.toInt() ?? 0,
+  timestamp: json['timestamp'] == null
+      ? null
+      : DateTime.parse(json['timestamp'] as String),
+);
 
 Map<String, dynamic> _$$SearchAnalyticsImplToJson(
-        _$SearchAnalyticsImpl instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'userId': instance.userId,
-      'query': instance.query,
-      'category': instance.category,
-      'resultCount': instance.resultCount,
-      'location': instance.location,
-      'filters': instance.filters,
-      'clickedResults': instance.clickedResults,
-      'timestamp': instance.timestamp?.toIso8601String(),
-    };
+  _$SearchAnalyticsImpl instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'userId': instance.userId,
+  'query': instance.query,
+  'category': instance.category,
+  'resultCount': instance.resultCount,
+  'location': instance.location,
+  'filters': instance.filters,
+  'clickedResults': instance.clickedResults,
+  'timestamp': instance.timestamp?.toIso8601String(),
+};

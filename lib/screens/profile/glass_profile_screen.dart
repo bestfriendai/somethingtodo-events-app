@@ -32,31 +32,31 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
   late AnimationController _orbAnimationController;
   late List<AnimationController> _orbControllers;
   late List<FloatingOrb> _orbs;
-  
+
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    
+
     _avatarAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _statsAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _orbAnimationController = AnimationController(
       duration: const Duration(seconds: 20),
       vsync: this,
     )..repeat();
-    
+
     _initializeOrbs();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadUserData();
       _avatarAnimationController.forward();
@@ -67,22 +67,28 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
   }
 
   void _initializeOrbs() {
-    _orbControllers = List.generate(5, (index) => AnimationController(
-      duration: Duration(seconds: 10 + (index * 2)),
-      vsync: this,
-    )..repeat());
-    
-    _orbs = List.generate(5, (index) => FloatingOrb(
-      size: 20 + (index * 15).toDouble(),
-      color: [
-        Colors.white.withValues(alpha: 0.1),
-        Colors.white.withValues(alpha: 0.15),
-        Colors.white.withValues(alpha: 0.08),
-        Colors.white.withValues(alpha: 0.12),
-        Colors.white.withValues(alpha: 0.05),
-      ][index],
-      controller: _orbControllers[index],
-    ));
+    _orbControllers = List.generate(
+      5,
+      (index) => AnimationController(
+        duration: Duration(seconds: 10 + (index * 2)),
+        vsync: this,
+      )..repeat(),
+    );
+
+    _orbs = List.generate(
+      5,
+      (index) => FloatingOrb(
+        size: 20 + (index * 15).toDouble(),
+        color: [
+          Colors.white.withValues(alpha: 0.1),
+          Colors.white.withValues(alpha: 0.15),
+          Colors.white.withValues(alpha: 0.08),
+          Colors.white.withValues(alpha: 0.12),
+          Colors.white.withValues(alpha: 0.05),
+        ][index],
+        controller: _orbControllers[index],
+      ),
+    );
   }
 
   @override
@@ -99,7 +105,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
   Future<void> _loadUserData() async {
     final authProvider = context.read<AuthProvider>();
     final eventsProvider = context.read<EventsProvider>();
-    
+
     if (authProvider.currentUser != null) {
       await eventsProvider.loadFavoriteEvents(authProvider.currentUser!.id);
     }
@@ -108,25 +114,26 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [
           // Animated floating orbs background
-          ...List.generate(_orbs.length, (index) => 
-            AnimatedBuilder(
+          ...List.generate(
+            _orbs.length,
+            (index) => AnimatedBuilder(
               animation: _orbs[index].controller,
               builder: (context, child) => _buildFloatingOrb(_orbs[index]),
             ),
           ),
-          
+
           Consumer<AuthProvider>(
             builder: (context, authProvider, child) {
               if (authProvider.currentUser == null) {
                 return _buildSignInPrompt();
               }
-              
+
               return RefreshIndicator(
                 onRefresh: _loadUserData,
                 backgroundColor: Colors.transparent,
@@ -152,10 +159,11 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
   Widget _buildFloatingOrb(FloatingOrb orb) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     return Positioned(
       left: (screenWidth * 0.1) + (screenWidth * 0.8 * orb.controller.value),
-      top: (screenHeight * 0.1) + 
+      top:
+          (screenHeight * 0.1) +
           (screenHeight * 0.8 * math.sin(orb.controller.value * 2 * math.pi)),
       child: Container(
         width: orb.size,
@@ -216,17 +224,17 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                 Text(
                   'Sign in to access your profile',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
                 Text(
                   'Save your favorite events, get personalized recommendations, and sync across devices.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.7),
-                      ),
+                    color: Colors.white.withValues(alpha: 0.7),
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
@@ -323,7 +331,9 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
           child: IconButton(
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const GlassSettingsScreen()),
+              MaterialPageRoute(
+                builder: (context) => const GlassSettingsScreen(),
+              ),
             ),
             icon: const Icon(Icons.settings, color: Colors.white, size: 20),
           ),
@@ -336,18 +346,11 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                Colors.black12,
-              ],
+              colors: [Colors.transparent, Colors.black12],
             ),
           ),
           child: const Center(
-            child: Icon(
-              Icons.person,
-              size: 60,
-              color: Colors.white,
-            ),
+            child: Icon(Icons.person, size: 60, color: Colors.white),
           ),
         ),
       ),
@@ -432,7 +435,10 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                                         color: Colors.transparent,
                                         child: Center(
                                           child: Text(
-                                            user.displayName?.substring(0, 1).toUpperCase() ?? 'U',
+                                            user.displayName
+                                                    ?.substring(0, 1)
+                                                    .toUpperCase() ??
+                                                'U',
                                             style: const TextStyle(
                                               fontSize: 32,
                                               fontWeight: FontWeight.bold,
@@ -458,8 +464,12 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      AppTheme.warningColor.withValues(alpha: 0.8),
-                                      AppTheme.warningColor.withValues(alpha: 0.6),
+                                      AppTheme.warningColor.withValues(
+                                        alpha: 0.8,
+                                      ),
+                                      AppTheme.warningColor.withValues(
+                                        alpha: 0.6,
+                                      ),
                                     ],
                                   ),
                                   borderGradient: LinearGradient(
@@ -482,29 +492,29 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                       );
                     },
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Name and email
                   Text(
                     user.displayName ?? 'User',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   const SizedBox(height: 4),
-                  
+
                   Text(
                     user.email,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.7),
-                        ),
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
                     textAlign: TextAlign.center,
                   ),
-                  
+
                   if (user.isPremium) ...[
                     const SizedBox(height: 12),
                     GlassmorphicContainer(
@@ -554,9 +564,9 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Edit Profile Button
                   GlassmorphicContainer(
                     width: 160,
@@ -613,7 +623,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
 
   Widget _buildPremiumBanner(AppUser user) {
     if (user.isPremium) return const SliverToBoxAdapter();
-    
+
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -650,11 +660,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.star,
-                    color: AppTheme.warningColor,
-                    size: 24,
-                  ),
+                  Icon(Icons.star, color: AppTheme.warningColor, size: 24),
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Column(
@@ -671,18 +677,12 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                         ),
                         Text(
                           'Get unlimited recommendations and exclusive events',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 12),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
-                  ),
+                  const Icon(Icons.arrow_forward, color: Colors.white),
                 ],
               ),
             ),
@@ -739,7 +739,12 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Transform.scale(
       scale: _statsAnimationController.value,
       child: GlassmorphicContainer(
@@ -775,15 +780,15 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
               Text(
                 value,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
               ),
               Text(
                 label,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.7),
-                    ),
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -828,7 +833,9 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                 'Saved events you love',
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const FavoritesScreen(),
+                  ),
                 ),
               ),
               _buildDivider(),
@@ -838,7 +845,9 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                 'Event reminders and updates',
                 () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const NotificationsScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationsScreen(),
+                  ),
                 ),
               ),
               _buildDivider(),
@@ -919,9 +928,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(
-          color: Colors.white.withValues(alpha: 0.6),
-        ),
+        style: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
       ),
       trailing: Icon(
         Icons.arrow_forward_ios,
@@ -942,9 +949,9 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
             Text(
               'Recent Activity',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 16),
             Consumer<EventsProvider>(
@@ -986,14 +993,16 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                           const SizedBox(height: 16),
                           Text(
                             'No recent activity',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.7),
                                 ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Start exploring events to see your activity here',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
                                   color: Colors.white.withValues(alpha: 0.6),
                                 ),
                             textAlign: TextAlign.center,
@@ -1003,47 +1012,50 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
                     ),
                   );
                 }
-                
+
                 return Column(
                   children: eventsProvider.favoriteEvents
                       .take(3)
-                      .map((event) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: GlassmorphicContainer(
-                              width: double.infinity,
-                              height: 200,
-                              borderRadius: 12,
-                              blur: 15,
-                              alignment: Alignment.center,
-                              border: 1,
-                              linearGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.white.withValues(alpha: 0.1),
-                                  Colors.white.withValues(alpha: 0.05),
-                                ],
-                              ),
-                              borderGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.white.withValues(alpha: 0.2),
-                                  Colors.white.withValues(alpha: 0.1),
-                                ],
-                              ),
-                              child: EventCard(
-                                event: event,
-                                compact: true,
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EventDetailsScreen(event: event),
-                                  ),
+                      .map(
+                        (event) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: GlassmorphicContainer(
+                            width: double.infinity,
+                            height: 200,
+                            borderRadius: 12,
+                            blur: 15,
+                            alignment: Alignment.center,
+                            border: 1,
+                            linearGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withValues(alpha: 0.1),
+                                Colors.white.withValues(alpha: 0.05),
+                              ],
+                            ),
+                            borderGradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withValues(alpha: 0.2),
+                                Colors.white.withValues(alpha: 0.1),
+                              ],
+                            ),
+                            child: EventCard(
+                              event: event,
+                              compact: true,
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      EventDetailsScreen(event: event),
                                 ),
                               ),
                             ),
-                          ))
+                          ),
+                        ),
+                      )
                       .toList(),
                 );
               },
@@ -1058,18 +1070,19 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
   void _showEditProfileDialog() {
     final authProvider = context.read<AuthProvider>();
     final user = authProvider.currentUser!;
-    
+
     final nameController = TextEditingController(text: user.displayName);
     final phoneController = TextEditingController(text: user.phoneNumber);
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.black87,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(color: Colors.white),
         ),
-        title: const Text('Edit Profile', style: TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1078,10 +1091,17 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Display Name',
-                labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-                prefixIcon: Icon(Icons.person, color: Colors.white.withValues(alpha: 0.7)),
+                labelStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(
+                    color: Colors.white.withValues(alpha: 0.3),
+                  ),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -1096,10 +1116,17 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Phone Number',
-                labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-                prefixIcon: Icon(Icons.phone, color: Colors.white.withValues(alpha: 0.7)),
+                labelStyle: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
+                prefixIcon: Icon(
+                  Icons.phone,
+                  color: Colors.white.withValues(alpha: 0.7),
+                ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(
+                    color: Colors.white.withValues(alpha: 0.3),
+                  ),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -1113,7 +1140,10 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white70),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -1143,9 +1173,7 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: Colors.black87,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Sign Out', style: TextStyle(color: Colors.white)),
         content: const Text(
           'Are you sure you want to sign out?',
@@ -1154,7 +1182,10 @@ class _GlassProfileScreenState extends State<GlassProfileScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white70),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -1177,7 +1208,7 @@ class FloatingOrb {
   final double size;
   final Color color;
   final AnimationController controller;
-  
+
   FloatingOrb({
     required this.size,
     required this.color,

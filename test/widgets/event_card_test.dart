@@ -13,8 +13,9 @@ void main() {
       id: 'test-id',
       title: 'Test Event',
       description: 'Test Description',
-      category: EventCategory.music,
-      location: EventLocation(
+      organizerName: 'Test Organizer',
+      venue: const EventVenue(
+        name: 'Test Venue',
         address: 'Test Address',
         city: 'Test City',
         state: 'Test State',
@@ -22,32 +23,20 @@ void main() {
         latitude: 0.0,
         longitude: 0.0,
       ),
-      dateTime: DateTime.now(),
-      pricing: EventPricing(
+      imageUrls: ['https://example.com/image.jpg'],
+      category: EventCategory.music,
+      pricing: const EventPricing(
         isFree: true,
         price: 0.0,
         currency: 'USD',
       ),
-      organizer: EventOrganizer(
-        name: 'Test Organizer',
-        email: 'test@example.com',
-      ),
-      imageUrl: 'https://example.com/image.jpg',
-      tags: ['test'],
-      capacity: 100,
+      startDateTime: DateTime.now(),
+      endDateTime: DateTime.now().add(const Duration(hours: 2)),
+      tags: const ['test'],
       attendeeCount: 50,
+      maxAttendees: 100,
       isOnline: false,
-      website: 'https://example.com',
-      socialLinks: EventSocialLinks(
-        facebook: 'https://facebook.com/test',
-        twitter: 'https://twitter.com/test',
-        instagram: 'https://instagram.com/test',
-      ),
-      accessibility: EventAccessibility(
-        wheelchairAccessible: true,
-        signLanguageInterpreter: false,
-        hearingLoop: false,
-      ),
+      websiteUrl: 'https://example.com',
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
@@ -57,7 +46,14 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: PremiumEventCard(
-              event: sampleEvent,
+              id: sampleEvent.id,
+              title: sampleEvent.title,
+              description: sampleEvent.description,
+              imageUrl: sampleEvent.imageUrl,
+              category: sampleEvent.category.name,
+              price: sampleEvent.price,
+              distance: '1.2 km',
+              dateTime: sampleEvent.startDateTime,
               onTap: () {},
             ),
           ),
@@ -73,7 +69,13 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: MiniEventCard(
-              event: sampleEvent,
+              id: sampleEvent.id,
+              title: sampleEvent.title,
+              subtitle: sampleEvent.location,
+              imageUrl: sampleEvent.imageUrl,
+              category: sampleEvent.category.name,
+              price: sampleEvent.price,
+              time: '2:00 PM',
               onTap: () {},
             ),
           ),

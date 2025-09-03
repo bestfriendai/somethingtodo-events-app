@@ -22,16 +22,17 @@ class FirestoreService {
   // Collections
   CollectionReference get _eventsCollection => _firestore.collection('events');
   CollectionReference get _usersCollection => _firestore.collection('users');
-  CollectionReference get _analyticsCollection => _firestore.collection('analytics');
+  CollectionReference get _analyticsCollection =>
+      _firestore.collection('analytics');
 
   // Event CRUD Operations
   Future<String> createEvent(Event event) async {
     try {
       final docRef = await _eventsCollection.add(event.toJson());
-      
+
       // Update the event with its ID
       await docRef.update({'id': docRef.id});
-      
+
       return docRef.id;
     } catch (e) {
       throw Exception('Failed to create event: $e');
@@ -96,13 +97,17 @@ class FirestoreService {
       }
 
       if (startDate != null) {
-        query = query.where('startDateTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'startDateTime',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
 
       if (endDate != null) {
-        query = query.where('endDateTime',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'endDateTime',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
 
       if (startAfter != null) {
@@ -118,12 +123,7 @@ class FirestoreService {
 
       // Apply location-based filtering if coordinates provided
       if (latitude != null && longitude != null && radius != null) {
-        events = _filterEventsByDistance(
-          events,
-          latitude,
-          longitude,
-          radius,
-        );
+        events = _filterEventsByDistance(events, latitude, longitude, radius);
       }
 
       // Apply text search if query provided
@@ -242,7 +242,8 @@ class FirestoreService {
         longitude: longitude,
         radius: radius,
         isFree: isFree,
-        limit: limit * 2, // Get more to ensure we have enough after text filtering
+        limit:
+            limit * 2, // Get more to ensure we have enough after text filtering
       );
 
       // Apply text search
@@ -268,11 +269,7 @@ class FirestoreService {
       // Log analytics
       await _analytics.logEvent(
         name: AnalyticsEvents.eventFavorite,
-        parameters: {
-          'user_id': userId,
-          'event_id': eventId,
-          'action': 'add',
-        },
+        parameters: {'user_id': userId, 'event_id': eventId, 'action': 'add'},
       );
     } catch (e) {
       throw Exception('Failed to add event to favorites: $e');
@@ -313,7 +310,7 @@ class FirestoreService {
 
       final userData = userDoc.data() as Map<String, dynamic>;
       final favoriteIds = List<String>.from(userData['favoriteEventIds'] ?? []);
-      
+
       return favoriteIds.contains(eventId);
     } catch (e) {
       return false;
@@ -325,10 +322,7 @@ class FirestoreService {
     try {
       await _analytics.logEvent(
         name: AnalyticsEvents.eventView,
-        parameters: {
-          'user_id': userId,
-          'event_id': eventId,
-        },
+        parameters: {'user_id': userId, 'event_id': eventId},
       );
 
       // Update event analytics
@@ -341,15 +335,15 @@ class FirestoreService {
     }
   }
 
-  Future<void> logEventShare(String userId, String eventId, String method) async {
+  Future<void> logEventShare(
+    String userId,
+    String eventId,
+    String method,
+  ) async {
     try {
       await _analytics.logEvent(
         name: AnalyticsEvents.eventShare,
-        parameters: {
-          'user_id': userId,
-          'event_id': eventId,
-          'method': method,
-        },
+        parameters: {'user_id': userId, 'event_id': eventId, 'method': method},
       );
 
       // Update event analytics
@@ -376,31 +370,41 @@ class FirestoreService {
         event.venue.longitude,
       );
       return distance <= radiusKm;
-    }).toList()
-      ..sort((a, b) {
-        final distanceA = _calculateDistance(
-          latitude, longitude,
-          a.venue.latitude, a.venue.longitude,
-        );
-        final distanceB = _calculateDistance(
-          latitude, longitude,
-          b.venue.latitude, b.venue.longitude,
-        );
-        return distanceA.compareTo(distanceB);
-      });
+    }).toList()..sort((a, b) {
+      final distanceA = _calculateDistance(
+        latitude,
+        longitude,
+        a.venue.latitude,
+        a.venue.longitude,
+      );
+      final distanceB = _calculateDistance(
+        latitude,
+        longitude,
+        b.venue.latitude,
+        b.venue.longitude,
+      );
+      return distanceA.compareTo(distanceB);
+    });
   }
 
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  double _calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
     const double earthRadius = 6371; // Earth's radius in kilometers
-    
+
     final double dLat = _degreesToRadians(lat2 - lat1);
     final double dLon = _degreesToRadians(lon2 - lon1);
-    
-    final double a = 
+
+    final double a =
         math.sin(dLat / 2) * math.sin(dLat / 2) +
-        math.cos(lat1) * math.cos(lat2) * 
-        math.sin(dLon / 2) * math.sin(dLon / 2);
-    
+        math.cos(lat1) *
+            math.cos(lat2) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
+
     final double c = 2 * math.asin(math.sqrt(a));
     return earthRadius * c;
   }
@@ -413,10 +417,10 @@ class FirestoreService {
     final lowercaseQuery = query.toLowerCase();
     return events.where((event) {
       return event.title.toLowerCase().contains(lowercaseQuery) ||
-             event.description.toLowerCase().contains(lowercaseQuery) ||
-             event.venue.name.toLowerCase().contains(lowercaseQuery) ||
-             event.organizerName.toLowerCase().contains(lowercaseQuery) ||
-             event.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
+          event.description.toLowerCase().contains(lowercaseQuery) ||
+          event.venue.name.toLowerCase().contains(lowercaseQuery) ||
+          event.organizerName.toLowerCase().contains(lowercaseQuery) ||
+          event.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
     }).toList();
   }
 
@@ -424,12 +428,12 @@ class FirestoreService {
   Future<void> batchUpdateEvents(List<Event> events) async {
     try {
       final batch = _firestore.batch();
-      
+
       for (final event in events) {
         final docRef = _eventsCollection.doc(event.id);
         batch.update(docRef, event.toJson());
       }
-      
+
       await batch.commit();
     } catch (e) {
       throw Exception('Failed to batch update events: $e');

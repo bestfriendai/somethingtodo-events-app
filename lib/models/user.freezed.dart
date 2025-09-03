@@ -12,7 +12,8 @@ part of 'user.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 AppUser _$AppUserFromJson(Map<String, dynamic> json) {
   return _AppUser.fromJson(json);
@@ -49,21 +50,22 @@ abstract class $AppUserCopyWith<$Res> {
   factory $AppUserCopyWith(AppUser value, $Res Function(AppUser) then) =
       _$AppUserCopyWithImpl<$Res, AppUser>;
   @useResult
-  $Res call(
-      {String id,
-      String email,
-      String? displayName,
-      String? photoUrl,
-      String? phoneNumber,
-      bool isPremium,
-      DateTime? premiumExpiresAt,
-      List<String> interests,
-      List<String> favoriteEventIds,
-      UserPreferences? preferences,
-      UserLocation? location,
-      DateTime? lastActiveAt,
-      DateTime? createdAt,
-      DateTime? updatedAt});
+  $Res call({
+    String id,
+    String email,
+    String? displayName,
+    String? photoUrl,
+    String? phoneNumber,
+    bool isPremium,
+    DateTime? premiumExpiresAt,
+    List<String> interests,
+    List<String> favoriteEventIds,
+    UserPreferences? preferences,
+    UserLocation? location,
+    DateTime? lastActiveAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 
   $UserPreferencesCopyWith<$Res>? get preferences;
   $UserLocationCopyWith<$Res>? get location;
@@ -99,64 +101,67 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayName: freezed == displayName
-          ? _value.displayName
-          : displayName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      photoUrl: freezed == photoUrl
-          ? _value.photoUrl
-          : photoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      phoneNumber: freezed == phoneNumber
-          ? _value.phoneNumber
-          : phoneNumber // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPremium: null == isPremium
-          ? _value.isPremium
-          : isPremium // ignore: cast_nullable_to_non_nullable
-              as bool,
-      premiumExpiresAt: freezed == premiumExpiresAt
-          ? _value.premiumExpiresAt
-          : premiumExpiresAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      interests: null == interests
-          ? _value.interests
-          : interests // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      favoriteEventIds: null == favoriteEventIds
-          ? _value.favoriteEventIds
-          : favoriteEventIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      preferences: freezed == preferences
-          ? _value.preferences
-          : preferences // ignore: cast_nullable_to_non_nullable
-              as UserPreferences?,
-      location: freezed == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as UserLocation?,
-      lastActiveAt: freezed == lastActiveAt
-          ? _value.lastActiveAt
-          : lastActiveAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+            displayName: freezed == displayName
+                ? _value.displayName
+                : displayName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            photoUrl: freezed == photoUrl
+                ? _value.photoUrl
+                : photoUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            phoneNumber: freezed == phoneNumber
+                ? _value.phoneNumber
+                : phoneNumber // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            isPremium: null == isPremium
+                ? _value.isPremium
+                : isPremium // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            premiumExpiresAt: freezed == premiumExpiresAt
+                ? _value.premiumExpiresAt
+                : premiumExpiresAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            interests: null == interests
+                ? _value.interests
+                : interests // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            favoriteEventIds: null == favoriteEventIds
+                ? _value.favoriteEventIds
+                : favoriteEventIds // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            preferences: freezed == preferences
+                ? _value.preferences
+                : preferences // ignore: cast_nullable_to_non_nullable
+                      as UserPreferences?,
+            location: freezed == location
+                ? _value.location
+                : location // ignore: cast_nullable_to_non_nullable
+                      as UserLocation?,
+            lastActiveAt: freezed == lastActiveAt
+                ? _value.lastActiveAt
+                : lastActiveAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            createdAt: freezed == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 
   /// Create a copy of AppUser
@@ -191,25 +196,27 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
 /// @nodoc
 abstract class _$$AppUserImplCopyWith<$Res> implements $AppUserCopyWith<$Res> {
   factory _$$AppUserImplCopyWith(
-          _$AppUserImpl value, $Res Function(_$AppUserImpl) then) =
-      __$$AppUserImplCopyWithImpl<$Res>;
+    _$AppUserImpl value,
+    $Res Function(_$AppUserImpl) then,
+  ) = __$$AppUserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String email,
-      String? displayName,
-      String? photoUrl,
-      String? phoneNumber,
-      bool isPremium,
-      DateTime? premiumExpiresAt,
-      List<String> interests,
-      List<String> favoriteEventIds,
-      UserPreferences? preferences,
-      UserLocation? location,
-      DateTime? lastActiveAt,
-      DateTime? createdAt,
-      DateTime? updatedAt});
+  $Res call({
+    String id,
+    String email,
+    String? displayName,
+    String? photoUrl,
+    String? phoneNumber,
+    bool isPremium,
+    DateTime? premiumExpiresAt,
+    List<String> interests,
+    List<String> favoriteEventIds,
+    UserPreferences? preferences,
+    UserLocation? location,
+    DateTime? lastActiveAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 
   @override
   $UserPreferencesCopyWith<$Res>? get preferences;
@@ -222,8 +229,9 @@ class __$$AppUserImplCopyWithImpl<$Res>
     extends _$AppUserCopyWithImpl<$Res, _$AppUserImpl>
     implements _$$AppUserImplCopyWith<$Res> {
   __$$AppUserImplCopyWithImpl(
-      _$AppUserImpl _value, $Res Function(_$AppUserImpl) _then)
-      : super(_value, _then);
+    _$AppUserImpl _value,
+    $Res Function(_$AppUserImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -245,87 +253,89 @@ class __$$AppUserImplCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
   }) {
-    return _then(_$AppUserImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayName: freezed == displayName
-          ? _value.displayName
-          : displayName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      photoUrl: freezed == photoUrl
-          ? _value.photoUrl
-          : photoUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      phoneNumber: freezed == phoneNumber
-          ? _value.phoneNumber
-          : phoneNumber // ignore: cast_nullable_to_non_nullable
-              as String?,
-      isPremium: null == isPremium
-          ? _value.isPremium
-          : isPremium // ignore: cast_nullable_to_non_nullable
-              as bool,
-      premiumExpiresAt: freezed == premiumExpiresAt
-          ? _value.premiumExpiresAt
-          : premiumExpiresAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      interests: null == interests
-          ? _value._interests
-          : interests // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      favoriteEventIds: null == favoriteEventIds
-          ? _value._favoriteEventIds
-          : favoriteEventIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      preferences: freezed == preferences
-          ? _value.preferences
-          : preferences // ignore: cast_nullable_to_non_nullable
-              as UserPreferences?,
-      location: freezed == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as UserLocation?,
-      lastActiveAt: freezed == lastActiveAt
-          ? _value.lastActiveAt
-          : lastActiveAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$AppUserImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
+        displayName: freezed == displayName
+            ? _value.displayName
+            : displayName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        photoUrl: freezed == photoUrl
+            ? _value.photoUrl
+            : photoUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        phoneNumber: freezed == phoneNumber
+            ? _value.phoneNumber
+            : phoneNumber // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        isPremium: null == isPremium
+            ? _value.isPremium
+            : isPremium // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        premiumExpiresAt: freezed == premiumExpiresAt
+            ? _value.premiumExpiresAt
+            : premiumExpiresAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        interests: null == interests
+            ? _value._interests
+            : interests // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        favoriteEventIds: null == favoriteEventIds
+            ? _value._favoriteEventIds
+            : favoriteEventIds // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        preferences: freezed == preferences
+            ? _value.preferences
+            : preferences // ignore: cast_nullable_to_non_nullable
+                  as UserPreferences?,
+        location: freezed == location
+            ? _value.location
+            : location // ignore: cast_nullable_to_non_nullable
+                  as UserLocation?,
+        lastActiveAt: freezed == lastActiveAt
+            ? _value.lastActiveAt
+            : lastActiveAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        createdAt: freezed == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$AppUserImpl implements _AppUser {
-  const _$AppUserImpl(
-      {required this.id,
-      required this.email,
-      this.displayName,
-      this.photoUrl,
-      this.phoneNumber,
-      this.isPremium = false,
-      this.premiumExpiresAt,
-      final List<String> interests = const [],
-      final List<String> favoriteEventIds = const [],
-      this.preferences,
-      this.location,
-      this.lastActiveAt,
-      this.createdAt,
-      this.updatedAt})
-      : _interests = interests,
-        _favoriteEventIds = favoriteEventIds;
+  const _$AppUserImpl({
+    required this.id,
+    required this.email,
+    this.displayName,
+    this.photoUrl,
+    this.phoneNumber,
+    this.isPremium = false,
+    this.premiumExpiresAt,
+    final List<String> interests = const [],
+    final List<String> favoriteEventIds = const [],
+    this.preferences,
+    this.location,
+    this.lastActiveAt,
+    this.createdAt,
+    this.updatedAt,
+  }) : _interests = interests,
+       _favoriteEventIds = favoriteEventIds;
 
   factory _$AppUserImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppUserImplFromJson(json);
@@ -397,10 +407,14 @@ class _$AppUserImpl implements _AppUser {
                 other.isPremium == isPremium) &&
             (identical(other.premiumExpiresAt, premiumExpiresAt) ||
                 other.premiumExpiresAt == premiumExpiresAt) &&
-            const DeepCollectionEquality()
-                .equals(other._interests, _interests) &&
-            const DeepCollectionEquality()
-                .equals(other._favoriteEventIds, _favoriteEventIds) &&
+            const DeepCollectionEquality().equals(
+              other._interests,
+              _interests,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._favoriteEventIds,
+              _favoriteEventIds,
+            ) &&
             (identical(other.preferences, preferences) ||
                 other.preferences == preferences) &&
             (identical(other.location, location) ||
@@ -416,21 +430,22 @@ class _$AppUserImpl implements _AppUser {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      email,
-      displayName,
-      photoUrl,
-      phoneNumber,
-      isPremium,
-      premiumExpiresAt,
-      const DeepCollectionEquality().hash(_interests),
-      const DeepCollectionEquality().hash(_favoriteEventIds),
-      preferences,
-      location,
-      lastActiveAt,
-      createdAt,
-      updatedAt);
+    runtimeType,
+    id,
+    email,
+    displayName,
+    photoUrl,
+    phoneNumber,
+    isPremium,
+    premiumExpiresAt,
+    const DeepCollectionEquality().hash(_interests),
+    const DeepCollectionEquality().hash(_favoriteEventIds),
+    preferences,
+    location,
+    lastActiveAt,
+    createdAt,
+    updatedAt,
+  );
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -442,28 +457,27 @@ class _$AppUserImpl implements _AppUser {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AppUserImplToJson(
-      this,
-    );
+    return _$$AppUserImplToJson(this);
   }
 }
 
 abstract class _AppUser implements AppUser {
-  const factory _AppUser(
-      {required final String id,
-      required final String email,
-      final String? displayName,
-      final String? photoUrl,
-      final String? phoneNumber,
-      final bool isPremium,
-      final DateTime? premiumExpiresAt,
-      final List<String> interests,
-      final List<String> favoriteEventIds,
-      final UserPreferences? preferences,
-      final UserLocation? location,
-      final DateTime? lastActiveAt,
-      final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$AppUserImpl;
+  const factory _AppUser({
+    required final String id,
+    required final String email,
+    final String? displayName,
+    final String? photoUrl,
+    final String? phoneNumber,
+    final bool isPremium,
+    final DateTime? premiumExpiresAt,
+    final List<String> interests,
+    final List<String> favoriteEventIds,
+    final UserPreferences? preferences,
+    final UserLocation? location,
+    final DateTime? lastActiveAt,
+    final DateTime? createdAt,
+    final DateTime? updatedAt,
+  }) = _$AppUserImpl;
 
   factory _AppUser.fromJson(Map<String, dynamic> json) = _$AppUserImpl.fromJson;
 
@@ -531,17 +545,19 @@ mixin _$UserPreferences {
 /// @nodoc
 abstract class $UserPreferencesCopyWith<$Res> {
   factory $UserPreferencesCopyWith(
-          UserPreferences value, $Res Function(UserPreferences) then) =
-      _$UserPreferencesCopyWithImpl<$Res, UserPreferences>;
+    UserPreferences value,
+    $Res Function(UserPreferences) then,
+  ) = _$UserPreferencesCopyWithImpl<$Res, UserPreferences>;
   @useResult
-  $Res call(
-      {bool notificationsEnabled,
-      bool locationEnabled,
-      bool marketingEmails,
-      String theme,
-      double maxDistance,
-      List<String> preferredCategories,
-      String pricePreference});
+  $Res call({
+    bool notificationsEnabled,
+    bool locationEnabled,
+    bool marketingEmails,
+    String theme,
+    double maxDistance,
+    List<String> preferredCategories,
+    String pricePreference,
+  });
 }
 
 /// @nodoc
@@ -567,55 +583,60 @@ class _$UserPreferencesCopyWithImpl<$Res, $Val extends UserPreferences>
     Object? preferredCategories = null,
     Object? pricePreference = null,
   }) {
-    return _then(_value.copyWith(
-      notificationsEnabled: null == notificationsEnabled
-          ? _value.notificationsEnabled
-          : notificationsEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      locationEnabled: null == locationEnabled
-          ? _value.locationEnabled
-          : locationEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      marketingEmails: null == marketingEmails
-          ? _value.marketingEmails
-          : marketingEmails // ignore: cast_nullable_to_non_nullable
-              as bool,
-      theme: null == theme
-          ? _value.theme
-          : theme // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxDistance: null == maxDistance
-          ? _value.maxDistance
-          : maxDistance // ignore: cast_nullable_to_non_nullable
-              as double,
-      preferredCategories: null == preferredCategories
-          ? _value.preferredCategories
-          : preferredCategories // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      pricePreference: null == pricePreference
-          ? _value.pricePreference
-          : pricePreference // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            notificationsEnabled: null == notificationsEnabled
+                ? _value.notificationsEnabled
+                : notificationsEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            locationEnabled: null == locationEnabled
+                ? _value.locationEnabled
+                : locationEnabled // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            marketingEmails: null == marketingEmails
+                ? _value.marketingEmails
+                : marketingEmails // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            theme: null == theme
+                ? _value.theme
+                : theme // ignore: cast_nullable_to_non_nullable
+                      as String,
+            maxDistance: null == maxDistance
+                ? _value.maxDistance
+                : maxDistance // ignore: cast_nullable_to_non_nullable
+                      as double,
+            preferredCategories: null == preferredCategories
+                ? _value.preferredCategories
+                : preferredCategories // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            pricePreference: null == pricePreference
+                ? _value.pricePreference
+                : pricePreference // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$UserPreferencesImplCopyWith<$Res>
     implements $UserPreferencesCopyWith<$Res> {
-  factory _$$UserPreferencesImplCopyWith(_$UserPreferencesImpl value,
-          $Res Function(_$UserPreferencesImpl) then) =
-      __$$UserPreferencesImplCopyWithImpl<$Res>;
+  factory _$$UserPreferencesImplCopyWith(
+    _$UserPreferencesImpl value,
+    $Res Function(_$UserPreferencesImpl) then,
+  ) = __$$UserPreferencesImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {bool notificationsEnabled,
-      bool locationEnabled,
-      bool marketingEmails,
-      String theme,
-      double maxDistance,
-      List<String> preferredCategories,
-      String pricePreference});
+  $Res call({
+    bool notificationsEnabled,
+    bool locationEnabled,
+    bool marketingEmails,
+    String theme,
+    double maxDistance,
+    List<String> preferredCategories,
+    String pricePreference,
+  });
 }
 
 /// @nodoc
@@ -623,8 +644,9 @@ class __$$UserPreferencesImplCopyWithImpl<$Res>
     extends _$UserPreferencesCopyWithImpl<$Res, _$UserPreferencesImpl>
     implements _$$UserPreferencesImplCopyWith<$Res> {
   __$$UserPreferencesImplCopyWithImpl(
-      _$UserPreferencesImpl _value, $Res Function(_$UserPreferencesImpl) _then)
-      : super(_value, _then);
+    _$UserPreferencesImpl _value,
+    $Res Function(_$UserPreferencesImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of UserPreferences
   /// with the given fields replaced by the non-null parameter values.
@@ -639,51 +661,53 @@ class __$$UserPreferencesImplCopyWithImpl<$Res>
     Object? preferredCategories = null,
     Object? pricePreference = null,
   }) {
-    return _then(_$UserPreferencesImpl(
-      notificationsEnabled: null == notificationsEnabled
-          ? _value.notificationsEnabled
-          : notificationsEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      locationEnabled: null == locationEnabled
-          ? _value.locationEnabled
-          : locationEnabled // ignore: cast_nullable_to_non_nullable
-              as bool,
-      marketingEmails: null == marketingEmails
-          ? _value.marketingEmails
-          : marketingEmails // ignore: cast_nullable_to_non_nullable
-              as bool,
-      theme: null == theme
-          ? _value.theme
-          : theme // ignore: cast_nullable_to_non_nullable
-              as String,
-      maxDistance: null == maxDistance
-          ? _value.maxDistance
-          : maxDistance // ignore: cast_nullable_to_non_nullable
-              as double,
-      preferredCategories: null == preferredCategories
-          ? _value._preferredCategories
-          : preferredCategories // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      pricePreference: null == pricePreference
-          ? _value.pricePreference
-          : pricePreference // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$UserPreferencesImpl(
+        notificationsEnabled: null == notificationsEnabled
+            ? _value.notificationsEnabled
+            : notificationsEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        locationEnabled: null == locationEnabled
+            ? _value.locationEnabled
+            : locationEnabled // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        marketingEmails: null == marketingEmails
+            ? _value.marketingEmails
+            : marketingEmails // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        theme: null == theme
+            ? _value.theme
+            : theme // ignore: cast_nullable_to_non_nullable
+                  as String,
+        maxDistance: null == maxDistance
+            ? _value.maxDistance
+            : maxDistance // ignore: cast_nullable_to_non_nullable
+                  as double,
+        preferredCategories: null == preferredCategories
+            ? _value._preferredCategories
+            : preferredCategories // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        pricePreference: null == pricePreference
+            ? _value.pricePreference
+            : pricePreference // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserPreferencesImpl implements _UserPreferences {
-  const _$UserPreferencesImpl(
-      {this.notificationsEnabled = true,
-      this.locationEnabled = true,
-      this.marketingEmails = true,
-      this.theme = 'light',
-      this.maxDistance = 10.0,
-      final List<String> preferredCategories = const [],
-      this.pricePreference = 'any'})
-      : _preferredCategories = preferredCategories;
+  const _$UserPreferencesImpl({
+    this.notificationsEnabled = true,
+    this.locationEnabled = true,
+    this.marketingEmails = true,
+    this.theme = 'light',
+    this.maxDistance = 10.0,
+    final List<String> preferredCategories = const [],
+    this.pricePreference = 'any',
+  }) : _preferredCategories = preferredCategories;
 
   factory _$UserPreferencesImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserPreferencesImplFromJson(json);
@@ -736,8 +760,10 @@ class _$UserPreferencesImpl implements _UserPreferences {
             (identical(other.theme, theme) || other.theme == theme) &&
             (identical(other.maxDistance, maxDistance) ||
                 other.maxDistance == maxDistance) &&
-            const DeepCollectionEquality()
-                .equals(other._preferredCategories, _preferredCategories) &&
+            const DeepCollectionEquality().equals(
+              other._preferredCategories,
+              _preferredCategories,
+            ) &&
             (identical(other.pricePreference, pricePreference) ||
                 other.pricePreference == pricePreference));
   }
@@ -745,14 +771,15 @@ class _$UserPreferencesImpl implements _UserPreferences {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      notificationsEnabled,
-      locationEnabled,
-      marketingEmails,
-      theme,
-      maxDistance,
-      const DeepCollectionEquality().hash(_preferredCategories),
-      pricePreference);
+    runtimeType,
+    notificationsEnabled,
+    locationEnabled,
+    marketingEmails,
+    theme,
+    maxDistance,
+    const DeepCollectionEquality().hash(_preferredCategories),
+    pricePreference,
+  );
 
   /// Create a copy of UserPreferences
   /// with the given fields replaced by the non-null parameter values.
@@ -761,25 +788,26 @@ class _$UserPreferencesImpl implements _UserPreferences {
   @pragma('vm:prefer-inline')
   _$$UserPreferencesImplCopyWith<_$UserPreferencesImpl> get copyWith =>
       __$$UserPreferencesImplCopyWithImpl<_$UserPreferencesImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserPreferencesImplToJson(
-      this,
-    );
+    return _$$UserPreferencesImplToJson(this);
   }
 }
 
 abstract class _UserPreferences implements UserPreferences {
-  const factory _UserPreferences(
-      {final bool notificationsEnabled,
-      final bool locationEnabled,
-      final bool marketingEmails,
-      final String theme,
-      final double maxDistance,
-      final List<String> preferredCategories,
-      final String pricePreference}) = _$UserPreferencesImpl;
+  const factory _UserPreferences({
+    final bool notificationsEnabled,
+    final bool locationEnabled,
+    final bool marketingEmails,
+    final String theme,
+    final double maxDistance,
+    final List<String> preferredCategories,
+    final String pricePreference,
+  }) = _$UserPreferencesImpl;
 
   factory _UserPreferences.fromJson(Map<String, dynamic> json) =
       _$UserPreferencesImpl.fromJson;
@@ -834,17 +862,19 @@ mixin _$UserLocation {
 /// @nodoc
 abstract class $UserLocationCopyWith<$Res> {
   factory $UserLocationCopyWith(
-          UserLocation value, $Res Function(UserLocation) then) =
-      _$UserLocationCopyWithImpl<$Res, UserLocation>;
+    UserLocation value,
+    $Res Function(UserLocation) then,
+  ) = _$UserLocationCopyWithImpl<$Res, UserLocation>;
   @useResult
-  $Res call(
-      {double latitude,
-      double longitude,
-      String? address,
-      String? city,
-      String? state,
-      String? country,
-      DateTime? lastUpdated});
+  $Res call({
+    double latitude,
+    double longitude,
+    String? address,
+    String? city,
+    String? state,
+    String? country,
+    DateTime? lastUpdated,
+  });
 }
 
 /// @nodoc
@@ -870,36 +900,39 @@ class _$UserLocationCopyWithImpl<$Res, $Val extends UserLocation>
     Object? country = freezed,
     Object? lastUpdated = freezed,
   }) {
-    return _then(_value.copyWith(
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      address: freezed == address
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String?,
-      city: freezed == city
-          ? _value.city
-          : city // ignore: cast_nullable_to_non_nullable
-              as String?,
-      state: freezed == state
-          ? _value.state
-          : state // ignore: cast_nullable_to_non_nullable
-              as String?,
-      country: freezed == country
-          ? _value.country
-          : country // ignore: cast_nullable_to_non_nullable
-              as String?,
-      lastUpdated: freezed == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            latitude: null == latitude
+                ? _value.latitude
+                : latitude // ignore: cast_nullable_to_non_nullable
+                      as double,
+            longitude: null == longitude
+                ? _value.longitude
+                : longitude // ignore: cast_nullable_to_non_nullable
+                      as double,
+            address: freezed == address
+                ? _value.address
+                : address // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            city: freezed == city
+                ? _value.city
+                : city // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            state: freezed == state
+                ? _value.state
+                : state // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            country: freezed == country
+                ? _value.country
+                : country // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            lastUpdated: freezed == lastUpdated
+                ? _value.lastUpdated
+                : lastUpdated // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -907,18 +940,20 @@ class _$UserLocationCopyWithImpl<$Res, $Val extends UserLocation>
 abstract class _$$UserLocationImplCopyWith<$Res>
     implements $UserLocationCopyWith<$Res> {
   factory _$$UserLocationImplCopyWith(
-          _$UserLocationImpl value, $Res Function(_$UserLocationImpl) then) =
-      __$$UserLocationImplCopyWithImpl<$Res>;
+    _$UserLocationImpl value,
+    $Res Function(_$UserLocationImpl) then,
+  ) = __$$UserLocationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {double latitude,
-      double longitude,
-      String? address,
-      String? city,
-      String? state,
-      String? country,
-      DateTime? lastUpdated});
+  $Res call({
+    double latitude,
+    double longitude,
+    String? address,
+    String? city,
+    String? state,
+    String? country,
+    DateTime? lastUpdated,
+  });
 }
 
 /// @nodoc
@@ -926,8 +961,9 @@ class __$$UserLocationImplCopyWithImpl<$Res>
     extends _$UserLocationCopyWithImpl<$Res, _$UserLocationImpl>
     implements _$$UserLocationImplCopyWith<$Res> {
   __$$UserLocationImplCopyWithImpl(
-      _$UserLocationImpl _value, $Res Function(_$UserLocationImpl) _then)
-      : super(_value, _then);
+    _$UserLocationImpl _value,
+    $Res Function(_$UserLocationImpl) _then,
+  ) : super(_value, _then);
 
   /// Create a copy of UserLocation
   /// with the given fields replaced by the non-null parameter values.
@@ -942,50 +978,53 @@ class __$$UserLocationImplCopyWithImpl<$Res>
     Object? country = freezed,
     Object? lastUpdated = freezed,
   }) {
-    return _then(_$UserLocationImpl(
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      address: freezed == address
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String?,
-      city: freezed == city
-          ? _value.city
-          : city // ignore: cast_nullable_to_non_nullable
-              as String?,
-      state: freezed == state
-          ? _value.state
-          : state // ignore: cast_nullable_to_non_nullable
-              as String?,
-      country: freezed == country
-          ? _value.country
-          : country // ignore: cast_nullable_to_non_nullable
-              as String?,
-      lastUpdated: freezed == lastUpdated
-          ? _value.lastUpdated
-          : lastUpdated // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-    ));
+    return _then(
+      _$UserLocationImpl(
+        latitude: null == latitude
+            ? _value.latitude
+            : latitude // ignore: cast_nullable_to_non_nullable
+                  as double,
+        longitude: null == longitude
+            ? _value.longitude
+            : longitude // ignore: cast_nullable_to_non_nullable
+                  as double,
+        address: freezed == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        city: freezed == city
+            ? _value.city
+            : city // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        state: freezed == state
+            ? _value.state
+            : state // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        country: freezed == country
+            ? _value.country
+            : country // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        lastUpdated: freezed == lastUpdated
+            ? _value.lastUpdated
+            : lastUpdated // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserLocationImpl implements _UserLocation {
-  const _$UserLocationImpl(
-      {required this.latitude,
-      required this.longitude,
-      this.address,
-      this.city,
-      this.state,
-      this.country,
-      this.lastUpdated});
+  const _$UserLocationImpl({
+    required this.latitude,
+    required this.longitude,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.lastUpdated,
+  });
 
   factory _$UserLocationImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserLocationImplFromJson(json);
@@ -1029,8 +1068,16 @@ class _$UserLocationImpl implements _UserLocation {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, latitude, longitude, address,
-      city, state, country, lastUpdated);
+  int get hashCode => Object.hash(
+    runtimeType,
+    latitude,
+    longitude,
+    address,
+    city,
+    state,
+    country,
+    lastUpdated,
+  );
 
   /// Create a copy of UserLocation
   /// with the given fields replaced by the non-null parameter values.
@@ -1042,21 +1089,20 @@ class _$UserLocationImpl implements _UserLocation {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserLocationImplToJson(
-      this,
-    );
+    return _$$UserLocationImplToJson(this);
   }
 }
 
 abstract class _UserLocation implements UserLocation {
-  const factory _UserLocation(
-      {required final double latitude,
-      required final double longitude,
-      final String? address,
-      final String? city,
-      final String? state,
-      final String? country,
-      final DateTime? lastUpdated}) = _$UserLocationImpl;
+  const factory _UserLocation({
+    required final double latitude,
+    required final double longitude,
+    final String? address,
+    final String? city,
+    final String? state,
+    final String? country,
+    final DateTime? lastUpdated,
+  }) = _$UserLocationImpl;
 
   factory _UserLocation.fromJson(Map<String, dynamic> json) =
       _$UserLocationImpl.fromJson;

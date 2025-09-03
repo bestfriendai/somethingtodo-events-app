@@ -758,7 +758,9 @@ class _SearchScreenState extends State<SearchScreen>
       decoration: BoxDecoration(
         color: ModernTheme.errorColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ModernTheme.errorColor.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: ModernTheme.errorColor.withValues(alpha: 0.3),
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,

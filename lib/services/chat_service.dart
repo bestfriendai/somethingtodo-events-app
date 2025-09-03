@@ -19,9 +19,12 @@ class ChatService {
   final Uuid _uuid = const Uuid();
 
   // Collections
-  CollectionReference get _chatSessionsCollection => _firestore.collection('chatSessions');
-  CollectionReference get _messagesCollection => _firestore.collection('messages');
-  CollectionReference get _recommendationsCollection => _firestore.collection('recommendations');
+  CollectionReference get _chatSessionsCollection =>
+      _firestore.collection('chatSessions');
+  CollectionReference get _messagesCollection =>
+      _firestore.collection('messages');
+  CollectionReference get _recommendationsCollection =>
+      _firestore.collection('recommendations');
 
   // Initialize chat service
   Future<void> initialize() async {
@@ -31,7 +34,9 @@ class ChatService {
         'Authorization': 'Bearer ${AppConfig.openAIApiKey}',
         'Content-Type': 'application/json',
       };
-      _dio.options.connectTimeout = const Duration(seconds: AppConfig.chatTimeoutSeconds);
+      _dio.options.connectTimeout = const Duration(
+        seconds: AppConfig.chatTimeoutSeconds,
+      );
     }
   }
 
@@ -55,7 +60,7 @@ class ChatService {
 
       if (!AppConfig.demoMode) {
         await _chatSessionsCollection.doc(session.id).set(session.toJson());
-        
+
         await _analytics.logEvent(
           name: AnalyticsEvents.chatStart,
           parameters: {
@@ -78,7 +83,7 @@ class ChatService {
       if (AppConfig.demoMode) {
         return [];
       }
-      
+
       final querySnapshot = await _chatSessionsCollection
           .where('userId', isEqualTo: userId)
           .where('status', isEqualTo: ChatStatus.active.name)
@@ -87,7 +92,9 @@ class ChatService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => ChatSession.fromJson(doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) => ChatSession.fromJson(doc.data() as Map<String, dynamic>),
+          )
           .toList();
     } catch (e) {
       // In case of permission errors or other issues, return empty list
@@ -171,10 +178,7 @@ class ChatService {
         if (role == MessageRole.user) {
           await _analytics.logEvent(
             name: AnalyticsEvents.chatMessage,
-            parameters: {
-              'session_id': sessionId,
-              'message_type': type.name,
-            },
+            parameters: {'session_id': sessionId, 'message_type': type.name},
           );
         }
       }
@@ -193,7 +197,9 @@ class ChatService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => ChatMessage.fromJson(doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) => ChatMessage.fromJson(doc.data() as Map<String, dynamic>),
+          )
           .toList();
     } catch (e) {
       throw Exception('Failed to get session messages: $e');
@@ -206,10 +212,13 @@ class ChatService {
         .orderBy('timestamp')
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => ChatMessage.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
-    });
+          return snapshot.docs
+              .map(
+                (doc) =>
+                    ChatMessage.fromJson(doc.data() as Map<String, dynamic>),
+              )
+              .toList();
+        });
   }
 
   // AI Chat Integration
@@ -228,7 +237,7 @@ class ChatService {
       );
 
       ChatMessage aiResponse;
-      
+
       if (AppConfig.demoMode) {
         // Use demo response
         aiResponse = ChatMessage(
@@ -241,7 +250,7 @@ class ChatService {
       } else {
         // Get conversation history
         final messages = await getSessionMessages(sessionId);
-        
+
         // Generate AI response
         aiResponse = await _generateAIResponse(
           messages: messages,
@@ -305,7 +314,9 @@ class ChatService {
           id: _uuid.v4(),
           sessionId: '',
           role: MessageRole.assistant,
-          content: message['content'] ?? 'I apologize, but I encountered an error processing your request.',
+          content:
+              message['content'] ??
+              'I apologize, but I encountered an error processing your request.',
           timestamp: DateTime.now(),
         );
       }
@@ -314,7 +325,8 @@ class ChatService {
         id: _uuid.v4(),
         sessionId: '',
         role: MessageRole.assistant,
-        content: 'I apologize, but I\'m having trouble connecting right now. Please try again in a moment.',
+        content:
+            'I apologize, but I\'m having trouble connecting right now. Please try again in a moment.',
         timestamp: DateTime.now(),
       );
     }
@@ -333,7 +345,7 @@ You are an AI assistant helping users discover events in their area. You can:
 Be helpful, friendly, and focus on finding the perfect events for the user's needs.
 ${context != null ? 'User context: ${json.encode(context)}' : ''}
         ''';
-        
+
       case ChatType.eventPlanning:
         return '''
 You are an AI assistant helping users plan their event attendance. You can:
@@ -345,7 +357,7 @@ You are an AI assistant helping users plan their event attendance. You can:
 Be practical and organized in your suggestions.
 ${context != null ? 'User context: ${json.encode(context)}' : ''}
         ''';
-        
+
       case ChatType.generalSupport:
         return '''
 You are a helpful AI assistant for the SomethingToDo app. You can:
@@ -363,10 +375,7 @@ ${context != null ? 'User context: ${json.encode(context)}' : ''}
   List<Map<String, dynamic>> _formatMessagesForAPI(List<ChatMessage> messages) {
     return messages
         .where((msg) => msg.role != MessageRole.system)
-        .map((msg) => {
-          'role': msg.role.name,
-          'content': msg.content,
-        })
+        .map((msg) => {'role': msg.role.name, 'content': msg.content})
         .toList();
   }
 
@@ -384,7 +393,10 @@ ${context != null ? 'User context: ${json.encode(context)}' : ''}
                 'category': {'type': 'string', 'description': 'Event category'},
                 'location': {'type': 'string', 'description': 'Location'},
                 'date_range': {'type': 'string', 'description': 'Date range'},
-                'price_range': {'type': 'string', 'description': 'Price preference'},
+                'price_range': {
+                  'type': 'string',
+                  'description': 'Price preference',
+                },
               },
             },
           },
@@ -409,7 +421,9 @@ ${context != null ? 'User context: ${json.encode(context)}' : ''}
     }
   }
 
-  Future<ChatMessage> _processFunctionCall(Map<String, dynamic> functionCall) async {
+  Future<ChatMessage> _processFunctionCall(
+    Map<String, dynamic> functionCall,
+  ) async {
     final functionName = functionCall['name'];
     final arguments = json.decode(functionCall['arguments']);
 
@@ -436,7 +450,8 @@ ${context != null ? 'User context: ${json.encode(context)}' : ''}
       id: _uuid.v4(),
       sessionId: '',
       role: MessageRole.assistant,
-      content: 'I found several events matching your criteria. Let me show you the best options.',
+      content:
+          'I found several events matching your criteria. Let me show you the best options.',
       type: MessageType.event,
       actions: [
         MessageAction(
@@ -456,13 +471,17 @@ ${context != null ? 'User context: ${json.encode(context)}' : ''}
       id: _uuid.v4(),
       sessionId: '',
       role: MessageRole.assistant,
-      content: 'Based on your interests, I have some great event recommendations for you!',
+      content:
+          'Based on your interests, I have some great event recommendations for you!',
       type: MessageType.event,
       timestamp: DateTime.now(),
     );
   }
 
-  Future<void> _processMessageActions(String sessionId, List<MessageAction> actions) async {
+  Future<void> _processMessageActions(
+    String sessionId,
+    List<MessageAction> actions,
+  ) async {
     // Process any automated actions that should happen after a message
     for (final action in actions) {
       switch (action.type) {
@@ -500,7 +519,10 @@ ${context != null ? 'User context: ${json.encode(context)}' : ''}
           .get();
 
       return querySnapshot.docs
-          .map((doc) => ChatRecommendation.fromJson(doc.data() as Map<String, dynamic>))
+          .map(
+            (doc) =>
+                ChatRecommendation.fromJson(doc.data() as Map<String, dynamic>),
+          )
           .toList();
     } catch (e) {
       throw Exception('Failed to get recommendations: $e');

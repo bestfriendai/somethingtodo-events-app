@@ -42,13 +42,13 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   Future<void> _initializeApp() async {
     // Add haptic feedback for premium feel
     HapticFeedback.mediumImpact();
-    
+
     // Simulate app initialization
     await Future.delayed(const Duration(seconds: 3));
-    
+
     if (mounted) {
       setState(() => _isLoading = false);
-      
+
       // Navigate after animation completes
       await Future.delayed(const Duration(milliseconds: 800));
       if (mounted) {
@@ -105,9 +105,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
           // Glassmorphic overlay
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.2),
-            ),
+            child: Container(color: Colors.black.withValues(alpha: 0.2)),
           ),
 
           // Main content
@@ -122,41 +120,44 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                     final scale = 1.0 + (_pulseController.value * 0.1);
                     return Transform.scale(
                       scale: scale,
-                      child: Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Color(0xFF9333EA),
-                              Color(0xFFEC4899),
-                            ],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF9333EA).withValues(alpha: 0.5),
-                              blurRadius: 30,
-                              spreadRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.explore_rounded,
-                          size: 60,
-                          color: Colors.white,
-                        ),
-                      )
-                          .animate()
-                          .fadeIn(duration: 1000.ms)
-                          .scale(
-                            begin: const Offset(0.5, 0.5),
-                            end: const Offset(1, 1),
-                            duration: 1000.ms,
-                            curve: Curves.elasticOut,
-                          ),
+                      child:
+                          Container(
+                                width: 120,
+                                height: 120,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color(0xFF9333EA),
+                                      Color(0xFFEC4899),
+                                    ],
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(
+                                        0xFF9333EA,
+                                      ).withValues(alpha: 0.5),
+                                      blurRadius: 30,
+                                      spreadRadius: 10,
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.explore_rounded,
+                                  size: 60,
+                                  color: Colors.white,
+                                ),
+                              )
+                              .animate()
+                              .fadeIn(duration: 1000.ms)
+                              .scale(
+                                begin: const Offset(0.5, 0.5),
+                                end: const Offset(1, 1),
+                                duration: 1000.ms,
+                                curve: Curves.elasticOut,
+                              ),
                     );
                   },
                 ),
@@ -165,13 +166,14 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
 
                 // App name
                 Text(
-                  'SomethingToDo',
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                      ),
-                )
+                      'SomethingToDo',
+                      style: Theme.of(context).textTheme.headlineLarge
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
+                    )
                     .animate()
                     .fadeIn(delay: 500.ms, duration: 1000.ms)
                     .slideY(
@@ -185,12 +187,12 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
 
                 // Tagline
                 Text(
-                  'Discover Amazing Events',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      'Discover Amazing Events',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         color: Colors.white.withValues(alpha: 0.8),
                         letterSpacing: 0.5,
                       ),
-                )
+                    )
                     .animate()
                     .fadeIn(delay: 800.ms, duration: 1000.ms)
                     .slideY(
@@ -205,18 +207,20 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                 // Loading indicator
                 if (_isLoading)
                   Container(
-                    width: 50,
-                    height: 50,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
+                        width: 50,
+                        height: 50,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      )
                       .animate()
                       .fadeIn(delay: 1000.ms, duration: 500.ms)
                       .scale(
@@ -226,10 +230,10 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                       )
                 else
                   const Icon(
-                    Icons.check_circle_rounded,
-                    color: Colors.white,
-                    size: 50,
-                  )
+                        Icons.check_circle_rounded,
+                        color: Colors.white,
+                        size: 50,
+                      )
                       .animate()
                       .fadeIn(duration: 300.ms)
                       .scale(
@@ -251,11 +255,9 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
               'Made with ❤️ in Flutter',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.5),
-                  ),
-            )
-                .animate()
-                .fadeIn(delay: 1500.ms, duration: 1000.ms),
+                color: Colors.white.withValues(alpha: 0.5),
+              ),
+            ).animate().fadeIn(delay: 1500.ms, duration: 1000.ms),
           ),
         ],
       ),

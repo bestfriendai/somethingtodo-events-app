@@ -12,16 +12,15 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen>
-    with TickerProviderStateMixin {
+class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   late AnimationController _fadeAnimationController;
   late AnimationController _slideAnimationController;
-  
+
   bool _isSignIn = true;
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  
+
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -31,17 +30,17 @@ class _AuthScreenState extends State<AuthScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _fadeAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _slideAnimationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _fadeAnimationController.forward();
     _slideAnimationController.forward();
   }
@@ -71,14 +70,14 @@ class _AuthScreenState extends State<AuthScreen>
 
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final authProvider = context.read<AuthProvider>();
-      
+
       if (_isSignIn) {
         await authProvider.signInWithEmail(
           email: _emailController.text.trim(),
@@ -91,7 +90,7 @@ class _AuthScreenState extends State<AuthScreen>
           displayName: _nameController.text.trim(),
         );
       }
-      
+
       if (mounted && authProvider.isAuthenticated) {
         Navigator.pushReplacementNamed(context, '/home');
       }
@@ -117,11 +116,11 @@ class _AuthScreenState extends State<AuthScreen>
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final authProvider = context.read<AuthProvider>();
       await authProvider.signInAsGuest();
-      
+
       if (mounted && authProvider.isAuthenticated) {
         Navigator.pushReplacementNamed(context, '/home');
       }
@@ -147,11 +146,11 @@ class _AuthScreenState extends State<AuthScreen>
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final authProvider = context.read<AuthProvider>();
       await authProvider.signInWithGoogle();
-      
+
       if (mounted && authProvider.isAuthenticated) {
         Navigator.pushReplacementNamed(context, '/home');
       }
@@ -176,17 +175,15 @@ class _AuthScreenState extends State<AuthScreen>
   void _forgotPassword() async {
     if (_emailController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email address first'),
-        ),
+        const SnackBar(content: Text('Please enter your email address first')),
       );
       return;
     }
-    
+
     try {
       final authProvider = context.read<AuthProvider>();
       await authProvider.resetPassword(_emailController.text.trim());
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -221,27 +218,27 @@ class _AuthScreenState extends State<AuthScreen>
                 child: Column(
                   children: [
                     const SizedBox(height: 40),
-                    
+
                     // Logo and title
                     _buildHeader(),
-                    
+
                     const SizedBox(height: 48),
-                    
+
                     // Auth form
                     _buildAuthForm(),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Social login
                     _buildSocialLogin(),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Demo/Guest login
                     _buildGuestLogin(),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Toggle auth mode
                     _buildToggleButton(),
                   ],
@@ -272,34 +269,30 @@ class _AuthScreenState extends State<AuthScreen>
               ),
             ],
           ),
-          child: const Icon(
-            Icons.event,
-            color: Colors.white,
-            size: 50,
-          ),
+          child: const Icon(Icons.event, color: Colors.white, size: 50),
         ).animate().scale(duration: 600.ms),
-        
+
         const SizedBox(height: 24),
-        
+
         // Title
         Text(
           _isSignIn ? 'Welcome Back!' : 'Create Account',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.3),
-        
+
         const SizedBox(height: 8),
-        
+
         // Subtitle
         Text(
-          _isSignIn 
+          _isSignIn
               ? 'Sign in to continue discovering amazing events'
               : 'Join us to discover amazing events near you',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
           textAlign: TextAlign.center,
         ).animate().fadeIn(duration: 1000.ms, delay: 200.ms),
       ],
@@ -335,7 +328,7 @@ class _AuthScreenState extends State<AuthScreen>
                     ),
                     const SizedBox(height: 16),
                   ],
-                  
+
                   // Email field
                   TextFormField(
                     controller: _emailController,
@@ -348,16 +341,17 @@ class _AuthScreenState extends State<AuthScreen>
                       if (value == null || value.trim().isEmpty) {
                         return 'Please enter your email';
                       }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                          .hasMatch(value.trim())) {
+                      if (!RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      ).hasMatch(value.trim())) {
                         return 'Please enter a valid email';
                       }
                       return null;
                     },
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Password field
                   TextFormField(
                     controller: _passwordController,
@@ -388,7 +382,7 @@ class _AuthScreenState extends State<AuthScreen>
                       return null;
                     },
                   ),
-                  
+
                   // Confirm password field (only for sign up)
                   if (!_isSignIn) ...[
                     const SizedBox(height: 16),
@@ -401,7 +395,8 @@ class _AuthScreenState extends State<AuthScreen>
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
-                              _obscureConfirmPassword = !_obscureConfirmPassword;
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
                             });
                           },
                           icon: Icon(
@@ -422,7 +417,7 @@ class _AuthScreenState extends State<AuthScreen>
                       },
                     ),
                   ],
-                  
+
                   // Forgot password (only for sign in)
                   if (_isSignIn) ...[
                     const SizedBox(height: 8),
@@ -434,9 +429,9 @@ class _AuthScreenState extends State<AuthScreen>
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Submit button
                   SizedBox(
                     width: double.infinity,
@@ -449,7 +444,9 @@ class _AuthScreenState extends State<AuthScreen>
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation(Colors.white),
+                                valueColor: AlwaysStoppedAnimation(
+                                  Colors.white,
+                                ),
                               ),
                             )
                           : Text(
@@ -481,17 +478,17 @@ class _AuthScreenState extends State<AuthScreen>
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'or',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               ),
             ),
             const Expanded(child: Divider()),
           ],
         ),
-        
+
         const SizedBox(height: 24),
-        
+
         // Google sign in
         SizedBox(
           width: double.infinity,
@@ -532,17 +529,17 @@ class _AuthScreenState extends State<AuthScreen>
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'or try demo',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               ),
             ),
             const Expanded(child: Divider()),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Guest login button
         SizedBox(
           width: double.infinity,
@@ -565,23 +562,20 @@ class _AuthScreenState extends State<AuthScreen>
                 : const Icon(Icons.explore, size: 20),
             label: const Text(
               'Continue as Guest',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
         ),
-        
+
         const SizedBox(height: 8),
-        
+
         // Demo description
         Text(
           'Try the app with sample data - no account needed',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-                fontSize: 12,
-              ),
+            color: Colors.grey[600],
+            fontSize: 12,
+          ),
           textAlign: TextAlign.center,
         ),
       ],
@@ -593,9 +587,7 @@ class _AuthScreenState extends State<AuthScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          _isSignIn 
-              ? "Don't have an account? "
-              : "Already have an account? ",
+          _isSignIn ? "Don't have an account? " : "Already have an account? ",
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         TextButton(

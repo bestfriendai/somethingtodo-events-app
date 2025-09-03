@@ -4,7 +4,7 @@ import 'screens/demo/event_cards_demo.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Set system UI overlay style
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -14,13 +14,13 @@ void main() {
       systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
-  
+
   // Set preferred orientations
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  
+
   runApp(const EventCardsDemoApp());
 }
 
