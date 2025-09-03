@@ -78,7 +78,7 @@ class AppConfig {
   static bool get isProduction =>
       const bool.fromEnvironment('PRODUCTION', defaultValue: false);
   static bool get isDevelopment => !isProduction;
-  static const bool demoMode = false; // Always use real data
+  static const bool demoMode = true; // Enable demo mode for testing
 
   // URLs
   static const String termsOfServiceUrl = 'https://somethingtodo.app/terms';

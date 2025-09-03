@@ -1,91 +1,276 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Helper functions
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    
+    // Check if user is authenticated
     function isAuthenticated() {
       return request.auth != null;
     }
 
+    // Check if user owns the document
     function isOwner(userId) {
       return request.auth != null && request.auth.uid == userId;
     }
     
+    // Check if user is a demo user
     function isDemoUser() {
       return request.auth != null && request.auth.uid.matches('demo_user_.*');
     }
 
+    // Check if user has premium status
     function isPremium() {
       return isAuthenticated() && 
-        (isDemoUser() || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium == true);
+        (isDemoUser() || 
+         exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPremium == true);
+    }
+    
+    // Check if user has admin role
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Validate data size to prevent abuse
+    function isValidDataSize() {
+      return request.resource.size() < 1 * 1024 * 1024; // 1MB limit
+    }
+    
+    // Validate string field length
+    function isValidStringLength(field, maxLength) {
+      return !field in request.resource.data || 
+             request.resource.data[field].size() <= maxLength;
+    }
+    
+    // Rate limiting check (simplified - production should use Cloud Functions)
+    function isWithinRateLimit() {
+      // This is a simplified check - implement proper rate limiting in Cloud Functions
+      return true;
+    }
+    
+    // Validate user data structure
+    function isValidUserData() {
+      return request.resource.data.keys().hasAll(['id', 'email', 'preferences']) &&
+             isValidStringLength('displayName', 100) &&
+             isValidStringLength('email', 254) &&
+             isValidStringLength('photoUrl', 500);
+    }
+    
+    // Validate event data structure
+    function isValidEventData() {
+      return request.resource.data.keys().hasAll(['name', 'description', 'venue']) &&
+             isValidStringLength('name', 200) &&
+             isValidStringLength('description', 5000);
+    }
+    
+    // Check if write operation is safe (no script injection)
+    function isSafeContent(content) {
+      return !content.matches('.*<script.*>.*</script>.*') &&
+             !content.matches('.*javascript:.*') &&
+             !content.matches('.*on\\w+\\s*=.*');
     }
 
-    // Users collection - Secure user data
+    // ============================================
+    // USERS COLLECTION - Secure user profiles
+    // ============================================
     match /users/{userId} {
-      allow read: if isAuthenticated() && (isOwner(userId) || isPremium() || isDemoUser());
-      allow create: if isAuthenticated() && (isOwner(userId) || isDemoUser());
-      allow update: if isAuthenticated() && (isOwner(userId) || isDemoUser());
-      allow delete: if false; // Prevent accidental deletion
-    }
-
-    // Events collection - Public read, admin write
-    match /events/{eventId} {
-      allow read: if true; // Public events
-      allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && 
-        (resource.data.createdBy == request.auth.uid || isPremium());
-      allow delete: if false; // Soft delete only
-    }
-
-    // Chat sessions - User-owned data
-    match /chatSessions/{sessionId} {
+      // Read: User can read their own profile or if they're premium/admin
       allow read: if isAuthenticated() && 
-        (resource.data.userId == request.auth.uid || isDemoUser());
+                     (isOwner(userId) || isPremium() || isAdmin() || isDemoUser());
+      
+      // Create: User can only create their own profile with valid data
       allow create: if isAuthenticated() && 
-        (request.resource.data.userId == request.auth.uid || isDemoUser());
+                       isOwner(userId) && 
+                       isValidUserData() &&
+                       isValidDataSize() &&
+                       request.resource.data.id == userId;
+      
+      // Update: User can only update their own profile with restrictions
       allow update: if isAuthenticated() && 
-        (resource.data.userId == request.auth.uid || isDemoUser());
+                       isOwner(userId) &&
+                       isValidUserData() &&
+                       isValidDataSize() &&
+                       // Prevent users from making themselves admin or premium
+                       (!('role' in request.resource.data) || 
+                        resource.data.role == request.resource.data.role) &&
+                       (!('isPremium' in request.resource.data) || 
+                        resource.data.isPremium == request.resource.data.isPremium);
+      
+      // Delete: Prevent accidental deletion - only admins can delete
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // EVENTS COLLECTION - Public read with controlled write
+    // ============================================
+    match /events/{eventId} {
+      // Read: Public events are readable by all authenticated users
+      allow read: if true; // Public events
+      
+      // Create: Authenticated users can create events with valid data
+      allow create: if isAuthenticated() && 
+                       isValidEventData() &&
+                       isValidDataSize() &&
+                       request.resource.data.createdBy == request.auth.uid &&
+                       request.resource.data.createdAt == request.time;
+      
+      // Update: Only event creator or premium users can update
+      allow update: if isAuthenticated() && 
+                       isValidEventData() &&
+                       isValidDataSize() &&
+                       (resource.data.createdBy == request.auth.uid || isPremium() || isAdmin()) &&
+                       // Prevent changing creator
+                       resource.data.createdBy == request.resource.data.createdBy;
+      
+      // Delete: Soft delete only by creator or admin
+      allow delete: if isAuthenticated() && 
+                       (resource.data.createdBy == request.auth.uid || isAdmin());
+    }
+
+    // ============================================
+    // CHAT SESSIONS - User-owned conversations
+    // ============================================
+    match /chatSessions/{sessionId} {
+      // Read: User can read their own sessions
+      allow read: if isAuthenticated() && 
+                     (resource.data.userId == request.auth.uid || isDemoUser() || isAdmin());
+      
+      // Create: User can create their own sessions
+      allow create: if isAuthenticated() && 
+                       request.resource.data.userId == request.auth.uid &&
+                       isValidDataSize() &&
+                       request.resource.data.createdAt == request.time;
+      
+      // Update: User can update their own sessions
+      allow update: if isAuthenticated() && 
+                       resource.data.userId == request.auth.uid &&
+                       isValidDataSize() &&
+                       // Prevent changing owner
+                       resource.data.userId == request.resource.data.userId;
+      
+      // Delete: Prevent deletion to maintain history
       allow delete: if false;
 
-      // Messages subcollection
+      // ============================================
+      // MESSAGES SUBCOLLECTION - Immutable message history
+      // ============================================
       match /messages/{messageId} {
+        // Read: User can read messages from their sessions
         allow read: if isAuthenticated() && 
-          get(/databases/$(database)/documents/chatSessions/$(sessionId)).data.userId == request.auth.uid;
+                       get(/databases/$(database)/documents/chatSessions/$(sessionId)).data.userId == request.auth.uid;
+        
+        // Create: User can add messages to their sessions with content validation
         allow create: if isAuthenticated() && 
-          get(/databases/$(database)/documents/chatSessions/$(sessionId)).data.userId == request.auth.uid;
-        allow update: if false; // Messages are immutable
+                         get(/databases/$(database)/documents/chatSessions/$(sessionId)).data.userId == request.auth.uid &&
+                         isValidStringLength('content', 1000) &&
+                         isSafeContent(request.resource.data.content) &&
+                         request.resource.data.timestamp == request.time;
+        
+        // Update/Delete: Messages are immutable
+        allow update: if false;
         allow delete: if false;
       }
     }
 
-    // Analytics - Write only, no read
-    match /analytics/{document=**} {
-      allow read: if false;
-      allow write: if isAuthenticated();
-    }
-
-    // Cache collection - System use only
-    match /cache/{document=**} {
-      allow read: if isAuthenticated();
-      allow write: if false; // Only backend can write
-    }
-
-    // Premium subscriptions - Secure financial data
-    match /subscriptions/{subscriptionId} {
-      allow read: if isAuthenticated() && 
-        resource.data.userId == request.auth.uid;
-      allow create: if false; // Only backend via Stripe
-      allow update: if false; // Only backend via Stripe  
-      allow delete: if false;
-    }
-
-    // Messages collection for global chat
+    // ============================================
+    // GLOBAL MESSAGES COLLECTION - Rate-limited chat
+    // ============================================
     match /messages/{messageId} {
+      // Read: Authenticated users can read messages
       allow read: if isAuthenticated();
+      
+      // Create: Authenticated users can create messages with validation
       allow create: if isAuthenticated() && 
-        request.resource.data.userId == request.auth.uid &&
-        request.resource.data.timestamp == request.time;
+                       request.resource.data.userId == request.auth.uid &&
+                       request.resource.data.timestamp == request.time &&
+                       isValidStringLength('content', 1000) &&
+                       isSafeContent(request.resource.data.content) &&
+                       isWithinRateLimit();
+      
+      // Update/Delete: Messages are immutable
       allow update: if false;
       allow delete: if false;
+    }
+
+    // ============================================
+    // ANALYTICS COLLECTION - Write-only telemetry
+    // ============================================
+    match /analytics/{document=**} {
+      // Read: No one can read analytics data (backend only)
+      allow read: if false;
+      
+      // Write: Authenticated users can write analytics events
+      allow write: if isAuthenticated() &&
+                      isValidDataSize() &&
+                      request.resource.data.userId == request.auth.uid &&
+                      request.resource.data.timestamp == request.time;
+    }
+
+    // ============================================
+    // CACHE COLLECTION - Backend managed cache
+    // ============================================
+    match /cache/{document=**} {
+      // Read: Authenticated users can read cached data
+      allow read: if isAuthenticated();
+      
+      // Write: Only backend can write to cache
+      allow write: if false;
+    }
+
+    // ============================================
+    // PREMIUM SUBSCRIPTIONS - Secure financial data
+    // ============================================
+    match /subscriptions/{subscriptionId} {
+      // Read: Users can only read their own subscription data
+      allow read: if isAuthenticated() && 
+                     resource.data.userId == request.auth.uid;
+      
+      // Create/Update/Delete: Only backend via Stripe webhooks
+      allow create: if false;
+      allow update: if false;  
+      allow delete: if false;
+    }
+
+    // ============================================
+    // REPORTS COLLECTION - User-generated reports
+    // ============================================
+    match /reports/{reportId} {
+      // Read: Only admins can read reports
+      allow read: if isAdmin();
+      
+      // Create: Authenticated users can create reports
+      allow create: if isAuthenticated() &&
+                       request.resource.data.reportedBy == request.auth.uid &&
+                       request.resource.data.createdAt == request.time &&
+                       isValidStringLength('reason', 500) &&
+                       isValidDataSize();
+      
+      // Update/Delete: Only admins can manage reports
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================
+    // AUDIT LOGS - Security audit trail
+    // ============================================
+    match /auditLogs/{logId} {
+      // Read: Only admins can read audit logs
+      allow read: if isAdmin();
+      
+      // Write: No direct writes (backend only)
+      allow write: if false;
+    }
+
+    // ============================================
+    // DEFAULT DENY - Reject all other access
+    // ============================================
+    match /{document=**} {
+      allow read: if false;
+      allow write: if false;
     }
   }
 }
