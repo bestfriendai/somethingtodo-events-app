@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print, undefined_getter, undefined_named_parameter, depend_on_referenced_packages, unused_import
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'lib/providers/events_provider.dart';

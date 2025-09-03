@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import '../../models/event.dart';
 import '../../config/theme.dart';
 import '../../config/app_config.dart';
+import '../../config/glass_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/firestore_service.dart';
 import 'loading_shimmer.dart';
@@ -109,95 +110,102 @@ class _EventCardState extends State<EventCard> {
   }
 
   Widget _buildFullCard() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: widget.onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(12),
-              ),
-              child: Stack(
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: widget.event.imageUrls.isNotEmpty
-                        ? widget.event.imageUrls.first
-                        : 'https://via.placeholder.com/400x200',
-                    height: 160,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        const LoadingShimmer(height: 160),
-                    errorWidget: (context, url, error) => Container(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: GlassTheme.glassCard(
+        borderRadius: 16,
+        padding: EdgeInsets.zero,
+        child: InkWell(
+          onTap: widget.onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
+                child: Stack(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: widget.event.imageUrls.isNotEmpty
+                          ? widget.event.imageUrls.first
+                          : 'https://via.placeholder.com/400x200',
                       height: 160,
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: Icon(Icons.image, size: 40, color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                  // Category Badge
-                  Positioned(
-                    top: 12,
-                    left: 12,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        widget.event.category.displayName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          const LoadingShimmer(height: 160),
+                      errorWidget: (context, url, error) => Container(
+                        height: 160,
+                        color: Colors.black.withValues(alpha: 0.1),
+                        child: const Center(
+                          child:
+                              Icon(Icons.image, size: 40, color: Colors.white70),
                         ),
                       ),
                     ),
-                  ),
-                  // Favorite Button
-                  if (widget.showFavoriteButton)
+                    // Category Badge
                     Positioned(
                       top: 12,
-                      right: 12,
-                      child: GestureDetector(
-                        onTap: _toggleFavorite,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            shape: BoxShape.circle,
+                      left: 12,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryColor.withValues(alpha: 0.9),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          widget.event.category.displayName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
                           ),
-                          child: _isToggling
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : Icon(
-                                  _isFavorited
-                                      ? Icons.favorite
-                                      : Icons.favorite_outline,
-                                  color: _isFavorited
-                                      ? AppTheme.errorColor
-                                      : Colors.grey[600],
-                                  size: 16,
-                                ),
                         ),
                       ),
                     ),
+                    // Favorite Button
+                    if (widget.showFavoriteButton)
+                      Positioned(
+                        top: 12,
+                        right: 12,
+                        child: GestureDetector(
+                          onTap: _toggleFavorite,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.15),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: _isToggling
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Icon(
+                                    _isFavorited
+                                        ? Icons.favorite
+                                        : Icons.favorite_outline,
+                                    color: _isFavorited
+                                        ? AppTheme.errorColor
+                                        : Colors.white,
+                                    size: 16,
+                                  ),
+                          ),
+                        ),
+                      ),
                 ],
               ),
             ),
