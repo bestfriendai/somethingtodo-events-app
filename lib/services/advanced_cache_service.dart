@@ -5,41 +5,42 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 /// Advanced cache service with performance monitoring and statistics
 class AdvancedCacheService {
-  static final AdvancedCacheService _instance = AdvancedCacheService._internal();
+  static final AdvancedCacheService _instance =
+      AdvancedCacheService._internal();
   factory AdvancedCacheService() => _instance;
   AdvancedCacheService._internal();
 
   // Cache boxes
   Box? _cacheBox;
   Box? _metadataBox;
-  
+
   // Statistics tracking
   int _hitCount = 0;
   int _missCount = 0;
   int _writeCount = 0;
   int _deleteCount = 0;
   int _totalSize = 0;
-  
+
   // Performance metrics
   final List<Duration> _readTimes = [];
   final List<Duration> _writeTimes = [];
-  
+
   bool _isInitialized = false;
 
   /// Initialize the advanced cache service
   Future<void> initialize() async {
     if (_isInitialized) return;
-    
+
     try {
       // Initialize cache boxes
       _cacheBox = await Hive.openBox('advanced_cache');
       _metadataBox = await Hive.openBox('cache_metadata');
-      
+
       // Load existing statistics
       await _loadStatistics();
-      
+
       _isInitialized = true;
-      
+
       if (kDebugMode) {
         print('AdvancedCacheService initialized successfully');
       }
@@ -59,14 +60,16 @@ class AdvancedCacheService {
       'writeCount': _writeCount,
       'deleteCount': _deleteCount,
       'totalSize': _totalSize,
-      'hitRate': _hitCount + _missCount > 0 
-          ? _hitCount / (_hitCount + _missCount) 
+      'hitRate': _hitCount + _missCount > 0
+          ? _hitCount / (_hitCount + _missCount)
           : 0.0,
       'averageReadTime': _readTimes.isNotEmpty
-          ? _readTimes.map((d) => d.inMicroseconds).reduce((a, b) => a + b) / _readTimes.length
+          ? _readTimes.map((d) => d.inMicroseconds).reduce((a, b) => a + b) /
+                _readTimes.length
           : 0.0,
       'averageWriteTime': _writeTimes.isNotEmpty
-          ? _writeTimes.map((d) => d.inMicroseconds).reduce((a, b) => a + b) / _writeTimes.length
+          ? _writeTimes.map((d) => d.inMicroseconds).reduce((a, b) => a + b) /
+                _writeTimes.length
           : 0.0,
       'cacheEntries': _cacheBox?.length ?? 0,
       'isInitialized': _isInitialized,
@@ -80,30 +83,32 @@ class AdvancedCacheService {
     }
 
     final stopwatch = Stopwatch()..start();
-    
+
     try {
       final data = _cacheBox!.get(key);
       stopwatch.stop();
-      
+
       _readTimes.add(stopwatch.elapsed);
       if (_readTimes.length > 100) {
         _readTimes.removeAt(0);
       }
-      
+
       if (data != null) {
         _hitCount++;
-        
+
         // Check if data is expired
         final metadata = _metadataBox!.get('${key}_meta');
         if (metadata != null && metadata['expiry'] != null) {
-          final expiry = DateTime.fromMillisecondsSinceEpoch(metadata['expiry']);
+          final expiry = DateTime.fromMillisecondsSinceEpoch(
+            metadata['expiry'],
+          );
           if (DateTime.now().isAfter(expiry)) {
             await delete(key);
             _missCount++;
             return null;
           }
         }
-        
+
         return data as T?;
       } else {
         _missCount++;
@@ -126,10 +131,10 @@ class AdvancedCacheService {
     }
 
     final stopwatch = Stopwatch()..start();
-    
+
     try {
       await _cacheBox!.put(key, data);
-      
+
       // Store metadata if expiry is provided
       if (expiry != null) {
         final expiryTime = DateTime.now().add(expiry);
@@ -138,16 +143,15 @@ class AdvancedCacheService {
           'size': _calculateSize(data),
         });
       }
-      
+
       stopwatch.stop();
       _writeTimes.add(stopwatch.elapsed);
       if (_writeTimes.length > 100) {
         _writeTimes.removeAt(0);
       }
-      
+
       _writeCount++;
       _updateTotalSize();
-      
     } catch (e) {
       stopwatch.stop();
       if (kDebugMode) {
@@ -160,7 +164,7 @@ class AdvancedCacheService {
   /// Delete cached data
   Future<void> delete(String key) async {
     if (!_isInitialized || _cacheBox == null) return;
-    
+
     try {
       await _cacheBox!.delete(key);
       await _metadataBox!.delete('${key}_meta');
@@ -176,7 +180,7 @@ class AdvancedCacheService {
   /// Clear all cached data
   Future<void> clear() async {
     if (!_isInitialized) return;
-    
+
     try {
       await _cacheBox?.clear();
       await _metadataBox?.clear();
@@ -191,15 +195,17 @@ class AdvancedCacheService {
   /// Clean expired entries
   Future<void> cleanExpired() async {
     if (!_isInitialized || _metadataBox == null) return;
-    
+
     final now = DateTime.now();
     final keysToDelete = <String>[];
-    
+
     for (final key in _metadataBox!.keys) {
       if (key.toString().endsWith('_meta')) {
         final metadata = _metadataBox!.get(key);
         if (metadata != null && metadata['expiry'] != null) {
-          final expiry = DateTime.fromMillisecondsSinceEpoch(metadata['expiry']);
+          final expiry = DateTime.fromMillisecondsSinceEpoch(
+            metadata['expiry'],
+          );
           if (now.isAfter(expiry)) {
             final originalKey = key.toString().replaceAll('_meta', '');
             keysToDelete.add(originalKey);
@@ -207,7 +213,7 @@ class AdvancedCacheService {
         }
       }
     }
-    
+
     for (final key in keysToDelete) {
       await delete(key);
     }
@@ -261,7 +267,7 @@ class AdvancedCacheService {
   /// Update total cache size
   void _updateTotalSize() {
     if (_cacheBox == null) return;
-    
+
     _totalSize = 0;
     for (final key in _cacheBox!.keys) {
       final data = _cacheBox!.get(key);

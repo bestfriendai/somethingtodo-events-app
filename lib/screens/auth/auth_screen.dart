@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../config/theme.dart';
+import '../../config/theme.dart' as old_theme;
+import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
+import '../../core/utils/validation_utils.dart';
 import '../../providers/auth_provider.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -32,12 +35,12 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     super.initState();
 
     _fadeAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: Duration(milliseconds: 800),
       vsync: this,
     );
 
     _slideAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: AppTheme.animationSlow,
       vsync: this,
     );
 
@@ -214,30 +217,30 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             return Opacity(
               opacity: _fadeAnimationController.value,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(AppTheme.spaceLg),
                 child: Column(
                   children: [
-                    const SizedBox(height: 40),
+                    SizedBox(height: AppTheme.space2xl - 8),
 
                     // Logo and title
                     _buildHeader(),
 
-                    const SizedBox(height: 48),
+                    SizedBox(height: AppTheme.space2xl),
 
                     // Auth form
                     _buildAuthForm(),
 
-                    const SizedBox(height: 24),
+                    SizedBox(height: AppTheme.spaceLg),
 
                     // Social login
                     _buildSocialLogin(),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppTheme.spaceMd),
 
                     // Demo/Guest login
                     _buildGuestLogin(),
 
-                    const SizedBox(height: 24),
+                    SizedBox(height: AppTheme.spaceLg),
 
                     // Toggle auth mode
                     _buildToggleButton(),
@@ -269,10 +272,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               ),
             ],
           ),
-          child: const Icon(Icons.event, color: Colors.white, size: 50),
-        ).animate().scale(duration: 600.ms),
+          child: Icon(Icons.event, color: Colors.white, size: AppTheme.space3xl - 14),
+        ).animate().scale(duration: AppTheme.animationSlow),
 
-        const SizedBox(height: 24),
+        SizedBox(height: AppTheme.spaceLg),
 
         // Title
         Text(
@@ -281,9 +284,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             context,
           ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
-        ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.3),
+        ).animate().fadeIn(duration: Duration(milliseconds: 800)).slideY(begin: 0.3),
 
-        const SizedBox(height: 8),
+        SizedBox(height: AppTheme.spaceSm),
 
         // Subtitle
         Text(
@@ -294,7 +297,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             context,
           ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
           textAlign: TextAlign.center,
-        ).animate().fadeIn(duration: 1000.ms, delay: 200.ms),
+        ).animate().fadeIn(duration: Duration(milliseconds: 1000), delay: Duration(milliseconds: 200)),
       ],
     );
   }
@@ -319,14 +322,9 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                         labelText: 'Full Name',
                         prefixIcon: Icon(Icons.person),
                       ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your full name';
-                        }
-                        return null;
-                      },
+                      validator: ValidationUtils.validateName,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppTheme.spaceMd),
                   ],
 
                   // Email field
@@ -337,20 +335,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                       labelText: 'Email',
                       prefixIcon: Icon(Icons.email),
                     ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!RegExp(
-                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                      ).hasMatch(value.trim())) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
+                    validator: ValidationUtils.validateEmail,
                   ),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppTheme.spaceMd),
 
                   // Password field
                   TextFormField(
@@ -372,20 +360,14 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      if (!_isSignIn && value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
+                    validator: _isSignIn ? 
+                      (value) => ValidationUtils.validateRequired(value, fieldName: 'Password') : 
+                      ValidationUtils.validatePassword,
                   ),
 
                   // Confirm password field (only for sign up)
                   if (!_isSignIn) ...[
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppTheme.spaceMd),
                     TextFormField(
                       controller: _confirmPasswordController,
                       obscureText: _obscureConfirmPassword,
@@ -406,21 +388,14 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
-                        }
-                        if (value != _passwordController.text) {
-                          return 'Passwords do not match';
-                        }
-                        return null;
-                      },
+                      validator: (value) => 
+                        ValidationUtils.validateConfirmPassword(value, _passwordController.text),
                     ),
                   ],
 
                   // Forgot password (only for sign in)
                   if (_isSignIn) ...[
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppTheme.spaceSm),
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -430,7 +405,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                     ),
                   ],
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppTheme.spaceLg),
 
                   // Submit button
                   SizedBox(

@@ -8,12 +8,12 @@ class ModernSearchBar extends StatefulWidget {
   final bool autofocus;
 
   const ModernSearchBar({
-    Key? key,
+    super.key,
     this.onChanged,
     this.onSubmitted,
     this.hintText,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ModernSearchBar> createState() => _ModernSearchBarState();

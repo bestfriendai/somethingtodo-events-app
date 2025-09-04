@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:ui';
-import 'dart:math';
 import '../../models/event.dart';
 import '../../config/modern_theme.dart';
 import '../../services/gesture_service.dart';
@@ -231,7 +229,7 @@ class _ModernEventCardState extends State<ModernEventCard>
       child: Row(
         children: [
           // Image section with modern styling
-          Container(
+          SizedBox(
             width: 160,
             child: Stack(
               fit: StackFit.expand,

@@ -81,7 +81,7 @@ class _DelightfulRefreshState extends State<DelightfulRefresh>
         SnackBar(
           content: Row(
             children: [
-              Container(
+              SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
@@ -320,8 +320,8 @@ class _PremiumRefreshIndicatorState extends State<PremiumRefreshIndicator>
   Widget _buildAuroraRefresh() {
     return DelightfulRefresh(
       onRefresh: _handleRefresh,
-      child: widget.child,
       showFunMessages: true,
+      child: widget.child,
     );
   }
 

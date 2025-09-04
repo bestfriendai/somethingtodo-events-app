@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'platform_interactions.dart';
@@ -115,7 +114,7 @@ class DelightService {
       _showAchievement(
         context,
         'Celebration Master!',
-        'You have triggered ${_confettiCount} celebrations!',
+        'You have triggered $_confettiCount celebrations!',
       );
     }
   }

@@ -6,11 +6,9 @@ import 'package:glassmorphism/glassmorphism.dart';
 import 'dart:math' as math;
 
 import '../../models/user.dart';
-import '../../models/event.dart';
 import '../../config/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/events_provider.dart';
-import '../../widgets/common/loading_shimmer.dart';
 import '../../widgets/common/event_card.dart';
 import '../events/event_details_screen.dart';
 import '../settings/glass_settings_screen.dart';

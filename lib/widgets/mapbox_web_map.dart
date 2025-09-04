@@ -208,10 +208,7 @@ class _MapboxWebMapState extends State<MapboxWebMap> {
                   const SizedBox(height: 4),
                   Text(
                     event.venue.name,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.white70,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.white70),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

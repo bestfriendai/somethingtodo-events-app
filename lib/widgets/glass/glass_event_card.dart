@@ -3,7 +3,6 @@ import 'package:glassmorphism/glassmorphism.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import '../../models/event.dart';
-import '../../config/theme.dart';
 import '../../config/glass_theme.dart';
 
 class GlassEventCard extends StatefulWidget {

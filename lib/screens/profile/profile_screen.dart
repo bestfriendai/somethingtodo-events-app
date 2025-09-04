@@ -4,11 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../models/user.dart';
-import '../../models/event.dart';
 import '../../config/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/events_provider.dart';
-import '../../widgets/common/loading_shimmer.dart';
 import '../../widgets/common/event_card.dart';
 import '../events/event_details_screen.dart';
 import 'settings_screen.dart';

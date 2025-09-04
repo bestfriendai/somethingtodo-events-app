@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 
 /// Accessibility helper utilities for the SomethingToDo app.
 ///

@@ -164,15 +164,11 @@ class _EventCardContent extends StatelessWidget {
               ),
             ),
             // Price badge
-            if (event.price != null)
-              Positioned(
-                top: 12,
-                right: 12,
-                child: _PriceBadge(
-                  price: event.price!,
-                  currency: event.currency,
-                ),
-              ),
+            Positioned(
+              top: 12,
+              right: 12,
+              child: _PriceBadge(price: event.price, currency: event.currency),
+            ),
           ],
         ),
         // Content
@@ -227,7 +223,7 @@ class _EventCardContent extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (event.venue?.city != null) ...[
+        if (event.venue.city != null) ...[
           const SizedBox(width: 8),
           Icon(
             Icons.location_on,
@@ -237,7 +233,7 @@ class _EventCardContent extends StatelessWidget {
           const SizedBox(width: 4),
           Flexible(
             child: Text(
-              event.venue!.city!,
+              event.venue.city!,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: isDark ? Colors.white70 : Colors.grey[600],
               ),
@@ -255,7 +251,7 @@ class _EventCardContent extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Attendees count
-        if (event.attendees != null && event.attendees! > 0)
+        if (event.attendees > 0)
           Row(
             children: [
               Icon(

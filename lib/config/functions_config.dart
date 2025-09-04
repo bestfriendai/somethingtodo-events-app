@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart'
+    show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import '../firebase_options.dart';
 import 'app_config.dart';
 
@@ -25,10 +26,11 @@ class FunctionsConfig {
     if (AppConfig.useFunctionsEmulator) {
       final host = (kIsWeb ? 'localhost' : '10.0.2.2');
       // For iOS simulator, localhost works; for Android emulator, use 10.0.2.2
-      final platformHost = defaultTargetPlatform == TargetPlatform.iOS ? 'localhost' : host;
+      final platformHost = defaultTargetPlatform == TargetPlatform.iOS
+          ? 'localhost'
+          : host;
       return 'http://$platformHost:${AppConfig.functionsEmulatorPort}/$projectId/${AppConfig.functionsRegion}/api';
     }
     return 'https://${AppConfig.functionsRegion}-$projectId.cloudfunctions.net/api';
   }
 }
-

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/modern/modern_bottom_nav.dart';
 import '../../widgets/glass_bottom_nav.dart';
 import '../../widgets/modern/modern_fab.dart';
 import '../../providers/auth_provider.dart';

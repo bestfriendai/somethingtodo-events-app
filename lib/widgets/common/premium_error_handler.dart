@@ -57,9 +57,7 @@ class _PremiumErrorBoundaryState extends State<PremiumErrorBoundary> {
   void addPostFrameCallback(VoidCallback Function() callback) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cleanup = callback();
-      if (cleanup != null) {
-        // Store cleanup function to call on dispose
-      }
+      // Store cleanup function to call on dispose
     });
   }
 

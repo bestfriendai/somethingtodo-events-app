@@ -635,7 +635,7 @@ extension DemoEventMethods on DemoDataService {
     };
 
     final categoryTitles = titles[category] ?? titles[EventCategory.other]!;
-    return '${categoryTitles[index % categoryTitles.length]} ${index > 20 ? "#${index}" : ""}';
+    return '${categoryTitles[index % categoryTitles.length]} ${index > 20 ? "#$index" : ""}';
   }
 
   static String _generateEventDescription(EventCategory category) {

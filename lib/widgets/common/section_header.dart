@@ -6,11 +6,11 @@ class SectionHeader extends StatelessWidget {
   final bool showSeeAll;
 
   const SectionHeader({
-    Key? key,
+    super.key,
     required this.title,
     this.onSeeAll,
     this.showSeeAll = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -29,9 +29,14 @@ class EnhancedThemePreview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(context),
-          SizedBox(height: ConsolidatedDesignSystem.responsiveSpacing(context, ConsolidatedDesignSystem.spacing5)),
-          
-          if (context.isDesktop) 
+          SizedBox(
+            height: ConsolidatedDesignSystem.responsiveSpacing(
+              context,
+              ConsolidatedDesignSystem.spacing5,
+            ),
+          ),
+
+          if (context.isDesktop)
             _buildDesktopLayout(context)
           else if (context.isTablet)
             _buildTabletLayout(context)
@@ -63,9 +68,14 @@ class EnhancedThemePreview extends StatelessWidget {
                   children: [
                     Text(
                       '$variantName Theme',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontSize: ConsolidatedDesignSystem.responsiveTextSize(context, 24),
-                      ),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontSize:
+                                ConsolidatedDesignSystem.responsiveTextSize(
+                                  context,
+                                  24,
+                                ),
+                          ),
                     ),
                     Text(
                       '${isDark ? 'Dark' : 'Light'} Mode Preview',
@@ -93,7 +103,9 @@ class EnhancedThemePreview extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(ConsolidatedDesignSystem.spacing3),
       decoration: BoxDecoration(
-        color: isAccessible ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1),
+        color: isAccessible
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.red.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(ConsolidatedDesignSystem.radiusSm),
         border: Border.all(
           color: isAccessible ? Colors.green : Colors.red,
@@ -189,31 +201,16 @@ class EnhancedThemePreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Buttons',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Buttons', style: Theme.of(context).textTheme.titleLarge),
           SizedBox(height: ConsolidatedDesignSystem.spacing4),
           Wrap(
             spacing: ConsolidatedDesignSystem.spacing3,
             runSpacing: ConsolidatedDesignSystem.spacing3,
             children: [
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Elevated'),
-              ),
-              FilledButton(
-                onPressed: () {},
-                child: const Text('Filled'),
-              ),
-              OutlinedButton(
-                onPressed: () {},
-                child: const Text('Outlined'),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text('Text'),
-              ),
+              ElevatedButton(onPressed: () {}, child: const Text('Elevated')),
+              FilledButton(onPressed: () {}, child: const Text('Filled')),
+              OutlinedButton(onPressed: () {}, child: const Text('Outlined')),
+              TextButton(onPressed: () {}, child: const Text('Text')),
               ElevatedButton.icon(
                 onPressed: () {},
                 icon: const Icon(Icons.star, size: 16),
@@ -233,10 +230,7 @@ class EnhancedThemePreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Inputs',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Inputs', style: Theme.of(context).textTheme.titleLarge),
           SizedBox(height: ConsolidatedDesignSystem.spacing4),
           TextField(
             decoration: InputDecoration(
@@ -274,10 +268,7 @@ class EnhancedThemePreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Cards & Chips',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Cards & Chips', style: Theme.of(context).textTheme.titleLarge),
           SizedBox(height: ConsolidatedDesignSystem.spacing4),
           Card(
             child: Padding(
@@ -306,10 +297,7 @@ class EnhancedThemePreview extends StatelessWidget {
                 label: const Text('Chip'),
                 avatar: const Icon(Icons.star, size: 16),
               ),
-              ActionChip(
-                label: const Text('Action'),
-                onPressed: () {},
-              ),
+              ActionChip(label: const Text('Action'), onPressed: () {}),
               FilterChip(
                 label: const Text('Filter'),
                 selected: true,
@@ -324,17 +312,14 @@ class EnhancedThemePreview extends StatelessWidget {
 
   Widget _buildColorPalette(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return ConsolidatedDesignSystem.modernCard(
       context: context,
       semanticLabel: 'Color palette preview',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Color Palette',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Color Palette', style: Theme.of(context).textTheme.titleLarge),
           SizedBox(height: ConsolidatedDesignSystem.spacing4),
           GridView.count(
             shrinkWrap: true,
@@ -344,12 +329,42 @@ class EnhancedThemePreview extends StatelessWidget {
             crossAxisSpacing: ConsolidatedDesignSystem.spacing2,
             childAspectRatio: context.isMobile ? 1.5 : 2.0,
             children: [
-              _buildColorSwatch(context, 'Primary', colorScheme.primary, colorScheme.onPrimary),
-              _buildColorSwatch(context, 'Secondary', colorScheme.secondary, colorScheme.onSecondary),
-              _buildColorSwatch(context, 'Tertiary', colorScheme.tertiary, colorScheme.onTertiary),
-              _buildColorSwatch(context, 'Surface', colorScheme.surface, colorScheme.onSurface),
-              _buildColorSwatch(context, 'Error', colorScheme.error, colorScheme.onError),
-              _buildColorSwatch(context, 'Outline', colorScheme.outline, colorScheme.surface),
+              _buildColorSwatch(
+                context,
+                'Primary',
+                colorScheme.primary,
+                colorScheme.onPrimary,
+              ),
+              _buildColorSwatch(
+                context,
+                'Secondary',
+                colorScheme.secondary,
+                colorScheme.onSecondary,
+              ),
+              _buildColorSwatch(
+                context,
+                'Tertiary',
+                colorScheme.tertiary,
+                colorScheme.onTertiary,
+              ),
+              _buildColorSwatch(
+                context,
+                'Surface',
+                colorScheme.surface,
+                colorScheme.onSurface,
+              ),
+              _buildColorSwatch(
+                context,
+                'Error',
+                colorScheme.error,
+                colorScheme.onError,
+              ),
+              _buildColorSwatch(
+                context,
+                'Outline',
+                colorScheme.outline,
+                colorScheme.surface,
+              ),
             ],
           ),
         ],
@@ -357,7 +372,12 @@ class EnhancedThemePreview extends StatelessWidget {
     );
   }
 
-  Widget _buildColorSwatch(BuildContext context, String name, Color color, Color onColor) {
+  Widget _buildColorSwatch(
+    BuildContext context,
+    String name,
+    Color color,
+    Color onColor,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: color,

@@ -3,16 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '../config/theme.dart';
 import '../config/modern_theme.dart';
 import '../config/app_config.dart';
+import '../core/constants/app_constants.dart';
 import '../services/delight_service.dart';
 import '../services/platform_interactions.dart';
-import '../widgets/common/premium_loading.dart';
-import '../widgets/common/premium_text_animator.dart';
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -88,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _initializeApp() async {
     // Add a shorter splash time for better UX
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(Duration(milliseconds: AppConstants.slowAnimationMs * 3));
 
     if (mounted) {
       // Success haptic (only on mobile)
@@ -135,8 +132,8 @@ class _SplashScreenState extends State<SplashScreen>
 
     return Scaffold(
       backgroundColor: isDarkMode
-          ? AppTheme.darkBackground
-          : AppTheme.lightBackground,
+          ? ModernTheme.darkBackground
+          : ModernTheme.lightBackground,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -183,17 +180,13 @@ class _SplashScreenState extends State<SplashScreen>
                                     gradient: LinearGradient(
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
-                                      colors: [
-                                        AppTheme.primaryColor,
-                                        AppTheme.primaryDarkColor,
-                                        Colors.purple.shade600,
-                                      ],
+                                      colors: ModernTheme.purpleGradient,
                                     ),
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.circular(28),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: AppTheme.primaryColor.withValues(
-                                          alpha: 0.4,
+                                        color: ModernTheme.primaryColor.withValues(
+                                          alpha: 0.35,
                                         ),
                                         blurRadius: 25,
                                         offset: const Offset(0, 15),
@@ -205,7 +198,7 @@ class _SplashScreenState extends State<SplashScreen>
                                     alignment: Alignment.center,
                                     children: [
                                       // Main icon
-                                      const Icon(
+                                      Icon(
                                         Icons.explore,
                                         size: 60,
                                         color: Colors.white,
@@ -221,8 +214,8 @@ class _SplashScreenState extends State<SplashScreen>
                                             30 * sin(angle),
                                           ),
                                           child: Container(
-                                            width: 12,
-                                            height: 12,
+                                            width: 20,
+                                            height: 20,
                                             decoration: const BoxDecoration(
                                               color: Colors.white,
                                               shape: BoxShape.circle,
@@ -233,8 +226,8 @@ class _SplashScreenState extends State<SplashScreen>
                                                 Icons.favorite,
                                                 Icons.celebration,
                                               ][index],
-                                              size: 8,
-                                              color: AppTheme.primaryColor,
+                                              size: 14,
+                                              color: ModernTheme.primaryColor,
                                             ),
                                           ),
                                         );
@@ -250,10 +243,10 @@ class _SplashScreenState extends State<SplashScreen>
                     )
                     .animate()
                     .scale(
-                      duration: const Duration(milliseconds: 800),
+                      duration: Duration(milliseconds: AppConstants.defaultAnimationMs + 500),
                       curve: Curves.elasticOut,
                     )
-                    .fadeIn(duration: const Duration(milliseconds: 600))
+                    .fadeIn(duration: 600.ms)
                     .then(delay: 1.seconds)
                     .shimmer(
                       duration: 2.seconds,
@@ -264,17 +257,17 @@ class _SplashScreenState extends State<SplashScreen>
 
                 // App Name
                 Text(
-                      AppConfig.appName,
+                      AppConstants.appName,
                       style: Theme.of(context).textTheme.displayMedium
                           ?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: isDarkMode
                                 ? Colors.white
-                                : AppTheme.lightOnSurface,
+                                : ModernTheme.lightOnSurface,
                           ),
                     )
-                    .animate(delay: const Duration(milliseconds: 300))
-                    .fadeIn(duration: const Duration(milliseconds: 600))
+.animate(delay: 300.ms)
+                    .fadeIn(duration: 600.ms)
                     .slideX(begin: 0.3, end: 0),
 
                 const SizedBox(height: 8),
@@ -288,16 +281,16 @@ class _SplashScreenState extends State<SplashScreen>
                               ?.copyWith(
                                 color: isDarkMode
                                     ? Colors.white70
-                                    : AppTheme.lightOnBackground.withValues(
+                                    : ModernTheme.lightOnSurface.withValues(
                                         alpha: 0.7,
                                       ),
                               ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: AppTheme.spaceSm),
                         Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
+                                horizontal: 16,
+                                vertical: 8,
                               ),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -306,7 +299,7 @@ class _SplashScreenState extends State<SplashScreen>
                                     Colors.orange.withValues(alpha: 0.8),
                                   ],
                                 ),
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.amber.withValues(alpha: 0.3),
@@ -315,17 +308,16 @@ class _SplashScreenState extends State<SplashScreen>
                                   ),
                                 ],
                               ),
-                              child: const Text(
+                              child: Text(
                                 'Where memories begin ✨',
-                                style: TextStyle(
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                   color: Colors.white,
-                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             )
-                            .animate(delay: 1.5.seconds)
-                            .fadeIn(duration: 600.ms)
+                            .animate(delay: Duration(milliseconds: 1500))
+                            .fadeIn(duration: AppTheme.animationSlow)
                             .scale(
                               begin: const Offset(0.5, 0.5),
                               curve: Curves.elasticOut,
@@ -334,8 +326,8 @@ class _SplashScreenState extends State<SplashScreen>
                             .shimmer(duration: 3.seconds),
                       ],
                     )
-                    .animate(delay: const Duration(milliseconds: 600))
-                    .fadeIn(duration: const Duration(milliseconds: 600))
+.animate(delay: 600.ms)
+                    .fadeIn(duration: 600.ms)
                     .slideX(begin: -0.3, end: 0),
               ],
             ),
@@ -346,8 +338,8 @@ class _SplashScreenState extends State<SplashScreen>
             Column(
               children: [
                 SizedBox(
-                      width: 40,
-                      height: 40,
+                      width: AppTheme.space2xl - 8,
+                      height: AppTheme.space2xl - 8,
                       child: CircularProgressIndicator(
                         strokeWidth: 3,
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -355,30 +347,30 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       ),
                     )
-                    .animate(delay: const Duration(milliseconds: 1000))
-                    .fadeIn(duration: const Duration(milliseconds: 400))
+                    .animate(delay: Duration(milliseconds: 1000))
+                    .fadeIn(duration: Duration(milliseconds: AppConstants.defaultAnimationMs + 100))
                     .scale(begin: const Offset(0.8, 0.8)),
 
                 const SizedBox(height: 24),
 
                 // Dynamic loading message
                 AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 400),
+                      duration: Duration(milliseconds: AppConstants.defaultAnimationMs + 100),
                       child: Text(
                         _currentMessage,
                         key: ValueKey(_currentMessage),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: isDarkMode
                               ? Colors.white60
-                              : AppTheme.lightOnBackground.withValues(
+                              : ModernTheme.lightOnSurface.withValues(
                                   alpha: 0.6,
                                 ),
                         ),
                         textAlign: TextAlign.center,
                       ),
                     )
-                    .animate(delay: const Duration(milliseconds: 1200))
-                    .fadeIn(duration: const Duration(milliseconds: 400)),
+                    .animate(delay: Duration(milliseconds: 1200))
+                    .fadeIn(duration: Duration(milliseconds: AppConstants.defaultAnimationMs + 100)),
               ],
             ),
 
@@ -394,7 +386,7 @@ class _SplashScreenState extends State<SplashScreen>
               },
               child: Container(
                 width: 100,
-                height: 20,
+                height: AppTheme.spaceLg - 4,
                 color: Colors.transparent,
               ),
             ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../models/event.dart';
 import '../../config/theme.dart';
@@ -160,11 +159,10 @@ class _EventCardState extends State<EventCard> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          DateFormat('MMM dd, yyyy • h:mm a')
-                              .format(widget.event.startDateTime),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          DateFormat(
+                            'MMM dd, yyyy • h:mm a',
+                          ).format(widget.event.startDateTime),
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: AppTheme.primaryColor,
                                 fontWeight: FontWeight.w500,
@@ -176,10 +174,9 @@ class _EventCardState extends State<EventCard> {
                     // Title
                     Text(
                       widget.event.title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -187,10 +184,9 @@ class _EventCardState extends State<EventCard> {
                     // Organizer
                     Text(
                       'by ${widget.event.organizerName}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.grey[600]),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                     ),
                     const SizedBox(height: 8),
                     // Location and Price
@@ -208,9 +204,7 @@ class _EventCardState extends State<EventCard> {
                               Expanded(
                                 child: Text(
                                   widget.event.venue.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
+                                  style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: Colors.grey[600]),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -226,10 +220,8 @@ class _EventCardState extends State<EventCard> {
                           ),
                           decoration: BoxDecoration(
                             color: widget.event.pricing.isFree
-                                ? AppTheme.successColor
-                                    .withValues(alpha: 0.1)
-                                : AppTheme.warningColor
-                                    .withValues(alpha: 0.1),
+                                ? AppTheme.successColor.withValues(alpha: 0.1)
+                                : AppTheme.warningColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(

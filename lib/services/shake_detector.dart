@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'delight_service.dart';
 import 'platform_interactions.dart';
@@ -12,7 +11,7 @@ class ShakeDetector {
   ShakeDetector._();
 
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
-  double _shakeThreshold = 15.0;
+  final double _shakeThreshold = 15.0;
   int _shakeCount = 0;
   DateTime? _lastShakeTime;
 

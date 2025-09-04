@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../config/theme.dart';
+import '../../config/theme.dart' as old_theme;
+import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
 import '../../providers/auth_provider.dart';
 import '../events/event_details_screen.dart';
 
@@ -91,7 +93,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
     super.initState();
 
     _listAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 600),
+      duration: AppTheme.animationSlow,
       vsync: this,
     );
 
@@ -323,7 +325,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                   child: Row(
                     children: [
                       Icon(Icons.check_circle_outline),
-                      SizedBox(width: 8),
+                      SizedBox(width: AppTheme.spaceSm),
                       Text('Select'),
                     ],
                   ),
@@ -333,7 +335,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                   child: Row(
                     children: [
                       Icon(Icons.mark_email_read),
-                      SizedBox(width: 8),
+                      SizedBox(width: AppTheme.spaceSm),
                       Text('Mark All as Read'),
                     ],
                   ),
@@ -343,7 +345,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                   child: Row(
                     children: [
                       Icon(Icons.clear_all),
-                      SizedBox(width: 8),
+                      SizedBox(width: AppTheme.spaceSm),
                       Text('Clear All'),
                     ],
                   ),
@@ -354,7 +356,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                   child: Row(
                     children: [
                       Icon(Icons.settings),
-                      SizedBox(width: 8),
+                      SizedBox(width: AppTheme.spaceSm),
                       Text('Notification Settings'),
                     ],
                   ),
@@ -369,12 +371,12 @@ class _NotificationsScreenState extends State<NotificationsScreen>
   Widget _buildSignInPrompt() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(AppTheme.spaceXl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.notifications_off, size: 80, color: Colors.grey[400]),
-            const SizedBox(height: 24),
+            Icon(Icons.notifications_off, size: AppTheme.space3xl + 16, color: Colors.grey[400]),
+            SizedBox(height: AppTheme.spaceLg),
             Text(
               'Sign in for notifications',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -382,7 +384,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                 color: Colors.grey[700],
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppTheme.spaceMd - 4),
             Text(
               'Get notified about events you care about and never miss out.',
               style: Theme.of(
@@ -390,7 +392,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
               ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: AppTheme.spaceXl),
             ElevatedButton.icon(
               onPressed: () => Navigator.pushNamed(context, '/auth'),
               icon: const Icon(Icons.login),
@@ -399,18 +401,18 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3);
+      ).animate().fadeIn(duration: AppTheme.animationSlow).slideY(begin: 0.3);
   }
 
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(AppTheme.spaceXl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.notifications_none, size: 80, color: Colors.grey[400]),
-            const SizedBox(height: 24),
+            Icon(Icons.notifications_none, size: AppTheme.space3xl + 16, color: Colors.grey[400]),
+            SizedBox(height: AppTheme.spaceLg),
             Text(
               'No notifications',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -418,7 +420,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
                 color: Colors.grey[700],
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppTheme.spaceMd - 4),
             Text(
               'When you have notifications, they\'ll appear here.',
               style: Theme.of(
@@ -429,7 +431,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.3);
+      ).animate().fadeIn(duration: AppTheme.animationSlow).slideY(begin: 0.3);
   }
 
   Widget _buildNotificationsList() {
@@ -437,7 +439,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       animation: _listAnimationController,
       builder: (context, child) {
         return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: AppTheme.spaceSm),
           itemCount: _notifications.length,
           itemBuilder: (context, index) {
             final notification = _notifications[index];
@@ -462,7 +464,7 @@ class _NotificationsScreenState extends State<NotificationsScreen>
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceLg - 4),
         color: AppTheme.errorColor,
         child: const Icon(Icons.delete, color: Colors.white),
       ),

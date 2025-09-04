@@ -8,8 +8,6 @@ import '../providers/chat_provider.dart';
 import '../services/location_service.dart';
 import '../services/firestore_service.dart';
 import '../services/rapidapi_events_service.dart';
-import '../services/chat_service.dart';
-import '../services/auth_service.dart';
 import '../models/event.dart';
 
 /// Comprehensive app debugger and tester
@@ -333,7 +331,7 @@ class AppDebugger {
 
   /// Generate test report
   void _generateReport() {
-    debugPrint('\n' + '=' * 50);
+    debugPrint('\n${'=' * 50}');
     debugPrint('📊 TEST REPORT');
     debugPrint('=' * 50);
 
@@ -370,7 +368,7 @@ class AppDebugger {
       debugPrint('  $icon $key: $value');
     });
 
-    debugPrint('\n' + '=' * 50);
+    debugPrint('\n${'=' * 50}');
     debugPrint('Testing completed at ${DateTime.now()}');
     debugPrint('=' * 50 + '\n');
   }

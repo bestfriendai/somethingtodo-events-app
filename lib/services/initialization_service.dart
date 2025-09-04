@@ -8,7 +8,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../firebase_options.dart';
 import 'notification_service.dart';
-import 'location_service.dart';
 import 'cache_service.dart';
 import 'analytics_service.dart';
 

@@ -23,7 +23,7 @@ class RapidAPIEventsService {
   DateTime? _lastFailureTime;
   int _failureCount = 0;
   static const int _maxFailures = 5;
-  static const Duration _circuitBreakerTimeout = Duration(minutes: 5);
+  static const Duration _circuitBreakerTimeout = Duration(minutes: 1);
 
   // Rate limiting
   DateTime? _lastRequestTime;
@@ -72,7 +72,22 @@ class RapidAPIEventsService {
             error.requestOptions.path,
             error: error,
           );
-          _onRequestFailure();
+          bool tripBreaker = false;
+          if (error.type == DioExceptionType.connectionTimeout ||
+              error.type == DioExceptionType.receiveTimeout ||
+              error.type == DioExceptionType.sendTimeout ||
+              error.type == DioExceptionType.connectionError) {
+            tripBreaker = true;
+          } else if (error.type == DioExceptionType.badResponse) {
+            final code = error.response?.statusCode ?? 0;
+            if (code >= 500 || code == 429) tripBreaker = true;
+          } else {
+            // Unknown/other errors: be conservative
+            tripBreaker = true;
+          }
+          if (tripBreaker) {
+            _onRequestFailure();
+          }
           handler.next(error);
         },
       ),
@@ -170,6 +185,27 @@ class RapidAPIEventsService {
       'Max retries exceeded for $operation',
       type: RapidAPIErrorType.maxRetriesExceeded,
     );
+  }
+
+  /// Simple health ping that does not go through the circuit breaker
+  Future<bool> pingHealth({Duration timeout = const Duration(seconds: 5)}) async {
+    try {
+      final resp = await _dio.get('/health', options: Options(receiveTimeout: timeout, sendTimeout: timeout, followRedirects: false));
+      if (resp.statusCode == 200) {
+        _onRequestSuccess();
+        return true;
+      }
+    } catch (_) {
+      // ignore
+    }
+    return false;
+  }
+
+  /// Force reset the circuit breaker (use sparingly)
+  void resetCircuitBreaker() {
+    _failureCount = 0;
+    _circuitBreakerOpen = false;
+    _lastFailureTime = null;
   }
 
   /// Comprehensive error handling
@@ -520,9 +556,9 @@ class RapidAPIEventsService {
       // Map category to EventCategory enum
       EventCategory? eventCategory;
       final categoryLower = category.toLowerCase();
-      if (categoryLower.contains('music'))
+      if (categoryLower.contains('music')) {
         eventCategory = EventCategory.music;
-      else if (categoryLower.contains('sport'))
+      } else if (categoryLower.contains('sport'))
         eventCategory = EventCategory.sports;
       else if (categoryLower.contains('art'))
         eventCategory = EventCategory.arts;

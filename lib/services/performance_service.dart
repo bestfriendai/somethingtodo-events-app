@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 /// Performance monitoring and optimization service
 class PerformanceService {
@@ -31,7 +29,7 @@ class PerformanceService {
 
   // Network monitoring
   int _activeNetworkRequests = 0;
-  int _totalNetworkRequests = 0;
+  final int _totalNetworkRequests = 0;
   Duration _averageNetworkLatency = Duration.zero;
   final Map<String, DateTime> _networkRequestTimes = {};
 

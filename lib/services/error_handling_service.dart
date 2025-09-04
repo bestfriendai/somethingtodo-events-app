@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'rapidapi_exception.dart';
 import 'logging_service.dart';
@@ -205,7 +204,7 @@ class ErrorHandlingService {
         final eventId = cacheKey.substring(6);
         cachedData = await cacheService.getCachedEvent(eventId);
       } else {
-        cachedData = await cacheService.getCachedUserPreference<T>(cacheKey);
+        cachedData = cacheService.getCachedUserPreference<T>(cacheKey);
       }
 
       if (cachedData != null) {

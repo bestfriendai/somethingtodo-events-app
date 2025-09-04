@@ -27,7 +27,7 @@ class LoadingOverlay extends StatefulWidget {
 class _LoadingOverlayState extends State<LoadingOverlay>
     with TickerProviderStateMixin {
   late AnimationController _sparkleController;
-  String _currentMessage = 'Loading...';
+  final String _currentMessage = 'Loading...';
 
   @override
   void initState() {

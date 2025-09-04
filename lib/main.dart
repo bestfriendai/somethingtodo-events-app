@@ -19,7 +19,7 @@ import 'services/cache_service.dart';
 import 'services/chat_service.dart';
 import 'screens/splash/animated_splash_screen.dart';
 import 'screens/onboarding/glass_onboarding_screen.dart';
-import 'screens/auth/glass_auth_screen.dart';
+import 'screens/auth/modern_auth_screen.dart';
 import 'screens/home/modern_main_navigation_screen.dart';
 import 'screens/events/event_details_screen.dart';
 import 'screens/events/event_list_screen.dart';
@@ -37,6 +37,7 @@ import 'screens/settings/theme_settings_screen.dart';
 import 'screens/search/enhanced_search_screen.dart';
 import 'services/navigation_service.dart';
 import 'utils/app_debugger.dart';
+import 'services/logger_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,13 +47,15 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    print('✅ Firebase initialized successfully');
+    Logger.info('Firebase initialized successfully');
 
     // Verify Firebase Auth is working
     final auth = FirebaseAuth.instance;
-    print('✅ Firebase Auth instance created: ${auth.app.options.projectId}');
+    Logger.info(
+      'Firebase Auth instance created: ${auth.app.options.projectId}',
+    );
   } catch (e) {
-    print('❌ Firebase initialization failed: $e');
+    Logger.error('Firebase initialization failed', e);
     // Continue anyway - the app will use fallback authentication
   }
 
@@ -62,7 +65,7 @@ void main() async {
       FlutterError.onError =
           FirebaseCrashlytics.instance.recordFlutterFatalError;
     } catch (e) {
-      print('⚠️ Crashlytics initialization failed: $e');
+      Logger.warning('Crashlytics initialization failed', e);
     }
   }
 
@@ -161,7 +164,7 @@ class SomethingToDoApp extends StatelessWidget {
     return {
       '/splash': (context) => const AnimatedSplashScreen(),
       '/onboarding': (context) => const GlassOnboardingScreen(),
-      '/auth': (context) => const GlassAuthScreen(),
+      '/auth': (context) => const ModernAuthScreen(),
       '/home': (context) => const ModernMainNavigationScreen(),
       '/profile': (context) => const GlassProfileScreen(),
       '/settings': (context) => const GlassSettingsScreen(),

@@ -151,17 +151,11 @@ class AuthService {
       await googleSignInInstance.signOut();
 
       print('Presenting Google Sign-In dialog...');
-      final GoogleSignInAccount? googleUser = await googleSignInInstance
+      final GoogleSignInAccount googleUser = await googleSignInInstance
           .authenticate();
 
-      if (googleUser == null) {
-        print('User cancelled Google Sign-In');
-        return null;
-      }
-
       print('Google Sign-In successful, getting authentication tokens...');
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
       if (googleAuth.idToken == null) {
         throw Exception('Failed to get ID token from Google');

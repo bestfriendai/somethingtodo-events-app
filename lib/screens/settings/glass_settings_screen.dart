@@ -742,7 +742,7 @@ class _GlassSettingsScreenState extends State<GlassSettingsScreen>
                             color: Colors.white,
                             fontSize: 14,
                           ),
-                          child: item.child!,
+                          child: item.child,
                         ),
                       ),
                     )

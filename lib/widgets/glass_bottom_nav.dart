@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'dart:ui';
-import 'dart:math' as math;
 
 class GlassBottomNavigation extends StatefulWidget {
   final int currentIndex;
@@ -105,158 +104,171 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: 30,
-            offset: const Offset(0, -10),
-            spreadRadius: 5,
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Main glass container
-          ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.1),
-                      Colors.black.withValues(alpha: 0.8),
-                    ],
-                  ),
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      width: 0.5,
+    return SafeArea(
+      top: false,
+      child: Container(
+        height: 90,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.5),
+              blurRadius: 30,
+              offset: const Offset(0, -10),
+              spreadRadius: 5,
+            ),
+          ],
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final barWidth = constraints.maxWidth;
+            const indicatorWidth = 60.0;
+            final segmentWidth = barWidth / _items.length;
+
+            return Stack(
+              children: [
+                // Main glass container
+                ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white.withValues(alpha: 0.1),
+                            Colors.black.withValues(alpha: 0.8),
+                          ],
+                        ),
+                        border: Border(
+                          top: BorderSide(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
 
-          // Glass morphism overlay
-          GlassmorphicContainer(
-            width: double.infinity,
-            height: 90,
-            borderRadius: 0,
-            blur: 20,
-            alignment: Alignment.center,
-            border: 0,
-            linearGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withValues(alpha: 0.05),
-                Colors.white.withValues(alpha: 0.02),
-              ],
-            ),
-            borderGradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.transparent, Colors.transparent],
-            ),
-            child: Stack(
-              children: [
-                // Animated indicator
-                AnimatedBuilder(
-                  animation: _indicatorController,
-                  builder: (context, child) {
-                    return Positioned(
-                      left:
-                          (MediaQuery.of(context).size.width / 5) *
-                              widget.currentIndex +
-                          (MediaQuery.of(context).size.width / 10) -
-                          30,
-                      bottom: 8,
-                      child: Container(
-                        width: 60,
-                        height: 3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          gradient: LinearGradient(
-                            colors: _items[widget.currentIndex].gradient,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: _items[widget.currentIndex].gradient[0]
-                                  .withValues(alpha: 0.5),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-
-                // Ripple effect
-                AnimatedBuilder(
-                  animation: _rippleController,
-                  builder: (context, child) {
-                    return Positioned(
-                      left:
-                          (MediaQuery.of(context).size.width / 5) *
-                          widget.currentIndex,
-                      top: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width / 5,
-                        height: 90,
-                        child: Center(
-                          child: Transform.scale(
-                            scale: _rippleController.value * 2,
+                // Glass morphism overlay
+                GlassmorphicContainer(
+                  width: double.infinity,
+                  height: 90,
+                  borderRadius: 0,
+                  blur: 20,
+                  alignment: Alignment.center,
+                  border: 0,
+                  linearGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.05),
+                      Colors.white.withValues(alpha: 0.02),
+                    ],
+                  ),
+                  borderGradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.transparent, Colors.transparent],
+                  ),
+                  child: Stack(
+                    children: [
+                      // Animated indicator
+                      AnimatedBuilder(
+                        animation: _indicatorController,
+                        builder: (context, child) {
+                          final left = segmentWidth * widget.currentIndex +
+                              (segmentWidth / 2) -
+                              (indicatorWidth / 2);
+                          return Positioned(
+                            left: left,
+                            bottom: 8,
                             child: Container(
-                              width: 50,
-                              height: 50,
+                              width: indicatorWidth,
+                              height: 3,
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  colors: [
-                                    _items[widget.currentIndex].gradient[0]
-                                        .withValues(
-                                          alpha:
-                                              0.3 *
-                                              (1 - _rippleController.value),
-                                        ),
-                                    _items[widget.currentIndex].gradient[1]
-                                        .withValues(
-                                          alpha:
-                                              0.1 *
-                                              (1 - _rippleController.value),
-                                        ),
-                                    Colors.transparent,
-                                  ],
+                                borderRadius: BorderRadius.circular(2),
+                                gradient: LinearGradient(
+                                  colors: _items[widget.currentIndex].gradient,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: _items[widget.currentIndex]
+                                        .gradient[0]
+                                        .withValues(alpha: 0.5),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      // Ripple effect
+                      AnimatedBuilder(
+                        animation: _rippleController,
+                        builder: (context, child) {
+                          final left = segmentWidth * widget.currentIndex;
+                          return Positioned(
+                            left: left,
+                            top: 0,
+                            child: SizedBox(
+                              width: segmentWidth,
+                              height: 90,
+                              child: Center(
+                                child: Transform.scale(
+                                  scale: _rippleController.value * 2,
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: RadialGradient(
+                                        colors: [
+                                          _items[widget.currentIndex]
+                                              .gradient[0]
+                                              .withValues(
+                                                alpha: 0.3 *
+                                                    (1 -
+                                                        _rippleController
+                                                            .value),
+                                              ),
+                                          _items[widget.currentIndex]
+                                              .gradient[1]
+                                              .withValues(
+                                                alpha: 0.1 *
+                                                    (1 -
+                                                        _rippleController
+                                                            .value),
+                                              ),
+                                          Colors.transparent,
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
 
-                // Navigation items
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: List.generate(_items.length, (index) {
-                    return _buildNavItem(index);
-                  }),
+                      // Navigation items
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children:
+                            List.generate(_items.length, (index) => _buildNavItem(index)),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -269,7 +281,7 @@ class _GlassBottomNavigationState extends State<GlassBottomNavigation>
       child: GestureDetector(
         onTap: () => widget.onTap(index),
         behavior: HitTestBehavior.opaque,
-        child: Container(
+        child: SizedBox(
           height: 90,
           child: Stack(
             children: [

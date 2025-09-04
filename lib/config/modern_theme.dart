@@ -14,24 +14,52 @@ class ModernTheme {
   /// Private constructor to prevent instantiation
   const ModernTheme._();
   // 2025 Ultra-Modern Color Palette (Refined & Professional)
-  static const Color primaryColor = Color(0xFF4F46E5); // Indigo 600 - More accessible
-  static const Color primaryLight = Color(0xFF818CF8); // Indigo 400 - For lighter elements
-  static const Color primaryDark = Color(0xFF3730A3); // Indigo 700 - For emphasis
+  static const Color primaryColor = Color(
+    0xFF4F46E5,
+  ); // Indigo 600 - More accessible
+  static const Color primaryLight = Color(
+    0xFF818CF8,
+  ); // Indigo 400 - For lighter elements
+  static const Color primaryDark = Color(
+    0xFF3730A3,
+  ); // Indigo 700 - For emphasis
   static const Color secondaryColor = Color(0xFF7C3AED); // Violet 600
-  static const Color tertiaryColor = Color(0xFF059669); // Emerald 600 - For success states
-  static const Color accentColor = Color(0xFF6B7280); // Gray 500 - Better contrast
-  static const Color warningColor = Color(0xFFD97706); // Amber 600 - More accessible
-  static const Color errorColor = Color(0xFFDC2626); // Red 600 - Better contrast
+  static const Color tertiaryColor = Color(
+    0xFF059669,
+  ); // Emerald 600 - For success states
+  static const Color accentColor = Color(
+    0xFF6B7280,
+  ); // Gray 500 - Better contrast
+  static const Color warningColor = Color(
+    0xFFD97706,
+  ); // Amber 600 - More accessible
+  static const Color errorColor = Color(
+    0xFFDC2626,
+  ); // Red 600 - Better contrast
   static const Color successColor = Color(0xFF059669); // Emerald 600
 
   // Enhanced Dark Theme Colors - Better contrast and readability
-  static const Color darkBackground = Color(0xFF0F0F23); // Deep indigo-black for sophistication
-  static const Color darkSurface = Color(0xFF1E1E3F); // Slightly lighter with indigo tint
-  static const Color darkCardSurface = Color(0xFF2D2D5F); // Card surface with subtle indigo
-  static const Color darkSurfaceVariant = Color(0xFF374151); // For different elevation levels
-  static const Color darkOnSurface = Color(0xFFE5E7EB); // Softer white for better readability
-  static const Color darkOnBackground = Color(0xFFD1D5DB); // Light gray with better contrast
-  static const Color darkOnSurfaceVariant = Color(0xFF9CA3AF); // For secondary text
+  static const Color darkBackground = Color(
+    0xFF0F0F23,
+  ); // Deep indigo-black for sophistication
+  static const Color darkSurface = Color(
+    0xFF1E1E3F,
+  ); // Slightly lighter with indigo tint
+  static const Color darkCardSurface = Color(
+    0xFF2D2D5F,
+  ); // Card surface with subtle indigo
+  static const Color darkSurfaceVariant = Color(
+    0xFF374151,
+  ); // For different elevation levels
+  static const Color darkOnSurface = Color(
+    0xFFE5E7EB,
+  ); // Softer white for better readability
+  static const Color darkOnBackground = Color(
+    0xFFD1D5DB,
+  ); // Light gray with better contrast
+  static const Color darkOnSurfaceVariant = Color(
+    0xFF9CA3AF,
+  ); // For secondary text
 
   // Enhanced Light Theme Colors - Better hierarchy and contrast
   static const Color lightBackground = Color(0xFFFAFBFF); // Subtle blue tint
@@ -43,10 +71,7 @@ class ModernTheme {
   static const Color lightOnSurfaceVariant = Color(0xFF475569); // Slate 600
 
   // Modern Professional Gradients - Refined and accessible
-  static const List<Color> primaryGradient = [
-    primaryColor,
-    primaryLight,
-  ];
+  static const List<Color> primaryGradient = [primaryColor, primaryLight];
 
   static const List<Color> sunsetGradient = [
     Color(0xFFF59E0B), // Amber 500
@@ -63,10 +88,7 @@ class ModernTheme {
     Color(0xFF059669), // Emerald 600
   ];
 
-  static const List<Color> purpleGradient = [
-    primaryColor,
-    secondaryColor,
-  ];
+  static const List<Color> purpleGradient = [primaryColor, secondaryColor];
 
   static const List<Color> successGradient = [
     Color(0xFF10B981), // Emerald 500
@@ -113,7 +135,86 @@ class ModernTheme {
   // NEW: Glassmorphic colors
   static const Color glassWhite = Color(0x1AFFFFFF);
   static const Color glassBorder = Color(0x2AFFFFFF);
+  static const Color glassBlack = Color(0x1A000000);
+  static const Color glassDarkBorder = Color(0x2A000000);
 
+  // Semantic state colors with better contrast
+  static const Color successBackground = Color(0x1A10B981);
+  static const Color warningBackground = Color(0x1AF59E0B);
+  static const Color errorBackground = Color(0x1AEF4444);
+  static const Color infoBackground = Color(0x1A3B82F6);
+
+  // Interactive states
+  static const Color hoverOverlay = Color(0x0AFFFFFF);
+  static const Color pressOverlay = Color(0x14FFFFFF);
+  static const Color focusBorder = Color(0xFF818CF8);
+  static const Color disabledOverlay = Color(0x0A000000);
+
+  // Spacing constants for consistent UI
+  static const double space2xs = 2.0;
+  static const double spaceXs = 4.0;
+  static const double spaceSm = 8.0;
+  static const double spaceMd = 16.0;
+  static const double spaceLg = 24.0;
+  static const double spaceXl = 32.0;
+  static const double space2xl = 48.0;
+  static const double space3xl = 64.0;
+
+  // Border radius constants
+  static const double radiusXs = 4.0;
+  static const double radiusSm = 8.0;
+  static const double radiusMd = 12.0;
+  static const double radiusLg = 16.0;
+  static const double radiusXl = 20.0;
+  static const double radius2xl = 28.0;
+  static const double radiusFull = 999.0;
+
+  // Elevation shadows with better depth
+  static List<BoxShadow> elevationSm(Color color) => [
+    BoxShadow(
+      color: color.withValues(alpha: 0.08),
+      blurRadius: 4,
+      offset: const Offset(0, 2),
+    ),
+  ];
+
+  static List<BoxShadow> elevationMd(Color color) => [
+    BoxShadow(
+      color: color.withValues(alpha: 0.12),
+      blurRadius: 12,
+      offset: const Offset(0, 4),
+    ),
+    BoxShadow(
+      color: color.withValues(alpha: 0.04),
+      blurRadius: 4,
+      offset: const Offset(0, 2),
+    ),
+  ];
+
+  static List<BoxShadow> elevationLg(Color color) => [
+    BoxShadow(
+      color: color.withValues(alpha: 0.16),
+      blurRadius: 24,
+      offset: const Offset(0, 8),
+    ),
+    BoxShadow(
+      color: color.withValues(alpha: 0.08),
+      blurRadius: 8,
+      offset: const Offset(0, 4),
+    ),
+  ];
+
+  // Animation durations
+  static const Duration animationFast = Duration(milliseconds: 150);
+  static const Duration animationMedium = Duration(milliseconds: 300);
+  static const Duration animationSlow = Duration(milliseconds: 600);
+  static const Duration animationPageTransition = Duration(milliseconds: 400);
+
+  // Animation curves
+  static const Curve curveEaseInOut = Curves.easeInOutCubic;
+  static const Curve curveEaseOut = Curves.easeOutCubic;
+  static const Curve curveBounce = Curves.elasticOut;
+  static const Curve curveOvershoot = Curves.easeOutBack;
 
   // Typography - Inter font for modern feel with NotoSans fallback
   static String get primaryFont => GoogleFonts.inter().fontFamily ?? 'NotoSans';
@@ -269,6 +370,77 @@ class ModernTheme {
         ),
       ),
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: primaryLight,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        textStyle: const TextStyle(
+          fontFamily: 'NotoSans',
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: darkOnSurface,
+        side: const BorderSide(color: Color(0xFF374151)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        textStyle: const TextStyle(
+          fontFamily: 'NotoSans',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: darkSurface,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFF374151), width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: primaryLight, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: errorColor, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: errorColor, width: 2),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      hintStyle: TextStyle(color: darkOnSurfaceVariant),
+      labelStyle: TextStyle(color: darkOnSurfaceVariant),
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: darkSurface,
+      deleteIconColor: darkOnSurfaceVariant,
+      labelStyle: TextStyle(color: darkOnSurface),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusFull),
+      ),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFF374151),
+      thickness: 1,
+      space: 0,
+    ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: darkCardSurface,
+      contentTextStyle: TextStyle(color: darkOnSurface),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      behavior: SnackBarBehavior.floating,
+    ),
     cardTheme: CardThemeData(
       elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -340,6 +512,77 @@ class ModernTheme {
           fontWeight: FontWeight.w600,
         ),
       ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: primaryDark,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        textStyle: const TextStyle(
+          fontFamily: 'NotoSans',
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: lightOnSurface,
+        side: const BorderSide(color: Color(0xFFE2E8F0)),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        textStyle: const TextStyle(
+          fontFamily: 'NotoSans',
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: lightSurface,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0), width: 1),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: primaryColor, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: errorColor, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: errorColor, width: 2),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      hintStyle: TextStyle(color: lightOnSurfaceVariant),
+      labelStyle: TextStyle(color: lightOnSurfaceVariant),
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: lightSurfaceVariant,
+      deleteIconColor: lightOnSurfaceVariant,
+      labelStyle: TextStyle(color: lightOnSurface),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusFull),
+      ),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFFE2E8F0),
+      thickness: 1,
+      space: 0,
+    ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: lightOnSurface,
+      contentTextStyle: TextStyle(color: lightSurface),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      behavior: SnackBarBehavior.floating,
     ),
     cardTheme: CardThemeData(
       elevation: 0,

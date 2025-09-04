@@ -33,14 +33,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   double _mapCenterLat = 37.7749;
   double _mapCenterLng = -122.4194;
   bool _isLoading = false;
-  bool _showEventsList = false;
+  final bool _showEventsList = false;
   bool _isLocationEnabled = false;
 
   EventCategory? _selectedCategory;
   Event? _selectedEvent;
 
   final PageController _eventPageController = PageController();
-  int _currentEventIndex = 0;
+  final int _currentEventIndex = 0;
 
   @override
   void initState() {

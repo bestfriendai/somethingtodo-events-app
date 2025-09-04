@@ -27,7 +27,7 @@ class PremiumEventCard extends StatefulWidget {
   final VoidCallback? onSave;
 
   const PremiumEventCard({
-    Key? key,
+    super.key,
     required this.id,
     required this.title,
     required this.description,
@@ -45,7 +45,7 @@ class PremiumEventCard extends StatefulWidget {
     this.onLike,
     this.onShare,
     this.onSave,
-  }) : super(key: key);
+  });
 
   @override
   State<PremiumEventCard> createState() => _PremiumEventCardState();

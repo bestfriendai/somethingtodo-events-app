@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../config/consolidated_design_system.dart';
 import '../../widgets/theme/enhanced_theme_preview.dart';
-import '../../config/responsive_breakpoints.dart';
 
 /// Theme settings screen for switching between design variants
 class ThemeSettingsScreen extends StatelessWidget {
@@ -85,14 +84,20 @@ class ThemeSettingsScreen extends StatelessWidget {
         final isSelected = themeProvider.currentVariant == variant.id;
 
         return Container(
-          margin: const EdgeInsets.only(bottom: ConsolidatedDesignSystem.spacingSm),
+          margin: const EdgeInsets.only(
+            bottom: ConsolidatedDesignSystem.spacingSm,
+          ),
           child: Card(
             elevation: isSelected ? 4 : 1,
             child: InkWell(
               onTap: () => themeProvider.setThemeVariant(variant.id),
-              borderRadius: BorderRadius.circular(ConsolidatedDesignSystem.radiusLg),
+              borderRadius: BorderRadius.circular(
+                ConsolidatedDesignSystem.radiusLg,
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(ConsolidatedDesignSystem.spacingMd),
+                padding: const EdgeInsets.all(
+                  ConsolidatedDesignSystem.spacingMd,
+                ),
                 child: Row(
                   children: [
                     Container(
@@ -129,7 +134,9 @@ class ThemeSettingsScreen extends StatelessWidget {
                                       : FontWeight.w500,
                                 ),
                           ),
-                          const SizedBox(height: ConsolidatedDesignSystem.spacingXs),
+                          const SizedBox(
+                            height: ConsolidatedDesignSystem.spacingXs,
+                          ),
                           Text(
                             variant.description,
                             style: Theme.of(context).textTheme.bodySmall

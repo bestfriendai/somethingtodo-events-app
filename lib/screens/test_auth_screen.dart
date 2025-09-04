@@ -28,11 +28,12 @@ class _TestAuthScreenState extends State<TestAuthScreen> {
     });
 
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
-      
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
+
       setState(() {
         _status = 'Sign up successful! User: ${credential.user?.uid}';
       });
@@ -58,7 +59,7 @@ class _TestAuthScreenState extends State<TestAuthScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      
+
       setState(() {
         _status = 'Sign in successful! User: ${credential.user?.uid}';
       });
@@ -163,7 +164,8 @@ class _TestAuthScreenState extends State<TestAuthScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pushReplacementNamed('/auth'),
+              onPressed: () =>
+                  Navigator.of(context).pushReplacementNamed('/auth'),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               child: const Text('Back to Auth Screen'),
             ),

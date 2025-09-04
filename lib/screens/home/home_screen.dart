@@ -6,7 +6,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../providers/events_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../models/event.dart';
-import '../../config/theme.dart';
+import '../../config/theme.dart' as old_theme;
+import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
 import '../../widgets/common/event_card.dart';
 import '../../widgets/common/loading_shimmer.dart';
 import '../events/event_details_screen.dart';
@@ -67,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen>
       await eventsProvider.loadEvents(refresh: true);
 
       // Try to load nearby events after a short delay to allow location to be obtained
-      Future.delayed(const Duration(seconds: 1), () {
+      Future.delayed(Duration(seconds: 1), () {
         if (mounted) {
           eventsProvider.loadNearbyEvents();
         }
@@ -140,21 +142,21 @@ class _HomeScreenState extends State<HomeScreen>
                     right: 2,
                     top: 2,
                     child: Container(
-                      padding: const EdgeInsets.all(2),
+                      padding: EdgeInsets.all(AppTheme.space2xs),
                       decoration: BoxDecoration(
                         color: AppTheme.errorColor,
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(AppTheme.radiusXs + 2),
                       ),
-                      constraints: const BoxConstraints(
-                        minWidth: 8,
-                        minHeight: 8,
+                      constraints: BoxConstraints(
+                        minWidth: AppTheme.spaceSm,
+                        minHeight: AppTheme.spaceSm,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: AppTheme.spaceSm),
           ],
         );
       },
@@ -164,26 +166,26 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildSearchBar() {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceMd),
         child: GestureDetector(
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SearchScreen()),
           ),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceMd, vertical: AppTheme.spaceMd - 4),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppTheme.radiusMd),
               border: Border.all(
                 color: Colors.grey.withValues(alpha: 0.3),
-                width: 1,
+                width: 1.0,
               ),
             ),
             child: Row(
               children: [
-                Icon(Icons.search, color: Colors.grey[600], size: 20),
-                const SizedBox(width: 12),
+                Icon(Icons.search, color: Colors.grey[600], size: AppTheme.spaceLg - 4),
+                SizedBox(width: AppTheme.spaceMd - 4),
                 Text(
                   'Search events, locations...',
                   style: Theme.of(
@@ -193,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen>
               ],
             ),
           ),
-        ).animate().fadeIn(duration: 300.ms).slideX(begin: -0.2),
+        ).animate().fadeIn(duration: AppTheme.animationMedium).slideX(begin: -0.2),
       ),
     );
   }
@@ -204,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen>
         builder: (context, eventsProvider, child) {
           if (eventsProvider.isLoading &&
               eventsProvider.featuredEvents.isEmpty) {
-            return const LoadingShimmer(height: 200);
+            return LoadingShimmer(height: 200);
           }
 
           if (eventsProvider.featuredEvents.isEmpty) {
@@ -215,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(AppTheme.spaceMd),
                 child: Text(
                   'Featured Events',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -239,9 +241,9 @@ class _HomeScreenState extends State<HomeScreen>
                   },
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppTheme.spaceSm),
               _buildFeaturedIndicator(eventsProvider.featuredEvents.length),
-              const SizedBox(height: 16),
+              SizedBox(height: AppTheme.spaceMd),
             ],
           );
         },
@@ -251,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildFeaturedEventCard(Event event) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.symmetric(horizontal: AppTheme.spaceMd),
       child: GestureDetector(
         onTap: () => Navigator.push(
           context,
@@ -261,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen>
         ),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppTheme.radiusLg),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.1),
@@ -271,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen>
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppTheme.radiusLg),
             child: Stack(
               children: [
                 // Background Image
@@ -283,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen>
                   width: double.infinity,
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
-                      const LoadingShimmer(height: 200),
+                      LoadingShimmer(height: 200),
                   errorWidget: (context, url, error) => Container(
                     height: 200,
                     color: Colors.grey[300],

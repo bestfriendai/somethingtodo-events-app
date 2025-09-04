@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
 import '../../models/chat.dart';
 import '../../models/event.dart';
-import '../../config/theme.dart';
-import '../../providers/chat_provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/chat_provider.dart';
+import '../../services/chat_service.dart';
+import '../../config/modern_theme.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
+import '../../core/utils/date_utils.dart';
+import '../../widgets/chat/chat_input.dart';
+import '../../widgets/chat/chat_message_bubble.dart';
 import '../../providers/events_provider.dart';
 import '../../widgets/common/event_card.dart';
 import '../events/event_details_screen.dart';
@@ -467,7 +472,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
         return ListView.builder(
           controller: _scrollController,
-          padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppTheme.spaceMd),
           itemCount: messages.length + (chatProvider.isTyping ? 1 : 0),
           itemBuilder: (context, index) {
             if (index == messages.length && chatProvider.isTyping) {
@@ -507,7 +512,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               )
             else
               const SizedBox(width: 32),
-            const SizedBox(width: 12),
+            SizedBox(width: AppTheme.spaceSm),
           ],
           Expanded(
             child: Column(
@@ -541,7 +546,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
                 // Event recommendations
                 if (message.recommendations.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppTheme.spaceSm),
                   ...message.recommendations.map(
                     (rec) => _buildRecommendationCard(rec),
                   ),

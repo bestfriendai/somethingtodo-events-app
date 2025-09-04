@@ -4,20 +4,17 @@ import 'package:shimmer/shimmer.dart';
 import '../../config/modern_theme.dart';
 
 /// Enhanced loading states and error handling UI components
-/// 
+///
 /// Features:
 /// - Sophisticated shimmer animations
-/// - Contextual loading indicators  
+/// - Contextual loading indicators
 /// - Beautiful error states with recovery actions
 /// - Offline mode indicators
 /// - Skeleton loaders matching content structure
 
 class LoadingStates {
   /// Modern shimmer-based skeleton loader for event cards
-  static Widget eventCardSkeleton({
-    bool isCompact = false,
-    int count = 3,
-  }) {
+  static Widget eventCardSkeleton({bool isCompact = false, int count = 3}) {
     return Column(
       children: List.generate(count, (index) {
         return Container(
@@ -26,7 +23,7 @@ class LoadingStates {
             borderRadius: BorderRadius.circular(20),
             color: Colors.white.withValues(alpha: 0.05),
           ),
-          child: isCompact 
+          child: isCompact
               ? _CompactEventCardSkeleton()
               : _FullEventCardSkeleton(),
         );
@@ -45,26 +42,26 @@ class LoadingStates {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: ModernTheme.primaryGradient,
-              ),
-              shape: BoxShape.circle,
-            ),
-            child: const CircularProgressIndicator(
-              color: Colors.white,
-              strokeWidth: 3.0,
-            ),
-          )
-          .animate(onPlay: (controller) => controller.repeat())
-          .rotate(duration: 2.seconds)
-          .then()
-          .scaleXY(end: 1.1, duration: 1.seconds, curve: Curves.easeInOut)
-          .then()
-          .scaleXY(end: 1.0, duration: 1.seconds, curve: Curves.easeInOut),
-          
+                width: size,
+                height: size,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: ModernTheme.primaryGradient,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+                child: const CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 3.0,
+                ),
+              )
+              .animate(onPlay: (controller) => controller.repeat())
+              .rotate(duration: 2.seconds)
+              .then()
+              .scaleXY(end: 1.1, duration: 1.seconds, curve: Curves.easeInOut)
+              .then()
+              .scaleXY(end: 1.0, duration: 1.seconds, curve: Curves.easeInOut),
+
           if (message != null) ...[
             const SizedBox(height: 24),
             Text(
@@ -101,29 +98,25 @@ class LoadingStates {
           children: [
             // Error icon with gradient background
             Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    ModernTheme.errorColor.withValues(alpha: 0.2),
-                    ModernTheme.errorColor.withValues(alpha: 0.1),
-                  ],
-                ),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                icon,
-                size: 40,
-                color: ModernTheme.errorColor,
-              ),
-            )
-            .animate()
-            .scale(duration: 600.ms, curve: Curves.elasticOut)
-            .shake(hz: 2, curve: Curves.easeInOut),
-            
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        ModernTheme.errorColor.withValues(alpha: 0.2),
+                        ModernTheme.errorColor.withValues(alpha: 0.1),
+                      ],
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, size: 40, color: ModernTheme.errorColor),
+                )
+                .animate()
+                .scale(duration: 600.ms, curve: Curves.elasticOut)
+                .shake(hz: 2, curve: Curves.easeInOut),
+
             const SizedBox(height: 24),
-            
+
             // Title
             Text(
               title,
@@ -134,9 +127,9 @@ class LoadingStates {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Message
             Text(
               message,
@@ -147,34 +140,34 @@ class LoadingStates {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Action buttons
             Column(
               children: [
                 // Primary action (retry)
                 ElevatedButton.icon(
-                  onPressed: onRetry,
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: Text(retryLabel),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ModernTheme.primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32, 
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                )
-                .animate()
-                .fadeIn(delay: 300.ms, duration: 400.ms)
-                .slideY(begin: 0.3),
-                
+                      onPressed: onRetry,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: Text(retryLabel),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ModernTheme.primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 0,
+                      ),
+                    )
+                    .animate()
+                    .fadeIn(delay: 300.ms, duration: 400.ms)
+                    .slideY(begin: 0.3),
+
                 // Secondary action if provided
                 if (onSecondaryAction != null && secondaryLabel != null) ...[
                   const SizedBox(height: 16),
@@ -187,11 +180,9 @@ class LoadingStates {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                  )
-                  .animate()
-                  .fadeIn(delay: 500.ms, duration: 400.ms),
+                  ).animate().fadeIn(delay: 500.ms, duration: 400.ms),
                 ],
-                
+
                 // Offline mode indicator
                 if (showOfflineMode) ...[
                   const SizedBox(height: 24),
@@ -222,11 +213,7 @@ class LoadingStates {
           children: [
             // Illustration or icon
             if (illustration != null)
-              Image.asset(
-                illustration,
-                width: 200,
-                height: 200,
-              )
+              Image.asset(illustration, width: 200, height: 200)
             else
               Container(
                 width: 120,
@@ -246,9 +233,9 @@ class LoadingStates {
                   color: Colors.white.withValues(alpha: 0.6),
                 ),
               ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Title
             Text(
               title,
@@ -259,9 +246,9 @@ class LoadingStates {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Message
             Text(
               message,
@@ -272,29 +259,33 @@ class LoadingStates {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Action button
             ElevatedButton(
-              onPressed: onAction,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ModernTheme.primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32, 
-                  vertical: 16,
+                  onPressed: onAction,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ModernTheme.primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Text(actionLabel),
+                )
+                .animate()
+                .fadeIn(delay: 300.ms, duration: 400.ms)
+                .scale(
+                  delay: 300.ms,
+                  duration: 400.ms,
+                  curve: Curves.elasticOut,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 0,
-              ),
-              child: Text(actionLabel),
-            )
-            .animate()
-            .fadeIn(delay: 300.ms, duration: 400.ms)
-            .scale(delay: 300.ms, duration: 400.ms, curve: Curves.elasticOut),
           ],
         ),
       ),
@@ -309,58 +300,56 @@ class LoadingStates {
     if (isOnline) return const SizedBox.shrink();
 
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: ModernTheme.warningGradient,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Row(
-          children: [
-            const Icon(
-              Icons.wifi_off_rounded,
-              color: Colors.white,
-              size: 20,
-            ),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Text(
-                'You\'re offline • Using cached data',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: ModernTheme.warningGradient),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
-            ),
-            if (onRetryConnection != null)
-              TextButton(
-                onPressed: onRetryConnection,
-                child: const Text(
-                  'Retry',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
+            ],
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.wifi_off_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text(
+                    'You\'re offline • Using cached data',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
-              ),
-          ],
-        ),
-      ),
-    )
-    .animate()
-    .slideY(begin: -1, duration: 400.ms, curve: Curves.easeOut)
-    .fadeIn(duration: 300.ms);
+                if (onRetryConnection != null)
+                  TextButton(
+                    onPressed: onRetryConnection,
+                    child: const Text(
+                      'Retry',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        )
+        .animate()
+        .slideY(begin: -1, duration: 400.ms, curve: Curves.easeOut)
+        .fadeIn(duration: 300.ms);
   }
 }
 
@@ -386,7 +375,7 @@ class _FullEventCardSkeleton extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Content placeholder
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -415,9 +404,9 @@ class _FullEventCardSkeleton extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Title
                 Container(
                   width: double.infinity,
@@ -427,9 +416,9 @@ class _FullEventCardSkeleton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: 24,
@@ -438,9 +427,9 @@ class _FullEventCardSkeleton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Description lines
                 Container(
                   width: double.infinity,
@@ -450,9 +439,9 @@ class _FullEventCardSkeleton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 Container(
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: 16,
@@ -461,9 +450,9 @@ class _FullEventCardSkeleton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Venue and price row
                 Row(
                   children: [
@@ -515,9 +504,9 @@ class _CompactEventCardSkeleton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            
+
             const SizedBox(width: 16),
-            
+
             // Content placeholder
             Expanded(
               child: Column(
@@ -531,9 +520,9 @@ class _CompactEventCardSkeleton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   Container(
                     width: double.infinity,
                     height: 18,
@@ -542,9 +531,9 @@ class _CompactEventCardSkeleton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 4),
-                  
+
                   Container(
                     width: MediaQuery.of(context).size.width * 0.5,
                     height: 18,
@@ -553,9 +542,9 @@ class _CompactEventCardSkeleton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   Container(
                     width: MediaQuery.of(context).size.width * 0.4,
                     height: 14,
@@ -567,7 +556,7 @@ class _CompactEventCardSkeleton extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Favorite button placeholder
             Container(
               width: 40,
@@ -588,36 +577,36 @@ class _OfflineModeIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.orange.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.orange.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.cloud_off_outlined,
-            color: Colors.orange.shade400,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            'Offline Mode Active',
-            style: TextStyle(
-              color: Colors.orange.shade300,
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.orange.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.orange.withValues(alpha: 0.3),
+              width: 1,
             ),
           ),
-        ],
-      ),
-    )
-    .animate(onPlay: (controller) => controller.repeat(reverse: true))
-    .fadeIn(duration: 1.5.seconds);
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.cloud_off_outlined,
+                color: Colors.orange.shade400,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Offline Mode Active',
+                style: TextStyle(
+                  color: Colors.orange.shade300,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        )
+        .animate(onPlay: (controller) => controller.repeat(reverse: true))
+        .fadeIn(duration: 1.5.seconds);
   }
 }

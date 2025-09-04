@@ -83,7 +83,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
   }
 
   void _loadFavoriteStatus() async {
-    final favorites = await CacheService.instance.getCachedFavorites();
+    final favorites = CacheService.instance.getCachedFavorites();
     if (mounted) {
       setState(() {
         _isLiked = favorites.contains(widget.event.id);
@@ -232,7 +232,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
           }
         }
       },
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: Stack(
@@ -662,7 +662,7 @@ class _SwipeableFeedCardState extends State<SwipeableFeedCard>
       onLongPress: () {
         DelightService.instance.triggerEasterEgg(context, 'action_explorer');
       },
-      child: Container(
+      child: SizedBox(
         width: 50,
         height: 70,
         child: Column(

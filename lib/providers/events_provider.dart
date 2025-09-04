@@ -12,6 +12,7 @@ import '../services/enhanced_location_service.dart';
 import '../services/logging_service.dart';
 import '../config/app_config.dart';
 import '../data/sample_events.dart';
+import '../services/rapidapi_exception.dart';
 
 class EventsProvider extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
@@ -78,6 +79,11 @@ class EventsProvider extends ChangeNotifier {
 
     // Initialize cache service
     await CacheService.instance.initialize();
+
+    // Quick health ping to ensure backend reachable and reset breaker if needed
+    try {
+      await _rapidAPIService.pingHealth();
+    } catch (_) {}
 
     // Try to load from cache first for better perceived performance
     await _loadFromCache();
@@ -350,7 +356,17 @@ class EventsProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       debugPrint('EventsProvider: Failed to load nearby events: $e');
-      _setError('Failed to load nearby events: $e');
+      if (e is RapidAPIException) {
+        // Graceful fallback for API outages or rate limits
+        _setError(e.message);
+        // Use existing events as nearby fallback to keep UI populated
+        if (_events.isNotEmpty) {
+          _nearbyEvents = _events.take(10).toList();
+          notifyListeners();
+        }
+      } else {
+        _setError('Failed to load nearby events: $e');
+      }
     } finally {
       _setLoading(false);
     }
@@ -411,39 +427,19 @@ class EventsProvider extends ChangeNotifier {
         _hasMoreEvents = _events.length >= 50;
         debugPrint('Total events loaded: ${_events.length}');
       } catch (apiError) {
-        // Check if it's a rate limit error (429 status code)
-        if (apiError.toString().contains('429') ||
-            apiError.toString().contains('rate') ||
-            apiError.toString().contains('Too Many Requests')) {
-          debugPrint('RapidAPI rate limited - loading demo events');
-          _error = 'API rate limit reached - showing sample events';
-
-          // Load demo events instead
-          _events = await SampleEvents.getDemoEvents();
-          _featuredEvents = await SampleEvents.getFeaturedEvents();
-          _nearbyEvents = _events.take(10).toList();
-          _hasMoreEvents = false;
-
-          // Still cache these for offline use
-          await CacheService.instance.cacheEvents(_events);
-          await CacheService.instance.cacheFeaturedEvents(_featuredEvents);
+        // Do not use sample data. Surface the error and keep any cached results.
+        if (apiError is RapidAPIException) {
+          debugPrint('RapidAPI error: ${apiError.type}');
+          _setError(apiError.message);
         } else {
-          // For other errors, try cache then demo
-          rethrow;
+          _setError('Failed to load events: $apiError');
         }
       }
     } catch (e) {
       debugPrint('Failed to load real events: $e');
       _setError('Failed to load events: $e');
-      // Fallback to cached data
-      if (await _loadFromCache()) {
-        debugPrint('Loaded from cache due to API error');
-      } else {
-        // Create some demo events as last resort
-        _events = await SampleEvents.getDemoEvents();
-        _featuredEvents = await SampleEvents.getFeaturedEvents();
-        _nearbyEvents = _events.take(10).toList();
-      }
+      // Fallback only to cache; do not use sample data
+      await _loadFromCache();
     } finally {
       _setLoading(false);
     }

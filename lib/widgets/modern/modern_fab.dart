@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:math';
-import 'dart:ui';
 import '../../config/modern_theme.dart';
 import '../../services/delight_service.dart';
 import '../../services/platform_interactions.dart';
@@ -404,7 +402,7 @@ class _ModernSpeedDialState extends State<ModernSpeedDial>
               );
             },
           );
-        }).toList(),
+        }),
         // Main FAB
         ModernFloatingActionButton(
           onPressed: _toggle,

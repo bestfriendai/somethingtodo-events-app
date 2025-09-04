@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'dart:math' as math;
-import '../../config/glass_theme.dart';
 
 class GlassOnboardingScreen extends StatefulWidget {
   const GlassOnboardingScreen({super.key});

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -213,7 +212,7 @@ class _PerformanceTracker {
   void _logSummary() {
     debugPrint('📊 Performance Summary:');
     debugPrint('   Frame Rate: ${_currentFrameRate.toStringAsFixed(1)} fps');
-    debugPrint('   Memory Usage: ${_currentMemoryUsage} MB');
+    debugPrint('   Memory Usage: $_currentMemoryUsage MB');
 
     if (_themeOperations.isNotEmpty) {
       debugPrint('   Theme Operations:');

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Optimized image widget with caching, lazy loading, and memory management
@@ -234,7 +233,7 @@ class _LazyImageState extends State<LazyImage> {
         }
         return false;
       },
-      child: Container(
+      child: SizedBox(
         key: _key,
         width: widget.width,
         height: widget.height,

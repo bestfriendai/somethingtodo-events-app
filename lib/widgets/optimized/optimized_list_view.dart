@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import '../../services/performance_service.dart';
 
 /// Optimized list view with performance enhancements
-/// 
+///
 /// Features:
 /// - Automatic performance adaptation
 /// - Viewport caching optimization
@@ -25,7 +24,7 @@ class OptimizedListView<T> extends StatefulWidget {
   final bool enablePullToRefresh;
   final Future<void> Function()? onRefresh;
   final int cacheExtentMultiplier;
-  
+
   const OptimizedListView({
     super.key,
     required this.items,
@@ -43,7 +42,7 @@ class OptimizedListView<T> extends StatefulWidget {
     this.onRefresh,
     this.cacheExtentMultiplier = 2,
   });
-  
+
   @override
   State<OptimizedListView<T>> createState() => _OptimizedListViewState<T>();
 }
@@ -52,17 +51,17 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
   late ScrollController _scrollController;
   bool _isLoadingMore = false;
   final Set<int> _visibleIndices = {};
-  
+
   @override
   void initState() {
     super.initState();
     _scrollController = widget.controller ?? ScrollController();
-    
+
     if (widget.onLoadMore != null) {
       _scrollController.addListener(_onScroll);
     }
   }
-  
+
   @override
   void dispose() {
     if (widget.controller == null) {
@@ -72,17 +71,17 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
     }
     super.dispose();
   }
-  
+
   void _onScroll() {
-    if (_scrollController.position.pixels >= 
+    if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       if (!_isLoadingMore && widget.onLoadMore != null) {
         setState(() {
           _isLoadingMore = true;
         });
-        
+
         widget.onLoadMore!();
-        
+
         // Reset loading state after delay
         Future.delayed(const Duration(seconds: 2), () {
           if (mounted) {
@@ -94,34 +93,34 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
       }
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (widget.items.isEmpty && widget.emptyWidget != null) {
       return widget.emptyWidget!;
     }
-    
+
     Widget listView = _buildOptimizedList();
-    
+
     if (widget.enablePullToRefresh && widget.onRefresh != null) {
       listView = RefreshIndicator(
         onRefresh: widget.onRefresh!,
         child: listView,
       );
     }
-    
+
     return listView;
   }
-  
+
   Widget _buildOptimizedList() {
     final performanceService = PerformanceService.instance;
-    
+
     // Calculate optimal cache extent based on performance
     final baseExtent = MediaQuery.of(context).size.height;
     final cacheExtent = performanceService.enableAnimations
         ? baseExtent * widget.cacheExtentMultiplier
         : baseExtent; // Reduce cache when performance is poor
-    
+
     if (widget.separator != null) {
       return ListView.separated(
         controller: _scrollController,
@@ -136,7 +135,7 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
         addRepaintBoundaries: false, // Manually add where needed
       );
     }
-    
+
     if (widget.itemExtent != null) {
       // Use fixed extent list for better performance
       return ListView.builder(
@@ -152,7 +151,7 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
         addRepaintBoundaries: false,
       );
     }
-    
+
     return ListView.builder(
       controller: _scrollController,
       padding: widget.padding,
@@ -165,21 +164,21 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
       addRepaintBoundaries: false,
     );
   }
-  
+
   Widget _buildItem(BuildContext context, int index) {
     // Show loading widget at the end
     if (index >= widget.items.length) {
       return widget.loadingWidget ?? _buildDefaultLoadingWidget();
     }
-    
+
     final item = widget.items[index];
     Widget child = widget.itemBuilder(context, item, index);
-    
+
     // Add repaint boundary for every 3rd item to balance performance
     if (index % 3 == 0) {
       child = RepaintBoundary(child: child);
     }
-    
+
     // Track visible items for analytics or preloading
     return NotificationListener<UserScrollNotification>(
       onNotification: (_) {
@@ -189,7 +188,7 @@ class _OptimizedListViewState<T> extends State<OptimizedListView<T>> {
       child: child,
     );
   }
-  
+
   Widget _buildDefaultLoadingWidget() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -205,7 +204,7 @@ class OptimizedSliverList<T> extends StatelessWidget {
   final Widget Function(BuildContext context, T item, int index) itemBuilder;
   final Widget? separator;
   final double? itemExtent;
-  
+
   const OptimizedSliverList({
     super.key,
     required this.items,
@@ -213,7 +212,7 @@ class OptimizedSliverList<T> extends StatelessWidget {
     this.separator,
     this.itemExtent,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     if (itemExtent != null) {
@@ -227,7 +226,7 @@ class OptimizedSliverList<T> extends StatelessWidget {
         ),
       );
     }
-    
+
     if (separator != null) {
       return SliverList(
         delegate: SliverChildBuilderDelegate(
@@ -244,7 +243,7 @@ class OptimizedSliverList<T> extends StatelessWidget {
         ),
       );
     }
-    
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) => _buildItem(context, index),
@@ -254,17 +253,17 @@ class OptimizedSliverList<T> extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildItem(BuildContext context, int index) {
     if (index >= items.length) return const SizedBox.shrink();
-    
+
     Widget child = itemBuilder(context, items[index], index);
-    
+
     // Add repaint boundary for expensive items
     if (index % 3 == 0) {
       child = RepaintBoundary(child: child);
     }
-    
+
     return child;
   }
 }
@@ -272,12 +271,18 @@ class OptimizedSliverList<T> extends StatelessWidget {
 /// Animated list with performance optimizations
 class OptimizedAnimatedList<T> extends StatefulWidget {
   final List<T> items;
-  final Widget Function(BuildContext context, T item, int index, Animation<double> animation) itemBuilder;
+  final Widget Function(
+    BuildContext context,
+    T item,
+    int index,
+    Animation<double> animation,
+  )
+  itemBuilder;
   final Duration insertDuration;
   final Duration removeDuration;
   final ScrollController? controller;
   final EdgeInsets? padding;
-  
+
   const OptimizedAnimatedList({
     super.key,
     required this.items,
@@ -287,34 +292,35 @@ class OptimizedAnimatedList<T> extends StatefulWidget {
     this.controller,
     this.padding,
   });
-  
+
   @override
-  State<OptimizedAnimatedList<T>> createState() => _OptimizedAnimatedListState<T>();
+  State<OptimizedAnimatedList<T>> createState() =>
+      _OptimizedAnimatedListState<T>();
 }
 
 class _OptimizedAnimatedListState<T> extends State<OptimizedAnimatedList<T>> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   late List<T> _items;
-  
+
   @override
   void initState() {
     super.initState();
     _items = List.from(widget.items);
   }
-  
+
   @override
   void didUpdateWidget(OptimizedAnimatedList<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (widget.items.length != oldWidget.items.length) {
       _updateItems();
     }
   }
-  
+
   void _updateItems() {
     final performanceService = PerformanceService.instance;
     final enableAnimations = performanceService.enableAnimations;
-    
+
     // Add new items
     for (int i = _items.length; i < widget.items.length; i++) {
       _items.add(widget.items[i]);
@@ -323,20 +329,21 @@ class _OptimizedAnimatedListState<T> extends State<OptimizedAnimatedList<T>> {
         duration: enableAnimations ? widget.insertDuration : Duration.zero,
       );
     }
-    
+
     // Remove extra items
     while (_items.length > widget.items.length) {
       final index = _items.length - 1;
       final item = _items.removeAt(index);
-      
+
       _listKey.currentState?.removeItem(
         index,
-        (context, animation) => widget.itemBuilder(context, item, index, animation),
+        (context, animation) =>
+            widget.itemBuilder(context, item, index, animation),
         duration: enableAnimations ? widget.removeDuration : Duration.zero,
       );
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return AnimatedList(
@@ -346,14 +353,19 @@ class _OptimizedAnimatedListState<T> extends State<OptimizedAnimatedList<T>> {
       initialItemCount: _items.length,
       itemBuilder: (context, index, animation) {
         if (index >= _items.length) return const SizedBox.shrink();
-        
-        Widget child = widget.itemBuilder(context, _items[index], index, animation);
-        
+
+        Widget child = widget.itemBuilder(
+          context,
+          _items[index],
+          index,
+          animation,
+        );
+
         // Add repaint boundary for complex animated items
         if (index % 3 == 0) {
           child = RepaintBoundary(child: child);
         }
-        
+
         return child;
       },
     );
@@ -369,7 +381,7 @@ class InfiniteScrollList<T> extends StatefulWidget {
   final Widget? loadingWidget;
   final Widget? emptyWidget;
   final Widget? errorWidget;
-  
+
   const InfiniteScrollList({
     super.key,
     required this.onLoadMore,
@@ -380,7 +392,7 @@ class InfiniteScrollList<T> extends StatefulWidget {
     this.emptyWidget,
     this.errorWidget,
   });
-  
+
   @override
   State<InfiniteScrollList<T>> createState() => _InfiniteScrollListState<T>();
 }
@@ -392,7 +404,7 @@ class _InfiniteScrollListState<T> extends State<InfiniteScrollList<T>> {
   bool _hasMore = true;
   bool _hasError = false;
   int _currentPage = 0;
-  
+
   @override
   void initState() {
     super.initState();
@@ -400,7 +412,7 @@ class _InfiniteScrollListState<T> extends State<InfiniteScrollList<T>> {
     _scrollController.addListener(_onScroll);
     _loadMore();
   }
-  
+
   @override
   void dispose() {
     if (widget.controller == null) {
@@ -410,25 +422,25 @@ class _InfiniteScrollListState<T> extends State<InfiniteScrollList<T>> {
     }
     super.dispose();
   }
-  
+
   void _onScroll() {
-    if (_scrollController.position.pixels >= 
+    if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       _loadMore();
     }
   }
-  
+
   Future<void> _loadMore() async {
     if (_isLoading || !_hasMore) return;
-    
+
     setState(() {
       _isLoading = true;
       _hasError = false;
     });
-    
+
     try {
       final newItems = await widget.onLoadMore(_currentPage);
-      
+
       setState(() {
         _items.addAll(newItems);
         _currentPage++;
@@ -442,13 +454,13 @@ class _InfiniteScrollListState<T> extends State<InfiniteScrollList<T>> {
       });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (_items.isEmpty && !_isLoading) {
       return widget.emptyWidget ?? const Center(child: Text('No items'));
     }
-    
+
     return OptimizedListView<T>(
       items: _items,
       itemBuilder: widget.itemBuilder,

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../config/modern_theme.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../models/event.dart';
 import '../../services/analytics_service.dart';
 // import '../glass/glass_container.dart'; // File doesn't exist
@@ -18,14 +15,14 @@ class EnhancedEventCard extends StatefulWidget {
   final bool isCompact;
 
   const EnhancedEventCard({
-    Key? key,
+    super.key,
     required this.event,
     this.onTap,
     this.onFavorite,
     this.onShare,
     this.showActions = true,
     this.isCompact = false,
-  }) : super(key: key);
+  });
 
   @override
   State<EnhancedEventCard> createState() => _EnhancedEventCardState();
@@ -219,38 +216,37 @@ class _EnhancedEventCardState extends State<EnhancedEventCard>
                                 .slideX(begin: -0.2, end: 0),
 
                             // Price badge
-                            if (widget.event.price != null)
-                              Positioned(
-                                    top: 12,
-                                    right: 12,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withValues(
-                                          alpha: 0.2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
+                            Positioned(
+                                  top: 12,
+                                  right: 12,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.2,
                                       ),
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical: 6,
-                                      ),
-                                      child: Text(
-                                        widget.event.price == 0
-                                            ? 'FREE'
-                                            : '\$${widget.event.price}',
-                                        style: TextStyle(
-                                          color: widget.event.price == 0
-                                              ? Colors.greenAccent
-                                              : Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
+                                    ),
+                                    child: Text(
+                                      widget.event.price == 0
+                                          ? 'FREE'
+                                          : '\$${widget.event.price}',
+                                      style: TextStyle(
+                                        color: widget.event.price == 0
+                                            ? Colors.greenAccent
+                                            : Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  )
-                                  .animate()
-                                  .fadeIn(delay: 300.ms)
-                                  .slideX(begin: 0.2, end: 0),
+                                  ),
+                                )
+                                .animate()
+                                .fadeIn(delay: 300.ms)
+                                .slideX(begin: 0.2, end: 0),
 
                             // Date overlay
                             Positioned(
@@ -537,7 +533,7 @@ class _EnhancedEventCardState extends State<EnhancedEventCard>
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                if (widget.event.price != null) ...[
+                                ...[
                                   SizedBox(width: 12),
                                   Text(
                                     widget.event.price == 0

@@ -177,7 +177,7 @@ class PlatformInteractions {
                     action.onPressed();
                   },
                 );
-              }).toList(),
+              }),
               if (showCancel) ...[
                 const Divider(),
                 ListTile(
@@ -415,7 +415,7 @@ class PlatformSwitch extends StatelessWidget {
       return CupertinoSwitch(
         value: value,
         onChanged: onChanged,
-        activeColor: activeColor,
+        activeTrackColor: activeColor,
       );
     } else {
       return Switch(

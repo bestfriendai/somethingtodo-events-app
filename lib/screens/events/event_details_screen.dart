@@ -10,7 +10,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../models/event.dart';
-import '../../config/theme.dart';
+import '../../config/theme.dart' as old_theme;
+import '../../core/theme/app_theme.dart';
+import '../../core/constants/app_constants.dart';
+import '../../core/utils/date_utils.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/events_provider.dart';
 import '../../services/firestore_service.dart';
@@ -227,7 +230,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
       ShareParams(
         text:
             '${_event!.title}\n\n'
-            '📅 ${DateFormat('EEEE, MMMM d, yyyy \'at\' h:mm a').format(_event!.startDateTime)}\n'
+            '📅 ${DateTimeUtils.getDayName(_event!.startDateTime)}, ${DateTimeUtils.formatDateTime(_event!.startDateTime)}\n'
             '📍 ${_event!.venue.name}\n'
             '💰 ${_event!.pricing.isFree ? 'Free' : '\$${_event!.pricing.price.toStringAsFixed(2)}'}\n\n'
             '${_event!.description}\n\n'
@@ -274,7 +277,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.error_outline, size: 64, color: Colors.grey),
-              SizedBox(height: 16),
+              SizedBox(height: AppTheme.spaceMd),
               Text('Event not found', style: TextStyle(fontSize: 18)),
             ],
           ),
@@ -318,9 +321,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
         IconButton(
           onPressed: _toggleFavorite,
           icon: _isToggling
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
+              ? SizedBox(
+                  width: AppTheme.spaceLg - 4,
+                  height: AppTheme.spaceLg - 4,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation(Colors.white),
@@ -400,13 +403,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  height: 6,
-                  width: _currentImageIndex == index ? 20 : 6,
+                  height: AppTheme.spaceSm - 2,
+                  width: _currentImageIndex == index ? AppTheme.spaceLg - 4 : AppTheme.spaceSm - 2,
                   decoration: BoxDecoration(
                     color: _currentImageIndex == index
                         ? Colors.white
                         : Colors.white.withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(3),
+                    borderRadius: BorderRadius.circular(AppTheme.radiusXs - 1),
                   ),
                 );
               }),
@@ -419,35 +422,35 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
   Widget _buildEventInfo() {
     return SliverToBoxAdapter(
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(AppTheme.spaceMd),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Category
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: AppTheme.spaceMd - 4, vertical: AppTheme.spaceSm - 2),
               decoration: BoxDecoration(
                 color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppTheme.radiusSm),
               ),
               child: Text(
                 _event!.category.displayName,
                 style: TextStyle(
                   color: AppTheme.primaryColor,
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
+                  fontSize: AppTheme.textTheme.bodySmall?.fontSize,
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppTheme.spaceMd - 4),
             // Title
             Text(
               _event!.title,
               style: Theme.of(
                 context,
               ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
-            ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.3),
-            const SizedBox(height: 8),
+            ).animate().fadeIn(duration: Duration(milliseconds: 500)).slideY(begin: 0.3),
+            SizedBox(height: AppTheme.spaceSm),
             // Organizer
             Text(
               'by ${_event!.organizerName}',
@@ -455,16 +458,16 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
                 context,
               ).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppTheme.spaceMd),
             // Date and time
             _buildInfoRow(
               Icons.calendar_today,
               'Date & Time',
-              '${DateFormat('EEEE, MMMM d, yyyy').format(_event!.startDateTime)}\n'
-                  '${DateFormat('h:mm a').format(_event!.startDateTime)} - '
-                  '${DateFormat('h:mm a').format(_event!.endDateTime)}',
+              '${DateTimeUtils.getDayName(_event!.startDateTime)}, ${DateTimeUtils.formatLong(_event!.startDateTime)}\n'
+                  '${DateTimeUtils.formatTime(_event!.startDateTime)} - '
+                  '${DateTimeUtils.formatTime(_event!.endDateTime)}',
             ),
-            const Divider(height: 32),
+            Divider(height: AppTheme.spaceXl),
             // Location
             _buildInfoRow(
               Icons.location_on,
@@ -472,7 +475,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen>
               '${_event!.venue.name}\n${_event!.venue.address}',
               onTap: _openMap,
             ),
-            const Divider(height: 32),
+            Divider(height: AppTheme.spaceXl),
             // Price
             _buildInfoRow(
               Icons.confirmation_number,

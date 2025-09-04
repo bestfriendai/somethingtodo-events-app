@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 /// Responsive breakpoints and utilities for SomethingToDo app
-/// 
+///
 /// Defines breakpoints for mobile, tablet, and desktop layouts
 /// following Material Design guidelines and modern responsive patterns
 class ResponsiveBreakpoints {
@@ -15,8 +15,8 @@ class ResponsiveBreakpoints {
   static const double desktop = 1240;
 
   /// Check if current screen width is mobile
-  static bool isMobile(BuildContext context) => 
-    MediaQuery.sizeOf(context).width < mobile;
+  static bool isMobile(BuildContext context) =>
+      MediaQuery.sizeOf(context).width < mobile;
 
   /// Check if current screen width is tablet
   static bool isTablet(BuildContext context) {
@@ -25,8 +25,8 @@ class ResponsiveBreakpoints {
   }
 
   /// Check if current screen width is desktop
-  static bool isDesktop(BuildContext context) => 
-    MediaQuery.sizeOf(context).width >= desktop;
+  static bool isDesktop(BuildContext context) =>
+      MediaQuery.sizeOf(context).width >= desktop;
 
   /// Get responsive padding based on screen size
   static EdgeInsets getResponsivePadding(BuildContext context) {
@@ -106,28 +106,30 @@ class ResponsiveBreakpoints {
 extension ResponsiveContext on BuildContext {
   /// Get screen size
   Size get screenSize => MediaQuery.sizeOf(this);
-  
+
   /// Check if mobile
   bool get isMobile => ResponsiveBreakpoints.isMobile(this);
-  
-  /// Check if tablet  
+
+  /// Check if tablet
   bool get isTablet => ResponsiveBreakpoints.isTablet(this);
-  
+
   /// Check if desktop
   bool get isDesktop => ResponsiveBreakpoints.isDesktop(this);
-  
+
   /// Get responsive padding
-  EdgeInsets get responsivePadding => ResponsiveBreakpoints.getResponsivePadding(this);
-  
+  EdgeInsets get responsivePadding =>
+      ResponsiveBreakpoints.getResponsivePadding(this);
+
   /// Get responsive margin
-  EdgeInsets get responsiveMargin => ResponsiveBreakpoints.getResponsiveMargin(this);
-  
+  EdgeInsets get responsiveMargin =>
+      ResponsiveBreakpoints.getResponsiveMargin(this);
+
   /// Get card width
   double get cardWidth => ResponsiveBreakpoints.getCardWidth(this);
-  
+
   /// Get column count
   int get columnCount => ResponsiveBreakpoints.getColumnCount(this);
-  
+
   /// Get text scale factor
   double get textScaleFactor => ResponsiveBreakpoints.getTextScaleFactor(this);
 }

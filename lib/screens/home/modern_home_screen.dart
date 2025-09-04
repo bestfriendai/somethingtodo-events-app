@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:intl/intl.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'dart:ui';
 import 'dart:math';
@@ -14,8 +13,8 @@ import '../../models/event.dart';
 import '../../config/modern_theme.dart';
 import '../../widgets/modern/modern_skeleton.dart';
 import '../../widgets/mobile/optimized_event_list.dart';
+import '../../widgets/api_error_widget.dart';
 
-import '../../widgets/common/delightful_refresh.dart';
 import '../../services/platform_interactions.dart';
 import '../../services/delight_service.dart';
 import '../events/event_details_screen.dart';
@@ -126,6 +125,24 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
               slivers: [
                 _buildGlassAppBar(),
                 _buildSearchBar(),
+                // Error banner when API is unavailable
+                SliverToBoxAdapter(
+                  child: Consumer<EventsProvider>(
+                    builder: (context, eventsProvider, child) {
+                      final error = eventsProvider.error;
+                      if (error == null) return const SizedBox.shrink();
+                      return ApiErrorBanner(
+                        message: error,
+                        onDismiss: () async {
+                          // Try to reload real events
+                          await context
+                              .read<EventsProvider>()
+                              .loadRealEvents(refresh: true);
+                        },
+                      );
+                    },
+                  ),
+                ),
                 _buildFeaturedEvents(),
                 _buildCategoryFilters(),
                 _buildEventsSection(),
@@ -279,6 +296,7 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
           backgroundColor: Colors.transparent,
           elevation: 0,
           expandedHeight: 120,
+          toolbarHeight: 88,
           flexibleSpace: ClipRRect(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 25, sigmaY: 25),
@@ -298,24 +316,25 @@ class _ModernHomeScreenState extends State<ModernHomeScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Good ${_getTimeOfDay()},',
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.8),
-                            fontSize: 14,
+                            fontSize: 12,
                           ),
                         ).animate().fadeIn(duration: 600.ms),
                         Text(
                           authProvider.currentUser?.displayName ?? 'Explorer',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 28,
+                            fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ).animate().fadeIn(delay: 200.ms, duration: 600.ms),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),

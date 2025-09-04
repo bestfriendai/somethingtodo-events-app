@@ -24,7 +24,7 @@ class MiniEventCard extends StatefulWidget {
   final bool isLoading;
 
   const MiniEventCard({
-    Key? key,
+    super.key,
     required this.id,
     required this.title,
     required this.subtitle,
@@ -40,7 +40,7 @@ class MiniEventCard extends StatefulWidget {
     this.onHide,
     this.onLongPress,
     this.isLoading = false,
-  }) : super(key: key);
+  });
 
   @override
   State<MiniEventCard> createState() => _MiniEventCardState();
@@ -227,7 +227,7 @@ class _MiniEventCardState extends State<MiniEventCard>
                               child: Row(
                                 children: [
                                   // Image with liquid effect
-                                  Container(
+                                  SizedBox(
                                     width: 100,
                                     height: 100,
                                     child: Stack(

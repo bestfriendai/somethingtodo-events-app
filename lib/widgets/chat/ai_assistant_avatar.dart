@@ -110,7 +110,7 @@ class _AIAssistantAvatarState extends State<AIAssistantAvatar>
     return GestureDetector(
       onTap: widget.onTap,
       child:
-          Container(
+          SizedBox(
                 width: widget.size,
                 height: widget.size,
                 child: Stack(

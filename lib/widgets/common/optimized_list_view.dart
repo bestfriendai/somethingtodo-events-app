@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import '../../utils/performance_optimizer.dart';
 
 /// Optimized list view with virtualization and performance improvements
